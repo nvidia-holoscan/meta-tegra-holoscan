@@ -1,0 +1,326 @@
+From 7d506092c454870f2a570f7091d12e7e226d2fd5 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 17 Jun 2022 12:15:10 -0600
+Subject: [PATCH] Holoscan v0.2.0 MGX Fixes
+
+---
+ CMakeLists.txt                                 |  2 +-
+ cmake/FindGXF.cmake                            |  1 +
+ cmake/FindTensorRT.cmake                       |  2 +-
+ cmake/create_gxe_application.cmake             | 18 +++++++++++-------
+ gxf_extensions/aja/CMakeLists.txt              |  2 ++
+ .../custom_lstm_inference/CMakeLists.txt       |  3 ++-
+ gxf_extensions/format_converter/CMakeLists.txt |  3 ++-
+ gxf_extensions/opengl/CMakeLists.txt           |  3 ++-
+ gxf_extensions/probe/CMakeLists.txt            |  3 ++-
+ .../segmentation_postprocessor/CMakeLists.txt  |  3 ++-
+ .../segmentation_visualizer/CMakeLists.txt     |  4 ++++
+ gxf_extensions/stream_playback/CMakeLists.txt  |  2 ++
+ gxf_extensions/tensor_rt/CMakeLists.txt        |  2 ++
+ gxf_extensions/v4l2/CMakeLists.txt             |  2 ++
+ .../visualizer_tool_tracking/CMakeLists.txt    |  5 +++++
+ 15 files changed, 41 insertions(+), 14 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c2375a..cf46b61 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -28,7 +28,7 @@ define_search_dir_for(ajantv2 "The directory containing the AJA NTV2 SDK cmake c
+ find_package(ajantv2 16.2 REQUIRED)
+ 
+ # Find CUDA: https://cmake.org/cmake/help/latest/module/FindCUDAToolkit.html
+-find_package(CUDAToolkit 11.6 REQUIRED)
++find_package(CUDAToolkit 11.4 REQUIRED)
+ 
+ # Find glad
+ define_search_dir_for(glad "The directory containing the glad cmake config")
+diff --git a/cmake/FindGXF.cmake b/cmake/FindGXF.cmake
+index 9a311e3..87baee4 100644
+--- a/cmake/FindGXF.cmake
++++ b/cmake/FindGXF.cmake
+@@ -93,6 +93,7 @@ foreach(component IN LISTS _GXF_LIBRARIES)
+     set_target_properties(GXF::${component} PROPERTIES
+       IMPORTED_LOCATION "${GXF_${component}_LIBRARY}"
+       INTERFACE_INCLUDE_DIRECTORIES "${GXF_${component}_INCLUDE_DIRS}"
++      IMPORTED_NO_SONAME TRUE
+     )
+ 
+     set(GXF_${component}_FOUND TRUE)
+diff --git a/cmake/FindTensorRT.cmake b/cmake/FindTensorRT.cmake
+index 033c95d..a799746 100644
+--- a/cmake/FindTensorRT.cmake
++++ b/cmake/FindTensorRT.cmake
+@@ -49,7 +49,7 @@ macro(find_trt_library libname)
+   add_library(TensorRT::${libname} SHARED IMPORTED GLOBAL)
+   set_target_properties(TensorRT::${libname} PROPERTIES
+       IMPORTED_LOCATION "${TensorRT_${libname}_LIBRARY}"
+-      INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TensorRT_INCLUDE_DIR}"
++      INTERFACE_INCLUDE_DIRECTORIES "${TensorRT_INCLUDE_DIR}"
+   )
+ endmacro()
+ find_trt_library(nvinfer)
+diff --git a/cmake/create_gxe_application.cmake b/cmake/create_gxe_application.cmake
+index d834c71..0688108 100644
+--- a/cmake/create_gxe_application.cmake
++++ b/cmake/create_gxe_application.cmake
+@@ -30,10 +30,11 @@ function(_get_lib_file_path location target)
+   get_target_property(imported ${target} IMPORTED)
+   if (imported)
+     get_target_property(lib ${target} IMPORTED_LOCATION)
++    cmake_path(GET lib FILENAME lib)
+   else()
+-    set(lib $<TARGET_FILE:${target}>)
++    set(lib $<TARGET_FILE_NAME:${target}>)
+   endif()
+-  set(${location} ${lib} PARENT_SCOPE)
++  set(${location} ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${lib} PARENT_SCOPE)
+ endfunction()
+ 
+ # Utility to get a library file directory
+@@ -105,8 +106,9 @@ function(create_gxe_application)
+ 
+   # Copy the yaml file
+   get_filename_component(GXE_APP_YAML_NAME ${GXE_APP_YAML} NAME)
+-  cmake_path(APPEND GXE_APP_YAML_BUILD_PATH ${CMAKE_CURRENT_BINARY_DIR} ${GXE_APP_YAML_NAME})
++  cmake_path(APPEND GXE_APP_YAML_INSTALL_PATH ${HOLOSCAN_INSTALL_PATH} ${GXE_APP_YAML_NAME})
+   file(COPY ${GXE_APP_YAML} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
++  install(FILES ${GXE_APP_YAML} DESTINATION ${HOLOSCAN_INSTALL_PATH})
+ 
+   # Create manifest file
+   list(APPEND GXE_APP_MANIFEST_CONTENT "extensions:")
+@@ -123,6 +125,7 @@ function(create_gxe_application)
+     OUTPUT ${GXE_APP_MANIFEST}
+     CONTENT ${GXE_APP_MANIFEST_CONTENT}
+   )
++  install(FILES ${GXE_APP_MANIFEST} DESTINATION ${HOLOSCAN_INSTALL_PATH})
+ 
+   # Get path to libraries to add to LD_LIBRARY_PATH
+   get_target_property(GXF_CORE_LIB GXF::core IMPORTED_LOCATION)
+@@ -139,14 +142,15 @@ function(create_gxe_application)
+   # Create bash script
+   list(REMOVE_DUPLICATES LIBRARY_PATHS)
+   list(JOIN LIBRARY_PATHS ":" LIBRARY_PATHS_STR)
+-  get_target_property(GXE_PATH GXF::gxe IMPORTED_LOCATION)
+   file(GENERATE
+     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${GXE_APP_NAME}
+     CONTENT
+ "#!/usr/bin/env bash
+-export LD_LIBRARY_PATH=${LIBRARY_PATHS_STR}:\"$LD_LIBRARY_PATH\"
+-${GXE_PATH} --app ${GXE_APP_YAML_BUILD_PATH} --manifest ${GXE_APP_MANIFEST} $@
++gxe --app ${GXE_APP_YAML_INSTALL_PATH} --manifest ${HOLOSCAN_INSTALL_PATH}/${GXE_APP_NAME}_manifest.yaml $@
+ "
+     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+   )
+-endfunction()
+\ No newline at end of file
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${GXE_APP_NAME}
++    DESTINATION ${HOLOSCAN_INSTALL_PATH}
++    PERMISSIONS WORLD_EXECUTE)
++endfunction()
+diff --git a/gxf_extensions/aja/CMakeLists.txt b/gxf_extensions/aja/CMakeLists.txt
+index b975f83..65ba503 100644
+--- a/gxf_extensions/aja/CMakeLists.txt
++++ b/gxf_extensions/aja/CMakeLists.txt
+@@ -26,6 +26,7 @@ target_link_libraries(aja_source_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS aja_source_lib)
+ 
+ # Create extension
+ add_library(aja_source SHARED
+@@ -34,3 +35,4 @@ add_library(aja_source SHARED
+ target_link_libraries(aja_source
+   PUBLIC aja_source_lib
+ )
++install(TARGETS aja_source)
+diff --git a/gxf_extensions/custom_lstm_inference/CMakeLists.txt b/gxf_extensions/custom_lstm_inference/CMakeLists.txt
+index 5e5d644..2a72a6c 100644
+--- a/gxf_extensions/custom_lstm_inference/CMakeLists.txt
++++ b/gxf_extensions/custom_lstm_inference/CMakeLists.txt
+@@ -26,6 +26,7 @@ target_link_libraries(custom_lstm_inference_lib
+     TensorRT::nvonnxparser
+     yaml-cpp
+ )
++install(TARGETS custom_lstm_inference_lib)
+ 
+ # Create extension
+ add_library(custom_lstm_inference SHARED
+@@ -34,4 +35,4 @@ add_library(custom_lstm_inference SHARED
+ target_link_libraries(custom_lstm_inference
+   PUBLIC custom_lstm_inference_lib
+ )
+-
++install(TARGETS custom_lstm_inference)
+diff --git a/gxf_extensions/format_converter/CMakeLists.txt b/gxf_extensions/format_converter/CMakeLists.txt
+index 6feb3a8..92bafc6 100644
+--- a/gxf_extensions/format_converter/CMakeLists.txt
++++ b/gxf_extensions/format_converter/CMakeLists.txt
+@@ -26,6 +26,7 @@ target_link_libraries(format_converter_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS format_converter_lib)
+ 
+ # Create extension
+ add_library(format_converter SHARED
+@@ -34,4 +35,4 @@ add_library(format_converter SHARED
+ target_link_libraries(format_converter
+   PUBLIC format_converter_lib
+ )
+-
++install(TARGETS format_converter)
+diff --git a/gxf_extensions/opengl/CMakeLists.txt b/gxf_extensions/opengl/CMakeLists.txt
+index 13be544..a3c27f4 100644
+--- a/gxf_extensions/opengl/CMakeLists.txt
++++ b/gxf_extensions/opengl/CMakeLists.txt
+@@ -27,6 +27,7 @@ target_link_libraries(opengl_renderer_lib
+     # OpenGL::GL # Using glad + patch instead for GL/gl.h
+     yaml-cpp
+ )
++install(TARGETS opengl_renderer_lib)
+ 
+ # Create extension
+ add_library(opengl_renderer SHARED
+@@ -35,4 +36,4 @@ add_library(opengl_renderer SHARED
+ target_link_libraries(opengl_renderer
+   PUBLIC opengl_renderer_lib
+ )
+-
++install(TARGETS opengl_renderer)
+diff --git a/gxf_extensions/probe/CMakeLists.txt b/gxf_extensions/probe/CMakeLists.txt
+index f10e4fb..349b92a 100644
+--- a/gxf_extensions/probe/CMakeLists.txt
++++ b/gxf_extensions/probe/CMakeLists.txt
+@@ -22,6 +22,7 @@ target_link_libraries(tensor_probe_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS tensor_probe_lib)
+ 
+ # Create extension
+ add_library(tensor_probe SHARED
+@@ -30,4 +31,4 @@ add_library(tensor_probe SHARED
+ target_link_libraries(tensor_probe
+   PUBLIC tensor_probe_lib
+ )
+-
++install(TARGETS tensor_probe)
+diff --git a/gxf_extensions/segmentation_postprocessor/CMakeLists.txt b/gxf_extensions/segmentation_postprocessor/CMakeLists.txt
+index 6a4bea5..67511ff 100644
+--- a/gxf_extensions/segmentation_postprocessor/CMakeLists.txt
++++ b/gxf_extensions/segmentation_postprocessor/CMakeLists.txt
+@@ -37,6 +37,7 @@ target_link_libraries(segmentation_postprocessor_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS segmentation_postprocessor_lib)
+ 
+ # Create extension
+ add_library(segmentation_postprocessor SHARED
+@@ -45,4 +46,4 @@ add_library(segmentation_postprocessor SHARED
+ target_link_libraries(segmentation_postprocessor
+   PUBLIC segmentation_postprocessor_lib
+ )
+-
++install(TARGETS segmentation_postprocessor)
+diff --git a/gxf_extensions/segmentation_visualizer/CMakeLists.txt b/gxf_extensions/segmentation_visualizer/CMakeLists.txt
+index 740e090..7dfd97b 100644
+--- a/gxf_extensions/segmentation_visualizer/CMakeLists.txt
++++ b/gxf_extensions/segmentation_visualizer/CMakeLists.txt
+@@ -27,6 +27,7 @@ target_link_libraries(segmentation_visualizer_lib
+     # OpenGL::GL # Using glad + patch instead for GL/gl.h
+     yaml-cpp
+ )
++install(TARGETS segmentation_visualizer_lib)
+ 
+ # Create extension
+ add_library(segmentation_visualizer SHARED
+@@ -35,6 +36,9 @@ add_library(segmentation_visualizer SHARED
+ target_link_libraries(segmentation_visualizer
+   PUBLIC segmentation_visualizer_lib
+ )
++install(TARGETS segmentation_visualizer)
+ 
+ # Copy resources
+ file(COPY glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
++string(REPLACE ${CMAKE_BINARY_DIR} "" RELATIVE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
++install(DIRECTORY glsl DESTINATION ${HOLOSCAN_INSTALL_PATH}/${RELATIVE_BINARY_DIR})
+diff --git a/gxf_extensions/stream_playback/CMakeLists.txt b/gxf_extensions/stream_playback/CMakeLists.txt
+index 89c8768..ad89f96 100644
+--- a/gxf_extensions/stream_playback/CMakeLists.txt
++++ b/gxf_extensions/stream_playback/CMakeLists.txt
+@@ -26,6 +26,7 @@ target_link_libraries(stream_playback_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS stream_playback_lib)
+ 
+ # Create extension
+ add_library(stream_playback SHARED
+@@ -35,3 +36,4 @@ target_link_libraries(stream_playback
+   PUBLIC
+     stream_playback_lib
+ )
++install(TARGETS stream_playback)
+diff --git a/gxf_extensions/tensor_rt/CMakeLists.txt b/gxf_extensions/tensor_rt/CMakeLists.txt
+index ff5d747..dbdc925 100644
+--- a/gxf_extensions/tensor_rt/CMakeLists.txt
++++ b/gxf_extensions/tensor_rt/CMakeLists.txt
+@@ -25,6 +25,7 @@ target_link_libraries(tensor_rt_inference_lib
+     TensorRT::nvonnxparser
+     yaml-cpp
+ )
++install(TARGETS tensor_rt_inference_lib)
+ 
+ # Create extension
+ add_library(tensor_rt SHARED
+@@ -33,3 +34,4 @@ add_library(tensor_rt SHARED
+ target_link_libraries(tensor_rt
+   PUBLIC tensor_rt_inference_lib
+ )
++install(TARGETS tensor_rt)
+diff --git a/gxf_extensions/v4l2/CMakeLists.txt b/gxf_extensions/v4l2/CMakeLists.txt
+index 1477a82..56f0628 100644
+--- a/gxf_extensions/v4l2/CMakeLists.txt
++++ b/gxf_extensions/v4l2/CMakeLists.txt
+@@ -23,6 +23,7 @@ target_link_libraries(v4l2_source_lib
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS v4l2_source_lib)
+ 
+ # Create extension
+ add_library(v4l2_source SHARED
+@@ -31,3 +32,4 @@ add_library(v4l2_source SHARED
+ target_link_libraries(v4l2_source
+   PUBLIC v4l2_source_lib
+ )
++install(TARGETS v4l2_source)
+diff --git a/gxf_extensions/visualizer_tool_tracking/CMakeLists.txt b/gxf_extensions/visualizer_tool_tracking/CMakeLists.txt
+index 0c22958..fd1a2c0 100644
+--- a/gxf_extensions/visualizer_tool_tracking/CMakeLists.txt
++++ b/gxf_extensions/visualizer_tool_tracking/CMakeLists.txt
+@@ -38,6 +38,7 @@ target_link_libraries(visualizer_tool_tracking_lib
+     nanovg
+     yaml-cpp
+ )
++install(TARGETS visualizer_tool_tracking_lib)
+ 
+ # Create extension
+ add_library(visualizer_tool_tracking SHARED
+@@ -46,7 +47,11 @@ add_library(visualizer_tool_tracking SHARED
+ target_link_libraries(visualizer_tool_tracking
+   PUBLIC visualizer_tool_tracking_lib
+ )
++install(TARGETS visualizer_tool_tracking)
+ 
+ # Copy resources
+ file(COPY fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+ file(COPY glsl DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
++string(REPLACE ${CMAKE_BINARY_DIR} "" RELATIVE_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
++install(DIRECTORY fonts DESTINATION ${HOLOSCAN_INSTALL_PATH}/${RELATIVE_BINARY_DIR})
++install(DIRECTORY glsl DESTINATION ${HOLOSCAN_INSTALL_PATH}/${RELATIVE_BINARY_DIR})
+-- 
+2.17.1
+
