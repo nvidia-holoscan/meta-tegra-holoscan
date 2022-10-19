@@ -18,34 +18,22 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+def cuda_install_arch(d):
+    arch = d.getVar('HOST_ARCH')
+    return 'sbsa' if arch == 'aarch64' else arch
 
-require ajantv2-common_${PV}.inc
+# Override the meta-tegra 'targets' path used for the CUDA install.
+CUDA_INSTALL_ARCH = "${@cuda_install_arch(d)}"
 
-S = "${WORKDIR}/git/ajadriver/linux"
+# Override the meta-tegra L4T deb package feed.
+L4T_DEB_FEED_BASE = "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/${CUDA_INSTALL_ARCH}"
+L4T_DEB_FEED_SKIP_POOL_APPEND = "1"
 
-inherit module
+# Override the meta-tegra CUDA license details.
+CUDA_LICENSE_PKG ?= "cuda-documentation-${CUDA_VERSION_DASHED}_11.7.91-1_${CUDA_DEB_PKGARCH}.deb;name=lic;subdir=${BP}"
+LICSUM:aarch64 = "582fc5aa275f3497735001436c5d679fb1622a2f210a2abb43f03bfb34ed3fce"
+LICSUM:x86-64 = "cbf5491e6e85d0f77d9f7e5c091c76360469babaa950bd1d506a404be2dbf160"
+LIC_FILES_CHKSUM ?= "file://usr/local/cuda-${CUDA_VERSION}/EULA.txt;md5=d43b70e08c9cd63c838dc661b6f1a763"
 
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
-"
-
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
-"
-
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-"
-
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
-
-RPROVIDES:${PN} += "kernel-module-ajantv2"
+# Include the meta-tegra CUDA binary package include.
+require recipes-devtools/cuda/cuda-shared-binaries.inc

@@ -18,34 +18,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+CUDA_PKG = "${BPN}-dev"
 
-require ajantv2-common_${PV}.inc
+require cuda-binaries-common.inc
 
-S = "${WORKDIR}/git/ajadriver/linux"
+DEPENDS:tegra = "nvidia-dgpu-drivers"
 
-inherit module
+DEVSUM:aarch64 = "07067dc603d7cef4f795246e9df5ec298df03533ab61844e483f55e05517cdd7"
+DEVSUM:x86-64 = "1547acec47fc8177c15a6281d305d8369a0dc09e65cce32969103ff587c2a0f9"
 
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
-"
+ALLOW_EMPTY:${PN} = "1"
+EXCLUDE_PACKAGES_FROM_SHLIBS = ""
+PRIVATE_LIBS = "libcuda.so.1"
 
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
-"
-
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-"
-
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
-
-RPROVIDES:${PN} += "kernel-module-ajantv2"
+BBCLASSEXTEND = "native nativesdk"

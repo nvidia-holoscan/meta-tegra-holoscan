@@ -25,13 +25,13 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
 
 add_library(TensorRT::nvinfer SHARED IMPORTED)
 set_target_properties(TensorRT::nvinfer PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/tensorrt"
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libnvinfer.so"
 )
 
 add_library(TensorRT::nvinfer_plugin SHARED IMPORTED)
 set_target_properties(TensorRT::nvinfer_plugin PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/tensorrt"
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libnvinfer_plugin.so"
     INTERFACE_LINK_LIBRARIES
         TensorRT::nvonnxparser
@@ -39,18 +39,18 @@ set_target_properties(TensorRT::nvinfer_plugin PROPERTIES
 
 add_library(TensorRT::nvcaffe_parser SHARED IMPORTED)
 set_target_properties(TensorRT::nvcaffe_parser PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/tensorrt"
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libnvcaffe_parser.so"
 )
 
 add_library(TensorRT::nvonnxparser SHARED IMPORTED)
 set_target_properties(TensorRT::nvonnxparser PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/tensorrt"
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libnvonnxparser.so"
 )
 
 add_library(TensorRT::nvparsers SHARED IMPORTED)
 set_target_properties(TensorRT::nvparsers PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include/tensorrt"
+    INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
     IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libnvparsers.so"
 )

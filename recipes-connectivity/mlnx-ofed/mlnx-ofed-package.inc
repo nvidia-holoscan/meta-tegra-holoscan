@@ -18,34 +18,23 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+MLNX_OFED_VER = "5.7-1.0.2.0"
 
-require ajantv2-common_${PV}.inc
-
-S = "${WORKDIR}/git/ajadriver/linux"
-
-inherit module
-
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
+DEPENDS = " \
+    mlnx-ofed-download \
 "
 
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
-"
+do_unpack[depends] += "xz-native:do_populate_sysroot"
 
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-"
+DEB_PACKAGE_SUFFIX ?= "arm64"
 
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
+do_unpack() {
+    rm -rf ${S}
+    mkdir ${S}
+    cd ${S}
+    ar x ${TMPDIR}/work-shared/mlnx-ofed-${MLNX_OFED_VER}/MLNX_OFED_LINUX-${MLNX_OFED_VER}-ubuntu20.04-aarch64/DEBS/${PN}_${PV}_${DEB_PACKAGE_SUFFIX}.deb
+    tar xf data.tar.xz
+    rm control.tar.xz data.tar.xz debian-binary
+}
 
-RPROVIDES:${PN} += "kernel-module-ajantv2"
+INSANE_SKIP:${PN} += "already-stripped"

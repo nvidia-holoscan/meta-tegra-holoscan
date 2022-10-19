@@ -25,11 +25,12 @@
 # layer exist in the current build context.
 #
 
-CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-11.4-linux-aarch64sbsa-v8.2.4.15.tgz"
-TENSORRT_PACKAGE="recipes-devtools/tensorrt/files/TensorRT-8.2.1.8.Ubuntu-20.04.aarch64-gnu.cuda-11.4.cudnn8.2.tar.gz"
-GXF_PACKAGE="recipes-devtools/gxf/files/gxf_2.4.2_20220516_f90116f2_holoscan-sdk_arm64.tar.gz"
+CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz"
+TENSORRT_PACKAGE="recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz"
+GXF_PACKAGE="recipes-devtools/gxf/files/gxf_2.4.3_20220811_6ff6ffd4_holoscan-sdk_arm64.tar.gz"
 HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data.zip"
 HOLOSCAN_ULTRASOUND_DATA="recipes-devtools/holoscan/files/holoscan_ultrasound_data.zip"
+RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.11.11.tar.gz"
 
 script_path=$(readlink -f ${0})
 env_path=$(dirname ${script_path})
@@ -47,5 +48,6 @@ check_package ${TENSORRT_PACKAGE}
 check_package ${GXF_PACKAGE}
 check_package ${HOLOSCAN_ENDOSCOPY_DATA}
 check_package ${HOLOSCAN_ULTRASOUND_DATA}
+check_package ${RIVERMAX_PACKAGE}
 
 exit 0

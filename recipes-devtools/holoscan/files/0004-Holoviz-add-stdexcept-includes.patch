@@ -1,0 +1,116 @@
+From 0d098efb781a17f03788036e8474f7d6f1dac38c Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 21 Sep 2022 13:43:43 -0600
+Subject: [PATCH 4/5] Holoviz: add stdexcept includes
+
+---
+ modules/holoviz/examples/demo/Main.cpp       | 1 +
+ modules/holoviz/src/Context.cpp              | 1 +
+ modules/holoviz/src/ExclusiveWindow.cpp      | 3 ++-
+ modules/holoviz/src/GLFWWindow.cpp           | 3 ++-
+ modules/holoviz/src/layers/GeometryLayer.cpp | 1 +
+ modules/holoviz/src/layers/ImageLayer.cpp    | 1 +
+ modules/holoviz/src/vulkan/Vulkan.cpp        | 1 +
+ 7 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/modules/holoviz/examples/demo/Main.cpp b/modules/holoviz/examples/demo/Main.cpp
+index 25cbe4e..c61c400 100644
+--- a/modules/holoviz/examples/demo/Main.cpp
++++ b/modules/holoviz/examples/demo/Main.cpp
+@@ -23,6 +23,7 @@
+ #include <chrono>
+ #include <vector>
+ #include <algorithm>
++#include <stdexcept>
+ 
+ #include <getopt.h>
+ 
+diff --git a/modules/holoviz/src/Context.cpp b/modules/holoviz/src/Context.cpp
+index a7343c5..5cd5084 100644
+--- a/modules/holoviz/src/Context.cpp
++++ b/modules/holoviz/src/Context.cpp
+@@ -29,6 +29,7 @@
+ #include <imgui.h>
+ 
+ #include <memory>
++#include <stdexcept>
+ 
+ namespace clara::holoviz
+ {
+diff --git a/modules/holoviz/src/ExclusiveWindow.cpp b/modules/holoviz/src/ExclusiveWindow.cpp
+index 040101e..5738386 100644
+--- a/modules/holoviz/src/ExclusiveWindow.cpp
++++ b/modules/holoviz/src/ExclusiveWindow.cpp
+@@ -27,6 +27,7 @@
+ 
+ #include <array>
+ #include <vector>
++#include <stdexcept>
+ #include <string>
+ 
+ namespace clara::holoviz
+@@ -272,4 +273,4 @@ void ExclusiveWindow::Begin() {}
+ 
+ void ExclusiveWindow::End() {}
+ 
+-} // namespace clara::holoviz
+\ No newline at end of file
++} // namespace clara::holoviz
+diff --git a/modules/holoviz/src/GLFWWindow.cpp b/modules/holoviz/src/GLFWWindow.cpp
+index b151c9d..9f74a6b 100644
+--- a/modules/holoviz/src/GLFWWindow.cpp
++++ b/modules/holoviz/src/GLFWWindow.cpp
+@@ -26,6 +26,7 @@
+ #include <nvvk/error_vk.hpp>
+ 
+ #include <iostream>
++#include <stdexcept>
+ #include <unistd.h>
+ 
+ namespace clara::holoviz
+@@ -170,4 +171,4 @@ void GLFWWindow::Begin()
+ 
+ void GLFWWindow::End() {}
+ 
+-} // namespace clara::holoviz
+\ No newline at end of file
++} // namespace clara::holoviz
+diff --git a/modules/holoviz/src/layers/GeometryLayer.cpp b/modules/holoviz/src/layers/GeometryLayer.cpp
+index 21f7630..71b5259 100644
+--- a/modules/holoviz/src/layers/GeometryLayer.cpp
++++ b/modules/holoviz/src/layers/GeometryLayer.cpp
+@@ -24,6 +24,7 @@
+ #include <array>
+ #include <list>
+ #include <sstream>
++#include <stdexcept>
+ #include <string>
+ #include <vector>
+ 
+diff --git a/modules/holoviz/src/layers/ImageLayer.cpp b/modules/holoviz/src/layers/ImageLayer.cpp
+index 8ddfb10..c26f5a4 100644
+--- a/modules/holoviz/src/layers/ImageLayer.cpp
++++ b/modules/holoviz/src/layers/ImageLayer.cpp
+@@ -21,6 +21,7 @@
+ 
+ #include <nvvk/resourceallocator_vk.hpp>
+ 
++#include <stdexcept>
+ #include <vector>
+ 
+ namespace clara::holoviz
+diff --git a/modules/holoviz/src/vulkan/Vulkan.cpp b/modules/holoviz/src/vulkan/Vulkan.cpp
+index ccdd64d..1c980ad 100644
+--- a/modules/holoviz/src/vulkan/Vulkan.cpp
++++ b/modules/holoviz/src/vulkan/Vulkan.cpp
+@@ -45,6 +45,7 @@
+ 
+ #include <iostream>
+ #include <sstream>
++#include <stdexcept>
+ #include <vector>
+ 
+ #include <unistd.h>
+-- 
+2.17.1
+

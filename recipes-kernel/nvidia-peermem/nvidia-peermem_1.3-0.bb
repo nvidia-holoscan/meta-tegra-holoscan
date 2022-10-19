@@ -18,34 +18,27 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+SUMMARY = "NVIDIA GPUDirect Peer Mem Module"
+LICENSE = "GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://README.md;md5=5a4d62b0f44a21b1e51ad898279d152e"
 
-require ajantv2-common_${PV}.inc
+SRC_URI = "git://github.com/Mellanox/nv_peer_memory.git;branch=master;protocol=https"
+SRCREV = "a15f0f666f40efa33b2719f80fe3d968586d2d4d"
 
-S = "${WORKDIR}/git/ajadriver/linux"
+SRC_URI += "file://0001-Makefile-changes-for-MGX-build.patch"
 
 inherit module
 
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
+S = "${WORKDIR}/git"
+
+DEPENDS:append = " \
+    mlnx-ofed-kernel-dkms \
+    ${PREFERRED_RPROVIDER_kernel-module-nvidia} \
+"
+
+EXTRA_OEMAKE += " \
+    OFA_KERNEL=${RECIPE_SYSROOT}${prefix}/src/mlnx-ofed-kernel-dkms \
+    OFA_SYMVERS=${RECIPE_SYSROOT}${includedir}/mlnx-ofed-kernel-dkms/Module.symvers \
     NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
+    KDIR=${STAGING_KERNEL_DIR} \
 "
-
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
-"
-
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-"
-
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
-
-RPROVIDES:${PN} += "kernel-module-ajantv2"

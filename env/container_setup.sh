@@ -50,20 +50,20 @@ git_clone() {
 }
 
 # BitBake
-BITBAKE_REV="f89a35155e3b8d12ac609a165c63ed206751b8da"
+BITBAKE_REV="9bdedc8074990e613c9567e2cd8072f8d885f07f"
 git_clone "https://github.com/openembedded/bitbake.git" ${BITBAKE_REV}
 
 # OpenEmbedded Core Layer
-OPENEMBEDDED_REV="95cc2d041ad651cfb81b2e55251acf1b86f9ddfc"
+OPENEMBEDDED_REV="5e07e6c376cf46d2788dcef53e9feba890c0236d"
 git_clone "https://github.com/openembedded/openembedded-core.git" ${OPENEMBEDDED_REV}
 
 # meta-openembedded Layer
-META_OPENEMBEDDED_REV="2d4090a7233274e2f876d812c13803ae1e1a2acf"
+META_OPENEMBEDDED_REV="a755af4fb5ca2e158b00214bb18e27ba69c200fd"
 git_clone "https://github.com/openembedded/meta-openembedded.git" ${META_OPENEMBEDDED_REV}
 
 # meta-tegra layer
-META_TEGRA_REV="515f4005add33836e5d4442d8f067ce2848ca194"
-git_clone "https://github.com/OE4T/meta-tegra.git" ${META_TEGRA_REV}
+META_TEGRA_REV="b4fa3bafc4efa48248b94d8c69366eb42ac45aef"
+git_clone "https://github.com/ibstewart/meta-tegra.git" ${META_TEGRA_REV}
 
 # meta-tegra-clara-holoscan-mgx layer (copied from build container)
 if [ ! -d "meta-tegra-clara-holoscan-mgx" ]; then

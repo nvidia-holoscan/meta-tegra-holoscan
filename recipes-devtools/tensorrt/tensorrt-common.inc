@@ -18,6 +18,4 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SRC_URI = "file://TensorRT-${PV}.Ubuntu-20.04.${TARGET_ARCH}-gnu.cuda-${CUDA_VERSION}.cudnn${CUDNN_VERSION}.tar.gz"
-
-LIC_FILES_CHKSUM = "file://${WORKDIR}/TensorRT-${PV}/doc/pdf/TensorRT-SLA.pdf;md5=db2600827a3ed6649339dbaf796557e6"
+SRC_URI = "file://TensorRT-${PV}.Ubuntu-20.04.${TARGET_ARCH}-gnu.cuda-11.6.cudnn8.4.tar.gz"

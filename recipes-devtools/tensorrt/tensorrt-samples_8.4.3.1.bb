@@ -18,34 +18,38 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+SUMMARY = "NVIDIA TensorRT Samples"
 
-require ajantv2-common_${PV}.inc
+LICENSE = "CLOSED"
 
-S = "${WORKDIR}/git/ajadriver/linux"
+include tensorrt-common.inc
 
-inherit module
-
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
+SRC_URI += " \
+    file://0001-Fix-samples-build.patch \
 "
 
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
+S = "${WORKDIR}/TensorRT-${PV}/samples"
+
+inherit cuda
+
+DEPENDS:append = " \
+    cuda-profiler-api \
+    cudnn \
+    tensorrt \
 "
 
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
+EXTRA_OEMAKE = " \
+    TARGET="${TARGET_ARCH}" \
+    CUDA_INSTALL_DIR="${CUDA_PATH}" \
+    CUDNN_INSTALL_DIR="${CUDA_PATH}" \
+    TRT_LIB_DIR="${STAGING_DIR_HOST}${libdir}" \
+    PROTOBUF_INSTALL_DIR="${STAGING_DIR_HOST}" \
 "
 
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
+TARGET_CC_ARCH += "${LDFLAGS}"
 
-RPROVIDES:${PN} += "kernel-module-ajantv2"
+do_install() {
+    install -d ${D}${bindir}/tensorrt-samples
+    install -m 0755 `find ${S}/../bin/ -maxdepth 1 -type f` ${D}${bindir}/tensorrt-samples
+    cp -rd --no-preserve=ownership ${S}/../data ${D}${bindir}/tensorrt-samples
+}

@@ -1,0 +1,46 @@
+From 3d28aef3751f9b2e81a3b0b7fcba44a1042365ba Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 22 Sep 2022 12:54:37 -0600
+Subject: [PATCH 2/5] Fix HOLOSCAN_LOG_ERROR issue with YAML::Node
+
+---
+ include/holoscan/utils/yaml_parser.hpp | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/include/holoscan/utils/yaml_parser.hpp b/include/holoscan/utils/yaml_parser.hpp
+index bea9f6a..babf775 100644
+--- a/include/holoscan/utils/yaml_parser.hpp
++++ b/include/holoscan/utils/yaml_parser.hpp
+@@ -63,7 +63,9 @@ template <typename typeT>
+ struct YAMLNodeParser<std::vector<typeT>> {
+   static std::vector<typeT> parse(const YAML::Node& node) {
+     if (!node.IsSequence()) {
+-      HOLOSCAN_LOG_ERROR("Unable to parse YAML node: '{}'. It is not a sequence.", node);
++      std::stringstream ss;
++      ss << node;
++      HOLOSCAN_LOG_ERROR("Unable to parse YAML node: '{}'. It is not a sequence.", ss.str());
+       return std::vector<typeT>();
+     }
+     std::vector<typeT> result(node.size());
+@@ -80,12 +82,16 @@ template <typename typeT, std::size_t N>
+ struct YAMLNodeParser<std::array<typeT, N>> {
+   static std::array<typeT, N> parse(const YAML::Node& node) {
+     if (!node.IsSequence()) {
+-      HOLOSCAN_LOG_ERROR("Unable to parse YAML node: '{}'. It is not a sequence.", node);
++      std::stringstream ss;
++      ss << node;
++      HOLOSCAN_LOG_ERROR("Unable to parse YAML node: '{}'. It is not a sequence.", ss.str());
+       return std::array<typeT, N>();
+     }
+     if (node.size() != N) {
++      std::stringstream ss;
++      ss << node;
+       HOLOSCAN_LOG_ERROR(
+-          "Unable to parse YAML node: '{}'. It is not a sequence of size {}.", node, N);
++          "Unable to parse YAML node: '{}'. It is not a sequence of size {}.", ss.str(), N);
+       return std::array<typeT, N>();
+     }
+     std::array<typeT, N> result;
+-- 
+2.17.1
+

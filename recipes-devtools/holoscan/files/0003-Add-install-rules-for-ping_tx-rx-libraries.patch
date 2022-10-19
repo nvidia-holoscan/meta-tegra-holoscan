@@ -1,0 +1,34 @@
+From 36c3b6e61b0980242637f09ea7f1fafe6ba6e797 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 21 Sep 2022 14:58:12 -0600
+Subject: [PATCH 3/5] Add install rules for ping_tx/rx libraries
+
+These libraries do not end with '_lib' and so aren't
+handled properly by create_gxe_application.
+---
+ gxf_extensions/sample/CMakeLists.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/gxf_extensions/sample/CMakeLists.txt b/gxf_extensions/sample/CMakeLists.txt
+index 6be27b6..04338c8 100644
+--- a/gxf_extensions/sample/CMakeLists.txt
++++ b/gxf_extensions/sample/CMakeLists.txt
+@@ -22,6 +22,7 @@ target_link_libraries(ping_tx
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS ping_tx)
+ 
+ # Create library
+ add_library(ping_rx SHARED
+@@ -33,6 +34,7 @@ target_link_libraries(ping_rx
+     GXF::std
+     yaml-cpp
+ )
++install(TARGETS ping_rx)
+ 
+ # Create extension
+ add_library(holoscan_sample SHARED
+-- 
+2.17.1
+

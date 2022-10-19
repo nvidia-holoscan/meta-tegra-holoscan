@@ -18,34 +18,43 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+SUMMARY = "NVIDIA Rivermax"
+LICENSE = "CLOSED"
 
-require ajantv2-common_${PV}.inc
+SRC_URI = "file://rivermax_ubuntu2004_1.11.11.tar.gz"
+SRCREV = "8dcebfd9e1159eb42abccd918c1e88c1703627d6"
 
-S = "${WORKDIR}/git/ajadriver/linux"
+extract_deb() {
+    cd ${S}
+    ar -x ${WORKDIR}/1.11.11/Ubuntu.20.04/deb-dist/aarch64/rivermax_${PV}_arm64.deb
+    tar xf data.tar.xz
+    rm -rf control.tar.xz data.tar.xz debian debian-binary
+}
 
-inherit module
+do_unpack[depends] += "xz-native:do_populate_sysroot"
+do_unpack:append() {
+    bb.build.exec_func("extract_deb", d)
+}
 
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
+do_install() {
+    install -d ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/* ${D}${libdir}
+    install -d ${D}${includedir}/mellanox
+    install -m 0644 ${S}/usr/include/mellanox/* ${D}${includedir}/mellanox
+}
+
+DEPENDS = " \
+    dpcp \
+    ibverbs-providers \
+    libibverbs1 \
+    libnl \
 "
 
-# T194 uses different RDMA APIs across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra194 = " \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
+RDEPENDS:${PN} += " \
+    libvma \
+    librdmacm1 \
 "
 
-# T234 shares the same RDMA API across iGPU and dGPU.
-EXTRA_OEMAKE:append:tegra234 = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-"
-
-DEPENDS:append:tegra194 = " ${@'${PREFERRED_RPROVIDER_kernel-module-nvidia}' if d.getVar('TEGRA_DGPU') == '1' else ''}"
-DEPENDS:append:tegra234 = " ${PREFERRED_RPROVIDER_kernel-module-nvidia}"
-
-RPROVIDES:${PN} += "kernel-module-ajantv2"
+INSANE_SKIP:${PN} += "already-stripped"
+INSANE_SKIP:${PN}-dev += "dev-elf"
+PRIVATE_LIBS:${PN}-dev += "librivermax.so.0"

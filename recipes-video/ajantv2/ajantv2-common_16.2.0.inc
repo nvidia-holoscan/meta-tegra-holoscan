@@ -25,5 +25,5 @@ SRC_URI = "git://github.com/ibstewart/ntv2.git;branch=holoscan-v0.2.0;protocol=h
 SRCREV = "8dcebfd9e1159eb42abccd918c1e88c1703627d6"
 
 SRC_URI += " \
-    file://0001-WAR-for-cudalowlatencydemo-build.patch;patchdir=${WORKDIR}/git \
+    file://0001-Disable-outlining-atomics.patch;patchdir=${WORKDIR}/git \
 "
