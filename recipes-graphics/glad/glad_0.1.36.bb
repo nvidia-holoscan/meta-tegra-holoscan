@@ -29,10 +29,16 @@ S = "${WORKDIR}/git"
 
 inherit cmake
 
-EXTRA_OECMAKE:append = "-D GLAD_INSTALL:BOOL=ON"
+EXTRA_OECMAKE:append = " \
+    -D BUILD_SHARED_LIBS:BOOL=ON \
+    -D GLAD_INSTALL:BOOL=ON \
+"
 
 do_compile[network] = "1"
 
 do_install:append () {
     rm ${D}${includedir}/KHR/khrplatform.h
 }
+
+FILES_SOLIBSDEV = ""
+SOLIBS = "*.so*"

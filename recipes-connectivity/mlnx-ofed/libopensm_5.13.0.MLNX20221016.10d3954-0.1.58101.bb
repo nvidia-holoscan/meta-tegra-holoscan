@@ -18,17 +18,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libibverbs1"
+SUMMARY = "Mellanox libopensm"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/*.so.* ${D}${libdir}
-}
+DEB_FILES = " \
+    libopensm_${PV}_arm64.deb \
+    libopensm-devel_${PV}_arm64.deb \
+"
 
 RDEPENDS:${PN} += " \
-    libnl \
-    libnl-route \
+    libibumad3 \
 "

@@ -25,17 +25,14 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=a71310eff4bf2b4be70c50985bd81d85
 
 PACKAGES = "${PN}"
 
-SRC_URI = "git://github.com/NVIDIA/clara-holoscan-embedded-sdk.git;branch=main;protocol=https"
-SRCREV = "5caf9680aa2b82ae90306d949789324b6bc0a45a"
+SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
+SRCREV = "9acd7a263a6a95cfce514bd2b6595bc6c4eb2282"
 
 SRC_URI += " \
-    file://0001-Add-Wno-deprecated-declarations-build-flag.patch \
-    file://0002-Fix-HOLOSCAN_LOG_ERROR-issue-with-YAML-Node.patch \
-    file://0003-Add-install-rules-for-ping_tx-rx-libraries.patch \
-    file://0004-Holoviz-add-stdexcept-includes.patch \
-    file://0005-Remove-Findajantv2.cmake-from-install-list.patch \
-    file://holoscan_endoscopy_data.zip;subdir=test_data/endoscopy \
-    file://holoscan_ultrasound_data.zip;subdir=test_data/ultrasound \
+    file://0001-Fix-GXF-TypenameAsString-error.patch \
+    file://holoscan_endoscopy_data_20221121.zip;subdir=test_data/endoscopy \
+    file://holoscan_ultrasound_data_20220608.zip;subdir=test_data/ultrasound \
+    file://holoscan_multi_ai_ultrasound_data_20221201.zip;subdir=test_data/multiai_ultrasound \
 "
 
 S = "${WORKDIR}/git"
@@ -47,8 +44,9 @@ inherit pkgconfig cmake cuda
 do_configure[network] = "1"
 do_compile[network] = "1"
 
-# Note: This install path needs to match hardcoded paths used in the Holoscan application graphs.
+# Note: These install and data paths needs to match hardcoded paths used in the Holoscan application graphs.
 HOLOSCAN_INSTALL_PATH = "/workspace"
+HOLOSCAN_DATA_PATH = "/data"
 
 export VULKAN_SDK="${RECIPE_SYSROOT}${prefix}"
 
@@ -79,6 +77,11 @@ EXTRA_OECMAKE:append = " \
     -DHOLOSCAN_USE_CCACHE=OFF \
 "
 
+# Disable building python bindings.
+EXTRA_OECMAKE:append = " \
+    -DHOLOSCAN_BUILD_PYTHON=OFF \
+"
+
 # Set a flag used by the tl-expected library to avoid build errors.
 EXTRA_OECMAKE:append = " \
     -DEXPECTED_ENABLE_TESTS=OFF \
@@ -99,6 +102,9 @@ DEPENDS += " \
     shaderc \
     glslang-native \
     libxxf86vm \
+    patchelf-native \
+    libcublas-native \
+    onnxruntime \
 "
 
 RDEPENDS:${PN} = " \
@@ -106,26 +112,33 @@ RDEPENDS:${PN} = " \
     glfw \
 "
 
-do_install:append () {
+do_component_install() {
+    bbnote ${CMAKE_VERBOSE} cmake --install '${B}' --prefix '${D}${HOLOSCAN_INSTALL_PATH}' --component "$@"
+    eval ${CMAKE_VERBOSE} cmake --install '${B}' --prefix '${D}${HOLOSCAN_INSTALL_PATH}' --component "$@"
+}
+
+do_install() {
+    # Install the required components.
+    do_component_install holoscan-core
+    do_component_install holoscan-gxf_extensions
+    do_component_install holoscan-apps
+    do_component_install holoscan-gxf_libs
+    do_component_install holoscan-gxf_bins
+    do_component_install holoscan-modules
+
     # Install test data (and remove incompatible engine files).
-    install -d ${D}/${HOLOSCAN_INSTALL_PATH}
-    cp -rd --no-preserve=ownership ${WORKDIR}/test_data ${D}/${HOLOSCAN_INSTALL_PATH}
-    rm ${D}/${HOLOSCAN_INSTALL_PATH}/test_data/endoscopy/model/tool_loc_convlstm_engines/*
-    rm ${D}/${HOLOSCAN_INSTALL_PATH}/test_data/ultrasound/model/us_unet_256x256_nhwc_engines/*
+    cp -rd --no-preserve=ownership ${WORKDIR}/test_data ${D}/${HOLOSCAN_DATA_PATH}
+    mkdir -p ${D}/${HOLOSCAN_DATA_PATH}/endoscopy/model/tool_loc_convlstm_engines
+    mkdir -p ${D}/${HOLOSCAN_DATA_PATH}/ultrasound/model/us_unet_256x256_nhwc_engines
+    rm -f ${D}/${HOLOSCAN_DATA_PATH}/endoscopy/model/tool_loc_convlstm_engines/*
+    rm -f ${D}/${HOLOSCAN_DATA_PATH}/ultrasound/model/us_unet_256x256_nhwc_engines/*
+    rm -f ${D}/${HOLOSCAN_DATA_PATH}/multiai_ultrasound/models/*.engine.*
 
     # Remove unneeded files.
-    rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/cmake
+    rm -rf $(find ${D}/${HOLOSCAN_INSTALL_PATH}/apps -name python)
+    rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/lib/cmake
+    rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/examples
     rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/include
-    rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/src
-    rm -rf ${D}/${HOLOSCAN_INSTALL_PATH}/share
-    rm ${D}/${HOLOSCAN_INSTALL_PATH}/lib/libglfw*
-
-    # Add library links to system library path.
-    install -d ${D}${libdir}
-    for i in ${D}/${HOLOSCAN_INSTALL_PATH}/lib/*.so ${D}/${HOLOSCAN_INSTALL_PATH}/lib/*.so.*; do
-        # Note that the destination path is relative to the symlink location, hence no ${D}.
-        ln -s ${HOLOSCAN_INSTALL_PATH}/lib/$(basename $i) ${D}${libdir}
-    done
 }
 
 FILES:${PN} += " \
@@ -133,10 +146,9 @@ FILES:${PN} += " \
     ${HOLOSCAN_INSTALL_PATH}/bin \
     ${HOLOSCAN_INSTALL_PATH}/gxf_extensions \
     ${HOLOSCAN_INSTALL_PATH}/lib \
-    ${HOLOSCAN_INSTALL_PATH}/test_data \
-    ${libdir} \
+    ${HOLOSCAN_DATA_PATH} \
 "
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 INHIBIT_PACKAGE_STRIP = "1"
-INSANE_SKIP:${PN} += "dev-so textrel staticdev"
+INSANE_SKIP:${PN} += "dev-so textrel staticdev useless-rpaths"

@@ -18,16 +18,37 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "NVIDIA MLNX_OFED Package Download"
-LICENSE = "CLOSED"
+SUMMARY = "ONNX Runtime Prebuilt Libraries"
+HOMEPAGE = "https://github.com/microsoft/onnxruntime"
+LICENSE = "MIT"
 
-SRC_URI = "https://www.mellanox.com/downloads/ofed/MLNX_OFED-${PV}/MLNX_OFED_LINUX-${PV}-ubuntu20.04-${TARGET_ARCH}.tgz"
-SRC_URI[md5sum] = "7c108889d14a8985701e83cdf1e665c6"
-SRC_URI[sha256sum] = "5948b847dd686fd7ebd0c63a016104d5369dc94b920dc26fc77d2335e0f7d667"
+LIC_FILES_CHKSUM = "file://${B}/LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
 
-WORKDIR = "${TMPDIR}/work-shared/mlnx-ofed-${PV}"
+SRC_URI = "https://github.com/microsoft/onnxruntime/releases/download/v${PV}/onnxruntime-linux-${TARGET_ARCH}-${PV}.tgz"
+SRC_URI[sha256sum] = "638e2ec3122a8deac4808670be51e607c5aaacbb662d54ede77bffa0a239d300"
 
-# Disable unused tasks for this download recipe.
+B = "${WORKDIR}/onnxruntime-linux-${TARGET_ARCH}-${PV}"
+
+do_install() {
+    install -d ${D}${libdir}
+    cp -d --no-preserve=ownership ${B}/lib/* ${D}${libdir}
+
+    install -d ${D}${includedir}
+    cp -d --no-preserve=ownership ${B}/include/* ${D}${includedir}
+
+    # Note that the VERSION_NUMBER file is used by the Holoscan SDK build.
+    install -m 0644 ${B}/VERSION_NUMBER ${D}${prefix}
+}
+
+FILES:${PN}-dev += " \
+    ${prefix}/VERSION_NUMBER \
+"
+
+SYSROOT_DIRS += " \
+    ${prefix} \
+"
+
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
-do_install[noexec] = "1"
+
+INSANE_SKIP:${PN} += "already-stripped"

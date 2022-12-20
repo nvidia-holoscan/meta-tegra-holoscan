@@ -55,10 +55,10 @@ RUN apt-get update -y \
 
 RUN locale-gen en_US.UTF-8
 
-WORKDIR /opt/nvidia/meta-tegra-clara-holoscan-mgx
+WORKDIR /opt/nvidia/meta-tegra-holoscan
 COPY . .
 RUN env/docker_check_packages.sh
 RUN ln -s container_setup.sh env/setup.sh
-ENV PATH="/opt/nvidia/meta-tegra-clara-holoscan-mgx/env:${PATH}"
+ENV PATH="/opt/nvidia/meta-tegra-holoscan/env:${PATH}"
 
 WORKDIR /workspace

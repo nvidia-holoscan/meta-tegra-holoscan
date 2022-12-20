@@ -1,0 +1,42 @@
+From 648f10b0fec32ba3bed8c1c847e5af8ec2204a99 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 16 Nov 2022 13:04:33 -0700
+Subject: [PATCH 6/6] Remove complex primitives support
+
+---
+ gxf/std/tensor.hpp | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/gxf/std/tensor.hpp b/gxf/std/tensor.hpp
+index 7146f20..7b72998 100644
+--- a/gxf/std/tensor.hpp
++++ b/gxf/std/tensor.hpp
+@@ -27,7 +27,6 @@
+ #include "gxf/core/component.hpp"
+ #include "gxf/core/expected.hpp"
+ #include "gxf/std/allocator.hpp"
+-#include "gxf/std/complex.hpp"
+ #include "gxf/std/memory_buffer.hpp"
+ 
+ namespace nvidia {
+@@ -46,8 +45,6 @@ enum class PrimitiveType {
+   kUnsigned64,
+   kFloat32,
+   kFloat64,
+-  kComplex64,
+-  kComplex128,
+ };
+ 
+ // Returns the size of each element of specific PrimitiveType as number of bytes.
+@@ -73,8 +70,6 @@ GXF_PRIMITIVE_TYPE_TRAITS(int64_t, kInt64);
+ GXF_PRIMITIVE_TYPE_TRAITS(uint64_t, kUnsigned64);
+ GXF_PRIMITIVE_TYPE_TRAITS(float, kFloat32);
+ GXF_PRIMITIVE_TYPE_TRAITS(double, kFloat64);
+-GXF_PRIMITIVE_TYPE_TRAITS(complex64, kComplex64);
+-GXF_PRIMITIVE_TYPE_TRAITS(complex128, kComplex128);
+ 
+ // Type to hold the shape of a tensor
+ class Shape {
+-- 
+2.17.1
+

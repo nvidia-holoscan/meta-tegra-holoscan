@@ -21,16 +21,17 @@
 
 #
 # This script is run when the docker image is being built, and checks to make
-# sure that the binary packages required by the meta-tegra-clara-holoscan-mgx
-# layer exist in the current build context.
+# sure that the binary packages required by the meta-tegra-holoscan layer
+# exist in the current build context.
 #
 
 CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz"
 TENSORRT_PACKAGE="recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz"
-GXF_PACKAGE="recipes-devtools/gxf/files/gxf_2.4.3_20220811_6ff6ffd4_holoscan-sdk_arm64.tar.gz"
-HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data.zip"
-HOLOSCAN_ULTRASOUND_DATA="recipes-devtools/holoscan/files/holoscan_ultrasound_data.zip"
-RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.11.11.tar.gz"
+GXF_PACKAGE="recipes-devtools/gxf/files/gxf_22.11_20221116_8fbe43cb_holoscan-sdk_arm64.tar.gz"
+HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data_20221121.zip"
+HOLOSCAN_ULTRASOUND_DATA="recipes-devtools/holoscan/files/holoscan_ultrasound_data_20220608.zip"
+HOLOSCAN_MULTI_AI_DATA="recipes-devtools/holoscan/files/holoscan_multi_ai_ultrasound_data_20221201.zip"
+RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz"
 
 script_path=$(readlink -f ${0})
 env_path=$(dirname ${script_path})
@@ -48,6 +49,7 @@ check_package ${TENSORRT_PACKAGE}
 check_package ${GXF_PACKAGE}
 check_package ${HOLOSCAN_ENDOSCOPY_DATA}
 check_package ${HOLOSCAN_ULTRASOUND_DATA}
+check_package ${HOLOSCAN_MULTI_AI_DATA}
 check_package ${RIVERMAX_PACKAGE}
 
 exit 0

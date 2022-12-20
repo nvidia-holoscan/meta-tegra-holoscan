@@ -21,8 +21,8 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=4f44fe1188f6450557e2b28f7ae0d5b9"
 
-SRC_URI = "git://github.com/ibstewart/ntv2.git;branch=holoscan-v0.2.0;protocol=https"
-SRCREV = "8dcebfd9e1159eb42abccd918c1e88c1703627d6"
+SRC_URI = "git://github.com/nvidia-holoscan/ntv2.git;branch=holoscan-v0.4.0;protocol=https"
+SRCREV = "072a43a870cd2970e25c5df8e9838a872d8a199c"
 
 SRC_URI += " \
     file://0001-Disable-outlining-atomics.patch;patchdir=${WORKDIR}/git \

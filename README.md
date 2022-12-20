@@ -1,14 +1,14 @@
-# OpenEmbedded/Yocto layer for NVIDIA Clara Holoscan
+# OpenEmbedded/Yocto layer for NVIDIA Holoscan
 
 This layer adds OpenEmbedded recipes and sample build configurations to build
-BSPs for NVIDIA Clara Developer Kits that feature support for discrete GPUs
-(dGPU), AJA Video Systems I/O boards, and the Clara Holoscan SDK.  These BSPs
-are built on a developer's host machine and are then flashed onto a Clara
-Developer Kit using provided scripts.
+BSPs for NVIDIA Holoscan Developer Kits that feature support for discrete GPUs
+(dGPU), Rivermax, AJA Video Systems I/O boards, and the NVIDIA Holoscan SDK.
+These BSPs are built on a developer's host machine and are then flashed onto a
+Holoscan Developer Kit using provided scripts.
 
 This is an add-on layer to the [meta-tegra](https://github.com/OE4T/meta-tegra)
 BSP layer with additions to enable the discrete GPU (dGPU) and other hardware
-drivers and toolkits that are used by the Clara Holoscan SDK.
+drivers and toolkits that are used by the NVIDIA Holoscan SDK.
 
 ## Supported Boards
 
@@ -17,7 +17,7 @@ drivers and toolkits that are used by the Clara Holoscan SDK.
 
 ## System Requirements
 
-Building a BSP for Clara Holoscan requires a significant amount of system
+Building a BSP for NVIDIA Holoscan requires a significant amount of system
 resources. Available disk space is the only strict requirement that must be
 met, with **a minimum of 200GB of free disk space required for a build** using
 the default configuration as described in this document. It is recommended,
@@ -60,8 +60,8 @@ on the host machine.
 #### Dependencies
 
 Unless otherwise stated, the following dependencies should all be cloned into
-the same working directory that this `meta-tegra-clara-holoscan-mgx` repo
-has been cloned into.
+the same working directory that this `meta-tegra-holoscan` repo has been cloned
+into.
 
 Also note that these dependencies are being actively developed, so
 compatibility can not be guaranteed when using the latest versions. Each
@@ -102,14 +102,14 @@ into and then run `git checkout {commit id}`.
 * #### Additional Metadata Layers
 
     The following additional layers are required and must be added to the
-    `BBLAYERS` list (along with this `meta-tegra-clara-holoscan-mgx` layer
-    itself) in the `build/conf/bblayers.conf` configuration file that is
-    created by the `oe-init-build-env` script. Note that the paths in this
-    configuration file must be full paths; see the template file in
-    `meta-tegra-clara-holoscan-mgx/env/templates/conf/bblayers.conf` for an
-    example when these layers are cloned into a `/workspace` root directory.
-    Also note that this `meta-tegra-clara-holoscan-mgx` layer must be listed
-    before the `meta-tegra` layer in `bblayers.conf`.
+    `BBLAYERS` list (along with this `meta-tegra-holoscan` layer itself) in the
+    `build/conf/bblayers.conf` configuration file that is created by the
+    `oe-init-build-env` script. Note that the paths in this configuration file
+    must be full paths; see the template file in
+    `meta-tegra-holoscan/env/templates/conf/bblayers.conf` for an example when
+    these layers are cloned into a `/workspace` root directory.  Also note that
+    this `meta-tegra-holoscan` layer must be listed before the `meta-tegra`
+    layer in `bblayers.conf`.
 
     Note that the repo used here for the `meta-tegra` layer is a fork of the
     official `meta-tegra` repo found at https://github.com/OE4T/meta-tegra.
@@ -118,7 +118,7 @@ into and then run `git checkout {commit id}`.
     that aren't suitable for the upstream repo.
 
     * **meta-openembedded/meta-oe**: https://github.com/openembedded/meta-openembedded **(commit: `a755af4f`)**
-    * **meta-tegra**: https://github.com/ibstewart/meta-tegra **(commit: `b4fa3baf`)**
+    * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `81e851ff`)**
 
 * #### Proprietary NVIDIA Binary Packages
 
@@ -135,39 +135,42 @@ into and then run `git checkout {commit id}`.
     * #### cuDNN (8.5.0.96)
 
       Download: https://developer.nvidia.com/compute/cudnn/secure/8.5.0/local_installers/11.7/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz`
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz`
 
     * #### TensorRT (8.4.3.1)
 
       Download: https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.3/tars/tensorrt-8.4.3.1.ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz`
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz`
 
-    * #### GXF (2.4.3)
+    * #### GXF (2.5.0)
 
       Download: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/gxf_arm64_holoscan_sdk  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-devtools/gxf/files/gxf_2.4.3_20220811_6ff6ffd4_holoscan-sdk_arm64.tar.gz`
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/gxf/files/gxf_22.11_20221116_8fbe43cb_holoscan-sdk_arm64.tar.gz`
 
-      > Note that when GXF is downloaded from NGC it will download a ZIP archive
-      > named `files.zip` that contains the above `tar.gz` file; extract this
-      > `tar.gz` file from the archive and move it to the destination given
+      > **_Note:_** When GXF is downloaded from NGC it will download a ZIP
+      > archive named `files.zip` that contains the above `tar.gz` file; extract
+      > this `tar.gz` file from the archive and move it to the destination given
       > above.
 
-    * #### Holoscan SDK (0.3.0)
+    * #### Holoscan SDK (0.4.0)
 
-      Endoscopy Sample Data: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_endoscopy_sample_data  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-devtools/holoscan/files/holoscan_endoscopy_data.zip`
+      Endoscopy Sample Data (20221121): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_endoscopy_sample_data  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_endoscopy_data_20221121.zip`
 
-      Ultrasound Sample Data: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_ultrasound_sample_data  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-devtools/holoscan/files/holoscan_ultrasound_data.zip`
+      Ultrasound Sample Data (20220608): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_ultrasound_sample_data  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_ultrasound_data_20220608.zip`
 
-      > Note that when downloading these resources from NGC they will be
+      Multi-AI Sample Data (20221201): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_multi_ai_ultrasound_sample_data  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_multi_ai_ultrasound_data_20221201.zip`
+
+      > **_Note:_** When downloading these resources from NGC they will be
       > downloaded using the name `files.zip`, so they will need to be renamed
       > when they are moved to the correct destinations given above.
 
-    * #### Rivermax SDK (1.11.11)
+    * #### Rivermax SDK (1.20.10)
 
-      Download: https://developer.nvidia.com/networking/secure/rivermax-linux-sdk/installation-package/version-1.11.x/1.11/rivermax_ubuntu2004_1.11.11.tar.gz  
-      Local Destination: `meta-tegra-clara-holoscan-mgx/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.11.11.tar.gz`
+      Download: https://developer.nvidia.com/networking/secure/rivermax-linux-sdk/installation-package/version-1.20.x/1.20/rivermax_ubuntu2004_1.20.10.tar.gz  
+      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz`
 
 #### iGPU and dGPU Configurations
 
@@ -196,28 +199,23 @@ To configure a Holoscan BSP, the `MACHINE` setting in the
 `build/conf/local.conf` configuration file that is initially generated by
 `oe-init-build-env` must be changed to one of the boards supported by this
 layer (see above), and the iGPU or dGPU configuration must be selected by
-including either `conf/holoscan-igpu.conf` or `conf/holoscan-dgpu.conf',
+including either `conf/holoscan-igpu.conf` or `conf/holoscan-dgpu.conf`,
 respectively:
 
 ```
-MACHINE ??= "clara-agx-xavier-devkit"
+MACHINE ??= "holoscan-devkit"
 require conf/holoscan-dgpu.conf
 ```
 
 > **_NOTE:_** If the configuration is switched between iGPU and dGPU, the
->             graphics driver packages need to be cleaned before building the
->             BSP in order to prevent file conflict errors. To clean these
->             packages, issue these commands:
+> graphics driver packages need to be cleaned before building the BSP in order
+> to prevent file conflict errors. To clean these packages, issue these
+> commands:
 >
->               $ bitbake nvidia-display-driver -c clean
->               $ bitbake nvidia-open-gpu-kernel-modules -c clean
->
->             It is also possible that other components may fail to build if the
->             GPU configuration changes. If another component fails to build,
->             try cleaning it before attempting the build again. For example, to
->             clean the `rivermax` component, issue the command:
->
->               $ bitbake rivermax -c clean
+> ```sh
+> $ bitbake nvidia-display-driver -c clean
+> $ bitbake nvidia-open-gpu-kernel-modules -c clean
+> ```
 
 Additional components from this layer can then be added to the BSP by appending
 them to `CORE_IMAGE_EXTRA_INSTALL`. For example, to install the Holoscan SDK
@@ -251,9 +249,10 @@ CORE_IMAGE_EXTRA_INSTALL:append = " \
 "
 ```
 
-If you are unsure what drivers are needed, one method of determining what is
-needed is to connect the devices to your host development machine and look to
-see which drivers were loaded using `lsmod`.
+If you are unsure what drivers are needed, the generic `kernel-modules` package
+can be added to the install list instead to install all of the upstream kernel
+modules. This will increase build time and image size, so it is suggested to
+install just the specific kernel modules that are actually needed if possible.
 
 ##### Enabling Rivermax
 
@@ -265,7 +264,7 @@ require conf/rivermax.conf
 
 Using Rivermax requires a valid license file, and the `rivermax-license` recipe
 is responsible for installing the Rivermax license file provided by
-`meta-tegra-clara-holoscan-mgx/recipes-connectivity/rivermax/files/rivermax.lic`.
+`meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax.lic`.
 This file is an empty (invalid) license file by default, and must be replaced
 with a valid Rivermax license file in order to fully enable Rivermax support.
 Alternatively, the license file can be copied to the device at runtime by
@@ -281,16 +280,6 @@ built into the image by adding the `kernel-module-ajantv2` component to
 CORE_IMAGE_EXTRA_INSTALL:append = " kernel-module-ajantv2"
 ```
 
-This will build the kernel module but it will not load the module
-automatically, and so the module would need to be loaded every time the device
-boots with `insmod`. To load the module and initialize the AJA devices
-automatically when the device boots, the `ajantv2` module can be added to
-`KERNEL_MODULE_AUTOLOAD` using the following:
-
-```
-KERNEL_MODULE_AUTOLOAD:append = " ajantv2"
-```
-
 #### Building and Flashing
 
 Building a BSP is done with `bitbake`; for example, to build a `core-image-x11`
@@ -300,8 +289,13 @@ image, use the following:
 $ bitbake core-image-x11
 ```
 
-> Note: If the build fails due to unavailable resource errors, try the build
-> again. Builds are extremely resource-intensive, and having a number of
+> **_Note:_** If the `bitbake` command is not found, ensure that the current
+> shell has been initialized using `source openembedded-core/oe-init-build-env`.
+> This script will add the required paths to the `PATH` environment variable so
+> that the `bitbake` command can be run from any directory.
+
+> **_Note:_** If the build fails due to unavailable resource errors, try the
+> build again. Builds are extremely resource-intensive, and having a number of
 > particularly large tasks running in parallel can exceed even 32GB of system
 > memory usage. Repeating the build can often reschedule the tasks so that
 > they can succeed. If errors are still encountered, try lowering the value
@@ -309,39 +303,58 @@ $ bitbake core-image-x11
 > in `build/conf/local.conf` to reduce the maximum number of tasks that BitBake
 > should run in parallel at any one time.
 
-> Note: If the `bitbake` command is not found, ensure that the current shell
-> has been initialized using `source openembedded-core/oe-init-build-env`. This
-> script will add the required paths to the `PATH` environment variable so that
-> the `bitbake` command can be run from any directory.
+> **_Note:_** Race conditions have been encountered that lead to errors during
+> the `do_rootfs` stage of the build such as `Couldn't find anything to satisfy
+> 'rivermax'`. If this occurs, try cleaning the failing package, build the
+> package by itself, then build the image again. For example, if the `rivermax`
+> package fails to install, try the following:
+>
+> ```sh
+> $ bitbake rivermax -c cleansstate
+> $ bitbake rivermax
+> $ bitbake core-image-x11
+> ```
 
 Using the configuration described above, this will build the BSP image and write
 the output to
 
 ```
-build/tmp-glibc/deploy/images/clara-agx-xavier-devkit/core-image-x11-clara-agx-xavier-devkit.tegraflash.tar.gz
+build/tmp-glibc/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
 ```
 
 The above file can then be extracted and the `doflash.sh` script that it
 includes can be used to flash the device while it is in recovery mode and
 connected to the host via the USB-C debug port:
 
-> To put a NVIDIA Clara Developer Kit into recovery mode, first remove the
-> left-hand side cover to expose the recover and reset buttons; then while the
-> unit is powered on, press the recovery and reset buttons, then release both
-> buttons. For more information see the [NVIDIA Clara Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
-
 ```sh
 $ tar -xf ${image_path}
 $ sudo ./doflash.sh
 ```
 
-Once flashed, the NVIDIA Clara Developer Kit can then be disconnected from the
+> **_Note:_** For instructions on how to put the developer kit into recovery
+> mode, see the developer kit user guide:
+>  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
+>  - [IGX Orin Developer Kit User Guide](https://developer.nvidia.com/igx-orin-developer-kit-user-guide).
+
+Once flashed, the Holoscan Developer Kit can then be disconnected from the
 host system and booted. The display connection that is used depends on the GPU
 configuration that was used for the build: the iGPU configuration uses the
 onboard HDMI or DisplayPort connection on the developer kit, while the dGPU
 configuration uses one of the DisplayPort connections on the discrete GPU.
 During boot you will see a black screen with only a cursor for a few moments
 before an X11 terminal appears (no additional GUI will appear).
+
+> **_Note:_** If the monitor never receives a signal there may be an issue
+> configuring the monitor during the initial boot process. If this occurs,
+> the `xrandr` utility can generally be used from a remote shell to display
+> the available monitor modes and to select a current mode. For example, to
+> configure a 1920x1080 display connected to the HDMI-0 output, use the
+> following:
+>
+> ```sh
+> $ export DISPLAY=:0
+> $ xrandr --output HDMI-0 --mode 1920x1080
+> ```
 
 #### Running the Holoscan SDK Sample Applications
 
@@ -353,7 +366,7 @@ the endoscopy instrument tracking application using sample recorded video data:
 
 ```sh
 $ cd /workspace
-$ ./apps/endoscopy_tool_tracking_gxf/tracking_replayer
+$ ./apps/endoscopy_tool_tracking/cpp/tracking_replayer
 ```
 
 Note that the first execution of the samples will rebuild the model engine files
@@ -365,7 +378,7 @@ executions.
 
 Instead of downloading and installing all of the build tools, dependencies, and
 proprietary binaries manually, NVIDIA also provides a [Holoscan OpenEmbedded/Yocto Build
-Container](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/containers/holoscan-mgx-oe-builder)
+Container](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/containers/holoscan-oe-builder)
 on the [NVIDIA GPU Cloud (NGC)](https://catalog.ngc.nvidia.com/) website.  This
 container image includes all of the tools and dependencies that are needed
 either within the container or as part of a setup script that initializes a

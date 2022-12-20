@@ -18,27 +18,25 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+MLNX_OFED_VER = "5.8"
+MLNX_OFED_PATCH_VER = "1.0.1.1"
 
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+DEB_FILES ?= "${PN}_${PV}_arm64.deb"
 
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
+do_fetch[noexec] = "1"
+
+do_unpack[depends] += " \
+    mlnx-ofed-download:do_unpack \
+    xz-native:do_populate_sysroot \
+"
+
+do_unpack() {
+    rm -rf ${S}
+    mkdir ${S}
+    cd ${S}
+    for deb in ${DEB_FILES}; do
+        ar x ${TMPDIR}/work-shared/mlnx-ofed-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}/MLNX_OFED_LINUX-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}-ubuntu20.04-aarch64/DEBS/${deb}
+        tar xf data.tar.xz
+        rm -f control.tar.* data.tar.xz debian-binary
+    done
 }
-
-INSANE_SKIP:${PN} += "already-stripped"

@@ -1,0 +1,951 @@
+From 8f236fabd96574f7bd2bad491ad3fbdd3e80678f Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 17 Nov 2022 20:33:28 -0700
+Subject: [PATCH 1/2] Fix OE build
+
+---
+ adb_parser/Makefile.am                    |  6 ++---
+ cmdif/Makefile.am                         | 12 +++++----
+ cmdparser/Makefile.am                     |  4 +--
+ common/tools_version.h                    |  8 ------
+ configure.ac                              |  4 +--
+ dev_mgt/Makefile.am                       | 14 +++++------
+ ext_libs/iniParser/Makefile.am            |  6 ++---
+ ext_libs/json/Makefile.am                 |  1 -
+ ext_libs/minixz/Makefile.am               | 11 ++++-----
+ flint/Makefile.am                         | 30 +++++++++++------------
+ fw_comps_mgr/Makefile.am                  |  6 ++---
+ libmfa/Makefile.am                        |  8 +++---
+ mad_ifc/Makefile.am                       |  4 +--
+ mflash/Makefile.am                        |  6 ++---
+ mft_utils/hsmclient/Makefile.am           |  2 +-
+ mlxarchive/Makefile.am                    |  6 ++---
+ mlxconfig/Makefile.am                     | 30 +++++++++++------------
+ mlxfwops/lib/Makefile.am                  |  2 +-
+ mlxlink/Makefile.am                       |  3 +--
+ mlxlink/modules/Makefile.am               | 10 ++++----
+ mlxlink/modules/printutil/Makefile.am     | 10 ++++----
+ mlxreg/Makefile.am                        |  8 +++---
+ mlxsign_lib/Makefile.am                   |  6 ++---
+ mstdump/crd_main/Makefile.am              |  4 +--
+ mtcr_ul/Makefile.am                       |  2 +-
+ mvpd/Makefile.am                          | 10 ++++----
+ pldmlib/Makefile.am                       |  6 ++---
+ reg_access/Makefile.am                    | 12 ++++-----
+ resourcedump/Makefile.am                  | 18 +++++++-------
+ resourcedump/resourcedump_lib/Makefile.am |  9 +++----
+ resourceparse/Makefile.am                 | 12 ++++-----
+ small_utils/Makefile.am                   | 26 ++++++++++----------
+ tools_layouts/Makefile.am                 |  4 +--
+ tools_res_mgmt/Makefile.am                |  2 +-
+ xz_utils/Makefile.am                      | 10 ++++----
+ 35 files changed, 148 insertions(+), 164 deletions(-)
+
+diff --git a/adb_parser/Makefile.am b/adb_parser/Makefile.am
+index dbe653c..582f1a6 100644
+--- a/adb_parser/Makefile.am
++++ b/adb_parser/Makefile.am
+@@ -37,10 +37,10 @@
+ DIST_SUBDIRS = .
+ 
+ USER_DIR = ..
+-INCLUDES = -I$(USER_DIR) -I$(USER_DIR)/common
++AM_CPPFLAGS = -I$(USER_DIR) -I$(USER_DIR)/common
+ AM_CXXFLAGS = -Wall -W -g -MP -MD  -pipe $(COMPILER_FPIC)
+ 
+-lib_LTLIBRARIES = libadb_parser.a
++lib_LTLIBRARIES = libadb_parser.la
+ 
+-libadb_parser_a_SOURCES = buf_ops.cpp expr.cpp adb_expr.cpp adb_parser.cpp adb_db.cpp adb_config.cpp adb_exceptionHolder.cpp adb_field.cpp adb_instance.cpp adb_logfile.cpp adb_node.cpp adb_xmlCreator.cpp
++libadb_parser_la_SOURCES = buf_ops.cpp expr.cpp adb_expr.cpp adb_parser.cpp adb_db.cpp adb_config.cpp adb_exceptionHolder.cpp adb_field.cpp adb_instance.cpp adb_logfile.cpp adb_node.cpp adb_xmlCreator.cpp
+ 
+diff --git a/cmdif/Makefile.am b/cmdif/Makefile.am
+index b6c43d5..ed03e1a 100644
+--- a/cmdif/Makefile.am
++++ b/cmdif/Makefile.am
+@@ -35,23 +35,25 @@
+ USER_DIR = $(top_srcdir)
+ MTCR_DIR = $(USER_DIR)/include/mtcr_ul
+ TOOLS_LAYOUTS_DIR = $(USER_DIR)/tools_layouts
+-AM_CPPFLAGS = -I. -I../common -I../tools_layouts  -I${MTCR_DIR} -I.. -I$(USER_DIR)/${MTCR_CONF_DIR}
++AM_CPPFLAGS = -I. -I${top_srcdir}/common -I${top_srcdir}/tools_layouts  -I${MTCR_DIR} -I${top_srcdir} -I$(USER_DIR)/${MTCR_CONF_DIR}
+ CCMDIF_SO = ccmdif.so
+ 
+ AM_CFLAGS = -W -Wall  -g -MP -MD $(COMPILER_FPIC) -DCMDIF_EXPORTS
+ CMDIF_VERSION = 1
+-lib_LTLIBRARIES = libcmdif.a
++lib_LTLIBRARIES = libcmdif.la
+ 
+ cmdifincludedir = $(includedir)/mstflint/cmdif/
+ 
+ cmdifinclude_HEADERS = icmd_cif_common.h icmd_cif_open.h
+ 
+-libcmdif_a_SOURCES = tools_cif.c tools_cif.h icmd_cif_common.c icmd_cif_common.h icmd_cif_open.c icmd_cif_open.h
++libcmdif_la_SOURCES = tools_cif.c tools_cif.h icmd_cif_common.c icmd_cif_common.h icmd_cif_open.c icmd_cif_open.h
++libcmdif_la_DEPENDENCIES = $(top_builddir)/tools_layouts/libtools_layouts.la
++libcmdif_la_LIBADD = $(libreg_access_a_DEPENDENCIES)
+ 
+ cmdif_pylibdir = $(libdir)/mstflint/python_tools/
+ cmdif_pylib_DATA = ${CCMDIF_SO} cmdif.py
+-${CCMDIF_SO}: libcmdif.a
++${CCMDIF_SO}: libcmdif.la
+ 	$(CC) -g -Wall -pthread -shared ${CFLAGS} *.o -o ${CCMDIF_SO} \
+-	-L$(USER_DIR)/tools_layouts -ltools_layouts -L$(USER_DIR)/${MTCR_CONF_DIR} -lmtcr_ul
++	-L$(top_builddir)/mtcr_ul -lmtcr_ul
+ 
+ CLEANFILES = ${CCMDIF_SO}
+diff --git a/cmdparser/Makefile.am b/cmdparser/Makefile.am
+index b5367dc..22d2cba 100644
+--- a/cmdparser/Makefile.am
++++ b/cmdparser/Makefile.am
+@@ -32,9 +32,7 @@
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ 
+-INCLUDES = -I. -I../common
+-
+-AM_CPPFLAGS = -W  -g -MP -MD $(COMPILER_FPIC)  $(COMPILER_FPIE)
++AM_CPPFLAGS = -I. -I${top_srcdir}/common -W -g -MP -MD $(COMPILER_FPIC)  $(COMPILER_FPIE)
+ 
+ noinst_LIBRARIES = libcmdparser.a
+ 
+diff --git a/common/tools_version.h b/common/tools_version.h
+index c656076..c38efed 100644
+--- a/common/tools_version.h
++++ b/common/tools_version.h
+@@ -41,14 +41,6 @@
+ #include <string.h>
+ #include <stdlib.h>
+ 
+-// To be replaced by an external script:
+-#ifdef MST_UL
+-#include "gitversion.h"
+-#endif
+-#ifndef TOOLS_GIT_SHA
+-#define TOOLS_GIT_SHA "6469M"
+-#endif
+-
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #ifndef MSTFLINT_VERSION_STR
+diff --git a/configure.ac b/configure.ac
+index 2fe1934..4634a29 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -42,7 +42,7 @@ AC_SUBST([VERSION])
+ AC_CONFIG_MACRO_DIR([m4])
+ AC_CONFIG_AUX_DIR(config)
+ AC_CONFIG_SRCDIR([README])
+-AM_INIT_AUTOMAKE([foreign])
++AM_INIT_AUTOMAKE([foreign subdir-objects])
+ 
+ dnl Checks for programs
+ AC_PROG_CC
+@@ -66,8 +66,6 @@ MTCR_CONF_DIR=""
+ LDL=""
+ default_en_inband=""
+ 
+-LDFLAGS="${LDFLAGS} -L/usr/local/lib -L/usr/local/lib64 -L/usr/lib64"
+-CXXFLAGS="${CXXFLAGS} -isystem /usr/local/include" 
+ if test "x$OS" = "xFreeBSD"; then
+     AC_MSG_NOTICE(FreeBSD Build)
+     MTCR_CONF_DIR="mtcr_freebsd"
+diff --git a/dev_mgt/Makefile.am b/dev_mgt/Makefile.am
+index 2283c2d..8a91fca 100644
+--- a/dev_mgt/Makefile.am
++++ b/dev_mgt/Makefile.am
+@@ -35,24 +35,24 @@ USER_DIR = ..
+ AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir) -I$(top_srcdir)/common  -I$(top_srcdir)/include/mtcr_ul
+ 
+ AM_CFLAGS = -W -Wall  -g -MP -MD -Wswitch-enum $(COMPILER_FPIC) -DMTCR_EXPORT
+-lib_LTLIBRARIES = libdev_mgt.a
++lib_LTLIBRARIES = libdev_mgt.la
+ 
+-libdev_mgt_a_SOURCES = \
++libdev_mgt_la_SOURCES = \
+ 						tools_dev_types.c \
+ 						tools_dev_types.h \
+ 						$(top_srcdir)/common/bit_slice.h       \
+ 						$(top_srcdir)/common/compatibility.h   \
+ 						$(top_srcdir)/common/tools_version.h
++libdev_mgt_la_DEPENDENCIES = $(top_builddir)/tools_layouts/libtools_layouts.la \
++                             $(top_builddir)/reg_access/libreg_access.la
++libdev_mgt_la_LIBADD = $(libreg_access_a_DEPENDENCIES)
+ 
+ dev_mgt_pylibdir = $(libdir)/mstflint/python_tools/
+ 
+ dev_mgt_pylib_DATA = c_dev_mgt.so dev_mgt.py
+-dist_dev_mgt_pylib_DATA = dev_mgt.py
+ 
+-c_dev_mgt.so: libdev_mgt.a
++c_dev_mgt.so: libdev_mgt.la
+ 	$(CC) -g -Wall -pthread -shared ${CFLAGS} tools_dev_types.o -o c_dev_mgt.so \
+-	-L$(USER_DIR)/reg_access -lreg_access \
+-	-L$(USER_DIR)/tools_layouts -ltools_layouts \
+-	-L$(USER_DIR)/${MTCR_CONF_DIR} -lmtcr_ul
++	-L$(top_builddir)/mtcr_ul -lmtcr_ul
+ 
+ CLEANFILES = c_dev_mgt.so
+diff --git a/ext_libs/iniParser/Makefile.am b/ext_libs/iniParser/Makefile.am
+index c4df7aa..fe26e67 100755
+--- a/ext_libs/iniParser/Makefile.am
++++ b/ext_libs/iniParser/Makefile.am
+@@ -34,12 +34,12 @@
+ 
+ USER_DIR = ../..
+ MTCR_DIR = $(USER_DIR)/${MTCR_CONFIG_DIR}
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(USER_DIR)/common
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(USER_DIR)/common
+ 
+ AM_CFLAGS = -W -g -MP -MD ${COMPILER_FPIC}
+ 
+-noinst_LTLIBRARIES = libiniparser.a
++noinst_LTLIBRARIES = libiniparser.la
+ 
+-libiniparser_a_SOURCES = \
++libiniparser_la_SOURCES = \
+ 	iniparser.c iniparser.h \
+ 	dictionary.c dictionary.h
+diff --git a/ext_libs/json/Makefile.am b/ext_libs/json/Makefile.am
+index 1c60bad..ed8c63f 100755
+--- a/ext_libs/json/Makefile.am
++++ b/ext_libs/json/Makefile.am
+@@ -34,7 +34,6 @@
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ 
+ USER_DIR = ../
+-INCLUDES =
+ AM_CPPFLAGS = -W -Werror -g -MP -MD ${COMPILER_FPIC} -Wno-missing-field-initializers -Wno-unused-parameter
+ noinst_LTLIBRARIES = libjson.la
+ libjson_la_SOURCES = json_reader.cpp  json_value.cpp  json_tool.h  json_writer.cpp  json/*.h
+diff --git a/ext_libs/minixz/Makefile.am b/ext_libs/minixz/Makefile.am
+index 2dd0d50..50ab3e8 100755
+--- a/ext_libs/minixz/Makefile.am
++++ b/ext_libs/minixz/Makefile.am
+@@ -33,12 +33,11 @@
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ 
+ USER_DIR = ..
+-INCLUDES = -I.
+-AM_CPPFLAGS = -DXZ_DEC_ANY_CHECK -W  -g -MP -MD ${COMPILER_FPIC}
+-noinst_LTLIBRARIES = libminixz.a
+-libminixz_a_SOURCES = xz_crc32.c  xz_dec_bcj.c  xz_dec_lzma2.c  xz_dec_stream.c xz_config.h   xz.h xz_lzma2.h    xz_private.h  xz_stream.h
++AM_CPPFLAGS = -I. -DXZ_DEC_ANY_CHECK -W  -g -MP -MD ${COMPILER_FPIC}
++noinst_LTLIBRARIES = libminixz.la
++libminixz_la_SOURCES = xz_crc32.c  xz_dec_bcj.c  xz_dec_lzma2.c  xz_dec_stream.c xz_config.h   xz.h xz_lzma2.h    xz_private.h  xz_stream.h
+ 
+-libminixz_a_DEPENDENCIES =  xz_crc32.c  xz_dec_bcj.c  xz_dec_lzma2.c  xz_dec_stream.c xz_config.h   xz.h xz_lzma2.h    xz_private.h  xz_stream.h
+-libminixz_a_LIBADD =
++libminixz_la_DEPENDENCIES =  xz_crc32.c  xz_dec_bcj.c  xz_dec_lzma2.c  xz_dec_stream.c xz_config.h   xz.h xz_lzma2.h    xz_private.h  xz_stream.h
++libminixz_la_LIBADD =
+ 
+ 
+diff --git a/flint/Makefile.am b/flint/Makefile.am
+index 6cf7c46..a85e6d9 100644
+--- a/flint/Makefile.am
++++ b/flint/Makefile.am
+@@ -53,18 +53,18 @@ bin_PROGRAMS = mstflint
+ mstflint_SOURCES = flint.cpp flint.h subcommands.cpp subcommands.h subcommands_linkx.cpp \
+ 					flint_params.cpp flint_params.h cmd_line_parser.cpp err_msgs.h
+ 
+-mstflint_LDADD =  ../mlxfwops/lib/libmlxfwops.a  \
+-                  ../cmdparser/libcmdparser.a    \
+-		  ../mflash/libmflash.a          \
+-		  ../tools_res_mgmt/libtools_res_mgmt.a \
+-		  $(CMDIF_DIR)/libcmdif.a        \
+-		  ../reg_access/libreg_access.a  \
+-		  ../dev_mgt/libdev_mgt.a        \
+-		  ../${MTCR_CONF_DIR}/libmtcr_ul.a        \
+-          ../tools_layouts/libtools_layouts.a \
+-          ../fw_comps_mgr/libfw_comps_mgr.a \
+-		  ../mft_utils/libmftutils.a\
+-		  ../mft_utils/hsmclient/libhsmclient.a\
++mstflint_LDADD =  $(top_builddir)/mlxfwops/lib/libmlxfwops.a  \
++                  $(top_builddir)/cmdparser/libcmdparser.a    \
++		  $(top_builddir)/mflash/libmflash.la          \
++		  $(top_builddir)/tools_res_mgmt/libtools_res_mgmt.a \
++		  $(top_builddir)/cmdif/libcmdif.la        \
++		  $(top_builddir)/reg_access/libreg_access.la  \
++		  $(top_builddir)/dev_mgt/libdev_mgt.la        \
++		  $(top_builddir)/mtcr_ul/libmtcr_ul.a        \
++          $(top_builddir)/tools_layouts/libtools_layouts.la \
++          $(top_builddir)/fw_comps_mgr/libfw_comps_mgr.a \
++		  $(top_builddir)/mft_utils/libmftutils.a\
++		  $(top_builddir)/mft_utils/hsmclient/libhsmclient.a\
+ 		  ${LDL}
+ 
+ 
+@@ -75,17 +75,17 @@ mstflint_CXXFLAGS += -DNO_ZLIB
+ endif
+ 
+ if ENABLE_CS
+-mstflint_LDADD += $(top_srcdir)/tools_crypto/libtools_crypto.a -lcrypto
++mstflint_LDADD += $(top_builddir)/tools_crypto/libtools_crypto.a -lcrypto
+ else
+ endif
+ 
+ if ENABLE_INBAND
+-mstflint_LDADD += $(MAD_IFC_DIR)/libmad_ifc.a
++mstflint_LDADD += $(top_builddir)/mad_ifc/libmad_ifc.a
+ else
+ endif
+ 
+ if ENABLE_OPENSSL
+-mstflint_LDADD += $(top_srcdir)/mlxsign_lib/libmlxsign.a -lcrypto -lssl
++mstflint_LDADD += $(top_builddir)/mlxsign_lib/libmlxsign.a -lcrypto -lssl
+ else
+ mstflint_CXXFLAGS += -DNO_OPEN_SSL
+ endif
+diff --git a/fw_comps_mgr/Makefile.am b/fw_comps_mgr/Makefile.am
+index 1e7449c..649f5b2 100755
+--- a/fw_comps_mgr/Makefile.am
++++ b/fw_comps_mgr/Makefile.am
+@@ -43,7 +43,7 @@ MAD_IFC_DIR = $(USER_DIR)/mad_ifc
+ TOOLS_RES_MGMT_DIR = $(USER_DIR)/tools_res_mgmt
+ DEV_MGT_DIR = $(USER_DIR)/dev_mgt
+ 
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_INC_DIR) -I$(MTCR_DIR) -I$(REG_ACCESS_DIR) -I$(CMDIF_DIR) \
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_INC_DIR) -I$(MTCR_DIR) -I$(REG_ACCESS_DIR) -I$(CMDIF_DIR) \
+            -I$(COMMON_DIR) -I $(LAYOUTS_DIR) -I $(UTILS_DIR) -I$(TOOLS_RES_MGMT_DIR) -I$(DEV_MGT_DIR)
+ 
+ FWCOMPS_VERSION = 1
+@@ -61,8 +61,8 @@ else
+ AM_CXXFLAGS += "-DNO_INBAND"
+ endif
+ 
+-libfw_comps_mgr_a_LIBADD = ../reg_access/libreg_access.a $(MTCR_DIR)/libmtcr_ul.a $(LAYOUTS_LIB) $(TOOLS_RES_MGMT_DIR)/libtools_res_mgmt.a
++libfw_comps_mgr_a_LIBADD = ${top_builddir}/reg_access/libreg_access.la $(top_builddir)/mtcr_ul/libmtcr_ul.a $(LAYOUTS_LIB) $(top_builddir)/tools_res_mgmt/libtools_res_mgmt.a
+ 
+ if ENABLE_INBAND
+-libfw_comps_mgr_a_LIBADD +=  $(top_srcdir)/mad_ifc/libmad_ifc.a
++libfw_comps_mgr_a_LIBADD +=  $(top_builddir)/mad_ifc/libmad_ifc.a
+ endif
+diff --git a/libmfa/Makefile.am b/libmfa/Makefile.am
+index abfba68..7be3f14 100644
+--- a/libmfa/Makefile.am
++++ b/libmfa/Makefile.am
+@@ -34,14 +34,14 @@
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ USER_DIR = $(top_srcdir)
+ #INCLUDES = -I. -I$(USER_DIR)/ext_libs/libtar -I$(USER_DIR)/ext_libs/libtar/listhash -I$(USER_DIR)/ext_libs/minixz
+-INCLUDES = -I. -I$(USER_DIR)/ext_libs/minixz -I$(USER_DIR)/common
++AM_CPPFLAGS = -I. -I$(USER_DIR)/ext_libs/minixz -I$(USER_DIR)/common
+ 
+ AM_CFLAGS = -MD -pipe -Wall -W -g  $(COMPILER_FPIC) 
+ 
+-noinst_LTLIBRARIES = libmfa.a
+-libmfa_a_LIBADD = -L$(USER_DIR)/ext_libs/minixz -lminixz
++noinst_LTLIBRARIES = libmfa.la
++libmfa_la_LIBADD = -L$(USER_DIR)/ext_libs/minixz -lminixz
+ 
+-libmfa_a_SOURCES = \
++libmfa_la_SOURCES = \
+     mfa.c mfa.h\
+     mfa_section.c  mfa_section.h\
+     xz_io_ops.c xz_io_ops.h\
+diff --git a/mad_ifc/Makefile.am b/mad_ifc/Makefile.am
+index 40166c5..b9181cc 100644
+--- a/mad_ifc/Makefile.am
++++ b/mad_ifc/Makefile.am
+@@ -35,7 +35,7 @@ USER_DIR = ..
+ MTCR_DIR = $(USER_DIR)/${MTCR_CONF_DIR}
+ MTCR_INC_DIR = $(top_srcdir)/include/mtcr_ul
+ 
+-INCLUDES = -I. -I.. -I$(MTCR_INC_DIR) -I../${MTCR_CONF_DIR} -I$(USER_DIR)/tools_ayouts/ 
++AM_CPPFLAGS = -I. -I${top_srcdir} -I${top_srcdir}/mtcr_ul -I$(MTCR_INC_DIR) -I../${MTCR_CONF_DIR} -I$(USER_DIR)/tools_ayouts/ 
+ 
+ AM_CFLAGS = -W -Wall  -g -MP -MD $(COMPILER_FPIC)
+ 
+@@ -43,6 +43,6 @@ AM_CFLAGS = -W -Wall  -g -MP -MD $(COMPILER_FPIC)
+ noinst_LIBRARIES = libmad_ifc.a
+ 
+ libmad_ifc_a_SOURCES = mad_ifc.c mad_ifc.h
+-libmad_ifc_a_DEPENDENCIES = $(USER_DIR)/tools_layouts/libtools_layouts.a
++libmad_ifc_a_DEPENDENCIES = $(USER_DIR)/tools_layouts/libtools_layouts.la
+ libmad_ifc_a_LIBADD = $(libmad_ifc_a_DEPENDENCIES)
+ 
+diff --git a/mflash/Makefile.am b/mflash/Makefile.am
+index d57abaf..e44c664 100644
+--- a/mflash/Makefile.am
++++ b/mflash/Makefile.am
+@@ -31,14 +31,14 @@
+ #--
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+-AM_CPPFLAGS = -I. -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/tools_layouts -I$(top_srcdir)/reg_access \
++AM_CPPFLAGS = -I. -I$(top_srcdir)/include/mtcr_ul -I${top_srcdir} -I$(top_srcdir)/common -I$(top_srcdir)/tools_layouts -I$(top_srcdir)/reg_access \
+           -I$(top_srcdir)/cmdif -I$(top_srcdir)/tools_res_mgmt $(COMPILER_FPIC)
+ 
+ AM_CFLAGS = -MD -pipe -Wall -W  -DMST_UL -g ${MFLASH_INBAND_FLAG} $(COMPILER_FPIC)
+ 
+-noinst_LTLIBRARIES = libmflash.a
++noinst_LTLIBRARIES = libmflash.la
+ 
+-libmflash_a_SOURCES =  mflash.c mflash.h mflash_gw.c mflash_gw.h mflash_new_gw.c mflash_new_gw.h \
++libmflash_la_SOURCES =  mflash.c mflash.h mflash_gw.c mflash_gw.h mflash_new_gw.c mflash_new_gw.h \
+ 			mflash_dev_capability.c mflash_dev_capability.h \
+ 			mflash_pack_layer.c mflash_pack_layer.h \
+ 			mflash_access_layer.c mflash_access_layer.h \
+diff --git a/mft_utils/hsmclient/Makefile.am b/mft_utils/hsmclient/Makefile.am
+index 911d356..e149aa0 100644
+--- a/mft_utils/hsmclient/Makefile.am
++++ b/mft_utils/hsmclient/Makefile.am
+@@ -32,7 +32,7 @@
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ USER_DIR = $(top_srcdir)
+-AM_CPPFLAGS = -I$(USER_DIR)/common -Iinc -Iinc/rsa $(COMPILER_FPIC) -DUNIX -DOS_UNIX -DOS_LINUX
++AM_CPPFLAGS = -I$(USER_DIR)/common -I${srcdir}/inc -I${srcdir}/inc/rsa $(COMPILER_FPIC) -DUNIX -DOS_UNIX -DOS_LINUX
+ 
+ AM_CFLAGS = -Wall -W -g -MP -MD -pipe  $(COMPILER_FPIC)
+ 
+diff --git a/mlxarchive/Makefile.am b/mlxarchive/Makefile.am
+index 39e02e2..2e29e53 100755
+--- a/mlxarchive/Makefile.am
++++ b/mlxarchive/Makefile.am
+@@ -42,16 +42,16 @@ CMDIF_DIR = $(USER_DIR)/cmdif
+ 
+ CURL_LIBS = -lcurl  -lssl -lcrypto -lrt
+ 
+-INCLUDES = $(JSON_CFLAGS) -I. \
++AM_CPPFLAGS = $(JSON_CFLAGS) -I. \
+            -I$(USER_DIR) -I$(USER_DIR)/libmfa \
+            -I$(MTCR_DIR) -I$(USER_DIR)/include/mtcr_ul \
+            -I$(USER_DIR)/mflash -I$(USER_DIR)/common \
+            -I$(UTILS_DIR) -I$(USER_DIR)/mlxfwops/lib \
+            -I$(USER_DIR)/dev_mgt -I$(USER_DIR)/tools_layouts
+ 
+-lib_LTLIBRARIES = libmstarchive.a
++lib_LTLIBRARIES = libmstarchive.la
+ 
+-libmstarchive_a_SOURCES = \
++libmstarchive_la_SOURCES = \
+               mlxarchive_mfa2_utils.h mlxarchive_mfa2_utils.cpp\
+               mlxarchive_mfa2_common_header.h mlxarchive_mfa2_common_header.cpp\
+               mlxarchive_mfa2_element.h mlxarchive_mfa2_element.cpp\
+diff --git a/mlxconfig/Makefile.am b/mlxconfig/Makefile.am
+index 3641b60..8c63ac1 100755
+--- a/mlxconfig/Makefile.am
++++ b/mlxconfig/Makefile.am
+@@ -37,11 +37,11 @@ COMMON_DIR = $(top_srcdir)/common
+ LAYOUTS_DIR = $(top_srcdir)/tools_layouts
+ UTILS_DIR = $(top_srcdir)/mft_utils
+ DEV_MGT_DIR = $(top_srcdir)/dev_mgt
+-LAYOUTS_LIB = $(LAYOUTS_DIR)/libtools_layouts.a
+-UTILS_LIB = $(USER_DIR)/mft_utils/libmftutils.a
++LAYOUTS_LIB = $(top_builddir)/tools_layouts/libtools_layouts.la
++UTILS_LIB = $(top_builddir)/mft_utils/libmftutils.a
+ CMDIF_DIR = $(USER_DIR)/cmdif
+ MLXSIGN_DIR = $(USER_DIR)/mlxsign_lib
+-MLXSIGN_LIB = $(MLXSIGN_DIR)/libmlxsign.a
++MLXSIGN_LIB = $(top_builddir)/mlxsign_lib/libmlxsign.a
+ COMPS_MGR_DIR = $(USER_DIR)/fw_comps_mgr
+ TOOLS_RES_MGMT_DIR = $(USER_DIR)/tools_res_mgmt
+ 
+@@ -63,39 +63,39 @@ ${MLXPRIVHOST_PYTHON_WRAPPER}: $(PYTHON_WRAPPER_SCRIPT)
+ mlxprivhostlibdir=$(libdir)/mstflint/python_tools/$(MLXPRIVHOST_PYTHON_WRAPPER)
+ mlxprivhostlib_DATA = $(MLXPRIVHOST_PYTHON_WRAPPER).py
+ 
+-noinst_LTLIBRARIES = libmlxcfg.a
++noinst_LTLIBRARIES = libmlxcfg.la
+ 
+-libmlxcfg_a_SOURCES =  mlxcfg_status.h mlxcfg_utils.h mlxcfg_utils.cpp mlxcfg_view.h\
++libmlxcfg_la_SOURCES =  mlxcfg_status.h mlxcfg_utils.h mlxcfg_utils.cpp mlxcfg_view.h\
+         mlxcfg_expression.h mlxcfg_expression.cpp\
+ mlxcfg_db_items.h mlxcfg_db_items.cpp\
+         mlxcfg_db_manager.h mlxcfg_db_manager.cpp mlxcfg_param.h mlxcfg_param.cpp mlxcfg_tlv.h mlxcfg_tlv.cpp\
+         mlxcfg_commander.h mlxcfg_commander.cpp mlxcfg_generic_commander.h mlxcfg_generic_commander.cpp\
+         mlxcfg_param_lib.h mlxcfg_param_lib.cpp mlxcfg_4thgen_commander.h mlxcfg_4thgen_commander.cpp
+ 
+-libmlxcfg_a_LIBADD = $(UTILS_LIB) $(MUPARSER_LIBS) $(SQLITE_LIBS)\
+-				$(CMDIF_DIR)/libcmdif.a ../reg_access/libreg_access.a $(LAYOUTS_LIB) $(MTCR_DIR)/libmtcr_ul.a\
+-				$(DEV_MGT_DIR)/libdev_mgt.a $(COMPS_MGR_DIR)/libfw_comps_mgr.a $(TOOLS_RES_MGMT_DIR)/libtools_res_mgmt.a $(MLNXOS_PPC_LIBS) $(LIBSTD_CPP) ${LDL}
++libmlxcfg_la_LIBADD = $(UTILS_LIB) $(MUPARSER_LIBS) $(SQLITE_LIBS)\
++				$(top_builddir)/cmdif/libcmdif.la $(top_builddir)/reg_access/libreg_access.la $(LAYOUTS_LIB) $(top_builddir)/mtcr_ul/libmtcr_ul.a\
++				$(top_builddir)/dev_mgt/libdev_mgt.la $(top_builddir)/fw_comps_mgr/libfw_comps_mgr.a $(top_builddir)/tools_res_mgmt/libtools_res_mgmt.a $(MLNXOS_PPC_LIBS) $(LIBSTD_CPP) ${LDL}
+ 
+-mstconfig_LDADD = libmlxcfg.a $(UTILS_LIB) $(MUPARSER_LIBS) $(SQLITE_LIBS)\
+-				$(CMDIF_DIR)/libcmdif.a ../reg_access/libreg_access.a $(LAYOUTS_LIB) $(MTCR_DIR)/libmtcr_ul.a\
+-				$(DEV_MGT_DIR)/libdev_mgt.a $(COMPS_MGR_DIR)/libfw_comps_mgr.a $(TOOLS_RES_MGMT_DIR)/libtools_res_mgmt.a $(MLNXOS_PPC_LIBS) $(LIBSTD_CPP) ${LDL}
++mstconfig_LDADD = libmlxcfg.la $(UTILS_LIB) $(MUPARSER_LIBS) $(SQLITE_LIBS)\
++				$(top_builddir)/cmdif/libcmdif.la $(top_builddir)/reg_access/libreg_access.la $(LAYOUTS_LIB) $(top_builddir)/mtcr_ul/libmtcr_ul.a\
++				$(top_builddir)/dev_mgt/libdev_mgt.la $(top_builddir)/fw_comps_mgr/libfw_comps_mgr.a $(top_builddir)/tools_res_mgmt/libtools_res_mgmt.a $(MLNXOS_PPC_LIBS) $(LIBSTD_CPP) ${LDL}
+ 
+ if DISABLE_XML2
+ AM_CXXFLAGS += -DDISABLE_XML2
+ else
+ mstconfig_LDADD += -lxml2
+-libmlxcfg_a_LIBADD += -lxml2
++libmlxcfg_la_LIBADD += -lxml2
+ endif
+ 
+ if ENABLE_INBAND
+-mstconfig_LDADD += $(top_srcdir)/mad_ifc/libmad_ifc.a
+-libmlxcfg_a_LIBADD += $(top_srcdir)/mad_ifc/libmad_ifc.a
++mstconfig_LDADD += $(top_builddir)/mad_ifc/libmad_ifc.a
++libmlxcfg_la_LIBADD += $(top_builddir)/mad_ifc/libmad_ifc.a
+ else
+ endif
+ 
+ if ENABLE_OPENSSL
+ mstconfig_LDADD +=   $(MLXSIGN_LIB) -lcrypto -lssl
+-libmlxcfg_a_LIBADD +=   $(MLXSIGN_LIB) -lcrypto -lssl
++libmlxcfg_la_LIBADD +=   $(MLXSIGN_LIB) -lcrypto -lssl
+ else
+ AM_CXXFLAGS += -DNO_OPEN_SSL
+ endif
+diff --git a/mlxfwops/lib/Makefile.am b/mlxfwops/lib/Makefile.am
+index 364484f..15f9255 100644
+--- a/mlxfwops/lib/Makefile.am
++++ b/mlxfwops/lib/Makefile.am
+@@ -43,7 +43,7 @@ UTILS_LIB = $(top_srcdir)/mft_utils
+ UEFI_COMMON_DIR = $(top_srcdir)/mlxfwops/uefi_c
+ DEV_MGT_DIR = $(top_srcdir)/dev_mgt
+ 
+-AM_CPPFLAGS = -I$(srcdir) -I$(MTCR_INC_DIR) -I$(MFLASH_DIR) $(JSON_CFLAGS) -I$(MINIXZ_DIR)\
++AM_CPPFLAGS = -I$(top_srcdir) -I$(srcdir) -I$(MTCR_INC_DIR) -I$(MFLASH_DIR) $(JSON_CFLAGS) -I$(MINIXZ_DIR)\
+            -I$(COMMON_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(MFT_EXT_LIBS_INC_DIR)/zlib -I$(LAYOUTS_DIR) -I$(top_srcdir)/common -I$(UTILS_LIB) -I$(UEFI_COMMON_DIR) -I$(DEV_MGT_DIR) -I$(MTCR_UL_DIR)
+ 
+ MLXFWOPS_VERSION = 1
+diff --git a/mlxlink/Makefile.am b/mlxlink/Makefile.am
+index 7d6d9f6..5be037d 100644
+--- a/mlxlink/Makefile.am
++++ b/mlxlink/Makefile.am
+@@ -45,10 +45,9 @@ MLXREG_DIR = $(top_srcdir)/mlxreg
+ LAYOUTS_DIR = $(top_srcdir)/tools_layouts
+ MLXLINK_MODULES_DIR = $(top_srcdir)/mlxlink
+ 
+-INCLUDES = -I. -I$(top_srcdir) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MLXLINK_MODULES_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
++AM_CPPFLAGS = -I. -I$(top_srcdir) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MLXLINK_MODULES_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
+ 
+ AM_CXXFLAGS = -Wall -W -DMST_UL -g -MP -MD -pipe  -std=c++11
+-AM_CPPFLAGS = $(AM_CXXFLAGS)
+ 
+ bin_PROGRAMS = mstlink
+ 
+diff --git a/mlxlink/modules/Makefile.am b/mlxlink/modules/Makefile.am
+index 7d811b2..dc7d381 100644
+--- a/mlxlink/modules/Makefile.am
++++ b/mlxlink/modules/Makefile.am
+@@ -42,14 +42,14 @@ UTILS_DIR = $(top_srcdir)/mft_utils
+ MLXREG_DIR = $(top_srcdir)/mlxreg
+ MLXLINK_MODULES_DIR = $(top_srcdir)/mlxlink
+ 
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MLXLINK_MODULES_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MLXLINK_MODULES_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
+ 
+ AM_CFLAGS = -Wall -W -g -MP -MD -pipe  $(COMPILER_FPIC) -DDATA_PATH=\"$(pkgdatadir)\"
+ AM_CXXFLAGS = -Wall -W -g -MP -MD -pipe  -std=c++11 #$(COMPILER_FPIC)
+ 
+-lib_LTLIBRARIES = libmodules_lib.a
++lib_LTLIBRARIES = libmodules_lib.la
+ 
+-libmodules_lib_a_SOURCES = mlxlink_commander.h \
++libmodules_lib_la_SOURCES = mlxlink_commander.h \
+                             mlxlink_commander.cpp \
+                             mlxlink_user_input.h \
+                             mlxlink_user_input.cpp \
+@@ -77,5 +77,5 @@ libmodules_lib_a_SOURCES = mlxlink_commander.h \
+                             amber_field.cpp \
+                             mlxlink_enums.h
+ 
+-libmodules_lib_a_LIBADD = printutil/libprint_util_lib.a $(JSON_LIBS)
+-libmodules_lib_a_CFLAGS = $(AM_CFLAGS)
++libmodules_lib_la_LIBADD = printutil/libprint_util_lib.a $(JSON_LIBS)
++libmodules_lib_la_CFLAGS = $(AM_CFLAGS)
+diff --git a/mlxlink/modules/printutil/Makefile.am b/mlxlink/modules/printutil/Makefile.am
+index d47b815..5e71fca 100644
+--- a/mlxlink/modules/printutil/Makefile.am
++++ b/mlxlink/modules/printutil/Makefile.am
+@@ -40,15 +40,15 @@ MTCR_INC_DIR = $(top_srcdir)/include/mtcr_ul
+ UTILS_DIR = $(top_srcdir)/mft_utils
+ MLXREG_DIR = $(top_srcdir)/mlxreg
+ 
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MLXREG_DIR) -I$(MTCR_INC_DIR) $(JSON_CFLAGS)
+ 
+ AM_CFLAGS = -Wall -W -g -MP -MD -pipe  -std=c++11 $(COMPILER_FPIC) -DDATA_PATH=\"$(pkgdatadir)\"
+ 
+-lib_LTLIBRARIES = libprint_util_lib.a
++lib_LTLIBRARIES = libprint_util_lib.la
+ 
+-libprint_util_lib_a_SOURCES = mlxlink_cmd_print.h \
++libprint_util_lib_la_SOURCES = mlxlink_cmd_print.h \
+                             mlxlink_cmd_print.cpp \
+                             mlxlink_record.h \
+                             mlxlink_record.cpp
+-libprint_util_lib_a_LIBDADD = $(JSON_LIBS)
+-libprint_util_lib_a_CFLAGS = $(AM_CFLAGS)
++libprint_util_lib_la_LIBDADD = $(JSON_LIBS)
++libprint_util_lib_la_CFLAGS = $(AM_CFLAGS)
+diff --git a/mlxreg/Makefile.am b/mlxreg/Makefile.am
+index fe58f9c..eacbc12 100644
+--- a/mlxreg/Makefile.am
++++ b/mlxreg/Makefile.am
+@@ -43,13 +43,13 @@ COMMON_DIR  = $(top_srcdir)/common
+ LAYOUTS_DIR = $(top_srcdir)/tools_layouts
+ MFT_UTILS_DIR = $(top_srcdir)/mft_utils
+ 
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MTCR_INC_DIR)
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(MFT_EXT_LIBS_INC_DIR) -I$(UTILS_DIR) -I$(MTCR_INC_DIR)
+ 
+ AM_CXXFLAGS = -Wall -W -DMST_UL -g -MP -MD -pipe 
+ 
+-lib_LTLIBRARIES = libmstreg_lib.a
++lib_LTLIBRARIES = libmstreg_lib.la
+ 
+-libmstreg_lib_a_SOURCES = mlxreg_exception.h \
++libmstreg_lib_la_SOURCES = mlxreg_exception.h \
+                            mlxreg_exception.cpp \
+                            mlxreg_parser.h \
+                            mlxreg_parser.cpp \
+@@ -60,7 +60,7 @@ mstreg_SOURCES = mlxreg_ui.cpp mlxreg_ui.h
+ 
+ bin_PROGRAMS = mstreg
+ 
+-mstreg_LDADD = libmstreg_lib.a \
++mstreg_LDADD = libmstreg_lib.la \
+                 $(USER_DIR)/cmdparser/libcmdparser.a \
+                 $(MFT_UTILS_DIR)/libmftutils.a \
+                 $(MTCR_DIR)/libmtcr_ul.a \
+diff --git a/mlxsign_lib/Makefile.am b/mlxsign_lib/Makefile.am
+index 72e2e58..991b3d3 100644
+--- a/mlxsign_lib/Makefile.am
++++ b/mlxsign_lib/Makefile.am
+@@ -31,8 +31,8 @@
+ #--
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+-USER_DIR = ..
+-INCLUDES = -I$(USER_DIR) -I$(USER_DIR)/common
++USER_DIR = ${top_srcdir}
++AM_CPPFLAGS = -I$(USER_DIR) -I$(USER_DIR)/common
+ AM_CXXFLAGS = -Wall -W  -g -MP -MD -pipe $(COMPILER_FPIC)
+ AM_CXXFLAGS += -DTOOLS_CRYPTO_KEY='$(TOOLS_CRYPTO_KEY)' -DTOOLS_CRYPTO_IV='$(TOOLS_CRYPTO_IV)'
+ 
+@@ -43,6 +43,6 @@ libmlxsign_a_SOURCES = mlxsign_lib.cpp mlxsign_lib.h mlxsign_com_def.h \
+ 
+ if ENABLE_OPENSSL
+ else
+-AM_CXXFLAGS = -DNO_OPEN_SSL
++AM_CXXFLAGS += -DNO_OPEN_SSL
+ endif
+ 
+diff --git a/mstdump/crd_main/Makefile.am b/mstdump/crd_main/Makefile.am
+index 35c847b..07714e0 100755
+--- a/mstdump/crd_main/Makefile.am
++++ b/mstdump/crd_main/Makefile.am
+@@ -37,8 +37,8 @@ AM_CFLAGS = -MD -pipe -g -Wall -W $(COMPILER_FPIC)
+ bin_PROGRAMS = mstregdump
+ 
+ mstregdump_SOURCES = mstdump.c
+-mstregdump_LDADD = ../crd_lib/libcrdump.a ../../dev_mgt/libdev_mgt.a ../../reg_access/libreg_access.a ../../tools_layouts/libtools_layouts.a \
+-			../../${MTCR_CONF_DIR}/libmtcr_ul.a  -lm ${LDL}
++mstregdump_LDADD = $(builddir)/../crd_lib/libcrdump.a $(top_builddir)/dev_mgt/libdev_mgt.la $(top_builddir)/reg_access/libreg_access.la $(top_builddir)/tools_layouts/libtools_layouts.la \
++			$(top_builddir)/${MTCR_CONF_DIR}/libmtcr_ul.a  -lm ${LDL}
+ 
+ mstregdump_CFLAGS = -DMSTDUMP_NAME=\"mstregdump\" -DDEV_EXAMPLE=\"0b:00.0\"
+ 
+diff --git a/mtcr_ul/Makefile.am b/mtcr_ul/Makefile.am
+index 17626ed..a79d4ad 100644
+--- a/mtcr_ul/Makefile.am
++++ b/mtcr_ul/Makefile.am
+@@ -31,7 +31,7 @@
+ #--
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+-AM_CPPFLAGS = -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/dev_mgt
++AM_CPPFLAGS = -I${top_srcdir} -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/dev_mgt
+ 
+ pkglib_LIBRARIES = libmtcr_ul.a
+ 
+diff --git a/mvpd/Makefile.am b/mvpd/Makefile.am
+index fc2d4ad..3670ef3 100644
+--- a/mvpd/Makefile.am
++++ b/mvpd/Makefile.am
+@@ -39,12 +39,12 @@ USER_DIR = $(top_srcdir)
+ AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(srcdir) -I$(LAYOUTS_DIR) -I$(USER_DIR)/include/mtcr_ul -I$(USER_DIR)/dev_mgt
+ AM_CFLAGS = -W -Wall -g -MP -MD $(COMPILER_FPIC)
+ 
+-noinst_LTLIBRARIES = libmvpd.a
++noinst_LTLIBRARIES = libmvpd.la
+ 
+-libmvpd_a_SOURCES =  mvpd.c mvpd.h
++libmvpd_la_SOURCES =  mvpd.c mvpd.h
+ 
+-libmvpd_a_DEPENDENCIES = $(MTCR_DIR)/libmtcr_ul.a
+-libmvpd_a_LIBADD = $(libmvpd_a_DEPENDENCIES)
++libmvpd_la_DEPENDENCIES = $(top_builddir)/mtcr_ul/libmtcr_ul.a
++libmvpd_la_LIBADD = $(libmvpd_a_DEPENDENCIES)
+ 
+ RMVPD_SO = rmvpd.so
+ 
+@@ -54,7 +54,7 @@ LDADD= ../${MTCR_CONF_DIR}/libmtcr_ul.a ${LDL}
+ 
+ noinst_HEADERS = mvpd.h
+ 
+-${RMVPD_SO}: libmvpd.a
++${RMVPD_SO}: libmvpd.la
+ 	$(CC) -g -Wall -pthread -shared ${CFLAGS} *.o -o ${RMVPD_SO} \
+ 	 -L$(MTCR_DIR) -lmtcr_ul
+ 	
+diff --git a/pldmlib/Makefile.am b/pldmlib/Makefile.am
+index f4a54ee..825bda7 100644
+--- a/pldmlib/Makefile.am
++++ b/pldmlib/Makefile.am
+@@ -32,13 +32,13 @@
+ 
+ # Makefile.am -- Process this file with automake to produce Makefile.in
+ USER_DIR = $(top_srcdir)
+-INCLUDES = -I. -I$(USER_DIR)/common
++AM_CPPFLAGS = -I. -I$(USER_DIR)/common
+ 
+ AM_CXXFLAGS = -Wall -W -g -MP -MD -pipe  $(COMPILER_FPIC) -DPLDMLIB_EXPORT
+ 
+-noinst_LTLIBRARIES = libpldm.a
++noinst_LTLIBRARIES = libpldm.la
+ 
+-libpldm_a_SOURCES = \
++libpldm_la_SOURCES = \
+     pldm_buff.cpp pldm_buff.h\
+     pldm_record_descriptor.cpp pldm_record_descriptor.h\
+     pldm_dev_id_record.cpp pldm_dev_id_record.h\
+diff --git a/reg_access/Makefile.am b/reg_access/Makefile.am
+index 26f6a5a..1e6b5f3 100644
+--- a/reg_access/Makefile.am
++++ b/reg_access/Makefile.am
+@@ -40,11 +40,11 @@ AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(srcdir) -I$(LAYOUTS_DIR) -I$(USER_DIR)/inclu
+ 
+ AM_CFLAGS = -W -Wall -g -MP -MD $(COMPILER_FPIC)
+ 
+-lib_LTLIBRARIES = libreg_access.a
++lib_LTLIBRARIES = libreg_access.la
+ 
+-libreg_access_a_SOURCES = reg_access.c reg_access.h
+-libreg_access_a_DEPENDENCIES = $(USER_DIR)/tools_layouts/libtools_layouts.a
+-libreg_access_a_LIBADD = $(libreg_access_a_DEPENDENCIES)
++libreg_access_la_SOURCES = reg_access.c reg_access.h
++libreg_access_la_DEPENDENCIES = $(top_builddir)/tools_layouts/libtools_layouts.la
++libreg_access_la_LIBADD = $(libreg_access_a_DEPENDENCIES)
+ 
+ RREG_ACCESS_SO = rreg_access.so
+ reg_access_pylibdir = $(libdir)/mstflint/python_tools/
+@@ -52,8 +52,8 @@ reg_access_pylibdir = $(libdir)/mstflint/python_tools/
+ reg_access_pylib_DATA = ${RREG_ACCESS_SO} regaccess.py
+ dist_reg_access_pylib_DATA = regaccess.py
+ 
+-${RREG_ACCESS_SO}: libreg_access.a
++${RREG_ACCESS_SO}: libreg_access.la
+ 	$(CC) -g -Wall -pthread -shared ${CFLAGS} *.o -o ${RREG_ACCESS_SO} \
+-	-L$(USER_DIR)/tools_layouts -ltools_layouts -L$(MTCR_DIR) -lmtcr_ul
++	-L${top_builddir}/mtcr_ul -lmtcr_ul
+ 
+ CLEANFILES = ${RREG_ACCESS_SO}
+diff --git a/resourcedump/Makefile.am b/resourcedump/Makefile.am
+index 83fcc16..b0bf130 100755
+--- a/resourcedump/Makefile.am
++++ b/resourcedump/Makefile.am
+@@ -39,24 +39,24 @@ USER_DIR = $(top_srcdir)
+ bin_SCRIPTS=mstresourcedump
+ 
+ PYTHON_WRAPPER=mstresourcedump
+-PYTHON_WRAPPER_SCRIPT=$(USER_DIR)/common/python_wrapper
++PYTHON_WRAPPER_SCRIPT=$(top_builddir)/common/python_wrapper
+ ${PYTHON_WRAPPER}: $(PYTHON_WRAPPER_SCRIPT)
+ 	cp $(PYTHON_WRAPPER_SCRIPT) $@
+ pythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump
+-dist_pythonlib_DATA = __init__.py mstresourcedump.py
++dist_pythonlib_DATA = $(srcdir)/__init__.py $(srcdir)/mstresourcedump.py
+ validationpythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/validation
+-dist_validationpythonlib_DATA = validation/*.py
++dist_validationpythonlib_DATA = $(srcdir)/validation/*.py
+ utilspythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/utils
+-dist_utilspythonlib_DATA = utils/*.py
++dist_utilspythonlib_DATA = $(srcdir)/utils/*.py
+ segmentspythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/segments
+-dist_segmentspythonlib_DATA = segments/*.py
++dist_segmentspythonlib_DATA = $(srcdir)/segments/*.py
+ resourcepythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/resource_data
+-dist_resourcepythonlib_DATA = resource_data/*.py
++dist_resourcepythonlib_DATA = $(srcdir)/resource_data/*.py
+ filterspythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/filters
+-dist_filterspythonlib_DATA = filters/*.py 
++dist_filterspythonlib_DATA = $(srcdir)/filters/*.py 
+ fetcherspythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/fetchers
+-dist_fetcherspythonlib_DATA = fetchers/*.py
++dist_fetcherspythonlib_DATA = $(srcdir)/fetchers/*.py
+ commandspythonlibdir=$(libdir)/mstflint/python_tools/mstresourcedump/commands
+-dist_commandspythonlib_DATA = commands/*.py
++dist_commandspythonlib_DATA =$(srcdir)/commands/*.py
+ 
+ CLEANFILES=${PYTHON_WRAPPER}
+diff --git a/resourcedump/resourcedump_lib/Makefile.am b/resourcedump/resourcedump_lib/Makefile.am
+index a2ff8b4..d0cdcdd 100755
+--- a/resourcedump/resourcedump_lib/Makefile.am
++++ b/resourcedump/resourcedump_lib/Makefile.am
+@@ -26,17 +26,16 @@ DEV_MGT_DIR = $(top_srcdir)/dev_mgt
+ TOOLS_CRYPTO_DIR = $(top_srcdir)/tools_crypto
+ RES_DUMP_DIR= $(top_srcdir)/resourcedump/resourcedump_lib
+ INFINIBAND_INCLUDE = -isystem /auto/mswg/projects/mft/mft_build/external_libs/mft_ext_libs_inc/libibmad/linux/infiniband_new
+-INCLUDES = -I$(top_srcdir) -I$(COMMON_DIR) -I$(REG_ACCESS_DIR) -I$(LAYOUTS_DIR) -I$(MTCR_DIR) $(INFINIBAND_INCLUDE) -I$(MTCR_INC_DIR)
++AM_CPPFLAGS = -I$(top_srcdir) -I$(COMMON_DIR) -I$(REG_ACCESS_DIR) -I$(LAYOUTS_DIR) -I$(MTCR_DIR) $(INFINIBAND_INCLUDE) -I$(MTCR_INC_DIR)
+ 
+ AM_CXXFLAGS = -Wall -W -MP -H -MD -pipe -DMST_UL -g -std=c++11 $(COMPILER_FPIC)
+-AM_CPPFLAGS = $(AM_CXXFLAGS)
+ CRESOURCEDUMP_SO = cresourcedump.so
+ lib_LTLIBRARIES = libresourcedump.la
+ 
+ 
+ libresourcedump_la_SOURCES = resource_dump.c resource_dump.h
+-libresourcedump_la_LIBADD = $(MTCR_DIR)/libmtcr_ul.a $(USER_DIR)/reg_access/libreg_access.a \
+-                            $(DEV_MGT_DIR)/libdev_mgt.a -L$(USER_DIR)/tools_layouts -ltools_layouts
++libresourcedump_la_LIBADD = $(top_builddir)/mtcr_ul/libmtcr_ul.a $(top_builddir)/reg_access/libreg_access.la \
++                            $(top_builddir)/dev_mgt/libdev_mgt.la $(top_builddir)/tools_layouts/libtools_layouts.la
+ 
+ 
+ resourcedump_pylibdir = $(libdir)/mstflint/python_tools/mstresourcedump/resourcedump_lib/
+@@ -44,8 +43,6 @@ dist_resourcedump_pylib_DATA = cresourcedump.so
+ 
+ ${CRESOURCEDUMP_SO}: libresourcedump.la
+ 	$(CC) -Wall -pthread -fpic -shared ${CFLAGS} resource_dump.o -o ${CRESOURCEDUMP_SO} $(MFT_CORE_LIB_LINK) \
+-	-L$(USER_DIR)/reg_access -lreg_access -L$(DEV_MGT_DIR)  -ldev_mgt \
+-    -L$(MTCR_DIR) -L$(USER_DIR)/tools_layouts -ltools_layouts \
+     $(MFT_CORE_LIB_LINK)
+ 
+ endif
+diff --git a/resourceparse/Makefile.am b/resourceparse/Makefile.am
+index c7c0a58..9aa2e15 100755
+--- a/resourceparse/Makefile.am
++++ b/resourceparse/Makefile.am
+@@ -35,18 +35,18 @@ USER_DIR = $(top_srcdir)
+ bin_SCRIPTS=mstresourceparse
+ 
+ PYTHON_WRAPPER=mstresourceparse
+-PYTHON_WRAPPER_SCRIPT=$(USER_DIR)/common/python_wrapper
++PYTHON_WRAPPER_SCRIPT=$(top_builddir)/common/python_wrapper
+ ${PYTHON_WRAPPER}: $(PYTHON_WRAPPER_SCRIPT)
+ 	cp $(PYTHON_WRAPPER_SCRIPT) $@
+ pythonlibdir=$(libdir)/mstflint/python_tools/mstresourceparse
+-dist_pythonlib_DATA = __init__.py mstresourceparse.py
++dist_pythonlib_DATA = $(srcdir)/__init__.py $(srcdir)/mstresourceparse.py
+ parserspythonlibdir=$(libdir)/mstflint/python_tools/mstresourceparse/parsers
+-dist_parserspythonlib_DATA = parsers/*.py
++dist_parserspythonlib_DATA = $(srcdir)/parsers/*.py
+ utilspythonlibdir=$(libdir)/mstflint/python_tools/mstresourceparse/utils
+-dist_utilspythonlib_DATA = utils/*.py
++dist_utilspythonlib_DATA = $(srcdir)/utils/*.py
+ segmentspythonlibdir=$(libdir)/mstflint/python_tools/mstresourceparse/segments
+-dist_segmentspythonlib_DATA = segments/*.py
++dist_segmentspythonlib_DATA = $(srcdir)/segments/*.py
+ resourcepythonlibdir=$(libdir)/mstflint/python_tools/mstresourceparse/resource_data
+-dist_resourcepythonlib_DATA = resource_data/*.py
++dist_resourcepythonlib_DATA = $(srcdir)/resource_data/*.py
+ 
+ CLEANFILES=${PYTHON_WRAPPER}
+diff --git a/small_utils/Makefile.am b/small_utils/Makefile.am
+index e713032..10c21c5 100644
+--- a/small_utils/Makefile.am
++++ b/small_utils/Makefile.am
+@@ -32,10 +32,10 @@
+ 
+ PYTHON_WRAPPER_SCRIPT = ../common/python_wrapper
+ 
+-AM_CPPFLAGS= -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/mvpd $(COMPILER_FPIC)
++AM_CPPFLAGS= -I$(top_srcdir) -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/mvpd $(COMPILER_FPIC)
+ AM_CFLAGS= -I$(top_srcdir)/include/mtcr_ul -I$(top_srcdir)/common -I$(top_srcdir)/mvpd $(COMPILER_FPIC)
+ 
+-LDADD= $(top_srcdir)/${MTCR_CONF_DIR}/libmtcr_ul.a ${LDL}
++LDADD= $(top_builddir)/${MTCR_CONF_DIR}/libmtcr_ul.a ${LDL}
+ 
+ bin_PROGRAMS = mstmread \
+ 					mstmwrite \
+@@ -51,20 +51,20 @@ mstmread_SOURCES = mread.c
+ mstmwrite_SOURCES = mwrite.c
+ 
+ mstvpd_SOURCES = vpd.c
+-mstvpd_LDADD = $(top_srcdir)/mvpd/libmvpd.a \
+-               $(top_srcdir)/${MTCR_CONF_DIR}/libmtcr_ul.a \
+-               $(top_srcdir)/dev_mgt/libdev_mgt.a \
+-               $(top_srcdir)/reg_access/libreg_access.a \
+-               $(top_srcdir)/tools_layouts/libtools_layouts.a \
++mstvpd_LDADD = $(top_builddir)/mvpd/libmvpd.la \
++               $(top_builddir)/${MTCR_CONF_DIR}/libmtcr_ul.a \
++               $(top_builddir)/dev_mgt/libdev_mgt.la \
++               $(top_builddir)/reg_access/libreg_access.la \
++               $(top_builddir)/tools_layouts/libtools_layouts.la \
+                ${LDL}
+ 
+ mstcongestion_SOURCES = congestion.cpp
+-mstcongestion_LDADD = $(top_srcdir)/cmdif/libcmdif.a \
+-					  $(top_srcdir)/dev_mgt/libdev_mgt.a \
+-                      $(top_srcdir)/reg_access/libreg_access.a \
+-                      $(top_srcdir)/tools_layouts/libtools_layouts.a \
+-                      $(top_srcdir)/cmdparser/libcmdparser.a \
+-                      $(top_srcdir)/${MTCR_CONF_DIR}/libmtcr_ul.a ${LDL}
++mstcongestion_LDADD = $(top_builddir)/cmdif/libcmdif.la \
++					  $(top_builddir)/dev_mgt/libdev_mgt.la \
++                      $(top_builddir)/reg_access/libreg_access.la \
++                      $(top_builddir)/tools_layouts/libtools_layouts.la \
++                      $(top_builddir)/cmdparser/libcmdparser.a \
++                      $(top_builddir)/${MTCR_CONF_DIR}/libmtcr_ul.a ${LDL}
+ 
+ mstmcra_SOURCES  = mcra.c
+ 
+diff --git a/tools_layouts/Makefile.am b/tools_layouts/Makefile.am
+index db9216e..63f8cb7 100644
+--- a/tools_layouts/Makefile.am
++++ b/tools_layouts/Makefile.am
+@@ -37,13 +37,13 @@ AM_CXXFLAGS =  -DDATA_PATH=\"$(pkgdatadir)\"
+ 
+ SUBDIRS = ${ADABE_DBS}
+ 
+-lib_LTLIBRARIES = libtools_layouts.a
++lib_LTLIBRARIES = libtools_layouts.la
+ 
+ toolslayoutsincludedir = $(includedir)/mstflint/tools_layouts/
+ 
+ toolslayoutsinclude_HEADERS = icmd_layouts.h adb_to_c_utils.h
+ 
+-libtools_layouts_a_SOURCES = prm_adb_db.cpp prm_adb_db.h \
++libtools_layouts_la_SOURCES = prm_adb_db.cpp prm_adb_db.h \
+ 				adb_to_c_utils.c adb_to_c_utils.h\
+ 				cibfw_layouts.c cibfw_layouts.h \
+ 				register_access_open_layouts.h register_access_open_layouts.c \
+diff --git a/tools_res_mgmt/Makefile.am b/tools_res_mgmt/Makefile.am
+index 6d7ba5d..a586887 100644
+--- a/tools_res_mgmt/Makefile.am
++++ b/tools_res_mgmt/Makefile.am
+@@ -34,7 +34,7 @@
+ 
+ USER_DIR = $(top_srcdir)
+ MTCR_DIR = $(USER_DIR)/include/mtcr_ul
+-AM_CPPFLAGS = -I. -I../common -I$(MTCR_DIR) -I.. -I$(USER_DIR)/${MTCR_CONF_DIR}
++AM_CPPFLAGS = -I. -I${top_srcdir}/common -I$(MTCR_DIR) -I${top_srcdir} -I$(USER_DIR)/${MTCR_CONF_DIR}
+ 
+ AM_CFLAGS = -W -Wall  -g -MP -MD $(COMPILER_FPIC)
+ noinst_LIBRARIES = libtools_res_mgmt.a
+diff --git a/xz_utils/Makefile.am b/xz_utils/Makefile.am
+index 71ba504..6f35b03 100755
+--- a/xz_utils/Makefile.am
++++ b/xz_utils/Makefile.am
+@@ -34,12 +34,12 @@
+ 
+ USER_DIR = ..
+ MTCR_DIR = $(USER_DIR)/${MTCR_CONF_DIR}
+-INCLUDES = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(USER_DIR)/common
++AM_CPPFLAGS = -I. -I$(USER_DIR) -I$(MTCR_DIR) -I$(USER_DIR)/common
+ AM_CFLAGS = -W  -g -MP -MD ${COMPILER_FPIC} 
+-noinst_LTLIBRARIES = libxz_utils.a
+-libxz_utils_a_SOURCES = xz_utils.c xz_utils.h
++noinst_LTLIBRARIES = libxz_utils.la
++libxz_utils_la_SOURCES = xz_utils.c xz_utils.h
+ 
+-libxz_utils_a_DEPENDENCIES =
+-libxz_utils_a_LIBADD =  -llzma
++libxz_utils_la_DEPENDENCIES =
++libxz_utils_la_LIBADD =  -llzma
+ 
+ libraryincludedir=$(includedir)/mstflint/xz_utils/
+-- 
+2.17.1
+

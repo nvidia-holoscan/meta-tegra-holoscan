@@ -1,0 +1,71 @@
+From 017e0a561a122fea82c7dfe746aa63faff828f93 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 16 Nov 2022 13:03:26 -0700
+Subject: [PATCH 3/6] Fix std::iterator deprecation
+
+---
+ common/iterator.hpp | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
+
+diff --git a/common/iterator.hpp b/common/iterator.hpp
+index d1e3d80..b0ade7b 100644
+--- a/common/iterator.hpp
++++ b/common/iterator.hpp
+@@ -44,13 +44,19 @@ template <class T> constexpr bool HasSize_v = HasSize<T>::value;
+ /// if the iterator reaches the end/beginning of the container. Element access is wrapped in
+ /// an `Expected` to prevent dereferencing invalid memory.
+ template <typename TContainer, typename TValue = typename TContainer::value_type>
+-class RandomAccessIterator : public std::iterator<std::random_access_iterator_tag, TValue> {
++class RandomAccessIterator {
+   static_assert(detail::HasData_v<TContainer>, "TContainer must have data()");
+   static_assert(detail::HasSize_v<TContainer>, "TContainer must have size()");
+   static_assert(IsIntegral_v<decltype(Declval<TContainer>().size())>,
+                 "size() must return an integral type");
+ 
+  public:
++  using iterator_category = std::random_access_iterator_tag;
++  using value_type = TValue;
++  using difference_type = std::ptrdiff_t;
++  using pointer = TValue*;
++  using reference = TValue&;
++
+   enum struct Error {
+     kArgumentOutOfRange,
+     kInvalidIterator,
+@@ -59,8 +65,6 @@ class RandomAccessIterator : public std::iterator<std::random_access_iterator_ta
+   template <typename U>
+   using Expected = Expected<U, Error>;
+ 
+-  using typename std::iterator<std::random_access_iterator_tag, TValue>::difference_type;
+-
+   constexpr RandomAccessIterator() : container_{nullptr}, index_{-1} {}
+   constexpr RandomAccessIterator(TContainer& container, size_t start)
+       : container_{&container}, index_{0} {
+@@ -159,17 +163,20 @@ using ConstRandomAccessIterator = RandomAccessIterator<const TContainer,
+ 
+ /// Reverse iterator
+ template <typename TIterator>
+-class ReverseIterator
+-    : public std::iterator<std::random_access_iterator_tag, typename TIterator::value_type> {
++class ReverseIterator {
+  public:
+   using TValue = typename TIterator::value_type;
+   using Error = typename TIterator::Error;
+ 
++  using iterator_category = std::random_access_iterator_tag;
++  using value_type = typename TIterator::value_type;
++  using difference_type = typename TIterator::difference_type;;
++  using pointer = typename TIterator::pointer;
++  using reference = typename TIterator::reference;
++
+   template <typename U>
+   using Expected = Expected<U, Error>;
+ 
+-  using difference_type = typename TIterator::difference_type;
+-
+   constexpr explicit ReverseIterator() : iter_{} {}
+   constexpr explicit ReverseIterator(TIterator iter) : iter_{iter} {}
+ 
+-- 
+2.17.1
+

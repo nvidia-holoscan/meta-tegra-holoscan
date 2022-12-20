@@ -1,17 +1,17 @@
-From 8c09a86be2e465bbdbd678bb988483a855591478 Mon Sep 17 00:00:00 2001
+From aebff6915741a4ca5d88fedc002fae11f70150be Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Tue, 29 Mar 2022 11:43:01 -0600
-Subject: [PATCH] Fix parameter_storage build error
+Subject: [PATCH 1/6] Fix parameter_storage build error
 
 ---
  gxf/std/parameter_storage.hpp | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/gxf/std/parameter_storage.hpp b/gxf/std/parameter_storage.hpp
-index 8ec1c3c0..4256b9cf 100644
+index 8716e88..689792b 100644
 --- a/gxf/std/parameter_storage.hpp
 +++ b/gxf/std/parameter_storage.hpp
-@@ -21,6 +21,7 @@ limitations under the License.
+@@ -22,6 +22,7 @@
  #include <shared_mutex>  // NOLINT
  #include <string>
  #include <utility>

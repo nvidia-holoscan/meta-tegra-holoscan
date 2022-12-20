@@ -1,17 +1,17 @@
-From fcdc0000d586302e9db8bdbd6f8bed0c6522b4ba Mon Sep 17 00:00:00 2001
+From c16d0742a6d9f7631d8b459a5c9a6890b2115282 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 31 Aug 2022 09:23:38 -0600
-Subject: [PATCH 2/2] Remove TypenameAsString from nvidia namespace
+Subject: [PATCH 2/6] Remove TypenameAsString from nvidia namespace
 
 ---
  common/type_name.hpp | 6 +-----
  1 file changed, 1 insertion(+), 5 deletions(-)
 
 diff --git a/common/type_name.hpp b/common/type_name.hpp
-index 17d0713..a535feb 100644
+index 49b3f7f..94e0b63 100644
 --- a/common/type_name.hpp
 +++ b/common/type_name.hpp
-@@ -26,8 +26,6 @@ limitations under the License.
+@@ -27,8 +27,6 @@
  // Not yet implemented
  #endif
  
@@ -20,7 +20,7 @@ index 17d0713..a535feb 100644
  // Gives a string representation of the name of a C++ type.
  //
  // The function will compute the typename during the first invocation and store it in heap memory.
-@@ -51,11 +49,9 @@ const char* TypenameAsString() {
+@@ -52,11 +50,9 @@ const char* TypenameAsString() {
    static char s_name[kMaxNameLength] = {0};  // Initialize with 0 to get a null-terminated string.
    static char* result = s_name;
    if (s_name[0] == 0 && result != nullptr) {  // Check for first invokation of this function.

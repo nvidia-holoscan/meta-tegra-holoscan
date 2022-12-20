@@ -18,20 +18,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libvma"
+SUMMARY = "Mellanox libxlio"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-PACKAGES = "${PN}"
+DEB_FILES = " \
+    libxlio_${PV}_arm64.deb \
+    libxlio-dbg_${PV}_arm64.deb \
+    libxlio-dev_${PV}_arm64.deb \
+"
 
-do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}/usr/lib/*.so.* ${D}${libdir}
-    ln -s libvma.so.9 ${D}${libdir}/libvma.so
-}
-
-RDEPENDS:${PN} += " \
+RDEPENDS_COMMON = " \
     dpcp \
     ibverbs-providers \
     libibverbs1 \
@@ -40,6 +38,11 @@ RDEPENDS:${PN} += " \
     librdmacm1 \
 "
 
-SOLIBS = ".so*"
+FILES_SOLIBSDEV = ""
+FILES:${PN} += "${libdir}/libxlio-debug.so"
+FILES:${PN}-dev += "${libdir}/libxlio.so"
 
-INSANE_SKIP:${PN} += "dev-so"
+RDEPENDS:${PN} += "${RDEPENDS_COMMON}"
+RDEPENDS:${PN}-dev += "${RDEPENDS_COMMON}"
+
+INSANE_SKIP:${PN}-dev += "dev-elf"

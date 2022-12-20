@@ -38,4 +38,4 @@ if [ -z "${1}" ]; then
     exit 1
 fi
 
-docker run --rm -it -v ${workspace_path}:/workspace --user $(id -u):$(id -g) ${build_image} container_bitbake.sh ${@}
+docker run --rm -it -v ${workspace_path}:/workspace --network host --user $(id -u):$(id -g) ${build_image} container_bitbake.sh ${@}

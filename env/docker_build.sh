@@ -22,7 +22,7 @@
 #
 # This script is run on the host, and builds the docker image.
 #
-#  Usage: docker_build.sh [image name, default = holoscan-mgx-oe-builder]
+#  Usage: docker_build.sh [image name, default = holoscan-oe-builder]
 #
 
 script_path=$(readlink -f ${0})
@@ -31,7 +31,7 @@ root_path=$(dirname ${env_path})
 
 image_name="${1}"
 if [ -z "${image_name}" ]; then
-    image_name="holoscan-mgx-oe-builder"
+    image_name="holoscan-oe-builder"
 fi
 
 docker build -f ${env_path}/Dockerfile -t ${image_name} ${root_path}

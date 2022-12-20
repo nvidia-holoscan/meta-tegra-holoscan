@@ -18,17 +18,34 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox librdmacm1"
+SUMMARY = "NVIDIA Rivermax Sample Applications"
 LICENSE = "CLOSED"
 
-require mlnx-ofed-package.inc
+SRC_URI = "file://rivermax_ubuntu2004_1.20.10.tar.gz"
+
+inherit cuda
+
+S = "${WORKDIR}/${PV}/apps"
+
+CUDA_HOST_CXX =  "${@cuda_extract_compiler('CXX_FOR_CUDA', d)[0]}"
+
+EXTRA_OEMAKE:append = " \
+    CC='${CUDA_HOST_CXX}' \
+    NVCC='${CUDACXX} -ccbin ${CUDA_HOST_CXX}' \
+    CUDA='y' \
+    CFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${RECIPE_SYSROOT}${includedir}/mellanox -I. -O3 --sysroot=${RECIPE_SYSROOT}' \
+    NVCFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${RECIPE_SYSROOT}${includedir}/mellanox -I. -I./cuda -O3 -m64 -DCUDA_ENABLED ${CUDAFLAGS} \
+              ${@"-DTEGRA_ENABLED" if d.getVar("TEGRA_DGPU") == "0" else ""}' \
+    NVLFLAGS='-L${RECIPE_SYSROOT}${libdir} -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/stubs -Xcompiler --sysroot=${RECIPE_SYSROOT} ${@cuda_meson_ldflags(d)} -lrivermax -lcuda \
+              ${@"-lnvidia-ml" if d.getVar("TEGRA_DGPU") == "1" else ""}' \
+"
 
 do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/*.so.* ${D}${libdir}
+    install -d ${D}${bindir}
+    install -m 0755 ${S}/generic_sender ${D}${bindir}
 }
 
-RDEPENDS:${PN} += " \
-    libibverbs1 \
-    libnl \
+DEPENDS = " \
+    rivermax \
+    cuda-nvml \
 "

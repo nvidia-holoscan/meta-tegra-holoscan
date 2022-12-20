@@ -62,22 +62,22 @@ META_OPENEMBEDDED_REV="a755af4fb5ca2e158b00214bb18e27ba69c200fd"
 git_clone "https://github.com/openembedded/meta-openembedded.git" ${META_OPENEMBEDDED_REV}
 
 # meta-tegra layer
-META_TEGRA_REV="b4fa3bafc4efa48248b94d8c69366eb42ac45aef"
-git_clone "https://github.com/ibstewart/meta-tegra.git" ${META_TEGRA_REV}
+META_TEGRA_REV="81e851ffb66917bdc7e5e9135661f6bfcce47fc3"
+git_clone "https://github.com/nvidia-holoscan/meta-tegra.git" ${META_TEGRA_REV}
 
-# meta-tegra-clara-holoscan-mgx layer (copied from build container)
-if [ ! -d "meta-tegra-clara-holoscan-mgx" ]; then
-    cp -r /opt/nvidia/meta-tegra-clara-holoscan-mgx .
-    chown -R ${user}:${group} meta-tegra-clara-holoscan-mgx
-    echo "Initialized meta-tegra-clara-holoscan-mgx"
+# meta-tegra-holoscan layer (copied from build container)
+if [ ! -d "meta-tegra-holoscan" ]; then
+    cp -r /opt/nvidia/meta-tegra-holoscan .
+    chown -R ${user}:${group} meta-tegra-holoscan
+    echo "Initialized meta-tegra-holoscan"
 else
-    echo "meta-tegra-clara-holoscan-mgx already exists; skipping"
+    echo "meta-tegra-holoscan already exists; skipping"
 fi
 
 # Default configuration (copied from build container)
 if [ ! -d "build/conf" ]; then
     mkdir -p build/conf
-    cp /opt/nvidia/meta-tegra-clara-holoscan-mgx/env/templates/conf/* build/conf
+    cp /opt/nvidia/meta-tegra-holoscan/env/templates/conf/* build/conf
     chown -R ${user}:${group} build
     echo "Initialized configuration defaults in build/conf"
 else
@@ -85,8 +85,8 @@ else
 fi
 
 # Host-side scripts (copied from build container)
-cp /opt/nvidia/meta-tegra-clara-holoscan-mgx/env/host_bitbake.sh bitbake.sh
-cp /opt/nvidia/meta-tegra-clara-holoscan-mgx/env/host_flash.sh flash.sh
+cp /opt/nvidia/meta-tegra-holoscan/env/host_bitbake.sh bitbake.sh
+cp /opt/nvidia/meta-tegra-holoscan/env/host_flash.sh flash.sh
 chown ${user}:${group} bitbake.sh
 chown ${user}:${group} flash.sh
 

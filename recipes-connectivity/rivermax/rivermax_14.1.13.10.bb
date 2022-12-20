@@ -18,27 +18,42 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+SUMMARY = "NVIDIA Rivermax"
+LICENSE = "CLOSED"
 
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+SRC_URI = "file://rivermax_ubuntu2004_1.20.10.tar.gz"
 
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
+extract_deb() {
+    cd ${S}
+    ar -x ${WORKDIR}/1.20.10/Ubuntu.20.04/deb-dist/aarch64/rivermax_${PV}_arm64.deb
+    tar xf data.tar.xz
+    rm -rf control.tar.xz data.tar.xz debian debian-binary
 }
 
+do_unpack[depends] += "xz-native:do_populate_sysroot"
+do_unpack:append() {
+    bb.build.exec_func("extract_deb", d)
+}
+
+do_install() {
+    install -d ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/* ${D}${libdir}
+    install -d ${D}${includedir}/mellanox
+    install -m 0644 ${S}/usr/include/mellanox/* ${D}${includedir}/mellanox
+}
+
+DEPENDS = " \
+    dpcp \
+    ibverbs-providers \
+    libibverbs1 \
+    libnl \
+"
+
+RDEPENDS:${PN} += " \
+    libvma \
+    librdmacm1 \
+"
+
 INSANE_SKIP:${PN} += "already-stripped"
+INSANE_SKIP:${PN}-dev += "dev-elf"
+PRIVATE_LIBS:${PN}-dev += "librivermax.so.0"

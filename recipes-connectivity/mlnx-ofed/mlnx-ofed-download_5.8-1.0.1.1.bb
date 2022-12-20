@@ -18,27 +18,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+SUMMARY = "NVIDIA MLNX_OFED Package Download"
+LICENSE = "CLOSED"
 
-do_patch[noexec] = "1"
+SRC_URI = "https://www.mellanox.com/downloads/ofed/MLNX_OFED-${PV}/MLNX_OFED_LINUX-${PV}-ubuntu20.04-${TARGET_ARCH}.tgz"
+SRC_URI[md5sum] = "28737c03233f4b3830f5d17051aaacbc"
+SRC_URI[sha256sum] = "6110246b84be74b53b7bcbeba6b458e4f9e8462bf89eeb9e34bf3f0998f36315"
+
+WORKDIR = "${TMPDIR}/work-shared/mlnx-ofed-${PV}"
+
+# Disable unused tasks for this download recipe.
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
-
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
-}
-
-INSANE_SKIP:${PN} += "already-stripped"
+do_install[noexec] = "1"

@@ -18,27 +18,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+SUMMARY = "Mellanox infiniband-diags"
+LICENSE = "CLOSED"
 
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+require mlnx-ofed-package.inc
 
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
-}
+FILES:${PN} += " \
+    ${datadir} \
+"
 
-INSANE_SKIP:${PN} += "already-stripped"
+RDEPENDS:${PN} += " \
+    libibmad5 \
+    libibnetdisc5 \
+    libibumad3 \
+    perl \
+"

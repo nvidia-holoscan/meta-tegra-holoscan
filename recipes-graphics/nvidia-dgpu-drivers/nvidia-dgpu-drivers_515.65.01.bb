@@ -120,6 +120,10 @@ do_install:append() {
     # GSP Firmware
     install -d ${D}${nonarch_base_libdir}/firmware/nvidia/${PV}
     install -m 0644 ${NVIDIA_SRC}/firmware/gsp.bin ${D}${nonarch_base_libdir}/firmware/nvidia/${PV}
+
+    # Vulkan ICD
+    install -d ${D}${sysconfdir}/vulkan/icd.d
+    install -m 0644 ${NVIDIA_SRC}/nvidia_icd.json ${D}${sysconfdir}/vulkan/icd.d/
 }
 
 python populate_packages:prepend() {

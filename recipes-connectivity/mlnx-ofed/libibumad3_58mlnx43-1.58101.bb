@@ -18,43 +18,13 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "NVIDIA Rivermax"
+SUMMARY = "Mellanox libibumad3"
 LICENSE = "CLOSED"
 
-SRC_URI = "file://rivermax_ubuntu2004_1.11.11.tar.gz"
-SRCREV = "8dcebfd9e1159eb42abccd918c1e88c1703627d6"
+require mlnx-ofed-package.inc
 
-extract_deb() {
-    cd ${S}
-    ar -x ${WORKDIR}/1.11.11/Ubuntu.20.04/deb-dist/aarch64/rivermax_${PV}_arm64.deb
-    tar xf data.tar.xz
-    rm -rf control.tar.xz data.tar.xz debian debian-binary
-}
-
-do_unpack[depends] += "xz-native:do_populate_sysroot"
-do_unpack:append() {
-    bb.build.exec_func("extract_deb", d)
-}
-
-do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/* ${D}${libdir}
-    install -d ${D}${includedir}/mellanox
-    install -m 0644 ${S}/usr/include/mellanox/* ${D}${includedir}/mellanox
-}
-
-DEPENDS = " \
-    dpcp \
-    ibverbs-providers \
-    libibverbs1 \
-    libnl \
+DEB_FILES = " \
+    libibumad3_${PV}_arm64.deb \
+    libibumad3-dbg_${PV}_arm64.deb \
+    libibumad-dev_${PV}_arm64.deb \
 "
-
-RDEPENDS:${PN} += " \
-    libvma \
-    librdmacm1 \
-"
-
-INSANE_SKIP:${PN} += "already-stripped"
-INSANE_SKIP:${PN}-dev += "dev-elf"
-PRIVATE_LIBS:${PN}-dev += "librivermax.so.0"

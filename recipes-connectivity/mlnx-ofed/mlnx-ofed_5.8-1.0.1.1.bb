@@ -18,27 +18,48 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+SUMMARY = "Meta recipe for bringing in all Mellanox OFED components"
+LICENSE = "CLOSED"
 
+MLNX_OFED_INSTALL_PACKAGES = " \
+    dpcp \
+    ibacm \
+    ibdump \
+    ibsim \
+    ibutils2 \
+    ibverbs-providers \
+    ibverbs-utils \
+    infiniband-diags \
+    libibmad5 \
+    libibnetdisc5 \
+    libibumad3 \
+    libibverbs1 \
+    libopensm \
+    librdmacm1 \
+    libvma \
+    libvma-utils \
+    libxlio \
+    libxlio-utils \
+    mft \
+    mlnx-ethtool \
+    mlnx-ofed-kernel-dkms \
+    mlnx-ofed-kernel-utils \
+    mlnx-tools \
+"
+
+MLNX_OFED_BUILD_PACKAGES = " \
+    libopenvswitch \
+"
+
+DEPENDS = "${MLNX_OFED_INSTALL_PACKAGES} ${MLNX_OFED_BUILD_PACKAGES}"
+RDEPENDS:${PN} = "${MLNX_OFED_INSTALL_PACKAGES}"
+
+# Disable unused tasks for this dummy recipe.
+do_fetch[noexec] = "1"
+do_unpack[noexec] = "1"
 do_patch[noexec] = "1"
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
+do_install[noexec] = "1"
 
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
-}
-
-INSANE_SKIP:${PN} += "already-stripped"
+ALLOW_EMPTY:${PN} = "1"

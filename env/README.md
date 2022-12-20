@@ -1,8 +1,8 @@
-# OpenEmbedded/Yocto Build Container for NVIDIA Clara Holoscan
+# OpenEmbedded/Yocto Build Container for NVIDIA Holoscan
 
 This container image contains runtime dependencies, scripts, and the
 NVIDIA-proprietary binary packages that are required to build an OpenEmbedded
-BSP image for NVIDIA Clara Developer Kits with dGPU support.
+BSP image for NVIDIA Holoscan Developer Kits with dGPU support.
 
 The following documentation provides information specific to the usage of the
 Holoscan Build Container, and may be missing information from the main
@@ -10,10 +10,10 @@ documentation that may be useful to know when configuring or using the BSP.
 Please see the main [README](../README.md) file for additional documentation.
 
 > Note: the main `README` file can be found at
-> `meta-tegra-clara-holoscan-mgx/README.md` after following the `1. Setting up
+> `meta-tegra-holoscan/README.md` after following the `1. Setting up
 > the Local Development Environment` section, below.
 
-Also note that building a BSP for Clara Holoscan requires a significant
+Also note that building a BSP for NVIDIA Holoscan requires a significant
 amount of resources, and at least **200GB of free disk space is required to
 build**. See the `System Requirements` section in the main
 [README](../README.md) for more details.
@@ -35,8 +35,8 @@ would like to initialize the development environment and run the following
 (making sure `IMAGE` matches the name and tag of this container image):
 
 ```sh
-$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-mgx-oe-builder:v0.3.0
-$ docker run --rm -v $(pwd):/workspace ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
+$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v0.4.0
+$ docker run --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 
 This setup processes initializes the following:
@@ -48,7 +48,7 @@ This setup processes initializes the following:
    openembedded-core
    meta-openembedded
    meta-tegra
-   meta-tegra-clara-holoscan-mgx
+   meta-tegra-holoscan
    ```
 
 2. A sample build configuration in the `build` folder.
@@ -79,8 +79,8 @@ details.
 
 To see the additional configuration that is added to this file relative to the
 standard OpenEmbedded `local.conf`, as well as some documentation as to what
-additional components offered by this meta-tegra-clara-holoscan-mgx layer may be
-enabled, scroll down to the "BEGIN NVIDIA CONFIGURATION" section in this file.
+additional components offered by this meta-tegra-holoscan layer may be enabled,
+scroll down to the "BEGIN NVIDIA CONFIGURATION" section in this file.
 
 ## 3. Build the Image
 
@@ -114,7 +114,7 @@ build/tmp-glibc/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.teg
 ## 4. Flash the Image
 
 The `flash.sh` script can be used to flash the BSP image that is output by the
-previous step onto the Clara Developer Kit hardware. For example, to flash the
+previous step onto the Holoscan Developer Kit hardware. For example, to flash the
 `core-image-x11` image that was produced by the previous step, connect the
 developer kit to the host via the USB-C debug port, put it into recovery
 mode, then run:
@@ -123,10 +123,10 @@ mode, then run:
 $ ./flash.sh core-image-x11
 ```
 
-> To put a Clara AGX Developer Kit into recovery mode, first remove the
-> left-hand side cover to expose the recover and reset buttons; then while the
-> unit is powered on, press the recovery and reset buttons, then release both
-> buttons. For more information see the [Clara Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
+> For instructions on how to put the developer kit into recovery mode, see the
+> developer kit user guide:
+>  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
+>  - [IGX Orin Developer Kit User Guide](https://developer.nvidia.com/igx-orin-developer-kit-user-guide).
 
 Note that flashing the device will require root privileges and so you may be
 asked for a sudo password by this script.
@@ -141,7 +141,7 @@ the endoscopy instrument tracking application using sample recorded video data:
 
 ```sh
 $ cd /workspace
-$ ./apps/endoscopy_tool_tracking_gxf/tracking_replayer
+$ ./apps/endoscopy_tool_tracking/cpp/tracking_replayer
 ```
 
 Note that the first execution of the samples will rebuild the model engine files

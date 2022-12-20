@@ -18,27 +18,32 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require mlnx-ofed-common.inc
+SUMMARY = "Mellanox Firmware Burning and Diagnostics Tools"
+LICENSE = "GPL-2.0-only & BSD-2-Clause"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=79e20039679d6414176a6a04804e40be"
 
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
+SRC_URI = "git://github.com/Mellanox/mstflint.git;branch=master;protocol=https"
+SRCREV = "b47b67c50d4664f101a12c9e4d960d531fb45a79"
 
-do_install() {
-    if [ -d ${S}/usr ]; then
-        install -d ${D}${prefix}
-        cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-    fi
-    if [ -d ${S}/etc ]; then
-        install -d ${D}${sysconfdir}
-        cp -rd --no-preserve=ownership ${S}/etc/* ${D}${sysconfdir}
-    fi
-    if [ -d ${D}${prefix}/lib/aarch64-linux-gnu ]; then
-        install -d ${D}${libdir}
-        mv ${D}${prefix}/lib/aarch64-linux-gnu/* ${D}${libdir}
-        rm -r ${D}${prefix}/lib/aarch64-linux-gnu
-    fi
-    rm -rf ${D}${datadir}/lintian
+SRC_URI += " \
+    file://0001-Fix-OE-build.patch \
+    file://0002-Remove-EXTERNAL-build-flag.patch \
+"
+
+inherit autotools pkgconfig
+
+S = "${WORKDIR}/git"
+
+EXTRA_OECONF = "TOOLS_GIT_SHA=${SRCREV}"
+TARGET_CC_ARCH += "${LDFLAGS}"
+
+do_install:append() {
+    rm -rf ${D}${libdir}/*.a
 }
 
-INSANE_SKIP:${PN} += "already-stripped"
+DEPENDS = " \
+    libibmad5 \
+    libibverbs1 \
+    openssl \
+    zlib \
+"

@@ -29,11 +29,15 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_2.4.3_20220811_6ff6ffd4_holoscan-sdk_${GXF_ARCH}"
+GXF_PACKAGE = "gxf_22.11_20221116_8fbe43cb_holoscan-sdk_${GXF_ARCH}"
 SRC_URI = " \
     file://${GXF_PACKAGE}.tar.gz \
     file://0001-Fix-parameter_storage-build-error.patch \
     file://0002-Remove-TypenameAsString-from-nvidia-namespace.patch \
+    file://0003-Fix-std-iterator-deprecation.patch \
+    file://0004-Fix-unused-parameters.patch \
+    file://0005-Fix-GxfEntityCreateInfo-initializer.patch \
+    file://0006-Remove-complex-primitives-support.patch \
 "
 
 S = "${WORKDIR}/${GXF_PACKAGE}"
@@ -44,6 +48,10 @@ do_install () {
     cp -rd --no-preserve=ownership ${S}/gxf ${D}/opt/nvidia/gxf
     cp -rd --no-preserve=ownership ${S}/${GXF_ARCH} ${D}/opt/nvidia/gxf
     find ${D}/opt/nvidia/gxf -regex "\(.*pybind.so\)\|\(.*python_codelet\)" | xargs rm -rf
+
+    # Remove currently unused libraries that use unavailable dependencies.
+    rm ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream/libgxf_stream.so
+    rm ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream/libgxf_test_stream_sync_cuda.so
 }
 
 FILES:${PN} += " \
@@ -62,6 +70,7 @@ SYSROOT_DIRS = " \
 DEPENDS = " \
     tensorrt-core \
     tensorrt-plugins \
+    cuda-nvtx \
 "
 
 RDEPENDS:${PN} += " \

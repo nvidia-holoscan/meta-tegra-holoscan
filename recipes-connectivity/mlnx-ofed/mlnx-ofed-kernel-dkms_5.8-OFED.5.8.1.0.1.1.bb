@@ -21,9 +21,9 @@
 SUMMARY = "Mellanox ofed-kernel-dkms"
 LICENSE = "CLOSED"
 
-DEB_PACKAGE_SUFFIX = "all"
+DEB_FILES = "mlnx-ofed-kernel-dkms_${PV}_all.deb"
 
-require mlnx-ofed-package.inc
+require mlnx-ofed-common.inc
 
 SRC_URI += " \
     file://fix-kernel-build.patch \
@@ -35,34 +35,35 @@ DEPENDS = " \
     coreutils-native \
 "
 
+# Default module configuration taken from ofed_scripts/dkms_ofed
+MLNX_MODULE_CONFIG = " \
+    --with-core-mod \
+    --with-user_mad-mod \
+    --with-user_access-mod \
+    --with-addr_trans-mod \
+    --with-mlx5-mod \
+    --with-mlxfw-mod \
+    --with-ipoib-mod \
+"
+
 do_configure() {
-    cp -rf ${S}/usr/src/mlnx-ofed-kernel-5.7/* ${B}
+    cp -rf ${S}/usr/src/mlnx-ofed-kernel-${MLNX_OFED_VER}/* ${B}
 
-    ./configure \
-        --skip-autoconf \
-        --with-core-mod \
-        --with-mlx5-mod \
-        --with-user_access-mod \
-        --with-linux=${STAGING_KERNEL_DIR} \
-        --with-linux-obj=${STAGING_KERNEL_BUILDDIR} \
-        --kernel-sources=${STAGING_KERNEL_DIR} \
-        --kernel-version=${KERNEL_VERSION}
-
-    cd compat
-    ./autogen.sh
-    cp -f Makefile.real Makefile
-    cp -f Makefile.real Makefile.in
-    ./configure ${CONFIGUREOPTS} \
-        --with-linux=${STAGING_KERNEL_DIR} \
-        --with-linux-obj=${STAGING_KERNEL_BUILDDIR} \
-        --with-njobs=12
+    ./configure ${PARALLEL_MAKE} \
+        --force-autogen \
+        --configureopts="${CONFIGUREOPTS}" \
+        --with-linux="${STAGING_KERNEL_DIR}" \
+        --with-linux-obj="${STAGING_KERNEL_BUILDDIR}" \
+        --kernel-sources="${STAGING_KERNEL_DIR}" \
+        --kernel-version="${KERNEL_VERSION}" \
+        ${MLNX_MODULE_CONFIG}
 }
 
 MODULES_INSTALL_TARGET = "install_modules"
 
 do_install:prepend() {
     install -d ${D}/usr/src/mlnx-ofed-kernel-dkms
-    cp -rd --no-preserve=ownership ${S}/usr/src/mlnx-ofed-kernel-5.7/* ${D}/usr/src/mlnx-ofed-kernel-dkms
+    cp -rd --no-preserve=ownership ${S}/usr/src/mlnx-ofed-kernel-${MLNX_OFED_VER}/* ${D}/usr/src/mlnx-ofed-kernel-dkms
     export INSTALL_MOD_PATH=${D}
 }
 

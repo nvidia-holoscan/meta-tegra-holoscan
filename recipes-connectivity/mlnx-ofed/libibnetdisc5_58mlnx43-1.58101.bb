@@ -18,21 +18,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Dummy recipe for bringing in all Mellanox OFED components"
+SUMMARY = "Mellanox libibnetdisc5"
 LICENSE = "CLOSED"
 
-DEPENDS = " \
-    dpcp \
-    ibverbs-providers \
-    libibverbs1 \
-    librdmacm1 \
-    libvma \
+require mlnx-ofed-package.inc
+
+DEB_FILES = " \
+    libibnetdisc5_${PV}_arm64.deb \
+    libibnetdisc5-dbg_${PV}_arm64.deb \
+    libibnetdisc-dev_${PV}_arm64.deb \
 "
 
-# Disable unused tasks for this dummy recipe.
-do_fetch[noexec] = "1"
-do_unpack[noexec] = "1"
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
-do_install[noexec] = "1"
+DEPENDS = " \
+    libibmad5 \
+"

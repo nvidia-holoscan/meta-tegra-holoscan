@@ -1,0 +1,25 @@
+From e14204d0616ea2cd887414d937feee6dcc3012b7 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 16 Nov 2022 13:36:46 -0700
+Subject: [PATCH 5/6] Fix GxfEntityCreateInfo initializer
+
+---
+ gxf/core/entity.hpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gxf/core/entity.hpp b/gxf/core/entity.hpp
+index d326f00..ac24c7b 100644
+--- a/gxf/core/entity.hpp
++++ b/gxf/core/entity.hpp
+@@ -37,7 +37,7 @@ class Entity {
+   // Creates a new entity
+   static Expected<Entity> New(gxf_context_t context) {
+     gxf_uid_t eid;
+-    const GxfEntityCreateInfo info = {0};
++    const GxfEntityCreateInfo info = {0, 0};
+     const gxf_result_t code = GxfCreateEntity(context, &info, &eid);
+     if (code != GXF_SUCCESS) {
+       return Unexpected{code};
+-- 
+2.17.1
+
