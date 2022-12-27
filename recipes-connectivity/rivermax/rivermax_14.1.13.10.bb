@@ -37,9 +37,9 @@ do_unpack:append() {
 
 do_install() {
     install -d ${D}${libdir}
-    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/* ${D}${libdir}
+    cp -d ${S}/usr/lib/aarch64-linux-gnu/* ${D}${libdir}
     install -d ${D}${includedir}/mellanox
-    install -m 0644 ${S}/usr/include/mellanox/* ${D}${includedir}/mellanox
+    cp -d ${S}/usr/include/mellanox/* ${D}${includedir}/mellanox
 }
 
 DEPENDS = " \
@@ -54,6 +54,8 @@ RDEPENDS:${PN} += " \
     librdmacm1 \
 "
 
-INSANE_SKIP:${PN} += "already-stripped"
+SOLIBS = "*.so*"
+FILES_SOLIBSDEV = ""
+
+INSANE_SKIP:${PN} += "already-stripped dev-so"
 INSANE_SKIP:${PN}-dev += "dev-elf"
-PRIVATE_LIBS:${PN}-dev += "librivermax.so.0"
