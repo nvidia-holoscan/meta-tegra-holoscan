@@ -1,0 +1,127 @@
+From b7eec8c55c552a5461812aca5d2d1acd58c7ed96 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 21 Dec 2022 12:21:52 -0700
+Subject: [PATCH 2/2] Fix CUDA samples build
+
+---
+ .../NVIDIA/cudalowlatencydemo/CMakeLists.txt        | 10 +++++-----
+ ajaapps/crossplatform/rdmawhacker/CMakeLists.txt    | 13 ++++++-------
+ ajaapps/crossplatform/testrdma/CMakeLists.txt       | 10 +++++-----
+ 3 files changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/ajaapps/crossplatform/demoapps/NVIDIA/cudalowlatencydemo/CMakeLists.txt b/ajaapps/crossplatform/demoapps/NVIDIA/cudalowlatencydemo/CMakeLists.txt
+index 5de6713..232f1ea 100644
+--- a/ajaapps/crossplatform/demoapps/NVIDIA/cudalowlatencydemo/CMakeLists.txt
++++ b/ajaapps/crossplatform/demoapps/NVIDIA/cudalowlatencydemo/CMakeLists.txt
+@@ -5,9 +5,9 @@ if (NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
+ 	return()
+ endif()
+ 
+-find_package(CUDA 11.1)
+-if (NOT CUDA_FOUND)
+-	message("skipping cudalowlatencydemo (CUDA not found)")
++find_package(CUDAToolkit 11.1)
++if (NOT CUDAToolkit_FOUND)
++	aja_message(STATUS "skipping cudalowlatencydemo (CUDA not found)")
+ 	return()
+ endif()
+ set(OpenGL_GL_PREFERENCE LEGACY)
+@@ -40,7 +40,7 @@ set(TARGET_INCLUDE_DIRS
+ 	${AJA_LIBRARIES_ROOT}
+ 	${AJA_LIB_BASE_ROOT}/system
+ 	${AJA_LIB_NTV2_ROOT}/includes
+-	${CUDA_INCLUDE_DIRS}
++	${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
+ 	${OPENGL_INCLUDE_DIRS}
+ 	${GLEW_INCLUDE_DIRS})
+ 
+@@ -98,7 +98,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+     find_library(FOUNDATION_FRAMEWORK Foundation)
+     set(TARGET_LINK_LIBS ${FOUNDATION_FRAMEWORK})
+ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+-	set(TARGET_LINK_LIBS X11 OpenGL::GL OpenGL::GLU GLEW::GLEW cuda dl pthread rt)
++	set(TARGET_LINK_LIBS X11 OpenGL::GL OpenGL::GLU GLEW::GLEW CUDA::cuda_driver dl pthread rt)
+ 	add_executable(cudalowlatencydemo ${TARGET_SOURCES} kernel.cu)
+ 	add_dependencies(cudalowlatencydemo ${CUDA_OBJ} ajantv2)
+ 	target_compile_definitions(cudalowlatencydemo PRIVATE ${TARGET_COMPILE_DEFS})
+diff --git a/ajaapps/crossplatform/rdmawhacker/CMakeLists.txt b/ajaapps/crossplatform/rdmawhacker/CMakeLists.txt
+index a82b64f..15e3f69 100644
+--- a/ajaapps/crossplatform/rdmawhacker/CMakeLists.txt
++++ b/ajaapps/crossplatform/rdmawhacker/CMakeLists.txt
+@@ -1,10 +1,10 @@
+-find_package(CUDA 11.2)
+-if (NOT CUDA_FOUND)
++find_package(CUDAToolkit 11.2)
++if (NOT CUDAToolkit_FOUND)
+ 	aja_message(STATUS "skipping rdmawhacker (CUDA not found)")
+ 	return()
+ endif()
+ 
+-project(rdmawhacker LANGUAGES CUDA CXX)
++project(rdmawhacker LANGUAGES CXX)
+ 
+ set(DEMO_APPS_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../demoapps)
+ 
+@@ -12,8 +12,8 @@ set(TARGET_INCLUDE_DIRS
+ 	${CMAKE_CURRENT_SOURCE_DIR}/../
+ 	${AJA_LIBRARIES_ROOT}
+ 	${AJA_LIB_NTV2_ROOT}/includes
+-    ${DEMO_APPS_ROOT}
+-	${CUDA_INCLUDE_DIRS})
++	${DEMO_APPS_ROOT}
++	${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+ 
+ set(DEMO_APPS_SOURCES
+ 	${DEMO_APPS_ROOT}/ntv2democommon.cpp)
+@@ -31,13 +31,12 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+     set(TARGET_COMPILE_DEFS
+         -DAJA_RDMA)
+-    set(TARGET_LINK_LIBS cuda ${CUDA_LIBRARIES} dl pthread rt)
++    set(TARGET_LINK_LIBS CUDA::cuda_driver CUDA::cudart dl pthread rt)
+ endif()
+ 
+ set(TARGET_SOURCES
+ 	${RDMAWHACKER_SOURCES})
+ 
+-aja_message(STATUS "CUDA Libs: ${CUDA_LIBRARIES}")
+ add_executable(rdmawhacker ${TARGET_SOURCES})
+ add_dependencies(rdmawhacker ajantv2)
+ target_compile_definitions(rdmawhacker PUBLIC ${TARGET_COMPILE_DEFS})
+diff --git a/ajaapps/crossplatform/testrdma/CMakeLists.txt b/ajaapps/crossplatform/testrdma/CMakeLists.txt
+index dc4dea1..02f75a6 100644
+--- a/ajaapps/crossplatform/testrdma/CMakeLists.txt
++++ b/ajaapps/crossplatform/testrdma/CMakeLists.txt
+@@ -1,16 +1,16 @@
+-find_package(CUDA 11.2)
+-if (NOT CUDA_FOUND)
++find_package(CUDAToolkit 11.2)
++if (NOT CUDAToolkit_FOUND)
+ 	aja_message(STATUS "skipping testrdma (CUDA not found)")
+ 	return()
+ endif()
+ 
+-project(testrdma LANGUAGES CUDA CXX)
++project(testrdma LANGUAGES CXX)
+ 
+ set(TARGET_INCLUDE_DIRS
+ 	${CMAKE_CURRENT_SOURCE_DIR}/../
+ 	${AJA_LIBRARIES_ROOT}
+ 	${AJA_LIB_NTV2_ROOT}/includes
+-	${CUDA_INCLUDE_DIRS})
++	${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+ 
+ set(TESTRDMA_SOURCES
+     testrdma.cpp)
+@@ -23,7 +23,7 @@ elseif (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+ 	set(TARGET_COMPILE_DEFS
+ 		-DAJA_RDMA)
+-	set(TARGET_LINK_LIBS cuda ${CUDA_LIBRARIES} dl pthread rt)
++	set(TARGET_LINK_LIBS CUDA::cuda_driver CUDA::cudart dl pthread rt)
+ endif()
+ 
+ set(TARGET_SOURCES
+-- 
+2.17.1
+

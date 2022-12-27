@@ -26,4 +26,5 @@ SRCREV = "072a43a870cd2970e25c5df8e9838a872d8a199c"
 
 SRC_URI += " \
     file://0001-Disable-outlining-atomics.patch;patchdir=${WORKDIR}/git \
+    file://0002-Fix-CUDA-samples-build.patch;patchdir=${WORKDIR}/git \
 "
