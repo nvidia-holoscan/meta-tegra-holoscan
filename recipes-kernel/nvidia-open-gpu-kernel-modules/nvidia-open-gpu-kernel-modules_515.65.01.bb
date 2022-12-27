@@ -39,6 +39,10 @@ EXTRA_OEMAKE += " \
     SYSOUT='${STAGING_KERNEL_BUILDDIR}' \
 "
 
+# Disable the yocto-enabled stack protection, which leads to this error when enabled:
+#    ERROR: modpost: "__stack_chk_guard" [nvidia-modeset.ko] undefined!
+SECURITY_STACK_PROTECTOR = ""
+
 do_install:append() {
     install -m 0644 -D ${WORKDIR}/nvidia.conf ${D}${sysconfdir}/modprobe.d/nvidia.conf
     install -m 0644 -D ${S}/kernel-open/nvidia/nv-p2p.h ${D}${includedir}/nvidia/nv-p2p.h
