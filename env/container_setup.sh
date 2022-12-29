@@ -49,20 +49,16 @@ git_clone() {
     fi
 }
 
-# BitBake
-BITBAKE_REV="9bdedc8074990e613c9567e2cd8072f8d885f07f"
-git_clone "https://github.com/openembedded/bitbake.git" ${BITBAKE_REV}
-
-# OpenEmbedded Core Layer
-OPENEMBEDDED_REV="5e07e6c376cf46d2788dcef53e9feba890c0236d"
-git_clone "https://github.com/openembedded/openembedded-core.git" ${OPENEMBEDDED_REV}
+# Poky
+POKY_REV="2e79b199114b25d81bfaa029ccfb17676946d20d"
+git_clone "https://git.yoctoproject.org/poky.git" ${POKY_REV}
 
 # meta-openembedded Layer
-META_OPENEMBEDDED_REV="a755af4fb5ca2e158b00214bb18e27ba69c200fd"
+META_OPENEMBEDDED_REV="a8055484f2829e8dfd03d5c8520b2c611aa7ebd2"
 git_clone "https://github.com/openembedded/meta-openembedded.git" ${META_OPENEMBEDDED_REV}
 
 # meta-tegra layer
-META_TEGRA_REV="81e851ffb66917bdc7e5e9135661f6bfcce47fc3"
+META_TEGRA_REV="05b5583c6676aa7b0bb50aed34e816715282bd97"
 git_clone "https://github.com/nvidia-holoscan/meta-tegra.git" ${META_TEGRA_REV}
 
 # meta-tegra-holoscan layer (copied from build container)

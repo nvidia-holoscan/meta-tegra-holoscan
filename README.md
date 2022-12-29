@@ -19,7 +19,7 @@ drivers and toolkits that are used by the NVIDIA Holoscan SDK.
 
 Building a BSP for NVIDIA Holoscan requires a significant amount of system
 resources. Available disk space is the only strict requirement that must be
-met, with **a minimum of 200GB of free disk space required for a build** using
+met, with **a minimum of 250GB of free disk space required for a build** using
 the default configuration as described in this document. It is recommended,
 however, that the development system have many CPU cores, a fast internet
 connection, and a large amount of memory and disk bandwidth in order to
@@ -36,9 +36,9 @@ For example, on a system with the following specifications:
 a complete build using the `core-image-x11` target and the default
 package configuration (including CUDA, TensorRT, and Holoscan SDK) takes:
 
-* Build Time: 2 hours and 35 minutes
+* Build Time: 3 hours and 5 minutes
 * Package Downloads: 22GB
-* Disk Space Used: 167GB
+* Disk Space Used: 193GB
 
 ## Build Environment Options
 
@@ -70,12 +70,12 @@ layer and thus should be used to ensure the build completes. To use these
 commit IDs, change into the directory that a dependency has been cloned
 into and then run `git checkout {commit id}`.
 
-* #### BitBake: https://github.com/openembedded/bitbake (commit: `9bdedc80`)
+* #### Poky: https://git.yoctoproject.org/poky/ (commit: `2e79b199`, tag: `kirkstone-4.0.5`)
 
-    The BitBake task execution engine is used for all Holoscan builds.
+    The Poky Build Tool and Metadata for the Yocto Project.
 
     See the [Yocto Project System Requirements](https://docs.yoctoproject.org/ref-manual/system-requirements.html#required-packages-for-the-build-host)
-    for the most up to date list of requirements that are needed to use BitBake.
+    for the most up to date list of requirements that are needed for Yocto.
     Specifically, see the `Essentials: Packages needed to build an image on a
     headless system` section for your particular operating system. For Ubuntu
     and Debian operating systems, this list is currently as follows:
@@ -88,17 +88,6 @@ into and then run `git checkout {commit id}`.
          liblz4-tool
     ```
 
-* #### OpenEmbedded Core: https://github.com/openembedded/openembedded-core (commit: `5e07e6c3`)
-
-    The OpenEmbedded Core layer provides the core metadata and script that is
-    used to setup the build environment. To setup the build environment (which
-    must be done in any shell that will be used to run `bitbake`),
-    run the `oe-init-build-env` script:
-
-    ```sh
-    $ source openembedded-core/oe-init-build-env
-    ```
-
 * #### Additional Metadata Layers
 
     The following additional layers are required and must be added to the
@@ -107,9 +96,7 @@ into and then run `git checkout {commit id}`.
     `oe-init-build-env` script. Note that the paths in this configuration file
     must be full paths; see the template file in
     `meta-tegra-holoscan/env/templates/conf/bblayers.conf` for an example when
-    these layers are cloned into a `/workspace` root directory.  Also note that
-    this `meta-tegra-holoscan` layer must be listed before the `meta-tegra`
-    layer in `bblayers.conf`.
+    these layers are cloned into a `/workspace` root directory.
 
     Note that the repo used here for the `meta-tegra` layer is a fork of the
     official `meta-tegra` repo found at https://github.com/OE4T/meta-tegra.
@@ -117,8 +104,8 @@ into and then run `git checkout {commit id}`.
     appropriate, but this fork may otherwise contain Holoscan-specific changes
     that aren't suitable for the upstream repo.
 
-    * **meta-openembedded/meta-oe**: https://github.com/openembedded/meta-openembedded **(commit: `a755af4f`)**
-    * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `81e851ff`)**
+    * **meta-openembedded/meta-oe**: https://github.com/openembedded/meta-openembedded **(commit: `a8055484`)**
+    * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `05b5583c`)**
 
 * #### Proprietary NVIDIA Binary Packages
 
@@ -290,7 +277,7 @@ $ bitbake core-image-x11
 ```
 
 > **_Note:_** If the `bitbake` command is not found, ensure that the current
-> shell has been initialized using `source openembedded-core/oe-init-build-env`.
+> shell has been initialized using `source poky/oe-init-build-env`.
 > This script will add the required paths to the `PATH` environment variable so
 > that the `bitbake` command can be run from any directory.
 
@@ -319,7 +306,7 @@ Using the configuration described above, this will build the BSP image and write
 the output to
 
 ```
-build/tmp-glibc/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
 ```
 
 The above file can then be extracted and the `doflash.sh` script that it

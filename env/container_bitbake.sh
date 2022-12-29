@@ -25,5 +25,5 @@
 #  Usage: container_bitbake.sh {bitbake arguments}
 #
 
-source /workspace/openembedded-core/oe-init-build-env build > /dev/null
+source /workspace/poky/oe-init-build-env build > /dev/null
 bitbake "${@}"

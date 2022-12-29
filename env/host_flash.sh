@@ -40,7 +40,7 @@ fi
 
 image_name="${1}"
 image_file="${image_name}-${machine}.tegraflash.tar.gz"
-image_dir="${workspace_path}/build/tmp-glibc/deploy/images/${machine}"
+image_dir="${workspace_path}/build/tmp/deploy/images/${machine}"
 image_path="${image_dir}/${image_file}"
 
 echo -e "Machine: ${machine}"

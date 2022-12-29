@@ -14,7 +14,7 @@ Please see the main [README](../README.md) file for additional documentation.
 > the Local Development Environment` section, below.
 
 Also note that building a BSP for NVIDIA Holoscan requires a significant
-amount of resources, and at least **200GB of free disk space is required to
+amount of resources, and at least **250GB of free disk space is required to
 build**. See the `System Requirements` section in the main
 [README](../README.md) for more details.
 
@@ -36,7 +36,7 @@ would like to initialize the development environment and run the following
 
 ```sh
 $ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v0.4.0
-$ docker run --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
+$ docker run -it --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 
 This setup processes initializes the following:
@@ -44,8 +44,7 @@ This setup processes initializes the following:
 1. The OE recipes and dependencies in these folders:
 
    ```
-   bitbake
-   openembedded-core
+   poky
    meta-openembedded
    meta-tegra
    meta-tegra-holoscan
@@ -66,7 +65,7 @@ This setup processes initializes the following:
 
 The OE image configuration file is created by the previous step and is written
 to `build/conf/local.conf`. This file is based on the default `local.conf` that
-is created by the OpenEmbedded environment setup script (`oe-init-build-env`)
+is created by the Poky environment setup script (`oe-init-build-env`)
 and has various NVIDIA configuration defaults and samples added to it.
 For example, the `MACHINE` configuration in this file is set to
 `holoscan-devkit` and CUDA, TensorRT, Rivermax, and the Holoscan SDK are
@@ -108,7 +107,7 @@ Using the default configuration, the above script will build the BSP image and
 write the final output to:
 
 ```
-build/tmp-glibc/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
 ```
 
 ## 4. Flash the Image
