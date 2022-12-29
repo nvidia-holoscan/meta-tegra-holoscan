@@ -1,0 +1,181 @@
+From c2123d84239fe08acbbc642383e527d624fcff92 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 28 Dec 2022 12:12:55 -0700
+Subject: Use external library dependencies
+
+This changes the dependencies on the following libraries so
+that they are provided at build time instead of being
+fetched, built, and installed by CMake:
+
+ - ajantv2
+ - glad
+ - glfw3
+ - yaml-cpp
+---
+ CMakeLists.txt                   | 10 ------
+ cmake/deps/glad_rapids.cmake     | 24 +-------------
+ cmake/deps/glfw_rapids.cmake     | 27 +---------------
+ cmake/deps/yaml-cpp_rapids.cmake | 54 +-------------------------------
+ 4 files changed, 3 insertions(+), 112 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 27b607a..8daee31 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -182,16 +182,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
+     op_video_stream_replayer
+ )
+ 
+-# Add PUBLIC dependencies to our install target
+-# Note: required due to. However, could only export but not install?
+-# TODO: work on limiting PUBLIC dependencies by not including third-party
+-# headers in our nterface headers, using forward declaration or PIMPL
+-list(APPEND HOLOSCAN_INSTALL_TARGETS
+-    yaml-cpp   # needed by holoscan::core
+-    glfw       # needed by holoscan::viz
+-    ajantv2    # needed by holoscan::ops::aja
+-)
+-
+ # Copy library files
+ install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
+     DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
+diff --git a/cmake/deps/glad_rapids.cmake b/cmake/deps/glad_rapids.cmake
+index 5c9b695..0b507c0 100644
+--- a/cmake/deps/glad_rapids.cmake
++++ b/cmake/deps/glad_rapids.cmake
+@@ -13,26 +13,4 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+-include(${rapids-cmake-dir}/cpm/find.cmake)
+-
+-rapids_cpm_find(GLAD 0.1.36
+-    GLOBAL_TARGETS glad
+-
+-    CPM_ARGS
+-
+-    GITHUB_REPOSITORY Dav1dde/glad
+-    VERSION 0.1.36
+-
+-    OPTIONS
+-    "GLAD_INSTALL OFF"
+-    EXCLUDE_FROM_ALL
+-)
+-
+-if(GLAD_ADDED)
+-    add_library(glad::glad ALIAS glad)
+-    install(TARGETS glad
+-        DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
+-        COMPONENT "holoscan-dependencies"
+-    )
+-endif()
+\ No newline at end of file
++rapids_find_package(glad 0.1.36 REQUIRED)
+diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
+index 0051d3f..159310f 100644
+--- a/cmake/deps/glfw_rapids.cmake
++++ b/cmake/deps/glfw_rapids.cmake
+@@ -13,9 +13,6 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+-include(${rapids-cmake-dir}/cpm/find.cmake)
+-
+ find_package(X11)
+ 
+ if(NOT X11_FOUND)
+@@ -47,26 +44,4 @@ if(NOT X11_Xinput_INCLUDE_PATH)
+     message(FATAL_ERROR "XInput headers not found. Please install XInput ('sudo apt-get install libxi-dev') and try again.")
+ endif()
+ 
+-rapids_cpm_find(GLFW 3.3.7
+-    GLOBAL_TARGETS glfw
+-
+-    CPM_ARGS
+-
+-    GITHUB_REPOSITORY glfw/glfw
+-    GIT_TAG 3.3.7
+-    OPTIONS
+-    "CXXOPTS_BUILD_EXAMPLES OFF"
+-    "CXXOPTS_BUILD_TESTS OFF"
+-    "GLFW_BUILD_TESTS OFF"
+-    "GLFW_BUILD_EXAMPLES OFF"
+-    "GLFW_BULID_DOCS OFF"
+-    "GLFW_INSTALL OFF"
+-    EXCLUDE_FROM_ALL
+-)
+-
+-if(GLFW_ADDED)
+-    install(TARGETS glfw
+-        DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
+-        COMPONENT "holoscan-dependencies"
+-    )
+-endif()
++rapids_find_package(glfw3 3.3 REQUIRED)
+diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
+index 34e04bf..0f1e927 100644
+--- a/cmake/deps/yaml-cpp_rapids.cmake
++++ b/cmake/deps/yaml-cpp_rapids.cmake
+@@ -13,56 +13,4 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+-include(${rapids-cmake-dir}/cpm/find.cmake)
+-
+-# Unfortunately, yaml-cpp project's CMakeLists.txt registers the user package
+-# (see below) which creates an item in '~/.cmake/packages/yaml-cpp/' and makes
+-# `find_package()` command in CPM try to look at the registered packages for
+-# 'yaml-cpp'.
+-# If the user configures CMake build twice consecutively without building
+-# source, the second configure will use a package in the user package registry
+-# (specified by '~/.cmake/packages/yaml-cpp/xxxxx' which refers to
+-# '${CMAKE_BINARY_DIR}/_deps/yaml-cpp-build')
+-# causing a failure when building the source tree because
+-# '_deps/yaml-cpp-build/libyaml-cpp.a', needed by'libholoscan.so' is
+-# missing.
+-#
+-# export(PACKAGE yaml-cpp)
+-#
+-# To prevent the situation, we set CMAKE_FIND_USE_PACKAGE_REGISTRY to FALSE
+-# (https://cmake.org/cmake/help/latest/variable/CMAKE_FIND_USE_PACKAGE_REGISTRY.html#variable:CMAKE_FIND_USE_PACKAGE_REGISTRY)
+-set(CMAKE_FIND_USE_PACKAGE_REGISTRY FALSE)
+-
+-# https://github.com/cpm-cmake/CPM.cmake/wiki/More-Snippets#yaml-cpp
+-set(YAML_CPP_CPM_ARGS
+-    GITHUB_REPOSITORY jbeder/yaml-cpp
+-    GIT_TAG yaml-cpp-0.7.0
+-    OPTIONS
+-    "YAML_CPP_BUILD_TESTS Off"
+-    "YAML_CPP_BUILD_CONTRIB Off"
+-    "YAML_CPP_BUILD_TOOLS Off"
+-    "YAML_BUILD_SHARED_LIBS On"  # Build the shared library instead of the default static library
+-)
+-rapids_cpm_find(yaml-cpp 0.7.0
+-    GLOBAL_TARGETS yaml-cpp
+-    BUILD_EXPORT_SET ${HOLOSCAN_PACKAGE_NAME}-exports
+-
+-    CPM_ARGS
+-    ${YAML_CPP_CPM_ARGS}
+-)
+-
+-if(yaml-cpp_ADDED)
+-
+-    # Install the headers needed for development with the SDK
+-    install(DIRECTORY ${yaml-cpp_SOURCE_DIR}/include/yaml-cpp
+-        DESTINATION "include"
+-        COMPONENT "holoscan-dependencies"
+-        )
+-
+-    # Install the target
+-    install(TARGETS yaml-cpp
+-        DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
+-        COMPONENT "holoscan-dependencies"
+-    )
+-endif()
++rapids_find_package(yaml-cpp 0.7.0 REQUIRED)
+-- 
+2.34.1
+

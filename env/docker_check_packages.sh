@@ -28,9 +28,6 @@
 CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.7.0.84_cuda11-archive.tar.xz"
 TENSORRT_PACKAGE="recipes-devtools/tensorrt/files/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz"
 GXF_PACKAGE="recipes-devtools/gxf/files/gxf_22.11_20230223_6b2e34ec_holoscan-sdk_arm64.tar.gz"
-HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data_20221121.zip"
-HOLOSCAN_ULTRASOUND_DATA="recipes-devtools/holoscan/files/holoscan_ultrasound_data_20220608.zip"
-HOLOSCAN_MULTI_AI_DATA="recipes-devtools/holoscan/files/holoscan_multi_ai_ultrasound_data_20221201.zip"
 RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz"
 NSIGHT_SYSTEMS_PACKAGE="recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb"
 
@@ -48,9 +45,6 @@ check_package() {
 check_package ${CUDNN_PACKAGE}
 check_package ${TENSORRT_PACKAGE}
 check_package ${GXF_PACKAGE}
-check_package ${HOLOSCAN_ENDOSCOPY_DATA}
-check_package ${HOLOSCAN_ULTRASOUND_DATA}
-check_package ${HOLOSCAN_MULTI_AI_DATA}
 check_package ${RIVERMAX_PACKAGE}
 check_package ${NSIGHT_SYSTEMS_PACKAGE}
 

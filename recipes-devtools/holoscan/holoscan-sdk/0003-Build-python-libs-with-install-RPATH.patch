@@ -1,0 +1,28 @@
+From 5a66abcdcf19bffbdd8248ea9593166da8849760 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 28 Dec 2022 13:05:38 -0700
+Subject: Build python libs with install RPATH
+
+---
+ python/src/CMakeLists.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/python/src/CMakeLists.txt b/python/src/CMakeLists.txt
+index 46ab158..fe8b05b 100644
+--- a/python/src/CMakeLists.txt
++++ b/python/src/CMakeLists.txt
+@@ -33,9 +33,8 @@ function(holoscan_pybind11_module CMAKE_PYBIND11_MODULE_NAME)
+         "\$ORIGIN/../lib" # in our python wheel"
+     )
+     list(JOIN _rpath ":" _rpath)
+-    set_property(TARGET ${module_name}
+-        APPEND PROPERTY BUILD_RPATH ${_rpath}
+-    )
++    set_target_properties(${module_name} PROPERTIES INSTALL_RPATH ${_rpath})
++    set_target_properties(${module_name} PROPERTIES BUILD_WITH_INSTALL_RPATH ON)
+     unset(_rpath)
+ 
+     # make submodule folder
+-- 
+2.34.1
+

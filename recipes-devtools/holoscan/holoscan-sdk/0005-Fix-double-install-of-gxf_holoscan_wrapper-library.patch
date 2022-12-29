@@ -1,0 +1,24 @@
+From 8e43ef664c2e631b4ccf28bfeb3c89933bde8ba6 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Mon, 27 Feb 2023 14:36:34 -0700
+Subject: Fix double-install of gxf_holoscan_wrapper library
+
+---
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8daee31..fa68590 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -164,7 +164,6 @@ endif()
+ list(APPEND HOLOSCAN_INSTALL_TARGETS
+     logger
+     core
+-    gxf_holoscan_wrapper_lib
+     holoviz
+     holoinfer
+     infer_utils
+-- 
+2.34.1
+

@@ -143,21 +143,6 @@ into and then run `git checkout {commit id}`.
       > this `tar.gz` file from the archive and move it to the destination given
       > above.
 
-    * #### Holoscan SDK (0.4.0)
-
-      Endoscopy Sample Data (20221121): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_endoscopy_sample_data  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_endoscopy_data_20221121.zip`
-
-      Ultrasound Sample Data (20220608): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_ultrasound_sample_data  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_ultrasound_data_20220608.zip`
-
-      Multi-AI Sample Data (20221201): https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/holoscan_multi_ai_ultrasound_sample_data  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/holoscan/files/holoscan_multi_ai_ultrasound_data_20221201.zip`
-
-      > **_Note:_** When downloading these resources from NGC they will be
-      > downloaded using the name `files.zip`, so they will need to be renamed
-      > when they are moved to the correct destinations given above.
-
     * #### Rivermax SDK (1.20.10)
 
       Download: https://developer.nvidia.com/networking/secure/rivermax-linux-sdk/installation-package/version-1.20.x/1.20/rivermax_ubuntu2004_1.20.10.tar.gz  

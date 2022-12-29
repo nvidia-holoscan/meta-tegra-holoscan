@@ -1,0 +1,44 @@
+From 98ed00f2f59102dbf5f9d414ea3d88fe7d901956 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Tue, 7 Mar 2023 17:18:17 -0700
+Subject: Remove multiai_ultrasound dataset
+
+---
+ data/CMakeLists.txt | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+index 37a8ac9..34d86bc 100644
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -38,27 +38,3 @@ if(HOLOSCAN_DOWNLOAD_DATASETS)
+   # Add dependency to force the download
+   add_dependencies(endoscopy_data endoscopy_data_download)
+ endif()
+-
+-# Multiai ultrasound sample data
+-add_library(multiai_ultrasound_data INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound/video/icardio_input1.avi")
+-# Setup the installation rule
+-install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound DESTINATION data COMPONENT holoscan-data)
+-
+-if(HOLOSCAN_DOWNLOAD_DATASETS)
+-  # Download the multiai sample data
+-  ExternalProject_Add(multiai_ultrasound_data_download
+-    URL https://api.ngc.nvidia.com/v2/resources/nvidia/clara-holoscan/holoscan_multi_ai_ultrasound_sample_data/versions/20221201/zip
+-    URL_MD5 8096b080563e6a75c8e50c3b271364cd
+-    DOWNLOAD_NAME holoscan_multi_ai_ultrasound_sample_data_20221201.zip
+-    DOWNLOAD_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound
+-    CONFIGURE_COMMAND ""
+-    BUILD_COMMAND ""
+-    INSTALL_COMMAND ""
+-    EXCLUDE_FROM_ALL 1
+-    BUILD_BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound/video/icardio_input1.avi"
+-  )
+-
+-  # Add dependency to force the download
+-  add_dependencies(multiai_ultrasound_data multiai_ultrasound_data_download)
+-endif()
+-- 
+2.34.1
+
