@@ -22,4 +22,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI:append = " \
     file://Disable-modules-provided-by-mlnx-ofed.patch \
     file://Add-nvidia-platform-t23x-mandalore-kernel-dts.patch \
+    file://Add-nvidia-platform-t23x-prometheus-kernel-dts.patch \
 "

@@ -1,0 +1,5439 @@
+From 2601bd48ad23781eaa1c9a436ad5a0588969f4d6 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 7 Dec 2022 14:33:06 -0700
+Subject: Add nvidia/platform/t23x/prometheus/kernel-dts
+
+---
+ .../t23x/prometheus/kernel-dts/Makefile       |  28 +
+ .../kernel-dts/cvb/tegra234-camera-p3785.dtsi | 397 ++++++++
+ .../cvb/tegra234-p3740-0000-a00.dtsi          | 312 ++++++
+ .../tegra234-p3740-0000-camera-e3331-a00.dtsi |  63 ++
+ .../tegra234-p3740-0000-camera-e3333-a00.dtsi | 187 ++++
+ ...tegra234-p3740-0000-camera-imx185-a00.dtsi |  69 ++
+ ...egra234-p3740-0000-camera-imx274-dual.dtsi |  82 ++
+ ...tegra234-p3740-0000-camera-imx390-a00.dtsi |  89 ++
+ .../tegra234-p3740-0000-camera-p3783-a00.dtsi | 182 ++++
+ .../cvb/tegra234-p3740-0002-b00.dtsi          | 232 +++++
+ .../kernel-dts/cvb/tegra234-p3740-audio.dtsi  | 120 +++
+ .../tegra234-p3740-b00-fixed-regulator.dtsi   | 139 +++
+ .../cvb/tegra234-p3740-b00-pcie.dtsi          |  60 ++
+ .../tegra234-p3740-b01-fixed-regulator.dtsi   | 139 +++
+ .../cvb/tegra234-p3740-b01-pcie.dtsi          |  59 ++
+ .../cvb/tegra234-p3740-camera-modules.dtsi    | 360 +++++++
+ .../cvb/tegra234-p3740-camera-p3785.dtsi      |  42 +
+ .../cvb/tegra234-p3740-fixed-regulator.dtsi   | 183 ++++
+ .../kernel-dts/cvb/tegra234-p3740-pcie.dtsi   |  80 ++
+ .../cvb/tegra234-p3740-powermon.dtsi          |  46 +
+ .../kernel-dts/cvb/tegra234-pwm-fan.dtsi      |  66 ++
+ .../kernel-dts/cvm/tegra234-p3701-0000.dtsi   |  44 +
+ .../kernel-dts/cvm/tegra234-p3701-0002.dtsi   |  22 +
+ ...234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi | 545 +++++++++++
+ .../tegra234-p3701-0000-p3740-0000-kexec.dts  | 132 +++
+ .../tegra234-p3701-0000-p3740-0000.dts        | 212 ++++
+ .../tegra234-p3701-0002-p3740-0002-b01.dts    |  27 +
+ .../tegra234-p3701-0002-p3740-0002-safety.dts |  33 +
+ .../tegra234-p3701-0002-p3740-0002.dts        |  43 +
+ ...tegra234-p3740-camera-hawk-owl-overlay.dts | 909 ++++++++++++++++++
+ .../tegra234-p3740-camera-p3785-overlay.dts   | 169 ++++
+ .../tegra234-p3740-overlay-pcie.dts           |  54 ++
+ ...a234-power-tree-p3701-0000-p3740-0000.dtsi |  38 +
+ 33 files changed, 5163 insertions(+)
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/Makefile
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-camera-p3785.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3331-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3333-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx185-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx274-dual.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx390-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-p3783-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-pcie.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-fixed-regulator.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-pcie.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-modules.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-p3785.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-fixed-regulator.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-pcie.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-powermon.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0000.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0002.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000-kexec.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-b01.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-overlay-pcie.dts
+ create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/tegra234-power-tree-p3701-0000-p3740-0000.dtsi
+
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/Makefile b/nvidia/platform/t23x/prometheus/kernel-dts/Makefile
+new file mode 100644
+index 000000000000..88901e9dd3e1
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/Makefile
+@@ -0,0 +1,28 @@
++old-dtb := $(dtb-y)
++old-dtbo := $(dtbo-y)
++dtb-y :=
++dtbo-y :=
++makefile-path := platform/t23x/prometheus/kernel-dts
++
++BUILD_ENABLE=n
++ifneq ($(filter y,$(CONFIG_ARCH_TEGRA_23x_SOC)),)
++BUILD_ENABLE=y
++endif
++
++dtb-$(BUILD_ENABLE) += tegra234-p3701-0000-p3740-0000.dtb
++dtb-$(BUILD_ENABLE) += tegra234-p3701-0002-p3740-0002.dtb
++dtb-$(BUILD_ENABLE) += tegra234-p3701-0002-p3740-0002-b01.dtb
++dtbo-$(BUILD_ENABLE) += tegra234-p3740-overlay-pcie.dtbo
++dtbo-$(BUILD_ENABLE) += tegra234-p3740-camera-hawk-owl-overlay.dtbo
++dtbo-$(BUILD_ENABLE) += tegra234-p3740-camera-p3785-overlay.dtbo
++dtb-$(BUILD_ENABLE) += tegra234-p3701-0002-p3740-0002-safety.dtb
++
++ifneq ($(dtb-y),)
++dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
++endif
++ifneq ($(dtbo-y),)
++dtbo-y := $(addprefix $(makefile-path)/,$(dtbo-y))
++endif
++
++dtb-y += $(old-dtb)
++dtbo-y += $(old-dtbo)
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-camera-p3785.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-camera-p3785.dtsi
+new file mode 100644
+index 000000000000..fa2dff44d0ae
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-camera-p3785.dtsi
+@@ -0,0 +1,397 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/ {
++	tegra-capture-vi {
++		nvidia,vi-mapping =
++			<0 0>,
++			<1 0>,
++			<2 0>,
++			<3 0>,
++			<4 1>,
++			<5 1>;
++		num-channels = <1>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				p3785_vi_in0: endpoint {
++					port-index = <0>;
++					bus-width = <8>;
++					remote-endpoint = <&p3785_csi_out0>;
++				};
++			};
++		};
++	};
++
++	host1x@13e00000 {
++		nvcsi@15a00000 {
++			num-channels = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			channel@0 {
++				reg = <0>;
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						p3785_csi_in0: endpoint@0 {
++							port-index = <0>;
++							bus-width = <8>;
++							remote-endpoint = <&p3785_out0>;
++						};
++					};
++					port@1 {
++						reg = <1>;
++						p3785_csi_out0: endpoint@1 {
++							remote-endpoint = <&p3785_vi_in0>;
++						};
++					};
++				};
++			};
++		};
++	};
++
++	i2c@3180000 {
++		p3785@56 {
++			compatible = "nvidia,lt6911uxc";
++			/* I2C device address */
++			reg = <0x56>;
++
++			/* V4L2 device node location */
++			devnode = "video0";
++
++			/* Physical dimensions of sensor */
++			physical_w = "3.674";
++			physical_h = "2.738";
++
++			sensor_model = "p3785";
++
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources
++			avdd-reg = "vana";
++			iovdd-reg = "vif";
++			dvdd-reg = "vdig";*/
++
++			/* Defines number of frames to be dropped by driver internally after applying */
++			/* sensor crop settings. Some sensors send corrupt frames after applying */
++			/* crop co-ordinates */
++			/*post_crop_frame_drop = "0";*/
++
++			/**
++			* ==== Modes ====
++			* A modeX node is required to support v4l2 driver
++			* implementation with NVIDIA camera software stack
++			*
++			* == Signal properties ==
++			*
++			* phy_mode = "";
++			* PHY mode used by the MIPI lanes for this device
++			*
++			* tegra_sinterface = "";
++			* CSI Serial interface connected to tegra
++			* Incase of virtual HW devices, use virtual
++			* For SW emulated devices, use host
++			*
++			* pix_clk_hz = "";
++			* Sensor pixel clock used for calculations like exposure and framerate
++			*
++			* readout_orientation = "0";
++			* Based on camera module orientation.
++			* Only change readout_orientation if you specifically
++			* Program a different readout order for this mode
++			*
++			* == Image format Properties ==
++			*
++			* active_w = "";
++			* Pixel active region width
++			*
++			* active_h = "";
++			* Pixel active region height
++			*
++			* pixel_t = "";
++			* The sensor readout pixel pattern
++			*
++			* line_length = "";
++			* Pixel line length (width) for sensor mode.
++			*
++			* == Source Control Settings ==
++			*
++			* Gain factor used to convert fixed point integer to float
++			* Gain range [min_gain/gain_factor, max_gain/gain_factor]
++			* Gain step [step_gain/gain_factor is the smallest step that can be configured]
++			* Default gain [Default gain to be initialized for the control.
++				     *     use min_gain_val as default for optimal results]
++			* Framerate factor used to convert fixed point integer to float
++			* Framerate range [min_framerate/framerate_factor, max_framerate/framerate_factor]
++			* Framerate step [step_framerate/framerate_factor is the smallest step that can be configured]
++			* Default Framerate [Default framerate to be initialized for the control.
++				     *     use max_framerate to get required performance]
++			* Exposure factor used to convert fixed point integer to float
++			* For convenience use 1 sec = 1000000us as conversion factor
++			* Exposure range [min_exp_time/exposure_factor, max_exp_time/exposure_factor]
++			* Exposure step [step_exp_time/exposure_factor is the smallest step that can be configured]
++			* Default Exposure Time [Default exposure to be initialized for the control.
++				     *     Set default exposure based on the default_framerate for optimal exposure settings]
++			* For convenience use 1 sec = 1000000us as conversion factor
++			*
++			* gain_factor = ""; (integer factor used for floating to fixed point conversion)
++			* min_gain_val = ""; (ceil to integer)
++			* max_gain_val = ""; (ceil to integer)
++			* step_gain_val = ""; (ceil to integer)
++			* default_gain = ""; (ceil to integer)
++			* Gain limits for mode
++			*
++			* exposure_factor = ""; (integer factor used for floating to fixed point conversion)
++			* min_exp_time = ""; (ceil to integer)
++			* max_exp_time = ""; (ceil to integer)
++			* step_exp_time = ""; (ceil to integer)
++			* default_exp_time = ""; (ceil to integer)
++			* Exposure Time limits for mode (sec)
++			*
++			* framerate_factor = ""; (integer factor used for floating to fixed point conversion)
++			* min_framerate = ""; (ceil to integer)
++			* max_framerate = ""; (ceil to integer)
++			* step_framerate = ""; (ceil to integer)
++			* default_framerate = ""; (ceil to integer)
++			* Framerate limits for mode (fps)
++			*
++			* embedded_metadata_height = "";
++			* Sensor embedded metadata height in units of rows.
++			* If sensor does not support embedded metadata value should be 0.
++
++			* num_of_exposure = "";
++			* Digital overlap(Dol) frames
++			*
++			* num_of_ignored_lines = "";
++			* Used for cropping, eg. OB lines + Ignored area of effective pixel lines
++			*
++			* num_of_lines_offset_0 = "";
++			* Used for cropping, vertical blanking in front of short exposure data
++			* If more Dol frames are used, it can be extended, eg. num_of_lines_offset_1
++			*
++			* num_of_ignored_pixels = "";
++			* Used for cropping, The length of line info(pixels)
++			*
++			* num_of_left_margin_pixels = "";
++			* Used for cropping, the size of the left edge margin before
++			* the active pixel area (after ignored pixels)
++			*
++			* num_of_right_margin_pixels = "";
++			* Used for cropping, the size of the right edge margin after
++			* the active pixel area
++			*
++			*/
++			mode0 { // E2832_1920x1080_60Fps
++				mclk_khz = "24000";
++				num_lanes = "4";
++				tegra_sinterface = "serial_a";
++				phy_mode = "DPHY";
++				discontinuous_clk = "yes";
++				dpcm_enable = "false";
++				cil_settletime = "0";
++
++				active_w = "1920";
++				active_h = "1080";
++				mode_type = "rgb";
++				pixel_phase = "rgb888";
++				csi_pixel_bit_depth = "24";
++				readout_orientation = "0";
++				line_length = "1920";
++				inherent_gain = "1";
++				mclk_multiplier = "24";
++				pix_clk_hz = "250000000";
++
++				gain_factor = "16";
++				framerate_factor = "1000000";
++				exposure_factor = "1000000";
++				min_gain_val = "16"; /* 1.00x */
++				max_gain_val = "170"; /* 10.66x */
++				step_gain_val = "1";
++				default_gain = "16"; /* 1.00x */
++				min_hdr_ratio = "1";
++				max_hdr_ratio = "1";
++				min_framerate = "2000000"; /* 2.0 fps */
++				max_framerate = "60000000"; /* 60.0 fps */
++				step_framerate = "1";
++				default_framerate = "60000000"; /* 60.0 fps */
++				min_exp_time = "13"; /* us */
++				max_exp_time = "683709"; /* us */
++				step_exp_time = "1";
++				default_exp_time = "16667"; /* us  */
++			};
++			mode1 { // E2832_3840x2160
++				mclk_khz = "24000";
++				num_lanes = "8";
++				tegra_sinterface = "serial_a";
++				phy_mode = "DPHY";
++				discontinuous_clk = "yes";
++				dpcm_enable = "false";
++				cil_settletime = "0";
++
++				active_w = "3840";
++				active_h = "2160";
++				mode_type = "rgb";
++				pixel_phase = "rgb888";
++				csi_pixel_bit_depth = "24";
++				readout_orientation = "0";
++				line_length = "3840";
++				inherent_gain = "1";
++				mclk_multiplier = "24";
++				pix_clk_hz = "500000000";
++
++				gain_factor = "16";
++				framerate_factor = "1000000";
++				exposure_factor = "1000000";
++				min_gain_val = "16"; /* 1.00x */
++				max_gain_val = "170"; /* 10.66x */
++				step_gain_val = "1";
++				default_gain = "16"; /* 1.00x */
++				min_hdr_ratio = "1";
++				max_hdr_ratio = "1";
++				min_framerate = "2000000"; /* 2.0 fps */
++				max_framerate = "60000000"; /* 60.0 fps */
++				step_framerate = "1";
++				default_framerate = "60000000"; /* 60.0 fps */
++				min_exp_time = "13"; /* us */
++				max_exp_time = "683709"; /* us */
++				step_exp_time = "1";
++				default_exp_time = "16667"; /* us  */
++			};
++
++			mode2 { // E2832_1280x720_60Fps
++				mclk_khz = "24000";
++				num_lanes = "4";
++				tegra_sinterface = "serial_a";
++				phy_mode = "DPHY";
++				discontinuous_clk = "yes";
++				dpcm_enable = "false";
++				cil_settletime = "0";
++
++				active_w = "1280";
++				active_h = "720";
++				mode_type = "rgb";
++				pixel_phase = "rgb888";
++				csi_pixel_bit_depth = "24";
++				readout_orientation = "0";
++				line_length = "1280";
++				inherent_gain = "1";
++				mclk_multiplier = "24";
++				pix_clk_hz = "250000000";
++
++				gain_factor = "16";
++				framerate_factor = "1000000";
++				exposure_factor = "1000000";
++				min_gain_val = "16"; /* 1.00x */
++				max_gain_val = "170"; /* 10.66x */
++				step_gain_val = "1";
++				default_gain = "16"; /* 1.00x */
++				min_hdr_ratio = "1";
++				max_hdr_ratio = "1";
++				min_framerate = "2000000"; /* 2.0 fps */
++				max_framerate = "60000000"; /* 60.0 fps */
++				step_framerate = "1";
++				default_framerate = "60000000"; /* 60.0 fps */
++				min_exp_time = "13"; /* us */
++				max_exp_time = "683709"; /* us */
++				step_exp_time = "1";
++				default_exp_time = "16667"; /* us  */
++			};
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@0 {
++					reg = <0>;
++					p3785_out0: endpoint {
++						port-index = <0>;
++						bus-width = <8>;
++						remote-endpoint = <&p3785_csi_in0>;
++					};
++				};
++			};
++		};
++	};
++};
++
++/ {
++
++	tegra-camera-platform {
++		compatible = "nvidia, tegra-camera-platform";
++		/**
++		* Physical settings to calculate max ISO BW
++		*
++		* num_csi_lanes = <>;
++		* Total number of CSI lanes when all cameras are active
++		*
++		* max_lane_speed = <>;
++		* Max lane speed in Kbit/s
++		*
++		* min_bits_per_pixel = <>;
++		* Min bits per pixel
++		*
++		* vi_peak_byte_per_pixel = <>;
++		* Max byte per pixel for the VI ISO case
++		*
++		* vi_bw_margin_pct = <>;
++		* Vi bandwidth margin in percentage
++		*
++		* max_pixel_rate = <>;
++		* Max pixel rate in Kpixel/s for the ISP ISO case
++		*
++		* isp_peak_byte_per_pixel = <>;
++		* Max byte per pixel for the ISP ISO case
++		*
++		* isp_bw_margin_pct = <>;
++		* Isp bandwidth margin in percentage
++		*/
++		num_csi_lanes = <4>;
++		max_lane_speed = <1500000>;
++		min_bits_per_pixel = <10>;
++		vi_peak_byte_per_pixel = <2>;
++		vi_bw_margin_pct = <25>;
++		max_pixel_rate = <750000>;
++		isp_peak_byte_per_pixel = <5>;
++		isp_bw_margin_pct = <25>;
++
++		/**
++		 * The general guideline for naming badge_info contains 3 parts, and is as follows,
++		 * The first part is the camera_board_id for the module; if the module is in a FFD
++		 * platform, then use the platform name for this part.
++		 * The second part contains the position of the module, ex. "rear" or "front".
++		 * The third part contains the last 6 characters of a part number which is found
++		 * in the module's specsheet from the vender.
++		 */
++		modules {
++			module0 {
++				badge = "p3785_ltx6911";
++				position = "bottom";
++				orientation = "1";
++				drivernode0 {
++					/* Declare PCL support driver (classically known as guid)  */
++					pcl_id = "v4l2_sensor";
++					/* Driver v4l2 device name */
++					devname = "p3785 2-0056";
++					/* Declare the device-tree hierarchy to driver instance */
++					proc-device-tree = "/proc/device-tree/i2c@3180000/p3785@56";
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-a00.dtsi
+new file mode 100644
+index 000000000000..7e2dd48dea7c
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-a00.dtsi
+@@ -0,0 +1,312 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++#include <dt-bindings/gpio/tegra234-gpio.h>
++#include "dt-bindings/input/input.h"
++#include "tegra234-pwm-fan.dtsi"
++#include "tegra234-p3740-audio.dtsi"
++#include "tegra234-p3740-fixed-regulator.dtsi"
++#include "tegra234-p3740-pcie.dtsi"
++#include "tegra234-p3740-camera-modules.dtsi"
++
++/ {
++	gpio-keys {
++		compatible = "gpio-keys";
++		gpio-keys,name = "gpio-keys";
++		status = "okay";
++
++		forcerecovery {
++			label = "force-recovery";
++			gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 0) GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_1>;
++		};
++
++		power_key {
++			label = "power-key";
++			gpios = <&tegra_aon_gpio TEGRA234_AON_GPIO(EE, 4) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
++
++		sleep {
++			label = "sleep";
++			gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_SLEEP>;
++		};
++	};
++
++	soft_wdt:soft_watchdog {
++		compatible = "softdog-platform";
++		status = "okay";
++	};
++
++	eeprom-manager {
++		data-size = <0x100>;
++		bus@0 {
++			i2c-bus = <&gen1_i2c>;
++			eeprom@1 {
++				slave-address = <0x56>;
++				label = "cvb";
++			};
++		};
++
++		bus@1 {
++			i2c-bus = <&gen2_i2c>;
++			eeprom@1 {
++				slave-address = <0x50>;
++				label = "super-module";
++			};
++		};
++	};
++
++	ufshci@2500000 {
++		status = "okay";
++	};
++
++	sdhci@3400000 {
++		disable-wp;
++		no-sdio;
++		nvidia,cd-wakeup-capable;
++		no-mmc;
++		nvidia,boot-detect-delay = <1000>;
++		cd-gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 7) 0>;
++		status = "okay";
++	};
++
++	/* I2C7 */
++	i2c@31c0000 {
++		status = "okay";
++		clock-frequency = <400000>;
++
++		typec: stusb1600@29 {
++			status = "okay";
++			compatible = "st,stusb1600";
++			reg = <0x29>;
++			vdd-supply = <&p3740_vdd_5v_sys>;
++			vsys-supply = <&p3740_vdd_3v3_sys>;
++			interrupt-parent = <&tegra_main_gpio>;
++			interrupts = <TEGRA234_MAIN_GPIO(K, 6) IRQ_TYPE_LEVEL_LOW>;
++			typec_con: connector {
++				compatible = "usb-c-connector";
++				label = "USB-C";
++				data-role = "dual";
++				power-role = "dual";
++				typec-power-opmode = "default";
++
++				port {
++					typec_con_ep: endpoint {
++						remote-endpoint = <&usb_role_switch0>;
++					};
++				};
++			};
++		};
++	};
++
++	xusb_padctl: xusb_padctl@3520000 {
++		status = "okay";
++		pads {
++			usb2 {
++				lanes {
++					usb2-0 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-1 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-2 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-3 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++				};
++			};
++			usb3 {
++				lanes {
++					usb3-0 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb3-1 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb3-2 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++				};
++			};
++		};
++
++		ports {
++			usb2-0 {
++				mode = "otg";
++				usb-role-switch;
++				status = "okay";
++				port {
++					usb_role_switch0: endpoint {
++						remote-endpoint = <&typec_con_ep>;
++					};
++				};
++			};
++			usb2-1 {
++				mode = "host";
++				status = "okay";
++			};
++			usb2-2 {
++				mode = "host";
++				status = "okay";
++			};
++			usb2-3 {
++				mode = "host";
++				status = "okay";
++			};
++			usb3-0 {
++				nvidia,usb2-companion = <1>;
++				status = "okay";
++			};
++			usb3-1 {
++				nvidia,usb2-companion = <0>;
++				status = "okay";
++			};
++			usb3-2 {
++				nvidia,usb2-companion = <2>;
++				status = "okay";
++			};
++		};
++	};
++
++	tegra_xudc: xudc@3550000 {
++		status = "okay";
++		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-1}>;
++		phy-names = "usb2-0", "usb3-1";
++		nvidia,xusb-padctl = <&xusb_padctl>;
++		nvidia,boost_cpu_freq = <1200>;
++	};
++
++	tegra_xhci: xhci@3610000 {
++		status = "okay";
++		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-1}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-2}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-3}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-0}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-1}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-2}>;
++		phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3",
++			"usb3-0", "usb3-1", "usb3-2";
++		nvidia,xusb-padctl = <&xusb_padctl>;
++	};
++
++	spi@3210000{ /* SPI1 in 40 pin conn */
++		status = "okay";
++		spi@0 { /* chip select 0 */
++			compatible = "tegra-spidev";
++			reg = <0x0>;
++			spi-max-frequency = <50000000>;
++			controller-data {
++				nvidia,enable-hw-based-cs;
++				nvidia,rx-clk-tap-delay = <0x10>;
++				nvidia,tx-clk-tap-delay = <0x0>;
++			};
++		};
++		spi@1 { /* chip select 1 */
++			compatible = "tegra-spidev";
++			reg = <0x1>;
++			spi-max-frequency = <50000000>;
++			controller-data {
++				nvidia,enable-hw-based-cs;
++				nvidia,rx-clk-tap-delay = <0x10>;
++				nvidia,tx-clk-tap-delay = <0x0>;
++			};
++		};
++	};
++
++	spi@3230000{ /* SPI3 in 40 pin conn */
++		status = "okay";
++		spi@0 { /* chip select 0 */
++			compatible = "tegra-spidev";
++			reg = <0x0>;
++			spi-max-frequency = <50000000>;
++			controller-data {
++				nvidia,enable-hw-based-cs;
++				nvidia,rx-clk-tap-delay = <0x10>;
++				nvidia,tx-clk-tap-delay = <0x0>;
++			};
++		};
++		spi@1 { /* chips select 1 */
++			compatible = "tegra-spidev";
++			reg = <0x1>;
++			spi-max-frequency = <50000000>;
++			controller-data {
++				nvidia,enable-hw-based-cs;
++				nvidia,rx-clk-tap-delay = <0x10>;
++				nvidia,tx-clk-tap-delay = <0x0>;
++			};
++		};
++	};
++
++	mttcan@c310000 {
++		status = "okay";
++	};
++
++	mttcan@c320000 {
++		status = "okay";
++	};
++
++	serial@3110000 {
++		status = "disabled";
++	};
++
++	tachometer@39c0000 {
++		status = "okay";
++		upper-threshold = <0xfffff>;
++		lower-threshold = <0x0>;
++	};
++
++	generic_pwm_tachometer {
++		status = "okay";
++	};
++
++	pwm@3280000 {
++		status = "okay";
++	};
++
++	pwm@32a0000 {
++		status = "okay";
++	};
++
++	pwm@32c0000 {
++		status = "okay";
++	};
++
++	pwm@32d0000 {
++		status = "disabled";
++	};
++
++	pwm@32f0000 {
++		status = "okay";
++	};
++	spi@c260000 {
++		status = "disabled";
++	};
++
++	spi@3300000 {
++		status = "disabled";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3331-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3331-a00.dtsi
+new file mode 100644
+index 000000000000..ce4f0d08611b
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3331-a00.dtsi
+@@ -0,0 +1,63 @@
++/*
++ * Copyright (c) 2017-2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-e3331-a00.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++/* camera control gpio definitions */
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/* TODO: Re-enable cam1 and cam2*/
++/ {
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0>;
++			label = "cam0-rst";
++		};
++	};
++
++	i2c@3180000 {
++		tca9546_70: tca9546@70 {
++			compatible = "nxp,pca9546";
++			reg = <0x70>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			vcc-pullup-supply = <&battery_reg>;
++			skip_mux_detect;
++			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
++			i2c@0 {
++				reg = <0>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				imx318_a@10 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					clock-frequency = <24000000>;
++					reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++					vdig-supply = <&p3740_vdd_sys_en>;
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3333-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3333-a00.dtsi
+new file mode 100644
+index 000000000000..4d057f5b9886
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-e3333-a00.dtsi
+@@ -0,0 +1,187 @@
++/*
++ * Copyright (c) 2015-2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-e3333-a00.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAM0_PWDN	TEGRA234_MAIN_GPIO(H, 6)
++#define CAM1_RST_L	TEGRA234_MAIN_GPIO(AC, 1)
++#define CAM1_PWDN	TEGRA234_MAIN_GPIO(AC, 0)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/ {
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0 CAM0_PWDN 0
++				 CAM1_RST_L 0 CAM1_PWDN 0>;
++			label = "cam0-rst", "cam0-pwdn",
++				"cam1-rst", "cam1-pwdn";
++		};
++	};
++
++	i2c@3180000 {
++		tca6408_21: tca6408@21 {
++			compatible = "ti,tca6408";
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x21>;
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			tca6408_21_outlow {
++				/*
++				 * GPIO-0 : PWDN_CAM2
++				 * GPIO-1 : RST_CAM2
++				 * GPIO-2 : PWDN_CAM3
++				 * GPIO-3 : RST_CAM3
++				 * GPIO-4 : PWDN_CAM4
++				 * GPIO-5 : RST_CAM4
++				 * GPIO-6 : PWDN_CAM5
++				 * GPIO-7 : RST_CAM5
++				 */
++				gpio-hog;
++				gpios = <0 0 1 0 2 0 3 0 4 0 5 0 6 0 7 0>;
++				output-low;
++				label = "tca6408_21_outlow_0",
++					"tca6408_21_outlow_1",
++					"tca6408_21_outlow_2",
++					"tca6408_21_outlow_3",
++					"tca6408_21_outlow_4",
++					"tca6408_21_outlow_5",
++					"tca6408_21_outlow_6",
++					"tca6408_21_outlow_7";
++			};
++			tca6408_21_outhigh {
++				status = "disabled";
++			};
++			tca6408_21_input {
++				status = "disabled";
++			};
++		};
++
++		tca9548_77: tca9548@77 {
++			compatible = "nxp,pca9548";
++			reg = <0x77>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			skip_mux_detect;
++			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
++			i2c@0 {
++				reg = <0>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_a@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					clock-frequency = <24000000>;
++					reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++					pwdn-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@1 {
++				reg = <1>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_b@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					clock-frequency = <24000000>;
++					reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
++					pwdn-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@2 {
++				reg = <2>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_c@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					clock-frequency = <24000000>;
++					pwdn-gpios = <&tca6408_21 0 GPIO_ACTIVE_HIGH>;
++					reset-gpios = <&tca6408_21 1 GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@3 {
++				reg = <3>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_d@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH2>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph2", "pllp_grtba";
++					mclk = "extperiph2";
++					clock-frequency = <24000000>;
++					pwdn-gpios = <&tca6408_21 2 GPIO_ACTIVE_HIGH>;
++					reset-gpios = <&tca6408_21 3 GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@4 {
++				reg = <4>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_e@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH2>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph2", "pllp_grtba";
++					mclk = "extperiph2";
++					clock-frequency = <24000000>;
++					pwdn-gpios = <&tca6408_21 4 GPIO_ACTIVE_HIGH>;
++					reset-gpios = <&tca6408_21 5 GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@5 {
++				reg = <5>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				ov5693_g@36 {
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH2>,
++						 <&bpmp_clks TEGRA234_CLK_PLLP_OUT0>;
++					clock-names = "extperiph2", "pllp_grtba";
++					mclk = "extperiph2";
++					clock-frequency = <24000000>;
++					pwdn-gpios = <&tca6408_21 6 GPIO_ACTIVE_HIGH>;
++					reset-gpios = <&tca6408_21 7 GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx185-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx185-a00.dtsi
+new file mode 100644
+index 000000000000..9c0f765ace74
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx185-a00.dtsi
+@@ -0,0 +1,69 @@
++/*
++ * Copyright (c) 2017-2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-imx185-a00.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/* camera control gpio definitions */
++
++/ {
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0>;
++			label = "cam0-rst";
++		};
++	};
++
++	i2c@3180000 {
++		tca9546@70 {
++			compatible = "nxp,pca9546";
++			reg = <0x70>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			skip_mux_detect = "yes";
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			vcc-pullup-supply = <&battery_reg>;
++			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
++
++			i2c@0 {
++				reg = <0>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				pca9570_a@24 {
++					compatible = "nxp,pca9570";
++					reg = <0x24>;
++					channel = "a";
++					drive_ic = "DRV8838";
++				};
++
++				imx185_a@1a {
++					/* Define any required hw resources needed by driver */
++					/* ie. clocks, io pins, power sources */
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++							 <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx274-dual.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx274-dual.dtsi
+new file mode 100644
+index 000000000000..9344f1df902c
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx274-dual.dtsi
+@@ -0,0 +1,82 @@
++/*
++ * Copyright (c) 2017-2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-imx274-dual.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAM0_PWDN	TEGRA234_MAIN_GPIO(H, 6)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/* camera control gpio definitions */
++
++/ {
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0 CAM0_PWDN 0>;
++			label = "cam0-rst", "cam0-pwdn";
++		};
++	};
++
++	i2c@3180000 {
++		tca9546@70 {
++			compatible = "nxp,pca9546";
++			reg = <0x70>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			skip_mux_detect = "yes";
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			vcc-pullup-supply = <&battery_reg>;
++			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
++
++			i2c@0 {
++				reg = <0>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				imx274_a@1a {
++					/* Define any required hw resources needed by driver */
++					/* ie. clocks, io pins, power sources */
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++							 <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++			i2c@1 {
++				reg = <1>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				imx274_c@1a {
++					/* Define any required hw resources needed by driver */
++					/* ie. clocks, io pins, power sources */
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++							 <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					reset-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++					vana-supply = <&p3740_avdd_cam_2v8>;
++					vif-supply = <&p3740_vdd_1v8_sys>;
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx390-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx390-a00.dtsi
+new file mode 100644
+index 000000000000..8c433474503b
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-imx390-a00.dtsi
+@@ -0,0 +1,89 @@
++/*
++ * Copyright (c) 2018-2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-imx390-a00.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/* camera control gpio definitions */
++
++/ {
++	i2c@3180000 {
++		tca9546@70 {
++			compatible = "nxp,pca9546";
++			reg = <0x70>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			skip_mux_detect = "yes";
++			vif-supply = <&p3740_vdd_1v8_sys>;
++			vcc-supply = <&p3740_vdd_1v8_sys>;
++			vcc-pullup-supply = <&battery_reg>;
++			force_bus_start = <CAMERA_I2C_MUX_BUS(0)>;
++
++			i2c@0 {
++				reg = <0>;
++				i2c-mux,deselect-on-exit;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				dser: max9296@48 {
++					compatible = "maxim,max9296";
++					reg = <0x48>;
++					csi-mode = "2x4";
++					max-src = <2>;
++					reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++				};
++				ser_prim: max9295_prim@62 {
++					compatible = "maxim,max9295";
++					reg = <0x62>;
++					is-prim-ser;
++				};
++				ser_a: max9295_a@40 {
++					compatible = "maxim,max9295";
++					reg = <0x40>;
++					nvidia,gmsl-dser-device = <&dser>;
++				};
++				ser_b: max9295_b@60 {
++					compatible = "maxim,max9295";
++					reg = <0x60>;
++					nvidia,gmsl-dser-device = <&dser>;
++				};
++				imx390_a@1b {
++					def-addr = <0x1a>;
++					/* Define any required hw resources needed by driver */
++					/* ie. clocks, io pins, power sources */
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++							<&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					nvidia,gmsl-ser-device = <&ser_a>;
++					nvidia,gmsl-dser-device = <&dser>;
++				};
++				imx390_b@1c {
++					def-addr = <0x1a>;
++					/* Define any required hw resources needed by driver */
++					/* ie. clocks, io pins, power sources */
++					clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++							<&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++					clock-names = "extperiph1", "pllp_grtba";
++					mclk = "extperiph1";
++					nvidia,gmsl-ser-device = <&ser_b>;
++					nvidia,gmsl-dser-device = <&dser>;
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-p3783-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-p3783-a00.dtsi
+new file mode 100644
+index 000000000000..dd7a2a6cb1df
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-camera-p3783-a00.dtsi
+@@ -0,0 +1,182 @@
++/*
++ * Copyright (c) 2018-2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <t234-common-modules/tegra234-camera-p3783-a00.dtsi>
++#include "dt-bindings/clock/tegra234-clock.h"
++
++
++#define CAM0_RST_L      TEGRA234_MAIN_GPIO(H, 3)
++#define CAM0_PWDN       TEGRA234_MAIN_GPIO(H, 6)
++#define CAM1_RST_L      TEGRA234_MAIN_GPIO(AC, 1)
++#define CAM1_PWDN       TEGRA234_MAIN_GPIO(AC, 0)
++#define PWR_EN      TEGRA234_MAIN_GPIO(AC, 7)
++
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/* camera control gpio definitions */
++
++/ {
++	/* set camera gpio direction to output */
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0 CAM0_PWDN 0
++				CAM1_RST_L 0 CAM1_PWDN 0>;
++			label = "cam0-rst", "cam0-pwdn",
++			      "cam1-rst", "cam1-pwdn";
++		};
++	};
++	i2c@31e0000 {
++
++		max96712_a@62 {
++			compatible = "nvidia,max96712";
++			reg = <0x62>;
++			channel = "a";
++		};
++
++		ar0234_a@30 {
++			def-addr = <0x10>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "a";
++			has-eeprom;
++			eeprom-addr = <0x30>;
++			reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_b@31 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "c";
++			has-eeprom;
++			eeprom-addr = <0x32>;
++			reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_c@32 {
++			def-addr = <0x10>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "a";
++			has-eeprom;
++			eeprom-addr = <0x34>;
++			reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_d@33 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "c";
++			has-eeprom;
++			eeprom-addr = <0x36>;
++			reset-gpios = <&tegra_main_gpio CAM0_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++	};
++	i2c@3180000 {
++
++		max96712_b@62 {
++			compatible = "nvidia,max96712";
++			reg = <0x62>;
++			channel = "b";
++		};
++
++		ar0234_e@30 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "b";
++			has-eeprom;
++			eeprom-addr = <0x30>;
++			reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_f@32 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "b";
++			has-eeprom;
++			eeprom-addr = <0x31>;
++			reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_g@34 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "b";
++			has-eeprom;
++			eeprom-addr = <0x32>;
++			reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++		ar0234_h@36 {
++			def-addr = <0x18>;
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++			       <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			channel = "b";
++			has-eeprom;
++			eeprom-addr = <0x33>;
++			reset-gpios = <&tegra_main_gpio CAM1_RST_L GPIO_ACTIVE_HIGH>;
++			pwdn-gpios = <&tegra_main_gpio CAM1_PWDN GPIO_ACTIVE_HIGH>;
++			pwr-gpios = <&tegra_main_gpio PWR_EN GPIO_ACTIVE_HIGH>;
++		};
++	};
++};
++
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi
+new file mode 100644
+index 000000000000..a60ae63d60dd
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi
+@@ -0,0 +1,232 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <dt-bindings/gpio/tegra234-gpio.h>
++#include <dt-bindings/input/input.h>
++#include "tegra234-p3740-b00-fixed-regulator.dtsi"
++#include "tegra234-p3740-b00-pcie.dtsi"
++#include "tegra234-p3740-audio.dtsi"
++#include "tegra234-p3740-camera-modules.dtsi"
++#include "tegra234-p3740-powermon.dtsi"
++
++/ {
++	gpio-keys {
++		compatible = "gpio-keys";
++		gpio-keys,name = "gpio-keys";
++		status = "okay";
++
++		forcerecovery {
++			label = "force-recovery";
++			gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 0) GPIO_ACTIVE_LOW>;
++			linux,code = <BTN_1>;
++		};
++
++		power_key {
++			label = "power-key";
++			gpios = <&tegra_aon_gpio TEGRA234_AON_GPIO(EE, 4) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
++
++		sleep {
++			label = "sleep";
++			gpios = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 2) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_SLEEP>;
++		};
++	};
++
++	eeprom-manager {
++		bus@1 {
++			i2c-bus = <&dp_aux_ch2_i2c>;
++			eeprom@1 {
++				slave-address = <0x55>;
++				label = "cvb";
++			};
++		};
++	};
++
++	serial@3110000 {
++		status = "okay";
++	};
++
++	stm@24080000 {
++		status = "disabled";
++	};
++
++	cpu0_etm@27040000 {
++		status = "disabled";
++	};
++
++	cpu1_etm@27140000 {
++		status = "disabled";
++	};
++
++	cpu2_etm@27240000 {
++		status = "disabled";
++	};
++
++	cpu3_etm@27340000 {
++		status = "disabled";
++	};
++
++	cpu4_etm@27440000 {
++		status = "disabled";
++	};
++
++	cpu5_etm@27540000 {
++		status = "disabled";
++	};
++
++	cpu6_etm@27640000 {
++		status = "disabled";
++	};
++
++	cpu7_etm@27740000 {
++		status = "disabled";
++	};
++
++	cpu8_etm@27840000 {
++		status = "disabled";
++	};
++
++	cpu9_etm@27940000 {
++		status = "disabled";
++	};
++
++	cpu10_etm@27A40000 {
++		status = "disabled";
++	};
++
++	cpu11_etm@27B40000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex0@26030000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex1@26040000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex2@26050000 {
++		status = "disabled";
++	};
++
++	funnel_top_ccplex@26020000 {
++		status = "disabled";
++	};
++
++	funnel_major@24040000 {
++		status = "disabled";
++	};
++
++	replicator@24060000 {
++		status = "disabled";
++	};
++
++	etf@24050000 {
++		status = "disabled";
++	};
++
++	etr@24070000 {
++		status = "disabled";
++	};
++
++	xusb_padctl: xusb_padctl@3520000 {
++		status = "okay";
++		pads {
++			usb2 {
++				lanes {
++					usb2-0 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-1 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-2 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb2-3 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++				};
++			};
++			usb3 {
++				lanes {
++					usb3-0 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb3-1 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++					usb3-2 {
++						nvidia,function = "xusb";
++						status = "okay";
++					};
++				};
++			};
++		};
++
++		ports {
++			usb2-0 {
++				mode = "host";
++				status = "okay";
++			};
++			usb2-1 {
++				mode = "host";
++				status = "okay";
++			};
++			usb2-2 {
++				mode = "host";
++				status = "okay";
++			};
++			usb2-3 {
++				mode = "host";
++				status = "okay";
++			};
++			usb3-0 {
++				nvidia,usb2-companion = <2>;
++				status = "okay";
++			};
++			usb3-1 {
++				nvidia,usb2-companion = <0>;
++				status = "okay";
++			};
++			usb3-2 {
++				nvidia,usb2-companion = <1>;
++				status = "okay";
++			};
++		};
++	};
++
++	tegra_xhci: xhci@3610000 {
++		status = "okay";
++		phys = <&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-0}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-1}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-2}>,
++			<&{/xusb_padctl@3520000/pads/usb2/lanes/usb2-3}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-0}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-1}>,
++			<&{/xusb_padctl@3520000/pads/usb3/lanes/usb3-2}>;
++		phy-names = "usb2-0", "usb2-1", "usb2-2", "usb2-3",
++			"usb3-0", "usb3-1", "usb3-2";
++		nvidia,xusb-padctl = <&xusb_padctl>;
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi
+new file mode 100644
+index 000000000000..02d8372d57b4
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi
+@@ -0,0 +1,120 @@
++/*
++ * T234 p3740 audio DTSI file.
++ *
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <audio/tegra-platforms-audio-dai-links.dtsi>
++#include <audio/tegra186-audio-dai-links.dtsi>
++#include <dt-bindings/sound/rt5640.h>
++#include <dt-bindings/gpio/tegra234-gpio.h>
++#include <dt-bindings/audio/tegra234-audio.h>
++
++/ {
++	i2c@31c0000 {
++		rt5640: rt5640.6-001c@1c {
++			compatible = "realtek,rt5640";
++			reg = <0x1c>;
++
++			clocks = <&bpmp TEGRA234_CLK_AUD_MCLK>;
++			clock-names = "mclk";
++
++			realtek,dmic1-data-pin = <0>; /* RT5640_DMIC1_NULL */
++			realtek,dmic2-data-pin = <0>; /* RT5640_DMIC2_NULL */
++			realtek,jack-detect-source = <RT5640_JD_SRC_HDA_HEADER>;
++
++			/* Codec IRQ output */
++			interrupt-parent = <&tegra_main_gpio>;
++			interrupts = <TEGRA234_MAIN_GPIO(F, 3) GPIO_ACTIVE_HIGH>;
++
++			#sound-dai-cells = <1>;
++			sound-name-prefix = "CVB-RT";
++
++			status = "okay";
++		};
++	};
++
++	aconnect@2a41000 {
++		status = "okay";
++
++		agic-controller@2a41000 {
++			status = "okay";
++		};
++
++		adsp@2993000 {
++			status = "okay";
++		};
++
++		ahub {
++			status = "okay";
++		};
++	};
++
++	tegra_acsl_audio: acsl_audio {
++		status = "okay";
++	};
++
++	hda@3510000 {
++		nvidia,model = "NVIDIA Holoscan MGX HDA";
++		status = "okay";
++	};
++
++	tegra_sound: sound {
++		status = "okay";
++		compatible = "nvidia,tegra186-ape";
++		nvidia-audio-card,name = "NVIDIA Holoscan MGX APE";
++		clocks = <&bpmp_clks TEGRA234_CLK_PLLA>,
++			 <&bpmp_clks TEGRA234_CLK_PLLA_OUT0>,
++			 <&bpmp_clks TEGRA234_CLK_AUD_MCLK>;
++		clock-names = "pll_a", "pll_a_out0", "extern1";
++		assigned-clocks = <&bpmp_clks TEGRA234_CLK_AUD_MCLK>;
++		assigned-clock-parents = <&bpmp_clks TEGRA234_CLK_PLLA_OUT0>;
++
++		nvidia-audio-card,widgets =
++			"Headphone",    "CVB-RT Headphone Jack",
++			"Microphone",   "CVB-RT Mic Jack",
++			"Speaker",      "CVB-RT Int Spk",
++			"Microphone",   "CVB-RT Int Mic";
++
++		nvidia-audio-card,routing =
++			"CVB-RT Headphone Jack",     "CVB-RT HPOL",
++			"CVB-RT Headphone Jack",     "CVB-RT HPOR",
++			"CVB-RT IN1P",               "CVB-RT Mic Jack",
++			"CVB-RT IN2P",               "CVB-RT Mic Jack",
++			"CVB-RT IN2N",               "CVB-RT Mic Jack",
++			"CVB-RT IN3P",               "CVB-RT Mic Jack",
++			"CVB-RT Int Spk",            "CVB-RT SPOLP",
++			"CVB-RT Int Spk",            "CVB-RT SPORP",
++			"CVB-RT Int Spk",            "CVB-RT LOUTL",
++			"CVB-RT Int Spk",            "CVB-RT LOUTR",
++			"CVB-RT DMIC1",              "CVB-RT Int Mic",
++			"CVB-RT DMIC2",              "CVB-RT Int Mic";
++
++		nvidia-audio-card,mclk-fs = <256>;
++	};
++};
++
++/*
++ * Default config for all I2S dai links are
++ * format = "i2s", bitclock-slave, frame-slave,
++ * bitclock-noninversion, frame-noninversion,
++ * Any change from default needs override on
++ * platform specific files.
++ */
++
++&i2s4_to_codec {
++	link-name = "rt5640-playback";
++	codec {
++		sound-dai = <&rt5640 0>;
++		prefix = "CVB-RT";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi
+new file mode 100644
+index 000000000000..e3ac9c76a9e5
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi
+@@ -0,0 +1,139 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <dt-bindings/gpio/tegra234-gpio.h>
++/ {
++	fixed-regulators {
++		p3740_vdd_5v0_stby: battery_reg: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "vdd-ac-bat";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++		p3740_vdd_12v_sys: regulator@100 {
++			compatible = "regulator-fixed";
++			reg = <100>;
++			regulator-name = "vdd-12v-sys";
++			regulator-min-microvolt = <12000000>;
++			regulator-max-microvolt = <12000000>;
++		};
++		p3740_vdd_5v_sys: vdd_5v_sys: regulator@101 {
++			compatible = "regulator-fixed";
++			reg = <101>;
++			regulator-name = "vdd-5v-sys";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++		p3740_vdd_3v3_sys: vdd_3v3_sys: regulator@102 {
++			compatible = "regulator-fixed";
++			reg = <102>;
++			regulator-name = "vdd-3v3-sys";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_1v8_sys: regulator@103 {
++			compatible = "regulator-fixed";
++			reg = <103>;
++			regulator-name = "vdd-1v8-sys";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		p3740_vdd_3v7_AO: regulator@104 {
++			compatible = "regulator-fixed";
++			reg = <104>;
++			regulator-name = "vdd-3v7-AO";
++			regulator-min-microvolt = <3700000>;
++			regulator-max-microvolt = <3700000>;
++		};
++		p3740_vdd_3v3_AO: regulator@105 {
++			compatible = "regulator-fixed";
++			reg = <105>;
++			regulator-name = "vdd-3v3-AO";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_1v8_AO: regulator@106 {
++			compatible = "regulator-fixed";
++			reg = <106>;
++			regulator-name = "vdd-1v8-AO";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		p3740_vdd_0v95_AO: regulator@107 {
++			compatible = "regulator-fixed";
++			reg = <107>;
++			regulator-name = "vdd-0v95-AO";
++			regulator-min-microvolt = <950000>;
++			regulator-max-microvolt = <950000>;
++		};
++		p3740_vdd_2v8_sys: regulator@108 {
++			compatible = "regulator-fixed";
++			reg = <108>;
++			regulator-name = "vdd-2v8-sys";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++		p3740_vdd_2v5_sys: regulator@109 {
++			compatible = "regulator-fixed";
++			reg = <109>;
++			regulator-name = "vdd-2v5-sys";
++			regulator-min-microvolt = <2500000>;
++			regulator-max-microvolt = <2500000>;
++		};
++		p3740_vdd_1v05_AO: regulator@110 {
++			compatible = "regulator-fixed";
++			reg = <110>;
++			regulator-name = "vdd-1v05-AO";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++		};
++		p3740_vdd_1v1_sys: regulator@111 {
++			compatible = "regulator-fixed";
++			reg = <111>;
++			regulator-name = "vdd-1v1-sys";
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++		};
++		p3740_vdd_1v0_sys: regulator@112 {
++			compatible = "regulator-fixed";
++			reg = <112>;
++			regulator-name = "vdd-1v0-sys";
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++		p3740_vdd_3v3_dp: regulator@114 {
++			compatible = "regulator-fixed";
++			reg = <114>;
++			regulator-name = "vdd-3v3-dp";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(A, 3) 0>;
++			enable-active-high;
++			regulator-always-on; /* Keeping always-on for bringup */
++		};
++		p3740_vdd_wifi_3v3: regulator@115 {
++			compatible = "regulator-fixed";
++			reg = <115>;
++			regulator-name = "vdd_wifi_3v3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
++			regulator-boot-on;
++			enable-active-high;
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-pcie.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-pcie.dtsi
+new file mode 100644
+index 000000000000..0ced8c69ca46
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-pcie.dtsi
+@@ -0,0 +1,60 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/ {
++
++	/* PCIe-C1: 6-Lane PCIe Switch */
++	pcie@14100000 {
++		status = "okay";
++		vpcie3v3-supply = <&p3740_vdd_wifi_3v3>;
++		phys = <&p2u_hsio_3>;
++		phy-names = "p2u-0";
++	};
++
++	/* PCIe-C4: M.2 Key-M NVMe */
++	pcie@14160000 {
++		status = "okay";
++
++		phys = <&p2u_hsio_7>, <&p2u_hsio_6>, <&p2u_hsio_5>,
++		       <&p2u_hsio_4>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
++
++	/* PCIe-C5: CX7 */
++	pcie@141a0000 {
++		status = "okay";
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
++	/* PCIe-C7: M.2 Key-M NVMe */
++	pcie@141e0000 {
++		status = "okay";
++
++		phys = <&p2u_gbe_0>, <&p2u_gbe_1>, <&p2u_gbe_2>,
++		       <&p2u_gbe_3>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
++
++	/* PCIe-C10: SATA CTLR */
++	pcie@140e0000 {
++		status = "okay";
++
++		phys = <&p2u_gbe_4>, <&p2u_gbe_5>;
++		phy-names = "p2u-0", "p2u-1";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-fixed-regulator.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-fixed-regulator.dtsi
+new file mode 100644
+index 000000000000..06a3ce8b681a
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-fixed-regulator.dtsi
+@@ -0,0 +1,139 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <dt-bindings/gpio/tegra234-gpio.h>
++/ {
++	fixed-regulators {
++		p3740_vdd_5v0_stby: battery_reg: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "vdd-ac-bat";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++		p3740_vdd_12v_sys: regulator@100 {
++			compatible = "regulator-fixed";
++			reg = <100>;
++			regulator-name = "vdd-12v-sys";
++			regulator-min-microvolt = <12000000>;
++			regulator-max-microvolt = <12000000>;
++		};
++		p3740_vdd_5v_sys: vdd_5v_sys: regulator@101 {
++			compatible = "regulator-fixed";
++			reg = <101>;
++			regulator-name = "vdd-5v-sys";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++		p3740_vdd_3v3_sys: vdd_3v3_sys: regulator@102 {
++			compatible = "regulator-fixed";
++			reg = <102>;
++			regulator-name = "vdd-3v3-sys";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_1v8_sys: regulator@103 {
++			compatible = "regulator-fixed";
++			reg = <103>;
++			regulator-name = "vdd-1v8-sys";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		p3740_vdd_3v7_AO: regulator@104 {
++			compatible = "regulator-fixed";
++			reg = <104>;
++			regulator-name = "vdd-3v7-AO";
++			regulator-min-microvolt = <3700000>;
++			regulator-max-microvolt = <3700000>;
++		};
++		p3740_vdd_3v3_AO: regulator@105 {
++			compatible = "regulator-fixed";
++			reg = <105>;
++			regulator-name = "vdd-3v3-AO";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_1v8_AO: regulator@106 {
++			compatible = "regulator-fixed";
++			reg = <106>;
++			regulator-name = "vdd-1v8-AO";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		p3740_vdd_0v95_AO: regulator@107 {
++			compatible = "regulator-fixed";
++			reg = <107>;
++			regulator-name = "vdd-0v95-AO";
++			regulator-min-microvolt = <950000>;
++			regulator-max-microvolt = <950000>;
++		};
++		p3740_vdd_2v8_sys: regulator@108 {
++			compatible = "regulator-fixed";
++			reg = <108>;
++			regulator-name = "vdd-2v8-sys";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
++		p3740_vdd_2v5_sys: regulator@109 {
++			compatible = "regulator-fixed";
++			reg = <109>;
++			regulator-name = "vdd-2v5-sys";
++			regulator-min-microvolt = <2500000>;
++			regulator-max-microvolt = <2500000>;
++		};
++		p3740_vdd_1v05_AO: regulator@110 {
++			compatible = "regulator-fixed";
++			reg = <110>;
++			regulator-name = "vdd-1v05-AO";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1050000>;
++		};
++		p3740_vdd_1v1_sys: regulator@111 {
++			compatible = "regulator-fixed";
++			reg = <111>;
++			regulator-name = "vdd-1v1-sys";
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++		};
++		p3740_vdd_1v0_sys: regulator@112 {
++			compatible = "regulator-fixed";
++			reg = <112>;
++			regulator-name = "vdd-1v0-sys";
++			regulator-min-microvolt = <1000000>;
++			regulator-max-microvolt = <1000000>;
++		};
++		p3740_vdd_3v3_dp: regulator@114 {
++			compatible = "regulator-fixed";
++			reg = <114>;
++			regulator-name = "vdd-3v3-dp";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(H, 6) 0>;
++			enable-active-high;
++			regulator-always-on; /* Keeping always-on for bringup */
++		};
++		p3740_vdd_wifi_3v3: regulator@115 {
++			compatible = "regulator-fixed";
++			reg = <115>;
++			regulator-name = "vdd_wifi_3v3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(G, 3) GPIO_ACTIVE_HIGH>;
++			regulator-boot-on;
++			enable-active-high;
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-pcie.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-pcie.dtsi
+new file mode 100644
+index 000000000000..a4da25535936
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b01-pcie.dtsi
+@@ -0,0 +1,59 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/ {
++
++	/* PCIe-C1: 6-Lane PCIe Switch */
++	pcie@14100000 {
++		status = "okay";
++		vpcie3v3-supply = <&p3740_vdd_wifi_3v3>;
++		phys = <&p2u_hsio_3>;
++		phy-names = "p2u-0";
++	};
++
++	/* PCIe-C4: M.2 Key-M NVMe */
++	pcie@14160000 {
++		status = "okay";
++
++		phys = <&p2u_hsio_7>, <&p2u_hsio_6>, <&p2u_hsio_5>,
++		       <&p2u_hsio_4>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
++
++	/* PCIe-C5: CX7 */
++	pcie@141a0000 {
++		status = "okay";
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
++	/* PCIe-C7: SATA CTLR */
++	pcie@141e0000 {
++		status = "okay";
++
++		phys = <&p2u_gbe_0>, <&p2u_gbe_1>;
++		phy-names = "p2u-0", "p2u-1";
++	};
++
++	/* PCIe-C10: M.2 Key-M NVMe */
++	pcie@140e0000 {
++		status = "okay";
++
++		phys = <&p2u_gbe_4>, <&p2u_gbe_5>;
++		phy-names = "p2u-0", "p2u-1";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-modules.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-modules.dtsi
+new file mode 100644
+index 000000000000..981298aa519e
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-modules.dtsi
+@@ -0,0 +1,360 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++
++#include "tegra234-p3740-0000-camera-p3783-a00.dtsi"
++#include "tegra234-p3740-camera-p3785.dtsi"
++
++#define CAM0_RST_L	TEGRA234_MAIN_GPIO(H, 3)
++#define CAM0_PWDN	TEGRA234_MAIN_GPIO(H, 6)
++#define CAM1_RST_L	TEGRA234_MAIN_GPIO(AC, 1)
++#define CAM1_PWDN	TEGRA234_MAIN_GPIO(AC, 0)
++
++/ {
++	/* set camera gpio direction to output */
++	gpio@2200000 {
++		camera-control-output-low {
++			gpio-hog;
++			output-low;
++			gpios = <CAM0_RST_L 0 CAM0_PWDN 0
++				 CAM1_RST_L 0 CAM1_PWDN 0>;
++			label = "cam0-rst", "cam0-pwdn",
++				"cam1-rst", "cam1-pwdn";
++		};
++	};
++
++	/* all cameras are disabled by default */
++	capture_vi_base: tegra-capture-vi {
++		ports {
++			vi_port0: port@0 {
++				status = "okay";
++				vi_in0: endpoint {
++					vc-id = <0>;
++					status = "okay";
++				};
++			};
++			vi_port1: port@1 {
++				status = "disabled";
++				vi_in1: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port2: port@2 {
++				status = "disabled";
++				vi_in2: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port3: port@3 {
++				status = "disabled";
++				vi_in3: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port4: port@4 {
++				status = "disabled";
++				vi_in4: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port5: port@5 {
++				status = "disabled";
++				vi_in5: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port6: port@6 {
++				status = "disabled";
++				vi_in6: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++			vi_port7: port@7 {
++				status = "disabled";
++				vi_in7: endpoint {
++					vc-id = <0>;
++					status = "disabled";
++				};
++			};
++		};
++	};
++
++	host1x@13e00000 {
++		csi_base: nvcsi@15a00000 {
++			num-tpg-channels = <36>;
++			csi_chan0: channel@0 {
++				status = "okay";
++				ports {
++					csi_chan0_port0: port@0 {
++						status = "okay";
++						csi_in0: endpoint@0 {
++							status = "okay";
++						};
++					};
++					csi_chan0_port1: port@1 {
++						status = "okay";
++						csi_out0: endpoint@1 {
++							status = "okay";
++						};
++					};
++				};
++			};
++			csi_chan1: channel@1 {
++				status = "disabled";
++				ports {
++					csi_chan1_port0: port@0 {
++						status = "disabled";
++						csi_in1: endpoint@2 {
++							status = "disabled";
++						};
++					};
++					csi_chan1_port1: port@1 {
++						status = "disabled";
++						csi_out1: endpoint@3 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan2: channel@2 {
++				status = "disabled";
++				ports {
++					csi_chan2_port0: port@0 {
++						status = "disabled";
++						csi_in2: endpoint@4 {
++							status = "disabled";
++						};
++					};
++					csi_chan2_port1: port@1 {
++						status = "disabled";
++						csi_out2: endpoint@5 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan3: channel@3 {
++				status = "disabled";
++				ports {
++					csi_chan3_port0: port@0 {
++						status = "disabled";
++						csi_in3: endpoint@6 {
++							status = "disabled";
++						};
++					};
++					csi_chan3_port1: port@1 {
++						status = "disabled";
++						csi_out3: endpoint@7 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan4: channel@4 {
++				status = "disabled";
++				ports {
++					csi_chan4_port0: port@0 {
++						status = "disabled";
++						csi_in4: endpoint@8 {
++							status = "disabled";
++						};
++					};
++					csi_chan4_port1: port@1 {
++						status = "disabled";
++						csi_out4: endpoint@9 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan5: channel@5 {
++				status = "disabled";
++				ports {
++					csi_chan5_port0: port@0 {
++						status = "disabled";
++						csi_in5: endpoint@10 {
++							status = "disabled";
++						};
++					};
++					csi_chan5_port1: port@1 {
++						status = "disabled";
++						csi_out5: endpoint@11 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan6: channel@6 {
++				status = "disabled";
++				ports {
++					csi_chan6_port0: port@0 {
++						status = "disabled";
++						csi_in6: endpoint@12 {
++							status = "disabled";
++						};
++					};
++					csi_chan6_port1: port@1 {
++						status = "disabled";
++						csi_out6: endpoint@13 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++			csi_chan7: channel@7 {
++				status = "disabled";
++				ports {
++					csi_chan7_port0: port@0 {
++						status = "disabled";
++						csi_in7: endpoint@14 {
++							status = "disabled";
++						};
++					};
++					csi_chan7_port1: port@1 {
++						status = "disabled";
++						csi_out7: endpoint@15 {
++							status = "disabled";
++						};
++					};
++				};
++			};
++		};
++	};
++
++	i2c@31e0000 {
++		hawk_cam0: ar0234_a@30 {
++			status = "disabled";
++		};
++		hawk_cam1: ar0234_b@31 {
++			status = "disabled";
++		};
++		hawk_cam2: ar0234_c@32 {
++			status = "disabled";
++		};
++		hawk_cam3: ar0234_d@33 {
++			status = "disabled";
++		};
++	};
++	i2c@3180000 {
++		owl_cam0: ar0234_e@30 {
++			status = "disabled";
++		};
++		owl_cam1: ar0234_f@32 {
++			status = "disabled";
++		};
++		owl_cam2: ar0234_g@34 {
++			status = "disabled";
++		};
++		owl_cam3: ar0234_h@36 {
++			status = "disabled";
++		};
++		p3785_cam0: p3785@56 {
++			status = "okay";
++		};
++	};
++
++	tcp: tegra-camera-platform {
++		compatible = "nvidia, tegra-camera-platform";
++		modules {
++			cam_module0: module0 {
++				status = "okay";
++				cam_module0_drivernode0: drivernode0 {
++					status = "okay";
++				};
++				cam_module0_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module1: module1 {
++				status = "disabled";
++				cam_module1_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module1_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module2: module2 {
++				status = "disabled";
++				cam_module2_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module2_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module3: module3 {
++				status = "disabled";
++				cam_module3_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module3_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module4: module4 {
++				status = "disabled";
++				cam_module4_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module4_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module5: module5 {
++				status = "disabled";
++				cam_module5_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module5_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module6: module6 {
++				status = "disabled";
++				cam_module6_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module6_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++			cam_module7: module7 {
++				status = "disabled";
++				cam_module7_drivernode0: drivernode0 {
++					status = "disabled";
++				};
++				cam_module7_drivernode1: drivernode1 {
++					status = "disabled";
++					pcl_id = "v4l2_lens";
++				};
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-p3785.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-p3785.dtsi
+new file mode 100644
+index 000000000000..5711e0c86343
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-camera-p3785.dtsi
+@@ -0,0 +1,42 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include "tegra234-camera-p3785.dtsi"
++
++#define CAM0_PWDN	TEGRA234_AON_GPIO(AA, 4)
++#define CAMERA_I2C_MUX_BUS(x) (0x1E + x)
++
++/ {
++
++	i2c@3180000 {
++		p3785@56 {
++			/* Define any required hw resources needed by driver */
++			/* ie. clocks, io pins, power sources */
++			clocks = <&bpmp_clks TEGRA234_CLK_EXTPERIPH1>,
++				<&bpmp_clks TEGRA234_CLK_EXTPERIPH1>;
++			clock-names = "extperiph1", "pllp_grtba";
++			mclk = "extperiph1";
++			reset-gpios = <&tegra_aon_gpio CAM0_PWDN GPIO_ACTIVE_HIGH>;
++			vana-supply = <&p3740_vdd_3v3_sys>;
++			vdig-supply = <&p3740_vdd_3v3_sys>;
++		};
++	};
++	gpio@c2f0000 {
++		camera-control-output-high {
++			gpio-hog;
++			output-high;
++			gpios = <CAM0_PWDN 0>;
++			label = "cam0-pwdn";
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-fixed-regulator.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-fixed-regulator.dtsi
+new file mode 100644
+index 000000000000..2a71c9ecd78d
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-fixed-regulator.dtsi
+@@ -0,0 +1,183 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <dt-bindings/gpio/tegra234-gpio.h>
++/ {
++	fixed-regulators {
++		hdr40_vdd_5v0: battery_reg: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "vdd-ac-bat";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++		p3740_vdd_12v_sys: regulator@100 {
++			compatible = "regulator-fixed";
++			reg = <100>;
++			regulator-name = "vdd-12v-sys";
++			regulator-min-microvolt = <12000000>;
++			regulator-max-microvolt = <12000000>;
++		};
++		p3740_vdd_5v_sys: vdd_5v_sys: regulator@101 {
++			compatible = "regulator-fixed";
++			reg = <101>;
++			regulator-name = "vdd-5v-sys";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
++		p3740_vdd_3v3_sys: vdd_3v3_sys: regulator@102 {
++			compatible = "regulator-fixed";
++			reg = <102>;
++			regulator-name = "vdd-3v3-sys";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_1v8_sys: regulator@103 {
++			compatible = "regulator-fixed";
++			reg = <103>;
++			regulator-name = "vdd-1v8-sys";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++		p3740_vdd_3v3_ftdi: regulator@104 {
++			compatible = "regulator-fixed";
++			reg = <104>;
++			regulator-name = "vdd-3v3-ftdi";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++		p3740_vdd_3v3_pcie: regulator@105 {
++			compatible = "regulator-fixed";
++			reg = <105>;
++			regulator-name = "vdd-3v3-pcie";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Z, 2) 0>;
++			enable-active-high;
++			regulator-boot-on;
++		};
++		p3740_avdd_cam_2v8: regulator@106 {
++			compatible = "regulator-fixed";
++			reg = <106>;
++			regulator-name = "avdd-cam-2v8";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Q, 1) 0>;
++			enable-active-high;
++		};
++		p3740_vdd_av1v1_hub: regulator@107 {
++			compatible = "regulator-fixed";
++			reg = <107>;
++			regulator-name = "vdd-av1v1-hub";
++			regulator-min-microvolt = <1100000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-always-on;
++			vin-supply = <&p3740_vdd_5v_sys>;
++		};
++		p3740_vbusA_cvb: regulator@108 {
++			compatible = "regulator-fixed";
++			reg = <108>;
++			regulator-name = "vbusA-cvb";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++			vin-supply = <&p3740_vdd_5v_sys>;
++		};
++		p3740_vbusB_cvb: regulator@109 {
++			compatible = "regulator-fixed";
++			reg = <109>;
++			regulator-name = "vbusB-cvb";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++			vin-supply = <&p3740_vdd_5v_sys>;
++		};
++		p3740_vdd_dp: regulator@110 {
++			compatible = "regulator-fixed";
++			reg = <110>;
++			regulator-name = "vdd-dp";
++			regulator-min-microvolt = <100000>;
++			regulator-max-microvolt = <100000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(A, 3) 0>;
++			regulator-always-on; /* Keeping always-on for bringup */
++			enable-active-high;
++		};
++		p3740_vdd_3v3_sd: regulator@111 {
++			compatible = "regulator-fixed";
++			reg = <111>;
++			regulator-name = "vdd-3v3-sd";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			vin-supply = <&p3740_vdd_3v3_sys>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(A, 0) 0>;
++			regulator-always-on; /* Keeping always-on for bringup */
++			enable-active-high;
++		};
++		p3740_vdd_usbc1_vbus: regulator@112 {
++			compatible = "regulator-fixed";
++			reg = <112>;
++			regulator-name = "vdd-usbc1-vbus";
++			regulator-min-microvolt = <300000>;
++			regulator-max-microvolt = <300000>;
++			regulator-always-on;
++			vin-supply = <&p3740_vdd_5v_sys>;
++		};
++		p3740_vdd_usbc2_vbus: regulator@113 {
++			compatible = "regulator-fixed";
++			reg = <113>;
++			regulator-name = "vdd-usbc2-vbus";
++			regulator-min-microvolt = <300000>;
++			regulator-max-microvolt = <300000>;
++			regulator-always-on;
++			vin-supply = <&p3740_vdd_5v_sys>;
++		};
++		p3740_vdd_12v_pcie: regulator@114 {
++			compatible = "regulator-fixed";
++			reg = <114>;
++			regulator-name = "vdd-12v-pcie";
++			regulator-min-microvolt = <12000000>;
++			regulator-max-microvolt = <12000000>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(A, 1) 1>;
++			regulator-boot-on;
++			enable-active-low;
++		};
++		p3740_vdd_sys_en: regulator@115 {
++			compatible = "regulator-fixed";
++			reg = <115>;
++			regulator-name = "vdd_sys_en";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(AC, 7) 0>;
++			regulator-always-on;
++			enable-active-high;
++		};
++		p3740_cx6_rst: regulator@116 {
++			/*
++			 * There isn't a physical regulator corresponding to
++			 * this item.  The associated GPIO connects to the CX6
++			 * pin.  It allows us to keep RST# asserted while Linux
++			 * boots and then deassert as we bring up the CX6.
++			 */
++			compatible = "regulator-fixed";
++			reg = <116>;
++			regulator-name = "cx6-rst-reg";
++			gpio = <&tegra_aon_gpio TEGRA234_AON_GPIO(AA, 0) GPIO_OPEN_DRAIN>;
++			enable-active-high;
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-pcie.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-pcie.dtsi
+new file mode 100644
+index 000000000000..f6b814214b6b
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-pcie.dtsi
+@@ -0,0 +1,80 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <dt-bindings/gpio/tegra234-gpio.h>
++
++/ {
++
++	pcie@14100000 {
++		status = "okay";
++
++		phys = <&p2u_hsio_3>;
++		phy-names = "p2u-0";
++	};
++
++	pcie@14160000 {
++		status = "okay";
++
++		phys = <&p2u_hsio_7>, <&p2u_hsio_6>, <&p2u_hsio_5>,
++		       <&p2u_hsio_4>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
++
++	pcie@141a0000 {
++		status = "okay";
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
++	pcie_ep@141a0000 {
++		status = "disabled";
++
++		reset-gpios = <&tegra_main_gpio
++			       TEGRA234_MAIN_GPIO(AF, 1)
++			       GPIO_ACTIVE_LOW>;
++
++		nvidia,refclk-select-gpios = <&tegra_aon_gpio
++					      TEGRA234_AON_GPIO(AA, 4)
++					      GPIO_ACTIVE_HIGH>;
++
++		phys = <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
++		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
++		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++	};
++
++	/* PCIe-C7: CX6 interface */
++	pcie@141e0000 {
++		status = "okay";
++
++		nvidia,disable-clock-request;
++		nvidia,disable-power-down;
++
++		num-lanes = <0x8>;
++		nvidia,max-speed = <0x4>;
++		max-link-speed = <0x4>;
++
++		phys = <&p2u_gbe_0>, <&p2u_gbe_1>, <&p2u_gbe_2>,
++		       <&p2u_gbe_3>, <&p2u_gbe_4>, <&p2u_gbe_5>,
++		       <&p2u_gbe_6>, <&p2u_gbe_7>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
++			    "p2u-5", "p2u-6", "p2u-7";
++		vpcie3v3-supply = <&p3740_cx6_rst>;
++	};
++
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-powermon.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-powermon.dtsi
+new file mode 100644
+index 000000000000..cebe5433bdab
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-powermon.dtsi
+@@ -0,0 +1,46 @@
++/*
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/ {
++	i2c@c250000 {
++		ina3221_7_41: ina3221@41 {
++			compatible = "ti,ina3221";
++			reg = <0x41>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++			channel@0 {
++				reg = <0x0>;
++				label = "CVB_ATX_12V";
++				shunt-resistor-micro-ohms = <2000>;
++			};
++			channel@1 {
++				reg = <0x1>;
++				label = "CVB_ATX_3V3";
++				shunt-resistor-micro-ohms = <2000>;
++			};
++			channel@2 {
++				reg = <0x2>;
++				label = "CVB_ATX_5V";
++				shunt-resistor-micro-ohms = <2000>;
++			};
++		};
++
++		ina219_7_44: ina219@44 {
++			compatible = "ti,ina219";
++			reg = <0x44>;
++			shunt-resistor = <2000>;
++                        label = "CVB_ATX_12V_8P";
++		};
++	};
++};
+\ No newline at end of file
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi
+new file mode 100644
+index 000000000000..1a7cf0bc8959
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi
+@@ -0,0 +1,66 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include <dt-bindings/gpio/tegra234-gpio.h>
++#include <dt-bindings/pwm/pwm.h>
++
++/ {
++	pwm_fan_shared_data: pfsd {
++		num_resources = <0>;
++		secret = <47>;
++		active_steps = <10>;
++		active_rpm = <0 1000 2000 3000 4000 5000 6000 7000 10000 11000>;
++		rpm_diff_tolerance = <2>;
++		active_rru = <40 2 1 1 1 1 1 1 1 1>;
++		active_rrd = <40 2 1 1 1 1 1 1 1 1>;
++		state_cap_lookup = <2 2 2 2 3 3 3 4 4 4>;
++		pwm_period = <45334>;
++		pwm_id = <3>;
++		pwm_polarity = <PWM_POLARITY_INVERTED>;
++		suspend_state = <1>;
++		step_time = <100>; /* mesecs */
++		state_cap = <7>;
++		active_pwm_max = <256>;
++		tach_period = <1000>;
++		pwm_gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Q, 2) GPIO_ACTIVE_LOW>;
++	};
++
++	pwm-fan {
++		compatible = "pwm-fan";
++		status = "okay";
++		#pwm-cells = <1>;
++		pwms = <&tegra_pwm3 0 45334>;
++		shared_data = <&pwm_fan_shared_data>;
++		profiles {
++			default = "quiet";
++			quiet {
++				state_cap = <4>;
++#if TEGRA_PWM_FAN_DT_VERSION == DT_VERSION_2
++				cooling-levels = <255 178 135 95 0 0 0 0 0 0>;
++#else
++				active_pwm = <0 77 120 160 255 255 255 255 255 255>;
++#endif
++			};
++			cool {
++				state_cap = <4>;
++#if TEGRA_PWM_FAN_DT_VERSION == DT_VERSION_2
++				cooling-levels = <255 178 135 95 0 0 0 0 0 0>;
++#else
++				active_pwm = <0 77 120 160 255 255 255 255 255 255>;
++#endif
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0000.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0000.dtsi
+new file mode 100644
+index 000000000000..b6a0835bb1f2
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0000.dtsi
+@@ -0,0 +1,44 @@
++/*
++ * Common include DTS file for CVM:P3701-0000 and CVB:P3740-0000 variants.
++ *
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include "dt-bindings/extcon-ids.h"
++#include "dt-bindings/gpio/tegra234-gpio.h"
++#include <dt-bindings/pwm/pwm.h>
++#include <t234-common-cvm/tegra234-cvm-p3701.dtsi>
++
++/ {
++	nvidia,fastboot-usb-vid = <0x0955>;
++	nvidia,fastboot-usb-pid = <0xee1e>;
++	model = "NVIDIA Prometheus";
++
++	actmon@d230000 {
++		status = "okay";
++		mc_all {
++			status = "okay";
++		};
++	};
++
++	sdhci@3400000 {
++		vmmc-supply = <&p3740_vdd_3v3_sd>;
++	};
++
++	xusb_padctl@3520000 {
++		avdd-usb-supply = <&p3740_vdd_3v3_sys>;
++	};
++
++	xudc@3550000 {
++		avdd-usb-supply = <&p3740_vdd_3v3_sys>;
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0002.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0002.dtsi
+new file mode 100644
+index 000000000000..711dc18c3fe9
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvm/tegra234-p3701-0002.dtsi
+@@ -0,0 +1,22 @@
++/*
++ * Common include DTS file for CVM:P3701-0002 and CVB:P3711-0000 variants.
++ *
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <t234-common-cvm/tegra234-cvm-p3701.dtsi>
++
++/ {
++	nvidia,fastboot-usb-vid = <0x0955>;
++	nvidia,fastboot-usb-pid = <0xee1e>;
++	model = "Nvidia Jetson MGX/IGX platform";
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi
+new file mode 100644
+index 000000000000..40051134159c
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi
+@@ -0,0 +1,545 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/ {
++	display@13800000 {
++		nvidia,dcb-image = [
++			55 aa 16 00 00 37 34 30 30 e9 4c 19 77 cc 56 49
++			44 45 4f 20 0d 00 00 00 70 01 00 00 00 00 49 42
++			4d 20 56 47 41 20 43 6f 6d 70 61 74 69 62 6c 65
++			01 00 00 00 10 00 c7 17 31 30 2f 32 36 2f 32 31
++			00 00 00 00 00 00 00 00 21 18 50 00 f1 2a 00 00
++			50 4d 49 44 00 00 00 00 00 00 00 a0 00 b0 00 b8
++			00 c0 00 0e 47 41 31 30 42 20 56 47 41 20 42 49
++			4f 53 0d 0a 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 56 65 72 73 69 6f 6e 20 39 34 2e
++			30 42 2e 30 30 2e 30 30 2e 32 30 20 0d 0a 00 43
++			6f 70 79 72 69 67 68 74 20 28 43 29 20 31 39 39
++			36 2d 32 30 32 31 20 4e 56 49 44 49 41 20 43 6f
++			72 70 2e 0d 0a 00 00 00 ff ff 00 00 00 00 ff ff
++			47 50 55 20 42 6f 61 72 64 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 43 68 69 70 20 52 65 76 20 20 20 00 00
++			00 00 00 00 00 00 00 ba 91 98 96 91 9a 9a 8d 96
++			91 98 df ad 9a 93 9a 9e 8c 9a df d2 df b1 90 8b
++			df b9 90 8d df af 8d 90 9b 8a 9c 8b 96 90 91 df
++			aa 8c 9a f2 f5 ff 00 00 00 00 00 00 00 00 00 00
++			50 43 49 52 de 10 94 22 00 00 18 00 00 00 00 03
++			16 00 01 00 00 80 00 00 2e 8b c0 2e 8b c0 8b c0
++			4e 50 44 45 01 01 14 00 16 00 00 01 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			ff b8 42 49 54 00 00 01 0c 06 12 45 32 01 04 00
++			38 02 42 02 25 00 44 02 43 02 2c 00 69 02 44 01
++			04 00 95 02 49 01 24 00 99 02 4d 02 29 00 bd 02
++			4e 00 00 00 00 00 50 02 e8 00 e6 02 53 02 18 00
++			ce 03 54 01 02 00 e6 03 55 01 05 00 ec 03 56 01
++			06 00 f1 03 78 01 08 00 f7 03 64 01 02 00 ff 03
++			70 02 04 00 01 04 75 01 11 00 05 04 69 02 6e 00
++			18 04 45 01 04 00 e8 03 00 00 86 04 86 04 fe 20
++			00 21 f0 2a 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 0b 94 20 00 00 00 00 00 a8 07
++			00 00 00 00 00 00 00 00 02 00 5c 5c 28 02 00 00
++			3c 02 04 00 10 00 00 00 00 f5 0e 00 00 00 00 00
++			00 35 44 00 00 c7 2d 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 72 30 00 00 e1 44 00 00 1f 45 00
++			00 46 45 00 00 00 00 00 00 da 04 00 00 00 00 de
++			04 00 00 4a 08 de 04 26 2a 4a 08 28 2a 86 04 ef
++			09 14 21 d4 09 d7 20 28 2a 90 00 ab 21 01 4c 08
++			3a 09 f0 43 00 00 fa 43 00 00 03 10 00 00 00 21
++			00 00 0c 21 00 00 50 4a 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 d5 33 00 00 bb 36 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 af 3c 00 00 00 00 00 00 e9 3c
++			00 00 0e 43 00 00 00 00 00 00 00 00 00 00 df 33
++			00 00 2e 3d 00 00 9c 43 00 00 ad 36 00 00 00 00
++			00 00 00 00 00 00 be 43 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 45 0b
++			00 00 c1 0a 00 00 5b 0b 00 00 11 3c 00 00 17 3c
++			00 00 1c 3c 00 00 20 3c 00 00 2a 3c 00 00 31 3c
++			00 00 3f 3c 00 00 81 3c 00 00 00 00 00 00 00 00
++			00 00 92 3c 00 00 ec 45 00 00 92 47 00 00 07 48
++			00 00 8d 49 00 00 7c 4b 00 00 b8 4b 00 00 e2 49
++			00 00 98 3c 00 00 79 3c 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 e8 4d 00 00 9c 3c 00 00 a5 3c
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 64 00
++			50 b5 00 19 cf 00 28 75 0e 14 89 0e 23 00 01 23
++			23 01 14 ac 0e 28 18 11 00 00 00 00 d4 0e 01 00
++			00 f1 0d c3 0c 00 00 00 00 01 01 00 00 00 00 f4
++			1c 2d 4e 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 92 2d 00 00 00 00 00 00 0b 94 20 00 00 20
++			92 d2 01 58 03 00 00 31 30 2f 32 36 2f 32 31 00
++			00 00 00 00 00 00 00 00 00 00 00 21 01 10 00 00
++			00 80 01 00 00 00 00 00 30 30 30 30 30 30 30 30
++			30 30 30 30 00 00 00 00 00 00 00 00 03 42 00 00
++			b9 78 8f 47 ad 04 4f 3d bf 01 4c 10 55 04 be ee
++			54 33 00 00 00 00 00 00 c5 4c 00 00 00 00 00 00
++			00 00 93 4e 00 00 01 00 10 00 bf 09 30 00 02 00
++			94 22 00 00 00 00 01 00 44 00 6b 09 00 00 86 04
++			00 00 3a 09 00 00 de 04 00 00 00 00 00 00 4a 08
++			00 00 5c 08 00 00 45 0b 00 00 c1 0a 00 00 5b 0b
++			00 00 71 0b 00 00 f1 0d 00 00 c3 0c 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 3c 21 00 00 30 c0
++			61 40 00 00 00 10 00 00 00 00 08 23 61 00 80 00
++			00 00 80 00 00 00 88 23 61 00 80 00 00 00 80 00
++			00 00 08 24 61 00 80 00 00 00 80 00 00 00 88 24
++			61 00 80 00 00 00 80 00 00 00 08 25 61 00 80 00
++			00 00 80 00 00 00 88 25 61 00 80 00 00 00 80 00
++			00 00 08 26 61 00 80 00 00 00 80 00 00 00 00 2a
++			13 00 00 00 04 00 00 00 04 00 00 2a 13 00 00 00
++			01 00 00 00 01 00 00 6e 13 00 00 00 04 00 00 00
++			04 00 00 6e 13 00 00 00 01 00 00 00 01 00 4c 00
++			12 00 3f 00 00 00 00 00 00 00 0c 24 02 00 01 00
++			00 00 00 00 00 00 e4 05 02 00 7c 00 00 00 00 00
++			00 00 e4 05 02 00 7c 00 00 00 18 00 00 00 e4 05
++			02 00 7c 00 00 00 0c 00 00 00 e4 05 02 00 7c 00
++			00 00 04 00 00 00 e4 05 02 00 7c 00 00 00 08 00
++			00 00 e4 05 02 00 7c 00 00 00 14 00 00 00 20 0e
++			9a 00 00 00 02 00 00 00 02 00 00 0e 9a 00 00 00
++			02 00 00 00 02 00 00 0e 9a 00 01 00 00 00 01 00
++			00 00 34 c0 61 40 00 00 00 80 00 00 00 00 00 0c
++			82 00 ff ff ff ff 00 00 00 00 00 0c 82 00 01 00
++			00 00 00 00 00 00 00 0c 82 00 02 00 00 00 00 00
++			00 00 00 0c 82 00 04 00 00 00 00 00 00 00 00 0c
++			82 00 08 00 00 00 00 00 00 00 00 0c 82 00 10 00
++			00 00 00 00 00 00 00 0c 82 00 20 00 00 00 00 00
++			00 00 90 02 82 00 01 00 00 00 00 00 00 00 88 02
++			82 00 ff 00 00 00 00 00 00 00 c0 04 82 00 07 00
++			00 00 00 00 00 00 00 0a 00 00 00 00 f0 1f 00 00
++			00 00 88 80 08 00 00 00 0f 00 00 00 01 00 40 c0
++			08 00 00 00 0c 00 00 00 0c 00 40 c0 08 00 1f 00
++			00 00 00 00 00 00 00 0a 00 00 00 00 f0 1f 00 00
++			00 00 74 09 9a 00 0f 00 00 00 00 00 00 00 e8 73
++			13 00 01 00 00 00 01 00 00 00 0c 06 9a 00 40 00
++			00 00 40 00 00 00 64 00 12 00 40 00 00 00 40 00
++			00 00 04 14 00 00 04 00 00 00 00 00 00 00 04 14
++			00 00 08 00 00 00 08 00 00 00 14 38 82 00 00 00
++			01 00 00 00 01 00 00 0a 00 00 00 00 f0 1f 00 00
++			00 00 0c 14 00 00 01 00 00 00 01 00 00 00 0c 14
++			00 00 02 00 00 00 01 00 00 00 88 54 62 00 00 00
++			01 00 00 00 00 00 88 54 62 00 00 00 02 00 00 00
++			00 00 88 54 62 00 00 00 04 00 00 00 00 00 9c 8b
++			11 00 00 00 00 80 00 00 00 00 14 0c 82 00 01 00
++			00 00 00 00 00 00 14 0c 82 00 02 00 00 00 00 00
++			00 00 14 0c 82 00 04 00 00 00 00 00 00 00 14 0c
++			82 00 08 00 00 00 00 00 00 00 14 0c 82 00 10 00
++			00 00 00 00 00 00 14 0c 82 00 20 00 00 00 00 00
++			00 00 9c 8b 11 00 00 00 00 80 00 00 00 00 10 01
++			82 00 01 00 00 00 00 00 00 00 d4 06 82 00 ff 03
++			00 00 00 00 00 00 14 0c 82 00 3f 00 00 00 01 00
++			00 00 00 14 00 00 02 00 00 00 00 00 00 00 44 c1
++			61 60 01 00 00 00 01 00 00 00 20 87 08 00 04 00
++			00 00 00 00 00 00 40 00 82 00 01 00 00 00 00 00
++			00 00 54 9b 41 00 ff 00 00 00 00 00 00 00 68 9b
++			41 00 03 00 00 00 00 00 00 00 40 80 11 00 02 00
++			00 00 00 00 00 00 04 0c 82 00 01 00 00 00 00 00
++			00 00 04 14 00 00 00 04 00 00 00 00 00 00 34 04
++			82 00 01 00 00 00 00 00 00 00 4c 08 00 01 02 03
++			04 05 06 07 00 01 02 03 04 05 06 07 41 06 24 06
++			00 00 00 07 00 02 bf 00 01 51 00 04 bf 00 02 5e
++			00 01 bf 00 03 52 00 03 bf 00 84 19 00 00 4f 00
++			85 7b 59 98 4f 00 06 ff 00 00 4f 00 07 ff 00 00
++			ef 00 08 ff 00 00 ef 00 09 ff 00 00 ef 00 0a ff
++			00 00 ef 00 0b ff 00 00 ef 00 0c ff 00 00 ef 00
++			0d ff 00 00 ef 00 0e ff 00 00 ef 00 0f ff 00 00
++			ef 00 10 42 50 11 e4 00 11 41 42 0b e2 00 12 40
++			41 0a e1 00 13 70 51 12 e5 00 14 ff 00 00 ef 00
++			15 ff 00 00 ef 00 16 ff 00 00 ef 00 17 ff 00 00
++			ef 00 18 ff 00 00 ef 00 19 ff 00 00 ef 00 1a ff
++			00 00 ef 00 1b ff 00 00 ef 00 1c ff 00 00 ef 00
++			1d ff 00 00 ef 00 1e ff 00 00 ef 00 1f ff 00 00
++			ef 00 00 ff 00 00 0f 00 00 ff 00 00 0f 00 00 ff
++			00 00 0f 00 00 ff 00 00 0f 00 10 07 16 10 00 a1
++			0a 01 f0 10 03 00 00 00 00 ff ff ff 00 ff ff 00
++			10 00 00 00 00 00 00 1f 01 00 00 00 00 00 00 ff
++			ff ff 00 ff ff 00 10 00 00 00 00 00 00 2f 02 00
++			00 00 00 00 00 ff ff ff 00 ff ff 00 10 00 00 00
++			00 00 00 3f 03 00 00 00 00 00 00 ff ff ff 00 ff
++			ff 00 10 00 00 00 00 00 00 4f 04 00 00 00 00 00
++			00 ff ff ff 00 ff ff 00 10 00 00 00 00 00 00 5f
++			05 00 00 00 00 00 00 ff ff ff 00 ff ff 00 10 00
++			00 00 00 00 00 6f 06 00 00 00 00 00 00 ff ff ff
++			00 ff ff 00 10 00 00 00 00 00 00 7f 07 00 00 00
++			00 00 00 ff ff ff 00 ff ff 00 10 00 00 00 00 00
++			00 8f 00 00 00 00 00 00 00 ff ff ff 00 ff ff 00
++			10 00 00 00 00 00 00 9f 01 00 00 00 00 00 00 ff
++			ff ff 00 ff ff 00 10 00 00 00 00 00 00 af 02 00
++			00 00 00 00 00 ff ff ff 00 ff ff 00 10 00 00 00
++			00 00 00 bf 03 00 00 00 00 00 00 ff ff ff 00 ff
++			ff 00 10 00 00 00 00 00 00 cf 04 00 00 00 00 00
++			00 ff ff ff 00 ff ff 00 10 00 00 00 00 00 00 df
++			05 00 00 00 00 00 00 ff ff ff 00 ff ff 00 10 00
++			00 00 00 00 00 ef 06 00 00 00 00 00 00 ff ff ff
++			00 ff ff 00 10 00 00 00 00 00 00 ff 07 00 00 00
++			00 00 00 ff ff ff 00 ff ff 00 10 00 00 00 00 00
++			00 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e
++			0f 10 11 12 13 14 15 16 17 18 19 1a 1b 1c 1d 1e
++			1f 10 04 20 04 00 00 80 00 b8 4c 0a ff e0 93 04
++			00 20 d6 13 00 e0 93 04 01 20 d6 13 00 ff 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00
++			00 00 00 00 00 00 00 00 01 00 00 00 00 ff 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00
++			00 00 00 00 00 00 00 00 01 00 00 00 00 ff 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 ff 00 00 00
++			00 00 00 00 00 00 00 00 01 00 00 00 00 ff 00 00
++			00 00 00 00 00 20 05 11 01 00 00 35 0c 00 ff ff
++			ff ff ff ff ff ff ff 00 00 00 00 10 05 11 01 00
++			00 00 00 ff ff 00 00 00 00 00 00 00 00 00 00 00
++			00 30 08 10 01 14 01 15 0e 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 10 0d 17 34 b0 8f 11 00 00 00 00 00 00
++			00 00 00 34 a8 04 82 00 00 00 00 00 00 00 00 00
++			34 a0 04 82 00 00 00 00 00 00 00 00 00 34 d4 02
++			82 00 00 00 00 00 00 00 00 00 34 a4 04 82 00 00
++			00 00 00 00 00 00 00 34 7c 14 00 00 00 00 00 00
++			00 00 00 00 34 08 0e 82 00 00 00 00 00 00 00 00
++			00 34 0c 0e 82 00 00 00 00 00 00 00 00 00 34 a8
++			83 11 00 00 00 00 00 00 00 00 00 34 78 01 82 00
++			00 00 00 00 00 00 00 00 34 78 01 82 00 00 00 00
++			00 00 00 00 00 34 ac 04 82 00 00 00 00 00 00 00
++			00 00 34 94 10 82 00 00 00 00 00 00 00 00 00 34
++			88 10 82 00 00 00 00 00 00 00 00 00 34 8c 10 82
++			00 00 00 00 00 00 00 00 00 34 90 10 82 00 00 00
++			00 00 00 00 00 00 34 ac 83 11 00 00 00 00 00 00
++			00 00 00 34 78 01 82 00 00 00 00 00 00 00 00 00
++			34 d4 02 82 00 00 00 00 00 00 00 00 00 34 78 05
++			82 00 00 00 00 00 00 00 00 00 34 b0 04 82 00 00
++			00 00 00 00 00 00 00 34 78 01 82 00 00 00 00 00
++			00 00 00 00 34 7c 07 82 00 00 00 00 00 00 00 00
++			00 10 03 1b 05 80 00 07 60 05 08 40 08 09 60 0d
++			0a 40 10 0d f0 17 0c e0 15 0e 60 18 0f 40 1c 10
++			e0 23 15 80 24 16 26 29 17 60 2d 18 40 30 19 60
++			35 1a 60 39 1b 60 3d 1d e0 43 1e a5 44 1f 60 49
++			20 60 4d 21 60 51 22 fc 47 23 a0 58 24 66 59 25
++			2c 5a 26 f2 5a ff 7d f4 ed 1f 18 7c a3 82 dc b6
++			81 88 d5 6f da 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 4e 56 49 44 49 41 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 4e 56 49 44 49 41 20
++			43 6f 72 70 6f 72 61 74 69 6f 6e 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 42 49 4f 53
++			20 43 65 72 74 69 66 69 63 61 74 65 20 43 68 65
++			63 6b 20 46 61 69 6c 65 64 21 21 21 0d 0a 00 00
++			00 00 00 00 22 05 02 0e 0c 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 50 04 13 0e 07 95 01 95 01 d0 07
++			a0 0f 1b 00 1b 00 0f 0f 32 ff 01 3f 08 95 01 95
++			01 d0 07 a0 0f 1b 00 1b 00 0f 0f 32 ff 01 3f 0b
++			95 01 95 01 d0 07 a0 0f 1b 00 1b 00 0f 0f 32 ff
++			01 3f 04 e1 00 13 01 94 11 28 23 e1 00 13 01 01
++			01 14 ff 01 02 0c 1b 00 1b 00 40 06 80 0c 1b 00
++			1b 00 01 01 28 ff 01 3f 41 1b 00 1b 00 40 06 8c
++			0a 1b 00 28 00 01 ff 28 ff 03 3f 42 1b 00 1b 00
++			40 06 8c 0a 1b 00 28 00 01 ff 28 ff 03 3f 80 1b
++			00 1b 00 20 03 54 06 1b 00 1b 00 01 01 14 ff 01
++			3f 81 1b 00 1b 00 20 03 54 06 1b 00 1b 00 01 01
++			14 ff 01 3f 82 1b 00 1b 00 20 03 54 06 1b 00 1b
++			00 01 01 14 ff 01 3f 83 1b 00 1b 00 20 03 54 06
++			1b 00 1b 00 01 01 14 ff 01 3f 0d 1b 00 1b 00 20
++			03 54 06 1b 00 1b 00 01 01 14 ff 01 3f 0e 1b 00
++			1b 00 e8 03 d0 07 0d 00 1b 00 01 ff 28 ff 01 1f
++			0f 95 01 95 01 d0 07 a0 0f 1b 00 1b 00 0f 0f 32
++			ff 01 3f 10 04 02 06 00 00 00 07 00 07 00 07 00
++			07 00 07 10 05 04 10 04 0f 0f 0f 0f 2f 2f 2f 2f
++			1c 1c 1c 1c 0f 46 40 00 0f 0f 0f 0f 2f 2f 2f 2f
++			1d 1d 1d 1d 0f 46 40 00 0f 0f 0f 0f 2f 2f 2f 2f
++			1e 1e 1e 1e 0f 46 40 00 0f 0f 0f 0f 2f 2f 2f 2f
++			1f 1f 1f 1f 0f 46 40 00 0f 0f 0f 0f 2d 2d 2d 2d
++			19 19 19 19 0f 46 40 00 0f 0f 0f 0f 2c 2c 2c 2c
++			1b 1b 1b 1b 0f 46 40 00 0f 0f 0f 0f 2b 2b 2b 2b
++			1d 1d 1d 1d 0f 46 40 00 0f 0f 0f 0f 2a 2a 2a 2a
++			1f 1f 1f 1f 0f 46 40 00 0e 0e 0e 0e 29 29 29 29
++			18 18 18 18 0f 46 40 00 0e 0e 0e 0e 28 28 28 28
++			1a 1a 1a 1a 0f 46 40 00 0e 0e 0e 0e 27 27 27 27
++			1c 1c 1c 1c 0f 46 40 00 0e 0e 0e 0e 26 26 26 26
++			1e 1e 1e 1e 0f 46 40 00 0f 0f 0f 0f 2d 2d 2d 2d
++			19 19 19 19 0f 46 40 00 0f 0f 0f 0f 2c 2c 2c 2c
++			1b 1b 1b 1b 0f 46 40 00 0f 0f 0f 0f 2b 2b 2b 2b
++			1d 1d 1d 1d 0f 46 40 00 0f 0f 0f 0f 2a 2a 2a 2a
++			1f 1f 1f 1f 0f 46 40 00 20 19 04 00 00 50 32 74
++			40 e8 80 e4 57 01 04 04 06 76 19 00 00 13 10 00
++			00 49 11 00 00 47 12 00 00 45 13 00 00 43 14 00
++			00 41 15 00 00 3f 16 00 00 10 08 0e 05 00 2c 04
++			04 d1 84 00 00 00 00 0a 05 00 06 00 00 00 00 00
++			38 3d 3e 3f 3a 00 00 00 00 05 05 05 05 00 00 00
++			00 00 00 00 00 88 58 24 00 00 00 00 00 75 40 00
++			00 00 00 0a 05 00 06 00 00 00 00 00 38 3d 3e 3f
++			3a 3f 3f 3f 3f 05 05 05 05 0a 0a 0a 0a 00 00 00
++			00 88 58 24 00 00 00 00 00 65 19 00 00 00 00 0a
++			05 00 06 00 00 00 00 00 48 3a 3a 3a 3a 3a 3a 3a
++			3a 00 00 00 00 00 00 00 00 00 00 00 00 f8 5a 24
++			00 00 00 00 00 00 00 00 00 00 00 0a 0a 00 06 00
++			00 00 00 00 58 3a 3a 3a 3a 3a 3a 3a 3a 00 00 00
++			00 00 00 00 00 00 00 00 00 f8 5a 24 00 00 00 00
++			00 03 00 00 01 0a 05 0f 46 40 00 00 03 00 44 06
++			00 00 01 0a 08 0f 46 40 00 00 03 00 44 08 00 00
++			01 0a 05 0f 46 40 00 00 03 00 44 0a 00 00 01 0a
++			05 0f 46 40 00 00 03 00 44 0c 00 00 01 0a 08 0f
++			46 40 00 00 03 00 44 10 08 0e 05 00 2c 04 04 d1
++			84 00 00 00 00 0a 05 00 06 00 00 00 00 00 38 3d
++			3e 3f 3a 00 00 00 00 05 05 05 05 00 00 00 00 00
++			00 00 00 88 58 24 00 00 00 00 00 75 40 00 00 00
++			00 0a 05 00 06 00 00 00 00 00 38 3d 3e 3f 3a 00
++			00 00 00 05 05 05 05 00 00 00 00 00 00 00 00 88
++			58 24 00 00 00 00 00 65 19 00 00 00 00 0a 05 00
++			06 00 00 00 00 00 48 3a 3a 3a 3a 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 f8 5a 24 00 00
++			00 00 00 00 00 00 00 00 00 0a 0a 00 06 00 00 00
++			00 00 58 3a 3a 3a 3a 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 f8 5a 24 00 00 00 00 00 0c
++			00 00 01 0a 05 0f 46 40 00 00 03 00 44 0d 00 00
++			01 0a 08 0f 46 40 00 00 03 00 44 0e 00 00 01 0a
++			05 0f 46 40 00 00 03 00 44 0f 01 00 01 0a 05 0f
++			46 40 00 00 03 00 44 10 01 00 01 0a 08 0f 46 40
++			00 00 03 00 44 10 08 0e 05 00 2c 04 04 d1 84 00
++			00 00 00 0a 05 00 06 00 00 00 00 00 38 3d 3e 3f
++			3a 00 00 00 00 05 05 05 05 00 00 00 00 00 00 00
++			00 88 58 24 00 00 00 00 00 75 40 00 00 00 00 0a
++			05 00 06 00 00 00 00 00 38 3d 3e 3f 3a 3f 3f 3f
++			3f 05 05 05 05 05 05 05 05 00 00 00 00 88 58 24
++			00 00 00 00 00 65 19 00 00 00 00 0a 05 00 06 00
++			00 00 00 00 48 3a 3a 3a 3a 3a 3a 3a 3a 00 00 00
++			00 00 00 00 00 00 00 00 00 f8 5a 24 00 00 00 00
++			00 00 00 00 00 00 00 0a 0a 00 06 00 00 00 00 00
++			58 3a 3a 3a 3a 3a 3a 3a 3a 00 00 00 00 00 00 00
++			00 00 00 00 00 f8 5a 24 00 00 00 00 00 0c 01 00
++			01 0a 05 0f 46 40 00 00 03 00 44 0d 01 00 01 0a
++			08 0f 46 40 00 00 03 00 44 0e 02 00 01 0a 05 0f
++			46 40 00 00 03 00 44 0f 02 00 01 0a 05 0f 46 40
++			00 00 03 00 44 10 02 00 01 0a 08 0f 46 40 00 00
++			03 00 44 10 08 0e 05 00 2c 04 04 d1 84 00 00 00
++			00 0a 05 00 06 00 00 00 00 00 38 3d 3e 3f 3a 00
++			00 00 00 05 05 05 05 00 00 00 00 00 00 00 00 88
++			58 24 00 00 00 00 00 75 40 00 00 00 00 0a 05 00
++			06 00 00 00 00 00 38 3d 3e 3f 3a 00 00 00 00 05
++			05 05 05 00 00 00 00 00 00 00 00 88 58 24 00 00
++			00 00 00 65 19 00 00 00 00 0a 05 00 06 00 00 00
++			00 00 48 3a 3a 3a 3a 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 f8 5a 24 00 00 00 00 00 00
++			00 00 00 00 00 0a 0a 00 06 00 00 00 00 00 58 3a
++			3a 3a 3a 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 f8 5a 24 00 00 00 00 00 0c 00 00 01 0a
++			05 0f 46 40 00 00 03 00 44 0d 00 00 01 0a 08 0f
++			46 40 00 00 03 00 44 0e 00 00 01 0a 05 0f 46 40
++			00 00 03 00 44 0f 01 00 01 0a 05 0f 46 40 00 00
++			03 00 44 10 01 00 01 0a 08 0f 46 40 00 00 03 00
++			44 10 08 0e 05 00 2c 04 04 d1 84 00 00 00 00 0a
++			05 00 06 00 00 00 00 00 38 3d 3e 3f 3a 00 00 00
++			00 05 05 05 05 00 00 00 00 00 00 00 00 88 58 24
++			00 00 00 00 00 75 40 00 00 00 00 0a 05 00 06 00
++			00 00 00 00 38 3d 3e 3f 3a 3f 3f 3f 3f 05 05 05
++			05 08 08 08 08 00 00 00 00 88 58 24 00 00 00 00
++			00 65 19 00 00 00 00 0a 05 00 06 00 00 00 00 00
++			48 3a 3a 3a 3a 3a 3a 3a 3a 00 00 00 00 00 00 00
++			00 00 00 00 00 f8 5a 24 00 00 00 00 00 00 00 00
++			00 00 00 0a 0a 00 06 00 00 00 00 00 58 3a 3a 3a
++			3a 3a 3a 3a 3a 00 00 00 00 00 00 00 00 00 00 00
++			00 f8 5a 24 00 00 00 00 00 0c 01 00 01 0a 05 0f
++			46 40 00 00 03 00 44 0d 01 00 01 0a 08 0f 46 40
++			00 00 03 00 44 0e 02 00 01 0a 05 0f 46 40 00 00
++			03 00 44 0f 02 00 01 0a 05 0f 46 40 00 00 03 00
++			44 10 02 00 01 0a 08 0f 46 40 00 00 03 00 44 10
++			08 0e 05 00 2c 04 04 d1 84 00 00 00 00 0a 05 00
++			06 00 00 00 00 00 38 3d 3e 3f 3a 00 00 00 00 05
++			05 05 05 00 00 00 00 00 00 00 00 88 58 24 00 00
++			00 00 00 75 40 00 00 00 00 0a 05 00 06 00 00 00
++			00 00 38 3d 3e 3f 3a 00 00 00 00 05 05 05 05 00
++			00 00 00 00 00 00 00 88 58 24 00 00 00 00 00 65
++			19 00 00 00 00 0a 05 00 06 00 00 00 00 00 48 3a
++			3a 3a 3a 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 f8 5a 24 00 00 00 00 00 00 00 00 00 00
++			00 0a 0a 00 06 00 00 00 00 00 58 3a 3a 3a 3a 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 f8
++			5a 24 00 00 00 00 00 0c 00 00 01 0a 05 0f 46 40
++			00 00 03 00 44 0d 00 00 01 0a 08 0f 46 40 00 00
++			03 00 44 0e 00 00 01 0a 05 0f 46 40 00 00 03 00
++			44 0f 01 00 01 0a 05 0f 46 40 00 00 03 00 44 10
++			01 00 01 0a 08 0f 46 40 00 00 03 00 44 7a 14 c0
++			61 40 01 00 c2 0d 74 05 00 6e 14 c0 61 40 ff ff
++			bf ff 00 00 00 00 6e e4 c5 61 40 fe ff ff ff 00
++			00 00 00 71 5b f5 19 71 5b 6f 17 5b 74 17 71 56
++			00 ff 72 71 6e 0c c1 61 40 fe ff ff ff 00 00 00
++			00 6e 40 65 61 80 fe ff ff ff 00 00 00 00 71 6e
++			00 23 61 40 ff ff 80 fc 00 00 23 00 71 6e 00 23
++			61 40 ff ff 80 fc 00 00 27 00 71 6e 00 23 61 40
++			ff ff 80 fc 00 00 2b 00 71 6e 00 23 61 40 ff ff
++			80 fc 00 00 2f 00 71 41 23 10 08 6a 18 cb bd dc
++			4e 5c 08 00 00 00 00 00 00 ac 18 31 19 c1 00 00
++			00 00 00 00 00 00 00 00 00 00 06 03 80 01 10 00
++			60 04 02 03 80 01 10 00 02 04 2e 23 02 01 10 00
++			02 00 2f 32 03 02 10 00 02 00 fe 40 04 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 0f 00 00 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 0f 00 00 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 0f 00 00 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 0f 00 00 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 0f 00 00 00 00 00
++			00 00 0f 00 00 00 00 00 00 00 41 06 0f 04 02 0f
++			06 00 00 10 ff 03 00 80 ff 03 00 80 ff 03 00 10
++			ff 03 00 10 ff 03 00 10 ff 03 00 10 ff 03 00 10
++			ff 03 00 10 ff 03 00 10 ff 03 00 00 ff 03 00 00
++			ff 03 00 00 ff 03 00 00 ff 03 00 00 40 05 20 04
++			01 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00 00
++			00 40 05 10 04 00 46 10 00 00 ff 01 00 00 ff 02
++			00 00 ff 03 00 00 ff 04 00 00 ff 00 00 00 ff 00
++			00 00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00
++			00 00 ff 00 00 00 ff 00 00 00 ff 00 00 00 ff 00
++			00 00 ff 00 00 00 10 05 40 01 00 00 00 0b 03 00
++			00 0a 02 00 00 08 02 00 20 04 02 00 80 00 00 00
++			80 00 00 00 80 00 00 00 80 00 00 00 20 00 00 00
++			20 00 03 00 00 0c 03 00 00 0a 03 00 80 0b 03 00
++			80 0b 03 00 80 0b 03 00 80 0b 03 71 71 6e 14 c0
++			61 40 ff ff 3f fa 00 00 c0 01 74 05 00 6e 14 c0
++			61 40 f7 ff ff ff 08 00 00 00 6e b8 c1 61 40 ff
++			ff 3f 81 00 03 00 08 6e 00 23 61 40 ff ff 83 fc
++			00 00 00 00 71 58 40 c0 61 40 10 00 00 0a 1d 00
++			00 0a 04 00 00 08 04 00 20 04 04 00 80 00 00 00
++			80 00 00 00 80 00 00 00 80 00 00 00 20 00 00 00
++			20 00 1d 00 00 0c 1d 00 00 0a 1d 00 80 0a 1d 00
++			80 0a 1d 00 80 0a 1d 00 80 0a 1d 71 6e 00 23 61
++			40 ff ff fc fc 00 00 02 03 71 7a 14 c0 61 40 14
++			00 c2 0d 74 05 00 6e 14 c0 61 40 ff ff bf ff 00
++			00 00 00 74 14 00 71 6e 14 c0 61 40 ff ff ff f2
++			00 00 00 00 74 0a 00 6e 00 23 61 40 ff ff fc ff
++			00 00 01 00 6e 0c c1 61 60 ff bf ff ff 00 40 00
++			00 6e 14 c0 61 40 ff ff 7f ff 00 00 00 00 6e 30
++			c1 61 60 f0 ff ff ff 0f 00 00 00 6e 34 c0 61 40
++			ff ff ee 7f 00 00 00 80 56 17 ff 6e 0c c1 61 60
++			fc ff ff ff 01 00 00 00 6e 30 c1 61 60 0f ff ff
++			ff f0 00 00 00 74 0a 00 6e 30 c1 61 60 0f ff ff
++			ff 00 00 00 00 6e 10 c1 61 40 e0 e0 e0 e0 00 00
++			00 00 6e 2c c1 61 40 e0 e0 e0 e0 00 00 00 00 3a
++			05 15 6e 40 c1 61 60 fd ff ff ff 02 00 00 00 98
++			0a 01 00 00 01 fe 01 71 98 02 01 00 00 01 d0 00
++			6e 10 c1 61 40 e0 e0 e0 e0 10 10 10 10 6e 2c c1
++			61 40 e0 e0 e0 e0 10 10 10 10 71 5f 0c c1 61 60
++			00 01 40 ff 40 00 00 00 00 40 65 61 80 fe bf 00
++			bf 3a 00 03 5b 59 1b 72 71 3a 07 01 38 6e 40 c1
++			61 60 fe ff ff ff 01 00 00 00 72 5b ad 1c 52 e8
++			df 00 71 71 6e 0c c1 61 60 fe ff 00 ff 00 00 00
++			00 6e 30 c1 61 40 f0 ff ff ff 00 00 00 00 6e b0
++			c1 61 40 f0 ff ff ff 00 00 00 00 6e 34 c0 61 40
++			ff ff ee 7f 00 00 11 80 56 17 ff 6e 14 c0 61 40
++			ff ff 7f ff 00 00 80 00 6e 00 23 61 40 ff ff fc
++			ff 00 00 02 00 74 05 00 6e 14 c0 61 40 ff ff ff
++			f2 00 00 00 0d 74 05 00 6e 14 c0 61 40 ff ff bf
++			ff 00 00 40 00 74 05 00 6e 14 c0 61 40 f7 ff ff
++			ff 08 00 00 00 6e 0c c0 61 40 ff f0 f0 f0 00 03
++			05 05 6e b8 c1 61 40 ff ff ff 81 00 03 00 08 6e
++			00 23 61 40 ff ff 83 fc 00 00 00 00 6e 40 c1 61
++			60 fe ff ff ff 00 00 00 00 71 6e 0c c1 61 60 fd
++			ff ff ff 02 00 00 00 6e 30 c1 61 60 ff ff bf ff
++			00 00 40 00 71 10 05 40 01 01 00 00 00 00 0a 10
++			00 00 00 a0 40 00 00 80 40 00 00 80 40 00 00 80
++			40 00 00 80 40 00 00 80 40 00 00 20 00 00 32 10
++			80 00 0a 90 80 00 00 80 80 00 00 80 80 00 00 80
++			80 00 00 80 80 00 00 80 80 00 71 71 6e 40 65 61
++			80 fe ff ff ff 00 00 00 00 71 71 98 07 01 00 00
++			01 ef 10 71 98 07 01 00 00 01 ef 00 71 58 40 c0
++			61 40 10 00 00 00 00 32 10 00 00 00 a0 40 00 00
++			80 40 00 00 80 40 00 00 80 40 00 00 80 40 00 00
++			80 40 00 00 20 00 00 32 10 80 00 96 90 80 00 00
++			80 80 00 00 80 80 00 00 80 80 00 00 80 80 00 00
++			80 80 00 71 42 15 02 07 13 04 03 0a 04 28 23 28
++			23 01 04 04 06 45 1c 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 14 00 02 19 0a 03 1e 14 04
++			2b 28 06 1e 00 03 25 0f 04 2f 21 06 28 00 04 32
++			14 06 3c 00 06 14 00 02 19 0a 03 1e 14 04 2b 28
++			06 1e 00 03 25 0f 04 2f 21 06 28 00 04 32 14 06
++			3c 00 06 14 00 02 19 0a 03 1e 14 04 2b 28 06 1e
++			00 03 25 0f 04 2f 21 06 28 00 04 32 14 06 3c 00
++			06 0f 00 02 16 09 03 1d 0e 04 27 12 06 17 00 03
++			21 09 04 27 0e 06 1f 00 04 27 09 06 27 00 06 a7
++			1d 00 00 2f 1e 00 00 b7 1e 00 00 3f 1f 00 00 c7
++			1f 00 00 4f 20 00 00 10 08 00 00 00 10 08 00 1e
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 14
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 10
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 0c
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 0a
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 09
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 08
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 06
++			00 00 00 00 01 05 05 00 40 00 00 00 00 00 30 10
++			08 00 00 00 10 08 00 1e 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 14 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 10 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0c 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0a 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 09 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 08 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 06 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 10 08 00 00 00 10 08 00 1e
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 14
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 10
++			00 00 00 00 03 00 01 00 50 00 00 00 00 00 00 0c
++			00 00 00 00 03 00 01 00 50 00 00 00 00 00 00 0a
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 09
++			00 00 00 00 03 00 01 00 40 00 00 00 00 00 00 08
++			00 00 00 00 03 00 01 00 40 00 00 00 00 00 00 06
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 10
++			08 00 00 00 10 08 00 1e 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 14 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 10 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0c 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0a 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 09 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 08 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 06 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 10 08 00 00 00 10 08 00 1e
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 14
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 10
++			00 00 00 00 03 00 01 00 50 00 00 00 00 00 00 0c
++			00 00 00 00 03 00 01 00 50 00 00 00 00 00 00 0a
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 09
++			00 00 00 00 03 00 01 00 40 00 00 00 00 00 00 08
++			00 00 00 00 03 00 01 00 40 00 00 00 00 00 00 06
++			00 00 00 00 00 05 05 00 00 00 00 00 00 00 00 10
++			08 00 00 00 10 08 00 1e 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 14 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 10 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0c 00 00 00 00 03 00 01 00
++			50 00 00 00 00 00 00 0a 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 09 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 08 00 00 00 00 03 00 01 00
++			40 00 00 00 00 00 00 06 00 00 00 00 00 05 05 00
++			00 00 00 00 00 00 00 ];
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000-kexec.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000-kexec.dts
+new file mode 100644
+index 000000000000..0d00dcbfe5a9
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000-kexec.dts
+@@ -0,0 +1,132 @@
++/*
++ * Top level DTS file for CVM:P3701-0000 and CVB:P3740-0000.
++ *
++ * Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "cvm/t234-p3701-common.dtsi"
++#include "cvb/t234-p3740-0000-a00.dtsi"
++
++/ {
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	compatible = "nvidia,p3740-0000+p3701-0000", "nvidia,tegra23x";
++	memory {
++		reg =   <0x0 0x80000000 0x0 0x2c000000 0x0 0xac200000 0x0 0x44600000 0x1 0x0 0x1 0x80000000>;
++		device_type = "memory";
++	};
++
++	cpus {
++		cpu@0 {
++			reg = <0x0 0x0>;
++		};
++		cpu@1 {
++			reg = <0x0 0x1>;
++		};
++		/delete-node/ cpu@6;
++		/delete-node/ cpu@7;
++		cpu-map {
++			/delete-node/ cluster3;
++		};
++	};
++
++	arm-pmu {
++		interrupt-affinity =    <&cl0_0>,
++					<&cl0_1>,
++					<&cl1_0>,
++					<&cl1_1>,
++					<&cl2_0>,
++					<&cl2_1>;
++	};
++
++	bpmp {
++		carveout-size = <0x400000>;
++		carveout-start = <0xf3800000>;
++	};
++
++	watchdog@30c0000 {
++		status = "okay";
++	};
++
++	mttcan@c310000 {
++		status = "disabled";
++	};
++
++	sound {
++		status = "disabled";
++	};
++
++	aconnect@2a41000 {
++		status = "disabled";
++	};
++
++	hda@3510000 {
++		status = "disabled";
++	};
++
++	rtcpu@bc00000 {
++		status = "disabled";
++	};
++
++	spi@3270000 {
++		status = "disabled";
++	};
++
++	host1x {
++		nvdisplay@15200000 {
++			status = "disabled";
++		};
++		nvdisplay@15210000 {
++			status = "disabled";
++		};
++		sor {
++			status = "disabled";
++		};
++		sor1 {
++			status = "disabled";
++		};
++		dpaux@155c0000 {
++			status = "disabled";
++		};
++		dpaux@155D0000 {
++			status = "disabled";
++		};
++		dpaux@155F0000 {
++			status = "disabled";
++		};
++		tegra_cec {
++			status = "disabled";
++		};
++		se@15810000 {
++			status = "disabled";
++		};
++		se@15820000 {
++			status = "disabled";
++		};
++		se@15830000 {
++			status = "disabled";
++		};
++		se@15840000 {
++			status = "disabled";
++		};
++	};
++
++	gv11b {
++		status = "disabled";
++	};
++
++	bcmdhd_pcie_wlan {
++		status = "disabled";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000.dts
+new file mode 100644
+index 000000000000..033cc954d521
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0000-p3740-0000.dts
+@@ -0,0 +1,212 @@
++/*
++ * Top level DTS file for CVM:P3701-0000 and CVB:P3740-0000.
++ *
++ * Copyright (c) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "cvm/tegra234-p3701-0000.dtsi"
++#include "cvb/tegra234-p3740-0000-a00.dtsi"
++#include "tegra234-power-tree-p3701-0000-p3740-0000.dtsi"
++#include "tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi"
++#include <tegra234-soc/tegra234-cpuidle.dtsi>
++#include <t234-common-cvm/tegra234-thermal.dtsi>
++#include <t234-common-cvm/tegra234-thermal-cooling.dtsi>
++#include <tegra234-soc/mods-simple-bus.dtsi>
++#include <tegra234-soc/tegra234-soc-hwpm.dtsi>
++
++/ {
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	compatible = "nvidia,p3740-0000+p3701-0000", "nvidia,tegra234", "nvidia,tegra23x";
++
++	display@13800000 {
++		status = "okay";
++	};
++
++	dce@d800000 {
++		status = "okay";
++	};
++
++	bpmp {
++		i2c {
++			tegra_tmp451: temp-sensor@4c {
++				vdd-supply = <&p3740_vdd_1v8_sys>;
++			};
++		};
++	};
++
++	reserved-memory {
++		linux,cma {
++			status = "okay";
++		};
++	};
++
++tegra_soc_hwpm {
++		status = "okay";
++	};
++
++	cpus {
++		cpu@0 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@1 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@2 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@3 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@4 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@5 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@6 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@7 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@8 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@9 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@10 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu@11 {
++			cpu-idle-states = <&C7>;
++		};
++
++		cpu_core_power_states {
++			c7 {
++				min-residency-us = <30000>;
++				status = "okay";
++			};
++		};
++	};
++
++	cpuidle {
++		compatible = "nvidia,tegra23x-cpuidle-debugfs";
++		status = "okay";
++	};
++
++	tegra-hsp@3d00000 {
++		status = "okay";
++	};
++
++	aon@c000000 {
++		status = "okay";
++	};
++
++	stm@24080000 {
++		status = "disabled";
++	};
++
++	cpu0_etm@27040000 {
++		status = "disabled";
++	};
++
++	cpu1_etm@27140000 {
++		status = "disabled";
++	};
++
++	cpu2_etm@27240000 {
++		status = "disabled";
++	};
++
++	cpu3_etm@27340000 {
++		status = "disabled";
++	};
++
++	cpu4_etm@27440000 {
++		status = "disabled";
++	};
++
++	cpu5_etm@27540000 {
++		status = "disabled";
++	};
++
++	cpu6_etm@27640000 {
++		status = "disabled";
++	};
++
++	cpu7_etm@27740000 {
++		status = "disabled";
++	};
++
++	cpu8_etm@27840000 {
++		status = "disabled";
++	};
++
++	cpu9_etm@27940000 {
++		status = "disabled";
++	};
++
++	cpu10_etm@27A40000 {
++		status = "disabled";
++	};
++
++	cpu11_etm@27B40000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex0@26030000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex1@26040000 {
++		status = "disabled";
++	};
++
++	funnel_ccplex2@26050000 {
++		status = "disabled";
++	};
++
++	funnel_top_ccplex@26020000 {
++		status = "disabled";
++	};
++
++	funnel_major@24040000 {
++		status = "disabled";
++	};
++
++	replicator@24060000 {
++		status = "disabled";
++	};
++
++	etf@24050000 {
++		status = "disabled";
++	};
++
++	etr@24070000 {
++		status = "disabled";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-b01.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-b01.dts
+new file mode 100644
+index 000000000000..0b0e479e9600
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-b01.dts
+@@ -0,0 +1,27 @@
++/*
++ * Top level DTS file for CVM:P3701-0002 and CVB:P3704-0002.
++ *
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "tegra234-p3701-0002-p3740-0002.dts"
++#include "cvb/tegra234-p3740-b01-pcie.dtsi"
++#include "cvb/tegra234-p3740-b01-fixed-regulator.dtsi"
++
++/ {
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	compatible = "nvidia,p3740-0002-b01+p3701-0002", "nvidia,tegra23x",
++		      "nvidia,tegra234";
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts
+new file mode 100644
+index 000000000000..f1f68a0d6183
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts
+@@ -0,0 +1,33 @@
++/*
++ * Top level DTS file for CVM:P3701-0002 and CVB:P3704-0002.
++ *
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "tegra234-p3701-0002-p3740-0002.dts"
++
++/ {
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	compatible = "nvidia,p3740-0002+p3701-0002-safety", "nvidia,tegra23x",
++		      "nvidia,tegra234";
++
++	safetyservices_epl_client {
++		status = "okay";
++	};
++
++	tegra-hsp@1600000 {
++		status = "okay";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts
+new file mode 100644
+index 000000000000..5d3ce2cdfead
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts
+@@ -0,0 +1,43 @@
++/*
++ * Top level DTS file for CVM:P3701-0002 and CVB:P3704-0002.
++ *
++ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "cvm/tegra234-p3701-0002.dtsi"
++#include "cvb/tegra234-p3740-0002-b00.dtsi"
++#include <tegra234-soc/mods-simple-bus.dtsi>
++#include <t234-common-cvm/tegra234-cpuidle.dtsi>
++#include "tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi"
++
++/ {
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	compatible = "nvidia,p3740-0002+p3701-0002", "nvidia,tegra23x",
++		      "nvidia,tegra234";
++
++	dce@d800000 {
++		status = "okay";
++	};
++
++	reserved-memory {
++		linux,cma {
++			status = "okay";
++		};
++	};
++
++	display@13800000 {
++		status = "okay";
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts
+new file mode 100644
+index 000000000000..ed31831020ed
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts
+@@ -0,0 +1,909 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Jetson Device-tree overlay for Camera Hawk & Owl on t23x platforms
++ *
++ * Copyright (c) 2022 NVIDIA CORPORATION. All rights reserved.
++ *
++ */
++
++
++/dts-v1/;
++/plugin/;
++
++/ {
++	overlay-name = "Jetson Camera Hawk-Owl p3783 module";
++	jetson-header-name = "Jetson AGX CSI Connector";
++	compatible = "nvidia,p3740-0000+p3701-0000";
++
++	/* VI number of channels */
++	fragment@0 {
++		target-path = "/tegra-capture-vi";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			num-channels=<8>;
++		};
++	};
++
++	fragment@1 {
++		target-path = "/tegra-capture-vi/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@2 {
++		target-path = "/tegra-capture-vi/ports/port@0/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <0>;
++			port-index = <0>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out0>;
++		};
++	};
++	fragment@3 {
++		target-path = "/tegra-capture-vi/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@4 {
++		target-path = "/tegra-capture-vi/ports/port@1/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <1>;
++			port-index = <0>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out1>;
++		};
++	};
++	fragment@5 {
++		target-path = "/tegra-capture-vi/ports/port@2";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@6 {
++		target-path = "/tegra-capture-vi/ports/port@2/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <0>;
++			port-index = <1>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out2>;
++		};
++	};
++	fragment@7 {
++		target-path = "/tegra-capture-vi/ports/port@3";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@8 {
++		target-path = "/tegra-capture-vi/ports/port@3/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <1>;
++			port-index = <1>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out3>;
++		};
++	};
++	fragment@9 {
++		target-path = "/tegra-capture-vi/ports/port@4";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@10 {
++		target-path = "/tegra-capture-vi/ports/port@4/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <0>;
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out4>;
++		};
++	};
++	fragment@11 {
++		target-path = "/tegra-capture-vi/ports/port@5";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@12 {
++		target-path = "/tegra-capture-vi/ports/port@5/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <1>;
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out5>;
++		};
++	};
++	fragment@13 {
++		target-path = "/tegra-capture-vi/ports/port@6";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@14 {
++		target-path = "/tegra-capture-vi/ports/port@6/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <2>;
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out6>;
++		};
++	};
++	fragment@15 {
++		target-path = "/tegra-capture-vi/ports/port@7";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@16 {
++		target-path = "/tegra-capture-vi/ports/port@7/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			vc-id = <3>;
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_csi_out7>;
++		};
++	};
++	fragment@17 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			num-channels=<8>;
++		};
++	};
++	fragment@18 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@19 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@20 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@0/endpoint@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <0>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out0>;
++		};
++	};
++	fragment@21 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@22 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@1/endpoint@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@23 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@24 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@1/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@25 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@1/ports/port@0/endpoint@2";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <0>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out1>;
++		};
++	};
++	fragment@26 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@1/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@27 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@1/ports/port@1/endpoint@3";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@28 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@2";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@29 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@2/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@30 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@2/ports/port@0/endpoint@4";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <1>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out2>;
++		};
++	};
++	fragment@31 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@2/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@32 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@2/ports/port@1/endpoint@5";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++
++	fragment@33 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@3";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@34 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@3/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@35 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@3/ports/port@0/endpoint@6";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <1>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out3>;
++		};
++	};
++	fragment@36 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@3/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@37 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@3/ports/port@1/endpoint@7";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++
++	fragment@38 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@4";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@39 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@4/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@40 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@4/ports/port@0/endpoint@8";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out4>;
++		};
++	};
++	fragment@41 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@4/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@42 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@4/ports/port@1/endpoint@9";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++
++	fragment@43 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@5";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@44 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@5/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@45 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@5/ports/port@0/endpoint@10";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out5>;
++		};
++	};
++	fragment@46 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@5/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@47 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@5/ports/port@1/endpoint@11";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@48 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@6";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@49 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@6/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@50 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@6/ports/port@0/endpoint@12";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out6>;
++		};
++	};
++	fragment@51 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@6/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@52 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@6/ports/port@1/endpoint@13";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++
++	fragment@53 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@7";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@54 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@7/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@55 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@7/ports/port@0/endpoint@14";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <4>;
++			bus-width = <2>;
++			remote-endpoint = <&ar0234_ar0234_out7>;
++		};
++	};
++	fragment@56 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@7/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@57 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@7/ports/port@1/endpoint@15";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@58 {
++		target-path = "/i2c@31e0000/ar0234_a@30";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@59 {
++		target-path = "/i2c@31e0000/ar0234_b@31";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@60 {
++		target-path = "/i2c@31e0000/ar0234_c@32";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@61 {
++		target-path = "/i2c@31e0000/ar0234_d@33";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@62 {
++		target-path = "/i2c@3180000/ar0234_e@30";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@63 {
++		target-path = "/i2c@3180000/ar0234_f@32";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@64 {
++		target-path = "/i2c@3180000/ar0234_g@34";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@65 {
++		target-path = "/i2c@3180000/ar0234_h@36";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@66 {
++		target-path = "/i2c@3180000/p3785@56";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "disbaled";
++		};
++	};
++
++	fragment@67 {
++		target-path = "/tegra-camera-platform";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			num_csi_lanes = <6>;
++			max_lane_speed = <1500000>;
++			min_bits_per_pixel = <10>;
++			vi_peak_byte_per_pixel = <2>;
++			vi_bw_margin_pct = <25>;
++			isp_peak_byte_per_pixel = <5>;
++			isp_bw_margin_pct = <25>;
++		};
++	};
++
++	fragment@68 {
++		target-path = "/tegra-camera-platform/modules/module0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "owl_bottomleft";
++			position = "bottomleft";
++			orientation = "1";
++		};
++	};
++
++	fragment@69 {
++		target-path = "/tegra-camera-platform/modules/module0/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 2-0030";
++			proc-device-tree = "/proc/device-tree/i2c@3180000/ar0234_e@30";
++		};
++	};
++
++	fragment@70 {
++		target-path = "/tegra-camera-platform/modules/module1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "owl_bottomright";
++			position = "bottomright";
++			orientation = "1";
++		};
++	};
++
++	fragment@71 {
++		target-path = "/tegra-camera-platform/modules/module1/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 2-0032";
++			proc-device-tree = "/proc/device-tree/i2c@3180000/ar0234_f@32";
++		};
++	};
++	fragment@72 {
++		target-path = "/tegra-camera-platform/modules/module2";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "owl_centerleft";
++			position = "centerleft";
++			orientation = "1";
++		};
++	};
++
++	fragment@73 {
++		target-path = "/tegra-camera-platform/modules/module2/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 2-0034";
++			proc-device-tree = "/proc/device-tree/i2c@3180000/ar0234_g@34";
++		};
++	};
++	fragment@74 {
++		target-path = "/tegra-camera-platform/modules/module3";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "owl_centerright";
++			position = "centerright";
++			orientation = "1";
++		};
++	};
++
++	fragment@75 {
++		target-path = "/tegra-camera-platform/modules/module3/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 2-0036";
++			proc-device-tree = "/proc/device-tree/i2c@3180000/ar0234_h@36";
++		};
++	};
++	fragment@76 {
++		target-path = "/tegra-camera-platform/modules/module4";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "ar0234_bottomleft";
++			position = "bottomleft";
++			orientation = "1";
++		};
++	};
++
++	fragment@77 {
++		target-path = "/tegra-camera-platform/modules/module4/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 8-0030";
++			proc-device-tree = "/proc/device-tree/i2c@31e0000/ar0234_a@30";
++		};
++	};
++	fragment@78 {
++		target-path = "/tegra-camera-platform/modules/module5";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "ar0234_bottomright";
++			position = "bottomright";
++			orientation = "1";
++		};
++	};
++
++	fragment@79 {
++		target-path = "/tegra-camera-platform/modules/module5/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 8-0031";
++			proc-device-tree = "/proc/device-tree/i2c@31e0000/ar0234_b@31";
++		};
++	};
++	fragment@80 {
++		target-path = "/tegra-camera-platform/modules/module6";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "ar0234_centerleft";
++			position = "centerleft";
++			orientation = "1";
++		};
++	};
++
++	fragment@81 {
++		target-path = "/tegra-camera-platform/modules/module6/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 8-0032";
++			proc-device-tree = "/proc/device-tree/i2c@31e0000/ar0234_c@32";
++		};
++	};
++	fragment@82 {
++		target-path = "/tegra-camera-platform/modules/module7";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "ar0234_centerright";
++			position = "centerright";
++			orientation = "1";
++		};
++	};
++
++	fragment@83 {
++		target-path = "/tegra-camera-platform/modules/module7/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "ar0234 8-0033";
++			proc-device-tree = "/proc/device-tree/i2c@31e0000/ar0234_d@33";
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts
+new file mode 100644
+index 000000000000..b733bb50c7b9
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Jetson Device-tree overlay for Camera Hawk & Owl on t23x platforms
++ *
++ * Copyright (c) 2022 NVIDIA CORPORATION. All rights reserved.
++ *
++ */
++
++
++/dts-v1/;
++/plugin/;
++
++/ {
++	overlay-name = "Jetson Camera P3785 ";
++	jetson-header-name = "Jetson AGX CSI Connector";
++	compatible = "nvidia,p3740-0000+p3701-0000";
++
++	/* VI number of channels */
++	fragment@0 {
++		target-path = "/tegra-capture-vi";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			nvidia,vi-mapping =
++				<0 0>,
++				<1 0>,
++				<2 0>,
++				<3 0>,
++				<4 1>,
++				<5 1>;
++			num-channels=<1>;
++		};
++        };
++	fragment@1 {
++		target-path = "/tegra-capture-vi/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@2 {
++		target-path = "/tegra-capture-vi/ports/port@0/endpoint";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <0>;
++			bus-width = <8>;
++			remote-endpoint = <&p3785_csi_out0>;
++		};
++	};
++	fragment@3 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			num-channels = <1>;
++		};
++	};
++
++	fragment@4 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@5 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@6 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@0/endpoint@0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			port-index = <0>;
++			bus-width = <8>;
++			remote-endpoint = <&p3785_out0>;
++		};
++	};
++	fragment@7 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@8 {
++		target-path = "/host1x@13e00000/nvcsi@15a00000/channel@0/ports/port@1/endpoint@1";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			remote-endpoint = <&p3785_vi_in0>;
++		};
++	};
++
++	fragment@9 {
++		target-path = "/i2c@3180000/p3785@56";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++		};
++	};
++	fragment@10 {
++		target-path = "/tegra-camera-platform";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			num_csi_lanes = <4>;
++			max_lane_speed = <1500000>;
++			min_bits_per_pixel = <10>;
++			vi_peak_byte_per_pixel = <2>;
++			vi_bw_margin_pct = <25>;
++			max_pixel_rate = <750000>;
++			isp_peak_byte_per_pixel = <5>;
++			isp_bw_margin_pct = <25>;
++		};
++	};
++	fragment@11 {
++		target-path = "/tegra-camera-platform/modules/module0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			badge = "p3785_ltx6911";
++			position = "bottom";
++			orientation = "1";
++		};
++	};
++	fragment@12 {
++		target-path = "/tegra-camera-platform/modules/module0/drivernode0";
++		board_config {
++			sw-modules = "kernel";
++		};
++		__overlay__ {
++			status = "okay";
++			pcl_id = "v4l2_sensor";
++			devname = "p3785 2-0056";
++			proc-device-tree = "/proc/device-tree/i2c@3180000/p3785@56";
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-overlay-pcie.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-overlay-pcie.dts
+new file mode 100644
+index 000000000000..e274d9c7b893
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-overlay-pcie.dts
+@@ -0,0 +1,54 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++/plugin/;
++
++/ {
++	overlay-name = "Add PCIe C5 dual mode support";
++	compatible = "nvidia,tegra23x";
++	nvidia,dtsfilename = __FILE__;
++	nvidia,dtbbuildtime = __DATE__, __TIME__;
++
++	/* PCIe C5 root port */
++	fragment@0 {
++		target-path = "/";
++		board_config {
++			odm-data = "nvhs-uphy-config-0";
++		};
++		__overlay__ {
++			pcie@141a0000 {
++				status = "okay";
++			};
++			pcie_ep@141a0000 {
++				status = "disabled";
++			};
++		};
++	};
++
++	/* PCIe C5 endpoint */
++	fragment@1 {
++		target-path = "/";
++		board_config {
++			odm-data = "nvhs-uphy-config-1";
++		};
++		__overlay__ {
++			pcie@141a0000 {
++				status = "disabled";
++			};
++			pcie_ep@141a0000 {
++				status = "okay";
++			};
++		};
++	};
++};
+diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-power-tree-p3701-0000-p3740-0000.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-power-tree-p3701-0000-p3740-0000.dtsi
+new file mode 100644
+index 000000000000..bae2a46b8d0d
+--- /dev/null
++++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-power-tree-p3701-0000-p3740-0000.dtsi
+@@ -0,0 +1,38 @@
++/*
++ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++
++#include "cvb/tegra234-p3740-fixed-regulator.dtsi"
++
++/ {
++	pcie@141a0000 {
++		vpcie3v3-supply = <&p3740_vdd_3v3_pcie>;
++		vpcie12v-supply = <&p3740_vdd_12v_pcie>;
++	};
++
++	pcie_ep@141a0000 {
++		vpcie3v3-supply = <&p3740_vdd_3v3_pcie>;
++		vpcie12v-supply = <&p3740_vdd_12v_pcie>;
++	};
++
++	sdhci@3440000 {
++		/*
++		 * Both 3.3V and 1.8V vqmmc/IO supplies are always provided
++		 * and enabling either of the supplies is controller by
++		 * pad controls. Do not list any vqmmc supply here.
++		 */
++		vmmc-supply = <&p3740_vdd_3v3_sd>;
++	};
++
++};
+-- 
+2.34.1
+
