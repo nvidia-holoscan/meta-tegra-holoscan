@@ -56,6 +56,7 @@ do_install:append() {
     install -m 0644 ${NVIDIA_SRC}/libnvidia-glcore.so.${PV} ${D}${libdir}
     install -m 0644 ${NVIDIA_SRC}/libnvidia-glsi.so.${PV} ${D}${libdir}
     install -m 0644 ${NVIDIA_SRC}/libnvidia-glvkspirv.so.${PV} ${D}${libdir}
+    install -m 0644 ${NVIDIA_SRC}/libnvidia-gtk2.so.${PV} ${D}${libdir}
     install -m 0644 ${NVIDIA_SRC}/libnvidia-ml.so.${PV} ${D}${libdir}
     install -m 0644 ${NVIDIA_SRC}/libnvidia-ngx.so.${PV} ${D}${libdir}
     install -m 0644 ${NVIDIA_SRC}/libnvidia-nvvm.so.${PV} ${D}${libdir}
@@ -78,6 +79,7 @@ do_install:append() {
     ln -sf libnvidia-encode.so.${PV} ${D}${libdir}/libnvidia-encode.so.1
     ln -sf libnvidia-fbc.so.${PV} ${D}${libdir}/libnvidia-fbc.so.1
     ln -sf libnvidia-ml.so.${PV} ${D}${libdir}/libnvidia-ml.so.1
+    ln -sf libnvidia-ngx.so.${PV} ${D}${libdir}/libnvidia-ngx.so.1
     ln -sf libnvidia-nvvm.so.4.0.0 ${D}${libdir}/libnvidia-nvvm.so.4
     ln -sf libnvidia-opencl.so.${PV} ${D}${libdir}/libnvidia-opencl.so.1
     ln -sf libnvidia-opticalflow.so.${PV} ${D}${libdir}/libnvidia-opticalflow.so.1
@@ -108,6 +110,10 @@ do_install:append() {
     install -m 0755 ${NVIDIA_SRC}/nvidia-smi ${D}${bindir}
     install -m 0755 ${NVIDIA_SRC}/nvidia-xconfig ${D}${bindir}
 
+    # Registry key file
+    install -d ${D}${datadir}/nvidia
+    install -m 0755 ${NVIDIA_SRC}/nvidia-application-profiles-${PV}-key-documentation ${D}${datadir}/nvidia
+
     # Docs
     install -d ${D}${mandir}/man1
     install -m 0644 ${NVIDIA_SRC}/nvidia-cuda-mps-control.1.gz ${D}${mandir}/man1
@@ -137,6 +143,7 @@ FILES_SOLIBSDEV = ""
 FILES:${PN} += " \
     ${libdir} \
     ${bindir} \
+    ${datadir} \
     ${nonarch_base_libdir} \
 "
 
@@ -147,6 +154,11 @@ RDEPENDS:${PN} += " \
     libxau \
     libxdmcp \
     libxext \
+    gtk+ \
+    glib-2.0 \
+    atk \
+    pango \
+    gdk-pixbuf \
     xserver-xorg-module-libwfb \
 "
 
