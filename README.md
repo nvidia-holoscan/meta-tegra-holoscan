@@ -105,6 +105,7 @@ into and then run `git checkout {commit id}`.
     that aren't suitable for the upstream repo.
 
     * **meta-openembedded/meta-oe**: https://github.com/openembedded/meta-openembedded **(commit: `a8055484`)**
+    * **meta-virtualization**: https://git.yoctoproject.org/meta-virtualization **(commit: `9a94fa2a`)**
     * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `05b5583c`)**
 
 * #### Proprietary NVIDIA Binary Packages

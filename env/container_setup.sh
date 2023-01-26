@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -53,9 +53,13 @@ git_clone() {
 POKY_REV="2e79b199114b25d81bfaa029ccfb17676946d20d"
 git_clone "https://git.yoctoproject.org/poky.git" ${POKY_REV}
 
-# meta-openembedded Layer
+# meta-openembedded layer
 META_OPENEMBEDDED_REV="a8055484f2829e8dfd03d5c8520b2c611aa7ebd2"
 git_clone "https://github.com/openembedded/meta-openembedded.git" ${META_OPENEMBEDDED_REV}
+
+# meta-virtualization layer
+META_VIRTUALIZATION_REV="9a94fa2ad76990b0eca40837a98aaf4cd83a7248"
+git_clone "https://git.yoctoproject.org/meta-virtualization.git" ${META_VIRTUALIZATION_REV}
 
 # meta-tegra layer
 META_TEGRA_REV="05b5583c6676aa7b0bb50aed34e816715282bd97"
