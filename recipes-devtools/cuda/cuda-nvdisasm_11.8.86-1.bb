@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,24 +22,7 @@ CUDA_PKG = "${BPN}"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "e175dd3669b72ed742764abb3bb5a1afcb8e62baaa7ffa2293c068abb971da87"
-MAINSUM:x86-64 = "304070c9aae02e24ad4a850599bd1fd56038fc27648500476ac7f83ddfcd90b4"
-
-FILES:${PN} += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherSubreaper \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/compute-sanitizer \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherTargetLdPreloadHelper \
-"
-
-FILES:${PN}-dev += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/*${SOLIBSDEV} \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/include \
-"
-
-FILES:${PN}-doc += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/docs \
-"
-
-RDEPENDS:${PN} += "bash"
+MAINSUM:aarch64 = "3882cf10b493ee266ea5f06550ef26a6c8d03cac3eb2bffc9e4cd0d379337125"
+MAINSUM:x86-64 = "81989cf87650ae3126693309f831fbe4332d415a5dc63c25ebb149eed562af70"
 
 BBCLASSEXTEND = "native nativesdk"

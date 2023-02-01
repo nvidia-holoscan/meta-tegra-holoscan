@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,12 +18,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+CUDA_PKG = "${BPN}-dev"
+
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "c4b8915f8dc841a0d8303f9009e7143d9d318690539157ad18667a8eca598e58"
-MAINSUM:x86-64 = "6d30cbadb49d8ce31eced61a26c2b564c216109e3c619da0c11dca2746b3d852"
+DEVSUM:aarch64 = "10280a8631ac84cd15c385f8c12f0478bb3554774a90ba8742ccf09916935168"
+DEVSUM:x86-64 = "66bee76aec1d59aad169526d7ac6323304baf4195a23730822f4776996cf1408"
 
-DEVSUM:aarch64 = "10a9efec69e9c7a63aa887a77954ff11ca6a37eba279927c5820d20c1bbc6a52"
-DEVSUM:x86-64 = "08b436f9e038ddcaf89c9e0b528b049dc9e786f1e79a8ace9f0e3a8b6178e0da"
+ALLOW_EMPTY:${PN} = "1"
+FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/nvml/example"
+EXCLUDE_PACKAGES_FROM_SHLIBS = ""
+PRIVATE_LIBS = "libnvidia-ml.so.1"
 
 BBCLASSEXTEND = "native nativesdk"

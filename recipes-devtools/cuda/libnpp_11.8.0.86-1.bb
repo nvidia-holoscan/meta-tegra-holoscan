@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,17 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}-dev"
-
 require cuda-binaries-common.inc
 
-DEPENDS:tegra = "nvidia-dgpu-drivers"
+MAINSUM:aarch64 = "660d0bb202eab721396e5de46eac05ea47178690b1c53aa7f63832be1e57b476"
+MAINSUM:x86-64 = "6f75e8540f50dd3461ccc2efa6352b80c81a30de7e43ffa703cb8f044d8bfcd3"
 
-DEVSUM:aarch64 = "07067dc603d7cef4f795246e9df5ec298df03533ab61844e483f55e05517cdd7"
-DEVSUM:x86-64 = "1547acec47fc8177c15a6281d305d8369a0dc09e65cce32969103ff587c2a0f9"
-
-ALLOW_EMPTY:${PN} = "1"
-EXCLUDE_PACKAGES_FROM_SHLIBS = ""
-PRIVATE_LIBS = "libcuda.so.1"
+DEVSUM:aarch64 = "3804bbf164f6af6e317f7fa27757d97dd3da77dcc7e47744f7591a6d20a90811"
+DEVSUM:x86-64 = "1e7d6cde014143f9eeb6d5e6383f6cca301e3746af5409e2d072bf35ccff8ff4"
 
 BBCLASSEXTEND = "native nativesdk"

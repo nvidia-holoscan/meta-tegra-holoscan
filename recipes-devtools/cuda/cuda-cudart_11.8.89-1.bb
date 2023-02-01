@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,11 +22,11 @@ DEPENDS = "cuda-driver cuda-nvcc-headers cuda-cccl"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "86e3b73d10b256ebe2bb92a493089a7c8b403ba3b5a6dce972b90f92687caea0"
-MAINSUM:x86-64 = "0d33b2d7202ef3cd1eba215ff1c16c91202a1e980613d6767c959ed0112e3dc7"
+MAINSUM:aarch64 = "c7078c3f419ec55d890a030aa182245977318017c255d670d3f876da5d7120a0"
+MAINSUM:x86-64 = "4f603955b63d228e980f14f32dbdabcfa154f4b9659dcc222b746a6c4f450239"
 
-DEVSUM:aarch64 = "d9809c7c86c6653e6cea9c272efa94ec1e27f2fa9642ded03a0d0163f96255a8"
-DEVSUM:x86-64 = "009bcb79e737118f79d21e6e429ec13e746f2385bc3dc08967ed6e9b259c198c"
+DEVSUM:aarch64 = "d25b28b101b85a7781727d8a3eff9f9d315208ff24da0b9d17dffa9616889bd6"
+DEVSUM:x86-64 = "c3ad62dbe3e80a7ba09fb9a69e5819abb274bb398fdcffbd7c7d8fa583dd700d"
 
 inherit siteinfo
 

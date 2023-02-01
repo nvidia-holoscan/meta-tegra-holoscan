@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,20 +18,14 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "cuda-nvcc"
-
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "d292db1e625a50e302362361d95e234478e61cd7f31f57af3bda53ed7419c1b5"
-MAINSUM:x86-64 = "0ac1d895a2b48f9c0f340c8f6ce8449ed8f3b56ad033aed99f7a2365cd27d10e"
+MAINSUM:aarch64 = "c92d66864653aaa22a00c2931615fda6de46ba984c8c4daf2eb9d3200ffec13c"
+MAINSUM:x86-64 = "7922e002784d4569902b2e0c3ac0396411e61e64a7bc4ac62c6bda678c4a590a"
 
-do_install:append() {
-    for d in bin lib nvvm nvvmx; do
-        rm -rf ${D}${prefix}/local/cuda-${CUDA_VERSION}/$d
-    done
-}
+DEVSUM:aarch64 = "2364edd47c3b1d93eea2f3af82cd3c2c577341c38e78d42c8292b9724db31cf5"
+DEVSUM:x86-64 = "3af21112a3a26ddd72e0dcde81f6af8973a817bdcce8d99ed06e81d6a667f9c0"
 
-FILES:${PN} = "${prefix}/local/cuda-${CUDA_VERSION}/include"
-FILES:${PN}-dev = ""
+RDEPENDS:${PN}-dev += "perl"
 
 BBCLASSEXTEND = "native nativesdk"

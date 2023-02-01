@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,10 @@
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "a1c8dd0bceca621f985e1f463a332367684071162ffe56bbf926f927cc31f46a"
-MAINSUM:x86-64 = "5ac38183df9f06f840abd7db2b8144421b12d61a5209f792f14e936c9b47b949"
+MAINSUM:aarch64 = "1e5229b478b002f675321f756ce2904057969d29c248833fa487741c0d4d683c"
+MAINSUM:x86-64 = "9f90b56c83b922e4c7a972b813bd29387be05c56c6c1dbce4c2c6ef459323d28"
 
-DEVSUM:aarch64 = "e6a45ae10f8b6aac1ebb08ece848377031246d6259fe2608011fcb140cc6cf09"
-DEVSUM:x86-64 = "4024ec35a2f6aefbdd866b2072412fed430d802cc0aae74ca533c7527deffaed"
+DEVSUM:aarch64 = "29b63f873b71d7cf33fd80e2a14921357a7334e2322ad18c30d9bc0c8ebc0ed9"
+DEVSUM:x86-64 = "ef6a4db5e7ca7889cd1c9c68a7808d163e487cbdfe91ed10def587242909dcd3"
 
 BBCLASSEXTEND = "native nativesdk"

@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,14 +18,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+CUDA_PKG = "${BPN}"
+
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "da137e5e7ded705ff6131ed024f2d836cf6a86bd7a1357e08546c99f95bf3aaa"
-MAINSUM:x86-64 = "d6f6e92319f070fa29719bd661b411e4f8349be71951e9793da9fba105055ece"
-
-DEVSUM:aarch64 = "38d810415e210582dac8d1461875dd6882ac7124c4d9ef5600dd7125f2479ef9"
-DEVSUM:x86-64 = "e94144e8645f3b75fbbd86d95960271f4eab258684c7381246d5fd8e167298cd"
-
-RDEPENDS:${PN}-dev += "perl"
+MAINSUM:aarch64 = "69c8a855b9cc2fc1cbac4b2b09162e04ab8bfac0954e3620d97c1b8e34491d3b"
+MAINSUM:x86-64 = "5b5130f758b92ad03e617cd353752997aa33538c80fb6aa6de106e12c8fad808"
 
 BBCLASSEXTEND = "native nativesdk"

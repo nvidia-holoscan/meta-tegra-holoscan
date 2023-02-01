@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,8 @@ CUDA_PKG = "${BPN}"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "d292db1e625a50e302362361d95e234478e61cd7f31f57af3bda53ed7419c1b5"
-MAINSUM:x86-64 = "0ac1d895a2b48f9c0f340c8f6ce8449ed8f3b56ad033aed99f7a2365cd27d10e"
+MAINSUM:aarch64 = "11f987d9003cac457385b950f5e4fe83f93412a0f6089ae1ee17a988e85401ed"
+MAINSUM:x86-64 = "f72fcab60e94ae2ffbf7c24bedde5329fd7f3ca8fd07b6a5e92fd85759ecabdf"
 
 # header files are populated by cuda-nvcc-headers recipes
 do_install:append() {
