@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,7 +23,7 @@ LICENSE = "MIT | GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1d5fa2a493e937d5a4b96e5e03b90f7c"
 
 SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=main;protocol=https"
-SRCREV = "98553501593ef05bddcc438689ed1136f732d40a"
+SRCREV = "811073c51e1f098834e90e67a074f1746b6e2831"
 
 SRC_URI:append = " file://nvidia.conf"
 
