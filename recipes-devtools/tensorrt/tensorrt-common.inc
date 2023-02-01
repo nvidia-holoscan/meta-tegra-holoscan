@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,4 +18,4 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SRC_URI = "file://TensorRT-${PV}.Ubuntu-20.04.${TARGET_ARCH}-gnu.cuda-11.6.cudnn8.4.tar.gz"
+SRC_URI = "file://TensorRT-${PV}.Ubuntu-20.04.${TARGET_ARCH}-gnu.cuda-11.8.cudnn8.6.tar.gz"

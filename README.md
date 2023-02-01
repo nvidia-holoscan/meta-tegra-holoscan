@@ -127,8 +127,8 @@ into and then run `git checkout {commit id}`.
 
     * #### TensorRT (8.5.3.1)
 
-      Download: https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.3/tars/tensorrt-8.4.3.1.ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz`
+      Download: https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.5.3/tars/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/tensorrt/files/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz`
 
     * #### GXF (2.5.0)
 
@@ -179,7 +179,7 @@ given in the following table:
 | Display Drivers | L4T 35.1.0 | OpenRM 525.85.05 |
 | CUDA            | 11.4.14    | 11.8.0           |
 | cuDNN           | 8.4.1.50   | 8.7.0.84         |
-| TensorRT        | 8.4.1      | 8.4.3.1          |
+| TensorRT        | 8.4.1      | 8.5.3.1          |
 
 #### Build Configuration
 

@@ -8,7 +8,7 @@
 # but only if the requested major version is the same as the current one.
 # The variable CVF_VERSION must be set before calling configure_file().
 
-set(PACKAGE_VERSION "8.4")
+set(PACKAGE_VERSION "8.5")
 
 if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION)
   set(PACKAGE_VERSION_COMPATIBLE FALSE)
