@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,8 +26,7 @@ NVIDIA_ARCHIVE_NAME = "NVIDIA-Linux-${TARGET_ARCH}-${PV}"
 NVIDIA_SRC = "${WORKDIR}/${NVIDIA_ARCHIVE_NAME}"
 
 SRC_URI = "https://us.download.nvidia.com/XFree86/${TARGET_ARCH}/${PV}/${NVIDIA_ARCHIVE_NAME}.run"
-SRC_URI[md5sum] = "acc3001e5efd1caa846decee5e937039"
-SRC_URI[sha256sum] = "0d2ac6c6ca144c8c7bbf1a62034998463b21f2660a793607d88c031650d93e93"
+SRC_URI[sha256sum] = "c2a5478397b1559bd3dd2b4211ef0fcfd6ab182e0f206592fa62b521667e4e8e"
 
 inherit features_check
 
@@ -125,7 +124,7 @@ do_install:append() {
 
     # GSP Firmware
     install -d ${D}${nonarch_base_libdir}/firmware/nvidia/${PV}
-    install -m 0644 ${NVIDIA_SRC}/firmware/gsp.bin ${D}${nonarch_base_libdir}/firmware/nvidia/${PV}
+    install -m 0644 ${NVIDIA_SRC}/firmware/*.bin ${D}${nonarch_base_libdir}/firmware/nvidia/${PV}
 
     # Vulkan ICD
     install -d ${D}${sysconfdir}/vulkan/icd.d
