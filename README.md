@@ -120,12 +120,12 @@ into and then run `git checkout {commit id}`.
 
     The current list of manually downloaded packages is as follows:
 
-    * #### cuDNN (8.5.0.96)
+    * #### cuDNN (8.7.0.84)
 
-      Download: https://developer.nvidia.com/compute/cudnn/secure/8.5.0/local_installers/11.7/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz`
+      Download: https://developer.nvidia.com/downloads/c118-cudnn-linux-sbsa-87084cuda11-archivetarz  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.7.0.84_cuda11-archive.tar.xz`
 
-    * #### TensorRT (8.4.3.1)
+    * #### TensorRT (8.5.3.1)
 
       Download: https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.3/tars/tensorrt-8.4.3.1.ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz  
       Local Destination: `meta-tegra-holoscan/recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz`
@@ -178,7 +178,7 @@ given in the following table:
 | --------------- | ---------- | ---------------- |
 | Display Drivers | L4T 35.1.0 | OpenRM 525.85.05 |
 | CUDA            | 11.4.14    | 11.8.0           |
-| cuDNN           | 8.4.1.50   | 8.5.0.96         |
+| cuDNN           | 8.4.1.50   | 8.7.0.84         |
 | TensorRT        | 8.4.1      | 8.4.3.1          |
 
 #### Build Configuration

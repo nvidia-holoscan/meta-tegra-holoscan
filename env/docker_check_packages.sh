@@ -25,7 +25,7 @@
 # exist in the current build context.
 #
 
-CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.5.0.96_cuda11-archive.tar.xz"
+CUDNN_PACKAGE="recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.7.0.84_cuda11-archive.tar.xz"
 TENSORRT_PACKAGE="recipes-devtools/tensorrt/files/TensorRT-8.4.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.6.cudnn8.4.tar.gz"
 GXF_PACKAGE="recipes-devtools/gxf/files/gxf_22.11_20221116_8fbe43cb_holoscan-sdk_arm64.tar.gz"
 HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data_20221121.zip"
