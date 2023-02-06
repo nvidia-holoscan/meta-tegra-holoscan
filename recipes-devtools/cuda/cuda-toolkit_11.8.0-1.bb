@@ -18,4 +18,4 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require recipes-devtools/cuda/cuda-toolkit_11.4.14-1.bb
+require recipes-devtools/cuda/cuda-toolkit_11.4.19-1.bb
