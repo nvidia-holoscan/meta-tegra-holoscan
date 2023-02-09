@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -32,6 +32,7 @@ HOLOSCAN_ENDOSCOPY_DATA="recipes-devtools/holoscan/files/holoscan_endoscopy_data
 HOLOSCAN_ULTRASOUND_DATA="recipes-devtools/holoscan/files/holoscan_ultrasound_data_20220608.zip"
 HOLOSCAN_MULTI_AI_DATA="recipes-devtools/holoscan/files/holoscan_multi_ai_ultrasound_data_20221201.zip"
 RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz"
+NSIGHT_SYSTEMS_PACKAGE="recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb"
 
 script_path=$(readlink -f ${0})
 env_path=$(dirname ${script_path})
@@ -51,5 +52,6 @@ check_package ${HOLOSCAN_ENDOSCOPY_DATA}
 check_package ${HOLOSCAN_ULTRASOUND_DATA}
 check_package ${HOLOSCAN_MULTI_AI_DATA}
 check_package ${RIVERMAX_PACKAGE}
+check_package ${NSIGHT_SYSTEMS_PACKAGE}
 
 exit 0

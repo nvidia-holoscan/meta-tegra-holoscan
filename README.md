@@ -163,6 +163,11 @@ into and then run `git checkout {commit id}`.
       Download: https://developer.nvidia.com/networking/secure/rivermax-linux-sdk/installation-package/version-1.20.x/1.20/rivermax_ubuntu2004_1.20.10.tar.gz  
       Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz`
 
+    * #### Nsight Systems (2023.1.1)
+
+      Download: https://developer.nvidia.com/downloads/nsight-systems20231-202311127-1-arm64deb  
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb
+
 #### iGPU and dGPU Configurations
 
 This layer provides both iGPU and dGPU support for the Holoscan platforms
