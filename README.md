@@ -383,3 +383,120 @@ Build Container.
 > `Dockerfile` that are used to build the Holoscan OpenEmbedded/Yocto Build
 > Container image, and can even be used to build the container image locally if
 > one so desires.
+
+## Debugging with GDB
+
+Debugging applications on the target can be done using GDB either directly on
+the target or remotely using a remote GDB connection. In either scenario, the
+debugging tools and symbols can be included in the image by adding the
+following to `build/conf/local.conf`:
+
+```
+EXTRA_IMAGE_FEATURES:append = " tools-debug dbg-pkgs"
+```
+
+Note that in both the local and remote debugging cases the GDB Text User
+Interface (TUI) mode is enabled and can be entered by adding the `-tui`
+argument to the `gdb` commands below, or toggled using the `C-x a` key binding
+once GDB has been launched. For more information on debugging with GDB, see the
+[Debugging with GDB](https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_toc.html)
+and [GDB Text User Interface](https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_19.html#SEC197)
+documentation.
+
+### Local Debugging
+
+For debugging locally on the device, the source code packages should also be
+installed by adding the following:
+
+```
+EXTRA_IMAGE_FEATURES:append = " src-pkgs"
+```
+
+With the debugging tools, symbols, and source code installed on the device, an
+application can be debugged locally by running `gdb [executable]`, e.g.:
+
+```sh
+$ cd /workspace
+$ gdb ./apps/multiai/cpp/multiai
+```
+
+### Remote Debugging
+
+#### 1. Installing the SDK on the Host
+
+Debugging remotely requires the SDK for the image to be built and installed
+on the host device from which debugging will be performed. To build the SDK
+package for an image (e.g. `core-image-sato`), run the following:
+
+```sh
+$ bitbake core-image-sato -c populate_sdk
+```
+
+Once built, the script to install the SDK will be present in
+`build/tmp/deploy/sdk`. To install the SDK, run the script that corresponds to
+the image. For example, to install the `core-image-sato` SDK, run the following:
+
+```sh
+$ ./build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-sato-armv8a-igx-orin-devkit-toolchain-4.0.7.sh
+```
+
+Follow the prompts to specify the install path for the SDK. The rest of these
+instructions will assume that the default install path of `/opt/poky/4.0.7` is
+used.
+
+#### 2. Running the Remote Debugging Server on the Target
+
+Launch the application on the target using the `gdbserver` command along with
+the target's network address and port that should be used for the remote
+debugging connection:
+
+```sh
+$ cd /workspace
+$ gdbserver 192.168.0.100:1234 ./apps/multiai/cpp/multiai
+Process ./apps/multiai/cpp/multiai created; pid = 1432
+Listening on port 1234
+```
+
+#### 3. Connecting to the Remote Debugging Session
+
+The SDK installed on the host includes an `environment-setup-armv8a-poky-linux`
+script that must be sourced from any terminal before the SDK can be used:
+
+```sh
+$ source /opt/poky/4.0.7/environment-setup-armv8a-poky-linux
+```
+
+This environment provides the `$GDB` environment variable that points to the
+GDB executable that must be used for the remote debugging. Launch this
+`$GDB` executable then connect to the remote target using the
+`target remote [ip]:[port]` command:
+
+```sh
+$ $GDB
+GNU gdb (GDB) 11.2
+...
+(gdb) target remote 192.168.0.100:1234
+Remote debugging using 192.168.0.100:1234
+Reading /workspace/apps/multiai/cpp/multiai from remote target...
+Reading symbols from target:/workspace/apps/multiai/cpp/multiai...
+Reading /lib/ld-linux-aarch64.so.1 from remote target...
+0x0000fffff7fd9d00 in _start () from target:/lib/ld-linux-aarch64.so.1
+(gdb)
+```
+
+While the symbols will be loaded remotely from the target, the path to the
+source code must be remapped to the local host path for the source using the
+`set substitute-path` command. Assuming the path of the host build tree is in
+`/holoscan`, this can be done with the following:
+
+```sh
+(gdb) set substitute-path /usr/src/debug /holoscan/build/tmp/work/armv8a_tegra234-poky-linux
+```
+
+At this point the symbols and source code should be available and remote
+debugging can begin.
+
+> **_Note:_** This example also assumes that the application being debugged was
+> written to the `armv8a_tegra234-poky-linux` directory of the build tree. This
+> may need to change if the application was written to another directory
+> (e.g. `armv8a-poky-linux`).
