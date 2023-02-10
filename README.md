@@ -13,7 +13,8 @@ drivers and toolkits that are used by the NVIDIA Holoscan SDK.
 ## Supported Boards
 
 * Clara AGX Developer Kit (clara-agx-xavier-devkit)
-* NVIDIA IGX Orin Developer Kit (holoscan-devkit)
+* NVIDIA IGX Orin Developer Kit ES (holoscan-devkit)
+* NVIDIA IGX Orin Developer Kit (igx-orin-devkit)
 
 ## System Requirements
 
@@ -194,7 +195,7 @@ including either `conf/holoscan-igpu.conf` or `conf/holoscan-dgpu.conf`,
 respectively:
 
 ```
-MACHINE ??= "holoscan-devkit"
+MACHINE ??= "igx-orin-devkit"
 require conf/holoscan-dgpu.conf
 ```
 
@@ -273,11 +274,11 @@ CORE_IMAGE_EXTRA_INSTALL:append = " kernel-module-ajantv2"
 
 #### Building and Flashing
 
-Building a BSP is done with `bitbake`; for example, to build a `core-image-x11`
+Building a BSP is done with `bitbake`; for example, to build a `core-image-sato`
 image, use the following:
 
 ```sh
-$ bitbake core-image-x11
+$ bitbake core-image-sato
 ```
 
 > **_Note:_** If the `bitbake` command is not found, ensure that the current
@@ -303,14 +304,14 @@ $ bitbake core-image-x11
 > ```sh
 > $ bitbake rivermax -c cleansstate
 > $ bitbake rivermax
-> $ bitbake core-image-x11
+> $ bitbake core-image-sato
 > ```
 
 Using the configuration described above, this will build the BSP image and write
 the output to
 
 ```
-build/tmp/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/igx-orin-devkit/core-image-sato-igx-orin-devkit.tegraflash.tar.gz
 ```
 
 The above file can then be extracted and the `doflash.sh` script that it
@@ -333,7 +334,7 @@ configuration that was used for the build: the iGPU configuration uses the
 onboard HDMI or DisplayPort connection on the developer kit, while the dGPU
 configuration uses one of the DisplayPort connections on the discrete GPU.
 During boot you will see a black screen with only a cursor for a few moments
-before an X11 terminal appears (no additional GUI will appear).
+before an X11 terminal or GUI appears (depending on your image type).
 
 > **_Note:_** If the monitor never receives a signal there may be an issue
 > configuring the monitor during the initial boot process. If this occurs,

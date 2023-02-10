@@ -46,6 +46,7 @@ This setup processes initializes the following:
    ```
    poky
    meta-openembedded
+   meta-virtualization
    meta-tegra
    meta-tegra-holoscan
    ```
@@ -68,7 +69,7 @@ to `build/conf/local.conf`. This file is based on the default `local.conf` that
 is created by the Poky environment setup script (`oe-init-build-env`)
 and has various NVIDIA configuration defaults and samples added to it.
 For example, the `MACHINE` configuration in this file is set to
-`holoscan-devkit` and CUDA, TensorRT, Rivermax, and the Holoscan SDK are
+`igx-orin-devkit` and CUDA, TensorRT, Rivermax, and the Holoscan SDK are
 installed by default. This configuration can be used as-is to build a BSP for
 the IGX Orin Developer Kit, but it may be neccessary to add components to this
 configuration to support additional hardware such as AJA video capture cards or
@@ -88,10 +89,10 @@ container image is used again for the actual `bitbake` build process. This
 can be done using the `bitbake.sh` build wrapper that is written to the
 root of the development directory. This script simply runs the `bitbake`
 process in the container and passes the arguments to the script to this
-process. For example, to build a core X11 image, use the following:
+process. For example, to build a core Sato image, use the following:
 
 ```sh
-$ ./bitbake.sh core-image-x11
+$ ./bitbake.sh core-image-sato
 ```
 
 > Note: If the build fails due to unavailable resource errors, try the build
@@ -107,19 +108,19 @@ Using the default configuration, the above script will build the BSP image and
 write the final output to:
 
 ```
-build/tmp/deploy/images/holoscan-devkit/core-image-x11-holoscan-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/igx-orin-devkit/core-image-sato-igx-orin-devkit.tegraflash.tar.gz
 ```
 
 ## 4. Flash the Image
 
 The `flash.sh` script can be used to flash the BSP image that is output by the
 previous step onto the Holoscan Developer Kit hardware. For example, to flash the
-`core-image-x11` image that was produced by the previous step, connect the
+`core-image-sato` image that was produced by the previous step, connect the
 developer kit to the host via the USB-C debug port, put it into recovery
 mode, then run:
 
 ```sh
-$ ./flash.sh core-image-x11
+$ ./flash.sh core-image-sato
 ```
 
 > For instructions on how to put the developer kit into recovery mode, see the

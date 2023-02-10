@@ -46,7 +46,7 @@
 
 ## [0.3.0] - 2022-10-19
 ### Added
-- Support for the NVIDIA IGX Orin Developer Kit (`holoscan-devkit`).
+- Support for the NVIDIA IGX Orin Developer Kit ES (`holoscan-devkit`).
 - Ability to support both iGPU and dGPU configurations via separate includes
 (`holoscan-igpu.conf` and `holoscan-dgpu.conf`, respectively).
 - Mellanox OFED and Rivermax Support.
@@ -59,7 +59,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 
 ### Known Issues
 - Holoscan SDK Ultrasound segmentation application is not functional on NVIDIA
-  IGX Orin Developer Kit (holoscan-devkit) with iGPU configuration.
+  IGX Orin Developer Kit ES (holoscan-devkit) with iGPU configuration.
 - Holoscan SDK High-Speed Endoscopy application is not yet supported.
 
 ### Component Versions
