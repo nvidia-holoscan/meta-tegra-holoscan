@@ -110,7 +110,7 @@ into and then run `git checkout {commit id}`.
     * **meta-openembedded/meta-networking**, and
     * **meta-openembedded/meta-python**: https://github.com/openembedded/meta-openembedded **(commit: `278ec081`)**
     * **meta-virtualization**: https://git.yoctoproject.org/meta-virtualization **(commit: `9a94fa2a`)**
-    * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `50a7046b`)**
+    * **meta-tegra**: https://github.com/nvidia-holoscan/meta-tegra **(commit: `f779da5c`)**
 
 * #### Proprietary NVIDIA Binary Packages
 
