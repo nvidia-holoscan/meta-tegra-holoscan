@@ -323,6 +323,13 @@ $ tar -xf ${image_path}
 $ sudo ./doflash.sh
 ```
 
+> **_Note:_** If the `doflash.sh` command fails due to a `No such file: 'dtc'`
+> error, install the device tree compiler (`dtc`) using the following:
+>
+> ```sh
+> $ sudo apt-get install device-tree-compiler
+> ```
+
 > **_Note:_** For instructions on how to put the developer kit into recovery
 > mode, see the developer kit user guide:
 >  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).

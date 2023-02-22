@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -35,6 +35,12 @@ machine=$(cat ${workspace_path}/build/conf/local.conf | sed -n "s/^MACHINE[^\"]*
 
 if [ -z "${1}" ]; then
     echo "Usage: flash.sh {image name}"
+    exit 1
+fi
+
+if ! command -v dtc &> /dev/null; then
+    echo "The device tree compiler (dtc) is not installed. Please install it with the following:"
+    echo "    sudo apt-get install device-tree-compiler"
     exit 1
 fi
 
