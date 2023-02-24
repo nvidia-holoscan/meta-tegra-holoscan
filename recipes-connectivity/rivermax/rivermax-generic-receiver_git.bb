@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,13 +18,29 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CORE_IMAGE_EXTRA_INSTALL:append = " \
-    mlnx-ofed \
-    rivermax \
-    rivermax-generic-sender \
-    rivermax-generic-receiver \
-    rivermax-license \
-    ${@'nvidia-peermem' if d.getVar('TEGRA_DGPU') == '1' else ''} \
+SUMMARY = "NVIDIA Rivermax Generic Receiver Sample Application"
+LICENSE = "Apache-2.0"
+
+LIC_FILES_CHKSUM = "file://${S}/../License.md;md5=b5b0ba1bc19282f7e114407166a20719"
+
+SRC_URI = "git://github.com/NVIDIA/Rivermax.git;branch=master;protocol=https"
+SRCREV = "eafc9affb751eec082f5257768ca04e2995bfcfa"
+
+S = "${WORKDIR}/git/generic_receiver"
+
+inherit pkgconfig cmake cuda
+
+EXTRA_OECMAKE += " \
+    -DCMAKE_SKIP_RPATH=TRUE \
+    ${@'-DRIVERMAX_ENABLE_TEGRA=ON' if d.getVar('TEGRA_DGPU') == '0' else ''} \
 "
 
-KERNEL_MODULE_AUTOLOAD:append = "${@' nv_peer_mem' if d.getVar('TEGRA_DGPU') == '1' else ''}"
+do_install() {
+    install -d ${D}${bindir}
+    install -m 0755 ${B}/generic_receiver ${D}${bindir}
+}
+
+DEPENDS = " \
+    rivermax \
+    ${@'cuda-nvml-native' if d.getVar('TEGRA_DGPU') == '1' else ''} \
+"

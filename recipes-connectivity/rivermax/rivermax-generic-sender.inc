@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,14 +18,21 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "NVIDIA Rivermax Sample Applications"
-LICENSE = "CLOSED"
+# The generic_sender application is still provided by the Rivermax SDK
+# package instead of by the Rivermax Applications GitHub, so this is
+# included by the base Rivermax recipe to build and package this app.
 
-SRC_URI = "file://rivermax_ubuntu2004_1.20.10.tar.gz"
+PACKAGES =+ "rivermax-generic-sender"
 
 inherit cuda
 
-S = "${WORKDIR}/${PV}/apps"
+copy_apps_src() {
+    cp -r ${WORKDIR}/${PV}/apps/* ${S}
+}
+
+do_unpack:append() {
+    bb.build.exec_func("copy_apps_src", d)
+}
 
 CUDA_HOST_CXX =  "${@cuda_extract_compiler('CXX_FOR_CUDA', d)[0]}"
 
@@ -33,19 +40,22 @@ EXTRA_OEMAKE:append = " \
     CC='${CUDA_HOST_CXX}' \
     NVCC='${CUDACXX} -ccbin ${CUDA_HOST_CXX}' \
     CUDA='y' \
-    CFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${RECIPE_SYSROOT}${includedir}/mellanox -I. -O3 --sysroot=${RECIPE_SYSROOT}' \
-    NVCFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${RECIPE_SYSROOT}${includedir}/mellanox -I. -I./cuda -O3 -m64 -DCUDA_ENABLED ${CUDAFLAGS} \
+    CFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${S}${includedir}/mellanox -I. -O3 --sysroot=${RECIPE_SYSROOT}' \
+    NVCFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${S}${includedir}/mellanox -I. -I./cuda -O3 -m64 -DCUDA_ENABLED ${CUDAFLAGS} \
               ${@"-DTEGRA_ENABLED" if d.getVar("TEGRA_DGPU") == "0" else ""}' \
-    NVLFLAGS='-L${RECIPE_SYSROOT}${libdir} -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/stubs -Xcompiler --sysroot=${RECIPE_SYSROOT} ${@cuda_meson_ldflags(d)} -lrivermax -lcuda \
+    NVLFLAGS='-L${S}${libdir}/aarch64-linux-gnu -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/stubs -Xcompiler --sysroot=${RECIPE_SYSROOT} ${@cuda_meson_ldflags(d)} -lrivermax -lcuda \
               ${@"-lnvidia-ml" if d.getVar("TEGRA_DGPU") == "1" else ""}' \
 "
 
-do_install() {
+do_install:append() {
     install -d ${D}${bindir}
     install -m 0755 ${S}/generic_sender ${D}${bindir}
 }
 
-DEPENDS = " \
-    rivermax \
+FILES:rivermax-generic-sender = " \
+    ${bindir} \
+"
+
+DEPENDS += " \
     cuda-nvml \
 "
