@@ -35,7 +35,7 @@ inherit pkgconfig
 CPPFLAGS += "-I${RECIPE_SYSROOT}${includedir}/tirpc"
 
 do_install() {
-    DESTDIR=${D} oe_runmake install prefix=${prefix}
+    oe_runmake install DESTDIR=${D} prefix=${prefix}
     ln -s libnvidia-container.so.${PV} ${D}${libdir}/libnvidia-container.so.1
 }
 
