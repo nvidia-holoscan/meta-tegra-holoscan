@@ -1,0 +1,67 @@
+From e2a6c1e895815a3e3363d0b5b15e9d94adf3b54c Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 1 Mar 2023 23:41:05 -0700
+Subject: Remove relative gxf_extension paths
+
+---
+ .../endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml    | 2 +-
+ .../endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml | 2 +-
+ .../h264_endoscopy_tool_tracking.yaml                           | 2 +-
+ applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
+index 180ccc2..fae536c 100644
+--- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
++++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
+@@ -20,7 +20,7 @@ extensions:
+   - libgxf_multimedia.so
+   - libgxf_serialization.so
+   - libgxf_stream_playback.so
+-  - gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
++  - libgxf_lstm_tensor_rt_inference.so
+ 
+ source: "replayer" # or "aja"
+ record_type: "none"  # or "input" if you want to record input video stream, or "visualizer" if you want
+diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
+index 5910a40..9a322f2 100644
+--- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
++++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ ---
+ extensions:
+-- gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
++- libgxf_lstm_tensor_rt_inference.so
+ 
+ aja:
+   width: 1920
+diff --git a/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml b/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
+index 3d5f525..d47e87e 100644
+--- a/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
++++ b/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
+@@ -21,7 +21,7 @@ extensions:
+   - libgxf_videodecoderio.so
+   - libgxf_videoencoder.so
+   - libgxf_videoencoderio.so
+-  - ../../gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
++  - libgxf_lstm_tensor_rt_inference.so
+ 
+ bitstream_reader:
+   outbuf_storage_type: 0
+diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
+index d67444f..35c4e4d 100644
+--- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
++++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ ---
+ extensions:
+-  - gxf_extensions/emergent_source/libgxf_emergent_source.so
++  - libgxf_emergent_source.so
+ 
+ emergent:
+   width: 2464
+-- 
+2.34.1
+

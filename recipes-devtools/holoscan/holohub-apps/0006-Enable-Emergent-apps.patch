@@ -1,0 +1,80 @@
+From d40df6143c38411dc2fc4168e6132bac4eca2ed0 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Tue, 14 Mar 2023 16:05:24 -0600
+Subject: Enable Emergent apps
+
+---
+ CMakeLists.txt                                | 1 +
+ applications/CMakeLists.txt                   | 7 +++++--
+ gxf_extensions/emergent_source/CMakeLists.txt | 8 ++++++--
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8f41a05..d5188e8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,6 +31,7 @@ include(CTest)
+ option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
+ option(HOLOHUB_BUILD_PYTHON "Build Holoscan SDK Python Bindings" ON)
+ option(BUILD_SAMPLE_APPS "Build Holoscan SDK sample applications" OFF)
++option(HOLOHUB_ENABLE_EMERGENT "Build Emergent-based sample applications" OFF)
+ 
+ # Set the default data directory
+ set(HOLOHUB_DATA_DIR "${CMAKE_BINARY_DIR}/data" CACHE PATH "Data Download directory")
+diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
+index 2849cc8..494c46a 100644
+--- a/applications/CMakeLists.txt
++++ b/applications/CMakeLists.txt
+@@ -40,8 +40,11 @@ add_holohub_application(h264_video_decode DEPENDS
+                         OPERATORS video_decoder video_read_bitstream
+                         HOLOSCAN_SAMPLE_APP)
+ 
++if(HOLOHUB_ENABLE_EMERGENT)
+ add_holohub_application(high_speed_endoscopy DEPENDS
+-                        OPERATORS emergent_source)
++                        OPERATORS emergent_source
++                        HOLOSCAN_SAMPLE_APP)
++endif()
+ 
+ add_holohub_application(multiai_ultrasound DEPENDS
+                         OPERATORS visualizer_icardio
+@@ -52,4 +55,4 @@ add_holohub_application(simple_radar_pipeline)
+ add_holohub_application(ultrasound_segmentation HOLOSCAN_SAMPLE_APP)
+ 
+ add_holohub_application(v4l2_plus DEPENDS 
+-                        OPERATORS v4l2_plus_source)
+\ No newline at end of file
++                        OPERATORS v4l2_plus_source)
+diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
+index be77b47..6317dec 100644
+--- a/gxf_extensions/emergent_source/CMakeLists.txt
++++ b/gxf_extensions/emergent_source/CMakeLists.txt
+@@ -17,6 +17,10 @@ project(gxf_emergent_source)
+ 
+ find_package(holoscan 0.5 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
++
++# Set the default Emergent SDK path
++set(EMERGENT_ROOT_DIR "/opt/EVT/eSDK" CACHE PATH "Emergent SDK directory")
++
+ # Create library
+ add_library(gxf_emergent_source_lib SHARED
+   emergent_source.cpp
+@@ -35,12 +39,12 @@ target_include_directories(gxf_emergent_source_lib
+   SYSTEM
+   BEFORE
+   PUBLIC
+-  "/opt/EVT/eSDK/include"
++  "${EMERGENT_ROOT_DIR}/include"
+ )
+ target_link_directories(gxf_emergent_source_lib
+   BEFORE
+   PUBLIC
+-  "/opt/EVT/eSDK/lib/"
++  "${EMERGENT_ROOT_DIR}/lib/"
+ )
+ 
+ # Create extension
+-- 
+2.34.1
+

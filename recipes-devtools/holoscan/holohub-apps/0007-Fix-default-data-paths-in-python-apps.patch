@@ -1,0 +1,67 @@
+From 628ae699f5acd97b367733c82e5bb772fc02e5e4 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 23 Mar 2023 13:36:09 -0600
+Subject: Fix default data paths in python apps
+
+---
+ .../colonoscopy_segmentation/colonoscopy_segmentation.py        | 2 +-
+ .../endoscopy_tool_tracking/python/endoscopy_tool_tracking.py   | 2 +-
+ applications/multiai_ultrasound/python/multiai_ultrasound.py    | 2 +-
+ .../ultrasound_segmentation/python/ultrasound_segmentation.py   | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
+index 0d4a8c7..9c6aa1a 100644
+--- a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
++++ b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
+@@ -50,7 +50,7 @@ class ColonoscopyApp(Application):
+         self.source = source
+ 
+         if data == "none":
+-            data = os.environ.get("HOLOSCAN_DATA_PATH", "../data")
++            data = os.environ.get("HOLOSCAN_DATA_PATH", "data/colonoscopy_segmentation")
+ 
+         self.sample_data_path = data
+ 
+diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
+index edbeeba..850dc20 100644
+--- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
++++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
+@@ -63,7 +63,7 @@ class EndoscopyApp(Application):
+         self.source = source
+ 
+         if data == "none":
+-            data = os.environ.get("HOLOSCAN_DATA_PATH", "../data")
++            data = os.environ.get("HOLOSCAN_DATA_PATH", "data/endoscopy")
+ 
+         self.sample_data_path = data
+ 
+diff --git a/applications/multiai_ultrasound/python/multiai_ultrasound.py b/applications/multiai_ultrasound/python/multiai_ultrasound.py
+index 139c29a..48e3bfd 100644
+--- a/applications/multiai_ultrasound/python/multiai_ultrasound.py
++++ b/applications/multiai_ultrasound/python/multiai_ultrasound.py
+@@ -36,7 +36,7 @@ class MultiAIICardio(Application):
+         super().__init__()
+ 
+         if data == "none":
+-            data = os.environ.get("HOLOSCAN_DATA_PATH", "../data")
++            data = os.environ.get("HOLOSCAN_DATA_PATH", "data/multiai_ultrasound")
+ 
+         # set name
+         self.name = "Ultrasound App"
+diff --git a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
+index 33553b1..509d5a5 100644
+--- a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
++++ b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
+@@ -50,7 +50,7 @@ class UltrasoundApp(Application):
+         self.source = source
+ 
+         if data == "none":
+-            data = os.environ.get("HOLOSCAN_DATA_PATH", "../data")
++            data = os.environ.get("HOLOSCAN_DATA_PATH", "data/ultrasound_segmentation")
+ 
+         self.sample_data_path = data
+ 
+-- 
+2.34.1
+
