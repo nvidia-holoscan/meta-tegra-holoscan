@@ -29,7 +29,7 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_22.11_20221116_8fbe43cb_holoscan-sdk_${GXF_ARCH}"
+GXF_PACKAGE = "gxf_22.11_20230223_6b2e34ec_holoscan-sdk_${GXF_ARCH}"
 SRC_URI = " \
     file://${GXF_PACKAGE}.tar.gz \
     file://0001-Fix-parameter_storage-build-error.patch \
@@ -75,6 +75,10 @@ DEPENDS = " \
 
 RDEPENDS:${PN} += " \
     libnpp \
+    libv4l \
+    tegra-libraries-multimedia \
+    tegra-libraries-multimedia-utils \
+    tegra-libraries-multimedia-v4l \
 "
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"

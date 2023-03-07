@@ -136,7 +136,7 @@ into and then run `git checkout {commit id}`.
     * #### GXF (2.5.0)
 
       Download: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/gxf_arm64_holoscan_sdk  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/gxf/files/gxf_22.11_20221116_8fbe43cb_holoscan-sdk_arm64.tar.gz`
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/gxf/files/gxf_22.11_20230223_6b2e34ec_holoscan-sdk_arm64.tar.gz`
 
       > **_Note:_** When GXF is downloaded from NGC it will download a ZIP
       > archive named `files.zip` that contains the above `tar.gz` file; extract
