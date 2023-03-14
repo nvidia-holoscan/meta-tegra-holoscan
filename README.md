@@ -231,12 +231,15 @@ this layer such as enabling an AJA Video I/O device. This additional
 documentation can be seen by scrolling to the `BEGIN NVIDIA CONFIGURATION`
 section at the bottom of the file.
 
-##### Adding Keyboard and Mouse Drivers
+##### Adding Additional Kernel Modules
 
-The default build has support for standard wired keyboards and mice, but if you
-are using a wireless device and/or one with more advanced features then it may
-be required to add additional drivers to your image. For example, to enable a
-Logitech wireless keyboard or mouse, the following kernel modules are needed:
+The machine configuration for a Holoscan devkit includes the minimal set of
+kernel modules required to support the onboard components, but it does not
+include modules to support additional peripherals such as USB cameras or
+wireless keyboards and mice. If such peripherals will be used, it will be
+required to add the corresponding kernel modules to the image to support these
+devices. For example, to enable a Logitech wireless keyboard or mouse, the
+following kernel modules are needed:
 
 ```
 CORE_IMAGE_EXTRA_INSTALL:append = " \
@@ -249,6 +252,9 @@ If you are unsure what drivers are needed, the generic `kernel-modules` package
 can be added to the install list instead to install all of the upstream kernel
 modules. This will increase build time and image size, so it is suggested to
 install just the specific kernel modules that are actually needed if possible.
+Note that the `kernel-modules` package has been added to the template
+configuration in `env/templates/conf/local.conf` to improve the out-of-the-box
+support for additional peripherals during the initial development phase.
 
 ##### Enabling Rivermax
 
