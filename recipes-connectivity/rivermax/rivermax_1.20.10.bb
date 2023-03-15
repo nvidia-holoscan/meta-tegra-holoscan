@@ -52,6 +52,9 @@ DEPENDS = " \
 RDEPENDS:${PN} += " \
     libvma \
     librdmacm1 \
+    mlnx-ofed \
+    rivermax-license \
+    ${@'nvidia-peermem' if d.getVar('TEGRA_DGPU') == '1' else ''} \
 "
 
 SOLIBS = "*.so*"
