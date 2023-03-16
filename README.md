@@ -20,7 +20,7 @@ drivers and toolkits that are used by the NVIDIA Holoscan SDK.
 
 Building a BSP for NVIDIA Holoscan requires a significant amount of system
 resources. Available disk space is the only strict requirement that must be
-met, with **a minimum of 250GB of free disk space required for a build** using
+met, with **a minimum of 300GB of free disk space required for a build** using
 the default configuration as described in this document. It is recommended,
 however, that the development system have many CPU cores, a fast internet
 connection, and a large amount of memory and disk bandwidth in order to
@@ -39,7 +39,7 @@ package configuration (including CUDA, TensorRT, and Holoscan SDK) takes:
 
 * Build Time: 3 hours and 5 minutes
 * Package Downloads: 22GB
-* Disk Space Used: 193GB
+* Disk Space Used: 265GB
 
 ## Build Environment Options
 
@@ -151,7 +151,7 @@ into and then run `git checkout {commit id}`.
     * #### Nsight Systems (2023.1.1)
 
       Download: https://developer.nvidia.com/downloads/nsight-systems20231-202311127-1-arm64deb  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb
+      Local Destination: `meta-tegra-holoscan/recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb`
 
 #### iGPU and dGPU Configurations
 
@@ -188,7 +188,7 @@ MACHINE ??= "igx-orin-devkit"
 require conf/holoscan-dgpu.conf
 ```
 
-> **_NOTE:_** If the configuration is switched between iGPU and dGPU, the
+> **_Note:_** If the configuration is switched between iGPU and dGPU, the
 > graphics driver packages need to be cleaned before building the BSP in order
 > to prevent file conflict errors. To clean these packages, issue these
 > commands:
@@ -294,6 +294,9 @@ $ bitbake core-image-sato
 > This script will add the required paths to the `PATH` environment variable so
 > that the `bitbake` command can be run from any directory.
 
+> **_Note:_** For the list of different image targets that are available to build,
+> see the [Yocto Project Images List](https://docs.yoctoproject.org/ref-manual/images.html).
+
 > **_Note:_** If the build fails due to unavailable resource errors, try the
 > build again. Builds are extremely resource-intensive, and having a number of
 > particularly large tasks running in parallel can exceed even 32GB of system
@@ -343,13 +346,15 @@ $ sudo ./doflash.sh
 >  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
 >  - [IGX Orin Developer Kit User Guide](https://developer.nvidia.com/igx-orin-developer-kit-user-guide).
 
-Once flashed, the Holoscan Developer Kit can then be disconnected from the
-host system and booted. The display connection that is used depends on the GPU
+Once flashed, the Holoscan Developer Kit can then be disconnected from the host
+system and booted. A display, keyboard, and mouse should be attached to the
+developer kit before it is booted. The display connection depends on the GPU
 configuration that was used for the build: the iGPU configuration uses the
-onboard HDMI or DisplayPort connection on the developer kit, while the dGPU
-configuration uses one of the DisplayPort connections on the discrete GPU.
-During boot you will see a black screen with only a cursor for a few moments
-before an X11 terminal or GUI appears (depending on your image type).
+onboard Tegra display connection while the dGPU configuration uses one of the
+connections on the discrete GPU. Please refer to the developer kit user guide
+for diagrams showing the locations of these display connections. During boot
+you will see a black screen with only a cursor for a few moments before an X11
+terminal or GUI appears (depending on your image type).
 
 > **_Note:_** If the monitor never receives a signal there may be an issue
 > configuring the monitor during the initial boot process. If this occurs,
@@ -363,17 +368,46 @@ before an X11 terminal or GUI appears (depending on your image type).
 > $ xrandr --output HDMI-0 --mode 1920x1080
 > ```
 
-#### Running the Holoscan SDK Sample Applications
+#### Running the Holoscan SDK and HoloHub Applications
 
-When the `holoscan-sdk` component is installed, the Holoscan SDK extensions and
-sample applications will be installed into the image in the `/workspace`
-directory. To run a sample application on the flashed device, navigate to this
-directory and launch the corresponding script. For example, the following runs
-the endoscopy instrument tracking application using sample recorded video data:
+When the `holoscan-sdk` component is installed, the Holoscan SDK is installed
+into the image in the `/opt/nvidia/holoscan` directory, with examples present in
+the `examples` subdirectory. Due to relative data paths being used by the apps,
+these examples should be run from the `/opt/nvidia/holoscan` directory. To run
+the C++ version of an example, simply run the executable in the example's `cpp`
+subdirectory:
 
 ```sh
-$ cd /workspace
-$ ./apps/endoscopy_tool_tracking/cpp/tracking_replayer
+$ cd /opt/nvidia/holoscan
+$ ./examples/hello_world/cpp/hello_world
+```
+
+To run the Python version of an example, run the application in the example's
+`python` subdirectory using `python3`:
+
+```sh
+$ cd /opt/nvidia/holoscan
+$ python3 ./examples/hello_world/python/hello_world.py
+```
+
+When the `holohub-apps` component is installed, the HoloHub sample applications
+are installed into the image in the `/opt/nvidia/holohub` directory, with the
+applications present in the `applications` subdirectory. Due to relative data
+paths being used by the apps, these applications should be run from the
+`/opt/nvidia/holohub` directory. To run the C++ version of an application,
+simply run the executable in the applications's `cpp` subdirectory:
+
+```sh
+$ cd /opt/nvidia/holohub
+$ ./applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking
+```
+
+To run the Python version of an application, run the application in the
+`python` subdirectory using `python3`:
+
+```sh
+$ cd /opt/nvidia/holohub
+$ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 ```
 
 Note that the first execution of the samples will rebuild the model engine files
@@ -394,7 +428,7 @@ a Holoscan BSP can be done in just a few simple commands. See
 [env/README.md](env/README.md) for documentation on the Holoscan OpenEmbedded/Yocto
 Build Container.
 
-> Note: the `env` directory in this repository contains the scripts and
+> **_Note:_** the `env` directory in this repository contains the scripts and
 > `Dockerfile` that are used to build the Holoscan OpenEmbedded/Yocto Build
 > Container image, and can even be used to build the container image locally if
 > one so desires.
