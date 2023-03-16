@@ -129,6 +129,10 @@ do_install:append() {
     # Vulkan ICD
     install -d ${D}${sysconfdir}/vulkan/icd.d
     install -m 0644 ${NVIDIA_SRC}/nvidia_icd.json ${D}${sysconfdir}/vulkan/icd.d/
+
+    # EGL glvnd config
+    install -d ${D}${datadir}/glvnd/egl_vendor.d
+    install -m 0644 ${NVIDIA_SRC}/10_nvidia.json ${D}${datadir}/glvnd/egl_vendor.d/
 }
 
 python populate_packages:prepend() {
