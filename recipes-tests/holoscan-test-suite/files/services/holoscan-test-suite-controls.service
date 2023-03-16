@@ -1,0 +1,13 @@
+[Unit]
+Description="Holoscan Test Suite Controls"
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/nvidia/holoscan-test-suite
+ExecStart=/usr/bin/screen -D -m -S holoscan-test-suite-control /bin/sh run_controls.sh
+ExecStop=/usr/bin/screen -X -S holoscan-test-suite-controls
+Restart=always
+RestartSec=30sec
+
+[Install]
+WantedBy=multi-user.target
