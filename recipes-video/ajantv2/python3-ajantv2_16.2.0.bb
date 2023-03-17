@@ -23,9 +23,9 @@ SUMMARY = "AJA NTV2 Python3 Module"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${S}/ajantv2.i;beginline=0;endline=21;md5=42d8804c74790962ad75b8205c6bea74"
 
-SRC_URI = "file://${PN}"
+SRC_URI = "file://${BPN}"
 
-S = "${WORKDIR}/${PN}"
+S = "${WORKDIR}/${BPN}"
 
 inherit cmake python3-dir
 
