@@ -73,16 +73,25 @@ do_install:append() {
     ln -sf libGLX_nvidia.so.${PV} ${D}${libdir}/libGLX_indirect.so.0
     ln -sf libGLX_nvidia.so.${PV} ${D}${libdir}/libGLX_nvidia.so.0
     ln -sf libnvcuvid.so.${PV} ${D}${libdir}/libnvcuvid.so.1
+    ln -sf libnvcuvid.so.1 ${D}${libdir}/libnvcuvid.so
     ln -sf libnvidia-allocator.so.${PV} ${D}${libdir}/libnvidia-allocator.so.1
+    ln -sf libnvidia-allocator.so.1 ${D}${libdir}/libnvidia-allocator.so
     ln -sf libnvidia-cfg.so.${PV} ${D}${libdir}/libnvidia-cfg.so.1
+    ln -sf libnvidia-cfg.so.1 ${D}${libdir}/libnvidia-cfg.so
     ln -sf libnvidia-encode.so.${PV} ${D}${libdir}/libnvidia-encode.so.1
+    ln -sf libnvidia-encode.so.1 ${D}${libdir}/libnvidia-encode.so
     ln -sf libnvidia-fbc.so.${PV} ${D}${libdir}/libnvidia-fbc.so.1
+    ln -sf libnvidia-fbc.so.1 ${D}${libdir}/libnvidia-fbc.so
     ln -sf libnvidia-ml.so.${PV} ${D}${libdir}/libnvidia-ml.so.1
+    ln -sf libnvidia-ml.so.1 ${D}${libdir}/libnvidia-ml.so
     ln -sf libnvidia-ngx.so.${PV} ${D}${libdir}/libnvidia-ngx.so.1
     ln -sf libnvidia-nvvm.so.4.0.0 ${D}${libdir}/libnvidia-nvvm.so.4
+    ln -sf libnvidia-nvvm.so.4 ${D}${libdir}/libnvidia-nvvm.so
     ln -sf libnvidia-opencl.so.${PV} ${D}${libdir}/libnvidia-opencl.so.1
     ln -sf libnvidia-opticalflow.so.${PV} ${D}${libdir}/libnvidia-opticalflow.so.1
+    ln -sf libnvidia-opticalflow.so.1 ${D}${libdir}/libnvidia-opticalflow.so
     ln -sf libnvidia-ptxjitcompiler.so.${PV} ${D}${libdir}/libnvidia-ptxjitcompiler.so.1
+    ln -sf libnvidia-ptxjitcompiler.so.1 ${D}${libdir}/libnvidia-ptxjitcompiler.so
     ln -sf libnvoptix.so.${PV} ${D}${libdir}/libnvoptix.so.1
 
     # VDPAU
