@@ -256,6 +256,19 @@ Note that the `kernel-modules` package has been added to the template
 configuration in `env/templates/conf/local.conf` to improve the out-of-the-box
 support for additional peripherals during the initial development phase.
 
+##### Enabling PREEMPT_RT patch
+
+`PREEMPT_RT` patch support for the Linux kernel is added by including the
+`conf/rt-patch.conf` file in `build/conf/local.conf`, like the following line:
+
+```
+require conf/rt-patch.conf
+```
+
+The `PREEMPT_RT` patch is currently only supported with iGPU configuration,
+enabling the `PREEMPT_RT` patch with dGPU configuration will lead to build 
+failures. 
+
 ##### Enabling Rivermax
 
 Rivermax support is added by including the `conf/rivermax.conf` file:
