@@ -43,7 +43,7 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=480539e97a7fb5ad9df72e45418ff4ec
 PACKAGES = "${PN} ${PN}-controls"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-test-suite.git;branch=main;protocol=https"
-SRCREV = "4bd5f9c79d52cd9a98b45a1b1e28cf48f6f71ab5"
+SRCREV = "e7a809d6e83998d74cc4bd1dcbbc4a75337b716c"
 
 SRC_URI += " \
     file://services \
