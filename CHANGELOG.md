@@ -1,3 +1,57 @@
+## [0.5.0] - 2023-03-31
+### Added
+- Support for IGX Orin Developer Kit (`igx-orin-devkit`)
+- HoloHub Applications
+- Holoscan Test Suite
+- Holoscan UEFI boot image
+- dGPU container support
+    - NVIDIA Container Toolkit 1.9.0
+    - libnvidia-container 1.11.0
+- Nsight Systems 2023.1.1
+- Documentation and support for debugging using GDB
+- `PREEMPT_RT` patch support (iGPU only)
+- Rivermax generic-sender and generic-receiver samples
+- Various dependency recipes
+    - Emergent Camera 2.37.05
+    - FastRLock 0.8.1
+    - CuPy 11.5.0
+    - UCX 1.13.1
+    - NVIDIA GPU Stress Test 2.3.0
+
+### Changed
+- Switched to using Yocto/Poky (Kirkstone 4.0.5)
+- Updated documentation to use `core-image-sato` image by default
+- Added `kernel-modules` to build template for convenience
+- Set default power mode to MAXN
+
+### Fixed
+- Added missing dGPU driver library symlinks
+- Fixed nvidia-settings application
+- Added missing Rivermax library symlinks
+- Added runtime check to flash script for required dtc command
+- Added missing Mellanox firmware updater tool
+- Disabled MetaModes in xorg config to fix Vulkan exclusive display mode
+
+### Component Versions
+|                 | iGPU and dGPU |
+| --------------- | ------------- |
+| L4T             | 35.2.1        |
+| Holoscan SDK    | 0.5.0         |
+| MLNX OFED       | 5.8-1.0.1.1   |
+| Rivermax        | 1.20.10       |
+| AJA NTV2        | 16.2.0        |
+| Emergent Camera | 2.37.05       |
+
+|                | iGPU      | dGPU      |
+| -------------- | --------- | --------- |
+| GPU Drivers    | 35.2.1    | 525.85.05 |
+| CUDA           | 11.4.19   | 11.8.0    |
+| cuDNN          | 8.6.0.166 | 8.7.0.84  |
+| TensorRT       | 8.5.2.1   | 8.5.3.1   |
+| nvidia-peermem | N/A       | 1.3.0     |
+| Nsight Systems | 2022.5.2  | 2023.1.1  |
+
+
 ## [0.4.0] - 2022-12-20
 ### Added
 - ONNX Runtime 1.12.1 recipe
@@ -99,6 +153,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[0.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/releases/tag/v0.2.0
