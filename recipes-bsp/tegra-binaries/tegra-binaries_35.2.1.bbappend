@@ -18,26 +18,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-SRC_URI:append = " \
-    file://Disable-modules-provided-by-mlnx-ofed.patch \
-    file://Add-nvidia-platform-t23x-mandalore-kernel-dts.patch \
-    file://Add-nvidia-platform-t23x-prometheus-kernel-dts.patch \
-    file://prometheus-dts-support-large-BAR1.patch \
+FILESEXTRAPATHS:prepend := "${THISDIR}/tegra-binaries:"
+
+SRC_URI += " \
+    file://prometheus-bct-support-large-BAR1.patch \
 "
-
-SRC_URI:append = "${@'file://Add-MMU_NOTIFIER-dependency-in-nv-p2p-Kconfig.patch' if 'RT_PATCH' in d else ''}"
-
-do_patch:append () {
-    if [ "${@d.getVar('RT_PATCH', True)}" = "1" ]; then
-        cd ${S}/scripts
-        ./rt-patch.sh apply-patches
-        # The below changes are needed so that the symlinks are 
-        # relative to the local directories and not absolute
-        cd ${S}/arch/arm64/configs/
-        mv .updated.defconfig updated.defconfig
-        mv .orig.defconfig orig.defconfig
-        ln -sfn updated.defconfig defconfig
-        ln -sfn defconfig tegra_defconfig
-    fi
-}
