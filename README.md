@@ -109,7 +109,7 @@ into and then run `git checkout {commit id}`.
     | -------------- | ---- | ------ |
     | meta-openembedded/meta-oe <br/> meta-openemdedded/meta-filesystems <br/> meta-openembedded/meta-networking <br/> meta-openembedded/meta-python | https://github.com/openembedded/meta-openembedded | `278ec081` |
     | meta-virtualization | https://git.yoctoproject.org/meta-virtualization | `9a94fa2a` |
-    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `f779da5c` |
+    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `98fa4f70` |
 
 * #### Proprietary NVIDIA Binary Packages
 
