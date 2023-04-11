@@ -1,4 +1,4 @@
-From 2601bd48ad23781eaa1c9a436ad5a0588969f4d6 Mon Sep 17 00:00:00 2001
+From ca35aeb43a990c92ec14944ca7015eecf2c8c714 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 7 Dec 2022 14:33:06 -0700
 Subject: Add nvidia/platform/t23x/prometheus/kernel-dts
@@ -13,8 +13,8 @@ Subject: Add nvidia/platform/t23x/prometheus/kernel-dts
  ...egra234-p3740-0000-camera-imx274-dual.dtsi |  82 ++
  ...tegra234-p3740-0000-camera-imx390-a00.dtsi |  89 ++
  .../tegra234-p3740-0000-camera-p3783-a00.dtsi | 182 ++++
- .../cvb/tegra234-p3740-0002-b00.dtsi          | 232 +++++
- .../kernel-dts/cvb/tegra234-p3740-audio.dtsi  | 120 +++
+ .../cvb/tegra234-p3740-0002-b00.dtsi          | 255 +++++
+ .../kernel-dts/cvb/tegra234-p3740-audio.dtsi  | 129 +++
  .../tegra234-p3740-b00-fixed-regulator.dtsi   | 139 +++
  .../cvb/tegra234-p3740-b00-pcie.dtsi          |  60 ++
  .../tegra234-p3740-b01-fixed-regulator.dtsi   | 139 +++
@@ -24,20 +24,20 @@ Subject: Add nvidia/platform/t23x/prometheus/kernel-dts
  .../cvb/tegra234-p3740-fixed-regulator.dtsi   | 183 ++++
  .../kernel-dts/cvb/tegra234-p3740-pcie.dtsi   |  80 ++
  .../cvb/tegra234-p3740-powermon.dtsi          |  46 +
- .../kernel-dts/cvb/tegra234-pwm-fan.dtsi      |  66 ++
+ .../kernel-dts/cvb/tegra234-pwm-fan.dtsi      |  54 +
  .../kernel-dts/cvm/tegra234-p3701-0000.dtsi   |  44 +
  .../kernel-dts/cvm/tegra234-p3701-0002.dtsi   |  22 +
  ...234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi | 545 +++++++++++
  .../tegra234-p3701-0000-p3740-0000-kexec.dts  | 132 +++
  .../tegra234-p3701-0000-p3740-0000.dts        | 212 ++++
  .../tegra234-p3701-0002-p3740-0002-b01.dts    |  27 +
- .../tegra234-p3701-0002-p3740-0002-safety.dts |  33 +
- .../tegra234-p3701-0002-p3740-0002.dts        |  43 +
- ...tegra234-p3740-camera-hawk-owl-overlay.dts | 909 ++++++++++++++++++
- .../tegra234-p3740-camera-p3785-overlay.dts   | 169 ++++
- .../tegra234-p3740-overlay-pcie.dts           |  54 ++
+ .../tegra234-p3701-0002-p3740-0002-safety.dts | 151 +++
+ .../tegra234-p3701-0002-p3740-0002.dts        |  49 +
+ ...tegra234-p3740-camera-hawk-owl-overlay.dts | 920 ++++++++++++++++++
+ .../tegra234-p3740-camera-p3785-overlay.dts   | 181 ++++
+ .../tegra234-p3740-overlay-pcie.dts           |  54 +
  ...a234-power-tree-p3701-0000-p3740-0000.dtsi |  38 +
- 33 files changed, 5163 insertions(+)
+ 33 files changed, 5330 insertions(+)
  create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/Makefile
  create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-camera-p3785.dtsi
  create mode 100644 nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0000-a00.dtsi
@@ -1537,10 +1537,10 @@ index 000000000000..dd7a2a6cb1df
 +
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi
 new file mode 100644
-index 000000000000..a60ae63d60dd
+index 000000000000..2e79e6fef47c
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-0002-b00.dtsi
-@@ -0,0 +1,232 @@
+@@ -0,0 +1,255 @@
 +/*
 + * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
 + *
@@ -1594,6 +1594,21 @@ index 000000000000..a60ae63d60dd
 +			eeprom@1 {
 +				slave-address = <0x55>;
 +				label = "cvb";
++			};
++		};
++	};
++
++	/* SPI1 connects to TPM */
++	spi@3210000 {
++		status = "okay";
++		spi@0 { /* chip select 0 */
++			compatible = "tegra-spidev";
++			reg = <0x0>;
++			spi-max-frequency = <50000000>;
++			controller-data {
++				nvidia,enable-hw-based-cs;
++				nvidia,rx-clk-tap-delay = <0x10>;
++				nvidia,tx-clk-tap-delay = <0x0>;
 +			};
 +		};
 +	};
@@ -1772,13 +1787,21 @@ index 000000000000..a60ae63d60dd
 +			"usb3-0", "usb3-1", "usb3-2";
 +		nvidia,xusb-padctl = <&xusb_padctl>;
 +	};
++
++	mttcan@c310000 {
++		status = "okay";
++	};
++
++	mttcan@c320000 {
++		status = "okay";
++	};
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi
 new file mode 100644
-index 000000000000..02d8372d57b4
+index 000000000000..29a837816650
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-audio.dtsi
-@@ -0,0 +1,120 @@
+@@ -0,0 +1,129 @@
 +/*
 + * T234 p3740 audio DTSI file.
 + *
@@ -1898,6 +1921,15 @@ index 000000000000..02d8372d57b4
 +		sound-dai = <&rt5640 0>;
 +		prefix = "CVB-RT";
 +	};
++};
++
++/* I2S link on CSI Connector */
++csi_conn_i2s: &i2s6_to_codec {
++	/*
++	 * HDMI IN board P3785 for HDMI->CSI I2S signals.
++	 */
++	bitclock-master;
++	frame-master;
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-p3740-b00-fixed-regulator.dtsi
 new file mode 100644
@@ -3064,12 +3096,12 @@ index 000000000000..cebe5433bdab
 \ No newline at end of file
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi
 new file mode 100644
-index 000000000000..1a7cf0bc8959
+index 000000000000..8d3014a67a37
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/cvb/tegra234-pwm-fan.dtsi
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,54 @@
 +/*
-+ * Copyright (c) 2021, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2021-2023, NVIDIA CORPORATION.  All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify it
 + * under the terms and conditions of the GNU General Public License,
@@ -3083,53 +3115,41 @@ index 000000000000..1a7cf0bc8959
 + * You should have received a copy of the GNU General Public License
 + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
-+#include <dt-bindings/gpio/tegra234-gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
 +
 +/ {
-+	pwm_fan_shared_data: pfsd {
-+		num_resources = <0>;
-+		secret = <47>;
-+		active_steps = <10>;
-+		active_rpm = <0 1000 2000 3000 4000 5000 6000 7000 10000 11000>;
-+		rpm_diff_tolerance = <2>;
-+		active_rru = <40 2 1 1 1 1 1 1 1 1>;
-+		active_rrd = <40 2 1 1 1 1 1 1 1 1>;
-+		state_cap_lookup = <2 2 2 2 3 3 3 4 4 4>;
-+		pwm_period = <45334>;
-+		pwm_id = <3>;
-+		pwm_polarity = <PWM_POLARITY_INVERTED>;
-+		suspend_state = <1>;
-+		step_time = <100>; /* mesecs */
-+		state_cap = <7>;
-+		active_pwm_max = <256>;
-+		tach_period = <1000>;
-+		pwm_gpio = <&tegra_main_gpio TEGRA234_MAIN_GPIO(Q, 2) GPIO_ACTIVE_LOW>;
-+	};
++	i2c@c250000 {
++		f75308@4d {
++			compatible = "fintek,f75308";
++			reg = <0x4d>;
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	pwm-fan {
-+		compatible = "pwm-fan";
-+		status = "okay";
-+		#pwm-cells = <1>;
-+		pwms = <&tegra_pwm3 0 45334>;
-+		shared_data = <&pwm_fan_shared_data>;
-+		profiles {
-+			default = "quiet";
-+			quiet {
-+				state_cap = <4>;
-+#if TEGRA_PWM_FAN_DT_VERSION == DT_VERSION_2
-+				cooling-levels = <255 178 135 95 0 0 0 0 0 0>;
-+#else
-+				active_pwm = <0 77 120 160 255 255 255 255 255 255>;
-+#endif
++			fan@0 {
++				reg = <0x0>;
++				type = "pwm";
++				duty = "manual_duty";
++				5seg = <100 80 60 40 20>;
 +			};
-+			cool {
-+				state_cap = <4>;
-+#if TEGRA_PWM_FAN_DT_VERSION == DT_VERSION_2
-+				cooling-levels = <255 178 135 95 0 0 0 0 0 0>;
-+#else
-+				active_pwm = <0 77 120 160 255 255 255 255 255 255>;
-+#endif
++
++			fan@1 {
++				reg = <0x1>;
++				type = "pwm";
++				duty = "manual_duty";
++				5seg = <100 80 60 40 20>;
++			};
++
++			fan@2 {
++				reg = <0x2>;
++				type = "pwm";
++				duty = "manual_duty";
++				5seg = <100 80 60 40 20>;
++			};
++
++			fan@3 {
++				reg = <0x3>;
++				type = "pwm";
++				duty = "manual_duty";
++				5seg = <100 80 60 40 20>;
 +			};
 +		};
 +	};
@@ -4154,10 +4174,10 @@ index 000000000000..0b0e479e9600
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts
 new file mode 100644
-index 000000000000..f1f68a0d6183
+index 000000000000..a94a79c802a0
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002-safety.dts
-@@ -0,0 +1,33 @@
+@@ -0,0 +1,151 @@
 +/*
 + * Top level DTS file for CVM:P3701-0002 and CVB:P3704-0002.
 + *
@@ -4183,24 +4203,142 @@ index 000000000000..f1f68a0d6183
 +	compatible = "nvidia,p3740-0002+p3701-0002-safety", "nvidia,tegra23x",
 +		      "nvidia,tegra234";
 +
-+	safetyservices_epl_client {
++	/* This is hsp_top2 where fsi-ccplex comm happens in all below nodes */
++	tegra-hsp@1600000 {
 +		status = "okay";
 +	};
 +
-+	tegra-hsp@1600000 {
++	fsicom_client { /* Kernel driver on which FsiComIvc relies on */
 +		status = "okay";
++	};
++
++	FsiComIvc { /* CCPLEX-FSI Comm Daemon uses below DT node */
++		compatible = "nvidia,tegra-fsicom-channels";
++		status = "okay";
++		nChannel=<7>;
++		channel_0{
++			frame-count = <4>;
++			frame-size = <1024>;
++			NvSciCh = "nvfsicom_EPD";
++		};
++		channel_1{
++			frame-count = <30>;
++			frame-size = <64>;
++			NvSciCh = "nvfsicom_CcplexApp";
++		};
++		channel_2{
++			frame-count = <4>;
++			frame-size = <64>;
++			NvSciCh = "nvfsicom_CcplexApp_state_change";
++		};
++		channel_3{
++			frame-count = <4>;
++			frame-size = <64>;
++			NvSciCh = "nvfsicom_app1";
++		};
++		channel_4{
++			frame-count = <2>;
++			frame-size = <512>;
++			NvSciCh = "nvfsicom_app2";
++		};
++		channel_5{
++			frame-count = <4>;
++			frame-size = <64>;
++			NvSciCh = "nvfsicom_appGR";
++		};
++		channel_6{
++			frame-count = <4>;
++			frame-size = <10240>;
++		};
++	};
++
++	/*
++	 * The app is responsible to send runtime tunables from the node SS_ErrorReportingConfig
++	 * for the FSI FW
++	 */
++	FsiComClientChConfigEpd {
++                compatible = "nvidia,tegra-fsicom-EPD";
++                status = "disabled";
++                channelid_list = <0>;
++        };
++
++	SS_ErrorReportingConfig {
++		compatible = "nvidia,tegra-SafetyServiceConfig";
++		status = "disabled";
++		/*Number of Sw Errors to be disabled*/
++		Sw_Errors_count = <0>;
++		/* List of SW errors to disable*/
++		/*Entry should be<<reporter id> <mask>>*/
++		/* Sample :<0x8000 0xFFFFFFFF>;*/
++		/*If the Error code mask is 0xFFFFFFFF then all the error code from the reporter ID will be disabled*/
++		Sw_Errors = <>;
++	};
++
++	FsiComAppChConfCcplexApp {
++		compatible = "nvidia,tegra-fsicom-CcplexApp";
++		status = "okay";
++		channelid_list = <1 2>;
++	};
++
++	safetyservices_epl_client { /* userspace app uses this driver to send error code */
++		compatible = "nvidia,tegra234-epl-client";
++		/*
++		 * FSI FW version 1.1.1 uses HSP 1, while latest FSI FW version
++		 * 1.5.4 onwards will be using HSP 0.
++		 */
++#if TEGRA_HSP_DT_VERSION >= DT_VERSION_2
++		mboxes =
++			<&hsp_top2 (TEGRA_HSP_MBOX_TYPE_SM | TEGRA_HSP_MBOX_TYPE_SM_128BIT) TEGRA_HSP_SM_TX(0)>;
++#else
++		mboxes =
++			<&hsp_top2 TEGRA_HSP_MBOX_TYPE_SM_128BIT TEGRA_HSP_SM_TX(0)>;
++#endif
++		mbox-names = "epl-tx";
++
++		reg = <0x0 0x00110000 0x0 0x4>,
++			  <0x0 0x00110004 0x0 0x4>,
++			  <0x0 0x00120000 0x0 0x4>,
++			  <0x0 0x00120004 0x0 0x4>,
++			  <0x0 0x00130000 0x0 0x4>,
++			  <0x0 0x00130004 0x0 0x4>,
++			  <0x0 0x00140000 0x0 0x4>,
++			  <0x0 0x00140004 0x0 0x4>,
++			  <0x0 0x00150000 0x0 0x4>,
++			  <0x0 0x00150004 0x0 0x4>,
++			  <0x0 0x024e0038 0x0 0x4>;
++
++		/* Device driver's name for reporting errors via MISCREG_MISC_EC_ERR0_SW_ERR_CODE_0 */
++		client-misc-sw-generic-err0 = "fsicom_client";
++		/* Device driver's name for reporting errors via MISCREG_MISC_EC_ERR1_SW_ERR_CODE_0 */
++		client-misc-sw-generic-err1 = "gk20b";
++		/* Device driver's name for reporting errors via MISCREG_MISC_EC_ERR3_SW_ERR_CODE_0 */
++		client-misc-sw-generic-err3 = "gk20d";
++		/* Device driver's name for reporting errors via MISCREG_MISC_EC_ERR4_SW_ERR_CODE_0 */
++		client-misc-sw-generic-err4 = "gk20e";
++
++		status = "okay";
++	};
++
++	/*
++	 * FIXME: there is no auto dtsi which enables this driver, and its mailbox
++	 * shown in its yaml file overlaps with the fsicom_client driver. Keeping
++	 * this disabled till it gets sorted out.
++	 */
++	hsierrrptinj {
++		compatible = "nvidia,tegra234-hsierrrptinj";
++		status = "disabled";
 +	};
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts
 new file mode 100644
-index 000000000000..5d3ce2cdfead
+index 000000000000..957c345ee858
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3701-0002-p3740-0002.dts
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,49 @@
 +/*
 + * Top level DTS file for CVM:P3701-0002 and CVB:P3704-0002.
 + *
-+ * Copyright (c) 2022, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2022-2023, NVIDIA CORPORATION.  All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -4215,7 +4353,9 @@ index 000000000000..5d3ce2cdfead
 +/dts-v1/;
 +#include "cvm/tegra234-p3701-0002.dtsi"
 +#include "cvb/tegra234-p3740-0002-b00.dtsi"
++#include "cvb/tegra234-pwm-fan.dtsi"
 +#include <tegra234-soc/mods-simple-bus.dtsi>
++#include <tegra234-soc/tegra234-soc-hwpm.dtsi>
 +#include <t234-common-cvm/tegra234-cpuidle.dtsi>
 +#include "tegra234-dcb-p3701-0000-a02-p3740-0000-a00.dtsi"
 +
@@ -4239,29 +4379,44 @@ index 000000000000..5d3ce2cdfead
 +	display@13800000 {
 +		status = "okay";
 +	};
++
++	tegra_soc_hwpm {
++		status = "okay";
++	};
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts
 new file mode 100644
-index 000000000000..ed31831020ed
+index 000000000000..d463a6b962e1
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-hawk-owl-overlay.dts
-@@ -0,0 +1,909 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+@@ -0,0 +1,920 @@
 +/*
-+ * Jetson Device-tree overlay for Camera Hawk & Owl on t23x platforms
++ * Copyright (c) 2023, NVIDIA CORPORATION.  All rights reserved.
 + *
-+ * Copyright (c) 2022 NVIDIA CORPORATION. All rights reserved.
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
 +
++/*
++ * Device-tree overlay for Hawk & Owl.
++ */
 +
 +/dts-v1/;
 +/plugin/;
 +
 +/ {
 +	overlay-name = "Jetson Camera Hawk-Owl p3783 module";
-+	jetson-header-name = "Jetson AGX CSI Connector";
-+	compatible = "nvidia,p3740-0000+p3701-0000";
++	jetson-header-name = "Jetson 122pin CSI Connector";
++	compatible = "nvidia,p3740-0000+p3701-0000", "nvidia,p3740-0002-b01+p3701-0002";
 +
 +	/* VI number of channels */
 +	fragment@0 {
@@ -5157,16 +5312,28 @@ index 000000000000..ed31831020ed
 +};
 diff --git a/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts
 new file mode 100644
-index 000000000000..b733bb50c7b9
+index 000000000000..61532ad7c7a5
 --- /dev/null
 +++ b/nvidia/platform/t23x/prometheus/kernel-dts/tegra234-p3740-camera-p3785-overlay.dts
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0-only
+@@ -0,0 +1,181 @@
 +/*
-+ * Jetson Device-tree overlay for Camera Hawk & Owl on t23x platforms
++ * Copyright (c) 2023, NVIDIA CORPORATION.  All rights reserved.
 + *
-+ * Copyright (c) 2022 NVIDIA CORPORATION. All rights reserved.
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++/*
++ * Device-tree overlay for P3785.
 + */
 +
 +
@@ -5175,8 +5342,8 @@ index 000000000000..b733bb50c7b9
 +
 +/ {
 +	overlay-name = "Jetson Camera P3785 ";
-+	jetson-header-name = "Jetson AGX CSI Connector";
-+	compatible = "nvidia,p3740-0000+p3701-0000";
++	jetson-header-name = "Jetson 122pin CSI Connector";
++	compatible = "nvidia,p3740-0000+p3701-0000", "nvidia,p3740-0002-b01+p3701-0002";
 +
 +	/* VI number of channels */
 +	fragment@0 {
