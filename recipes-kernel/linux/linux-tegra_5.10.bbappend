@@ -24,6 +24,7 @@ SRC_URI:append = " \
     file://Add-nvidia-platform-t23x-mandalore-kernel-dts.patch \
     file://Add-nvidia-platform-t23x-prometheus-kernel-dts.patch \
     file://prometheus-dts-support-large-BAR1.patch \
+    file://Enable-module-signing.cfg \
 "
 
 SRC_URI:append = "${@'file://Add-MMU_NOTIFIER-dependency-in-nv-p2p-Kconfig.patch' if 'RT_PATCH' in d else ''}"
