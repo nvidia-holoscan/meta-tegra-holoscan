@@ -549,3 +549,242 @@ debugging can begin.
 > written to the `armv8a_tegra234-poky-linux` directory of the build tree. This
 > may need to change if the application was written to another directory
 > (e.g. `armv8a-poky-linux`).
+
+## Enabling Secure Boot
+
+NVIDIA Jetson Linux platforms, including the Holoscan developer kits, provide
+boot security with an on-die BootROM that authenticates boot codes such as BCT
+and the bootloader using Public Key Cryptography (PKC) keys stored in
+write-once-read-multiple hardware fuses. A Secure Boot Key (SBK) can also be
+used to encrypt bootloader images. Enabling SBK is optional, but doing so
+requires PKC to be enabled.
+
+The root-of-trust that uses these hardware fuses for authentication ends at the
+bootloader. After this, the UEFI bootloader uses the UEFI Security Keys scheme
+to authenticate its payloads.
+
+The mechanisms used to enable secure boot are documented in the
+[Secure Boot](https://docs.nvidia.com/jetson/archives/r35.3.1/DeveloperGuide/text/SD/Security/SecureBoot.html)
+section of the Jetson Linux Developer Guide, and additional Yocto/OE-specific
+documentation is provided by the
+[Secure Boot Support](https://github.com/OE4T/meta-tegra/wiki/Secure-Boot-Support-in-L4T-R35.2.1)
+wiki on the [OE4T/meta-tegra](https://github.com/OE4T/meta-tegra) GitHub page.
+Once these documents have been read, the following sections provide examples that
+summarize the steps needed to enable PKC/SBK sigining and UEFI secure boot for
+an IGX Orin Devkit.
+
+> **_Note:_** The following sections are provided purely as examples, and
+> should likely not be followed as-is to create, fuse, and enable encryption
+> keys. In most cases OEMs will generate and maintain their own sets of keys
+> that will be used for this purpose.
+
+> **_WARNING:_** Burning fuses is a **one-time** operation, so be extremely
+> careful. If something is done incorrectly during this process you could
+> render the devkit completely and permanently unusable.
+
+> **_WARNING:_** Once the fuses have been burned, be certain to keep the keys
+> in a safe location as they will be needed every time the device is flashed.
+> Losing the keys means that you will not be able to flash the device again.
+
+The following examples use these three environment variables that must be set
+for the commands to work:
+
+* `BUILD_ROOT`: Set to the root of your build tree, i.e. where the
+   `meta-tegra-holoscan` directory exists
+
+* `KEYS_PATH`: Set to the path of a subdirectory in `${BUILD_ROOT}` where
+  generated key files should be written.
+
+* `L4T_DIR`: Set to the path where a previous successful build with `bitbake`
+  has setup the L4T native build tools. This path depends on the current L4T
+  version that is being used; for example, for a build using L4T 35.3.1 this
+  path will be
+  `${BUILD_ROOT}/build/tmp/work-shared/L4T-native-35.3.1-r0/Linux_for_Tegra`
+
+### A) Enabling PKC/SBK Signing
+
+The following example generates PKC and SBK keys and fuses the device, then an
+image is signed at flash time before being flashed onto the device.
+
+1. Generate an RSA 3K key pair (`pkc.pem`) for PKC signing:
+
+   ```sh
+   $ openssl genrsa -traditional -out ${KEYS_PATH}/pkc.pem 3072
+   ```
+
+2. Generate the Public Key Hash (`pkh.txt`) from the PKC key:
+
+   ```sh
+   $ ${L4T_DIR}/bootloader/tegrakeyhash --chip 0x23 --pkc ${KEYS_PATH}/pkc.pem | grep -A1 tegra-fuse | grep -v tegra-fuse > ${KEYS_PATH}/pkh.txt
+   ```
+
+3. Generate a Secure Boot Key (`sbk.key`):
+
+   ```sh
+   $ echo 0x$(openssl rand -hex 32 | fold -w8 | paste -sd' ' | sed 's/ / 0x/g') > ${KEYS_PATH}/sbk.key
+   ```
+
+4. Prepare the fuse config file to burn and enable the PKC and SBK fuses:
+
+   ```sh
+   $ cat > ${KEYS_PATH}/fuse_config.xml << EOF
+   <genericfuse MagicId="0x45535546" version="1.0.0">
+       <fuse name="PublicKeyHash" size="64" value="$(cat ${KEYS_PATH}/pkh.txt)"/>
+       <fuse name="SecureBootKey" size="32" value="0x$(cat ${KEYS_PATH}/sbk.key | sed 's/0x\| //g')"/>
+       <fuse name="BootSecurityInfo" size="4" value="0x209"/>
+   </genericfuse>
+   EOF
+   ```
+
+5. Burn the fuses. With the device in recovery mode and connected to the host
+   via the USB-C debug port, use the `odmfuse.sh` script to burn the fuses.
+
+   > **_Note:_** It is recommended to run the `odmfuse.sh` script with the `--test`
+   > flag added first to make sure that the operation will succeed. Only if no
+   > errors occur should the `--test` flag be removed when run.
+
+   > **_WARNING:_** Burning fuses is an irreversible process. **Do not perform this
+   > step until you are certain the fuse configuration (`fuse_config.xlm`) is
+   > correct.**
+
+   ```sh
+   $ cd ${L4T_DIR}
+   $ sudo ./odmfuse.sh --test -X ${KEYS_PATH}/fuse_config.xml -i 0x23 igx-orin-devkit
+   {Then, if successful...}
+   $ sudo ./odmfuse.sh -X ${KEYS_PATH}/fuse_config.xml -i 0x23 igx-orin-devkit
+   ```
+
+6. Flash the image using the `doflash.sh` script from a previously built and
+   extracted image as before, but append the `-u` and `-v` arguments to provide
+   the paths to the PKC and SBK keys, respectively.
+
+   ```sh
+   $ sudo ./doflash.sh -u ${KEYS_PATH}/pkc.pem -v ${KEYS_PATH}/sbk.key
+   ```
+
+   > **_Note:_** If using the `flash.sh` script provided by the Holoscan OE
+   > Builder container, edit the script to append these arguments to the
+   > `doflash.sh` line near the end of the file.
+
+### B) Enabling UEFI Secure Boot
+
+The following example generates the keys and certificates required to enable
+UEFI secure boot, then builds and signs an image using these keys such that
+the keys will be enrolled at boot time.
+
+> **_Note:_** Post-build UEFI signing is not currently supported.
+
+1. Generate PL, KEK, and DB key pairs and certificates:
+
+   ```sh
+   $ mkdir ${KEYS_PATH}/uefi
+   $ openssl req -newkey rsa:2048 -nodes -keyout ${KEYS_PATH}/uefi/PK.key -new -x509 -sha256 -days 3650 -subj "/CN=Platform Key/" -out ${KEYS_PATH}/uefi/PK.crt
+   $ openssl req -newkey rsa:2048 -nodes -keyout ${KEYS_PATH}/uefi/KEK.key -new -x509 -sha256 -days 3650 -subj "/CN=Key Exchange Key/" -out ${KEYS_PATH}/uefi/KEK.crt
+   $ openssl req -newkey rsa:2048 -nodes -keyout ${KEYS_PATH}/uefi/DB.key -new -x509 -sha256 -days 3650 -subj "/CN=Signature Database Key/" -out ${KEYS_PATH}/uefi/DB.crt
+   ```
+
+2. Create UEFI keys config file:
+
+   ```sh
+   $ cat > ${KEYS_PATH}/uefi/keys.conf << EOF
+   UEFI_PK_KEY_FILE="PK.key"
+   UEFI_PK_CERT_FILE="PK.crt"
+   UEFI_KEK_KEY_FILE="KEK.key"
+   UEFI_KEK_CERT_FILE="KEK.crt"
+   UEFI_DB_1_KEY_FILE="DB.key"
+   UEFI_DB_1_CERT_FILE="DB.crt"
+   UEFI_DB_APPEND_MSFT_UEFI=1
+   EOF
+   ```
+
+   > **_Note:_** The `gen_uefi_default_keys_dts.sh` script that uses the above
+   > configuration in the next step has been patched by the `meta-tegra-holoscan`
+   > layer to add the `UEFI_DB_APPEND_MSFT_UEFI` option in order to append the
+   > [Microsoft UEFI Certificate](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-secure-boot-key-creation-and-management-guidance?view=windows-11#14-signature-databases-db-and-dbx)
+   > to the allowed signature database (db) in the generated dts file. This is
+   > needed because the Mellanox UEFI firmware has been signed by the Microsoft
+   > UEFI key, so this certificate needs to be added to the signature database
+   > for the Mellanox firmware drivers to be loaded by UEFI.
+   >
+   > The `UEFI_KEK_APPEND_MSFT` option can also be enabled in the configuration
+   > file to append the [Microsoft KEK](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/windows-secure-boot-key-creation-and-management-guidance?view=windows-11#13-secure-boot-pki-requirements),
+   > to the enrolled key exchange keys list, and the
+   > `UEFI_DBX_APPEND_UEFI_REVOCATION_LIST` option can be enabled to append the
+   > latest [UEFI Revocation List File](https://uefi.org/revocationlistfile) to
+   > the `dbx` list.
+
+3. Generate `UefiDefaultSecurityKeys.dts` file:
+
+   ```sh
+   $ sudo apt install -y efitools
+   $ cd ${KEYS_PATH}/uefi
+   $ ${L4T_DIR}/tools/gen_uefi_default_keys_dts.sh keys.conf
+   ```
+
+4. Add the `UefiDefaultSecurityKeys.dts` file to a `tegra-uefi-keys-dtb` recipe
+   append file in order to enroll the keys during boot.
+
+   ```sh
+   $ cd ${BUILD_ROOT}
+   $ mkdir -p meta-tegra-holoscan/recipes-bsp/uefi/tegra-uefi-keys-dtb
+   $ cp ${KEYS_PATH}/uefi/UefiDefaultSecurityKeys.dts meta-tegra-holoscan/recipes-bsp/uefi/tegra-uefi-keys-dtb
+   $ cat > meta-tegra-holoscan/recipes-bsp/uefi/tegra-uefi-keys-dtb.bbappend << EOF
+   FILESEXTRAPATHS:prepend := "\${THISDIR}/tegra-uefi-keys-dtb:"
+   EOF
+   ```
+
+5. Update `local.conf` to add the DB key and certificate to sign UEFI at build
+   time. For example, the following command will append to the `local.conf`
+   file and the `${KEYS_PATH}` variable will be replaced with the absolute path
+   that the variable expands to. If editing the file manually, make sure to
+   provide absolute paths to these files.
+
+   ```sh
+   $ cat >> ${BUILD_ROOT}/build/conf/local.conf << EOF
+   TEGRA_UEFI_DB_KEY = "${KEYS_PATH}/uefi/DB.key"
+   TEGRA_UEFI_DB_CERT = "${KEYS_PATH}/uefi/DB.crt"
+   EOF
+   ```
+
+   > **_Note:_** When using the Holoscan OE Builder container, `${BUILD_ROOT}`
+   > is mounted in the container as `/workspace`. Therefore, if `${BUILD_ROOT}`
+   > is `/home/user/holoscan` and `${KEYS_PATH}` is `/home/user/holoscan/keys`
+   > then the paths used in the `local.conf` file should be:
+   >
+   > ```sh
+   > TEGRA_UEFI_DB_KEY = "/workspace/keys/uefi/DB.key"
+   > TEGRA_UEFI_DB_CERT = "/workspace/keys/uefi/DB.crt"
+   > ```
+
+6. Build and flash the image to the device. To check that UEFI secure boot has
+   been enabled, look for the following output from the console log during
+   boot:
+
+   ```sh
+   EFI stub: UEFI Secure Boot is enabled.
+   ```
+
+   Alternatively, to check the secureboot status at runtime, add the `efivar`
+   tool to the image via `CORE_IMAGE_EXTRA_INSTALL` then run the following on
+   the device:
+
+   ```sh
+   $ efivar -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-SecureBoot
+   ```
+
+   If secureboot is enabled, this will output:
+
+   ```sh
+   Value:
+   00000000  01
+   ```
+
+   If secureboot is not enabled, the `01` value will instead be `00`.
+
+   To check the PK, KEK, and db values, the following commands can be used:
+
+   ```sh
+   $ efivar -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-PK
+   $ efivar -n 8be4df61-93ca-11d2-aa0d-00e098032b8c-KEK
+   $ efivar -n d719b2cb-3d3a-4596-a3bc-dad00e67656f-db
+   ```
