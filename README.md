@@ -169,7 +169,7 @@ given in the following table:
 
 | Component       | iGPU       | dGPU             |
 | --------------- | ---------- | ---------------- |
-| Display Drivers | L4T 35.1.0 | OpenRM 525.85.05 |
+| Display Drivers | L4T 35.3.1 | OpenRM 525.85.05 |
 | CUDA            | 11.4.14    | 11.8.0           |
 | cuDNN           | 8.4.1.50   | 8.7.0.84         |
 | TensorRT        | 8.4.1      | 8.5.3.1          |

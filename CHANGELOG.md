@@ -1,3 +1,19 @@
+## [0.5.1] - 2023-04-25
+### Added
+- Secure Boot documentation section
+- Patch to append the Microsoft UEFI certificate and UEFI revocation
+  list to the Secure Boot key enrollment list
+
+### Changed
+- Updated L4T to 35.3.1
+- Updated IGX Orin Devkit configuration for latest board revision
+- Switched mlnx-ofed kernel patch to config fragment
+
+### Known Issues
+- Enabling Secure Boot when using a dGPU causes the UEFI boot menu
+  to no longer be displayed on the dGPU video output.
+
+
 ## [0.5.0] - 2023-03-31
 ### Added
 - Support for IGX Orin Developer Kit (`igx-orin-devkit`)
@@ -153,6 +169,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[0.5.1]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.2.0...v0.3.0
