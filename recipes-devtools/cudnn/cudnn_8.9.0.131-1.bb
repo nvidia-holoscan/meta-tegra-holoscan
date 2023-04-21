@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,49 +18,15 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "NVIDIA cuDNN"
-LICENSE = "CLOSED"
+inherit nvidia_deb_pkgfeed
 
-def cuda_pkg_arch(d):
-    arch = d.getVar('TARGET_ARCH')
-    return 'sbsa' if arch == 'aarch64' else arch
+# This recipe builds on top of the meta-tegra version.
+require recipes-devtools/cudnn/cudnn_8.6.0.166-1.bb
 
-CUDA_PKG_ARCH = "${@cuda_pkg_arch(d)}"
-CUDNN_PKG_PATH = "cudnn-linux-${CUDA_PKG_ARCH}-${PV}_cuda11-archive"
-
-SRC_URI = "file://${CUDNN_PKG_PATH}.tar.xz"
-
-COMPATIBLE_MACHINE = "(tegra)"
-PACKAGE_ARCH = "${TEGRA_PKGARCH}"
-
-S = "${WORKDIR}/${CUDNN_PKG_PATH}"
-
-do_install() {
-    install -d ${D}${libdir}
-    install -m 0644 ${S}/lib/* ${D}${libdir}
-
-    install -d ${D}${includedir}
-    install -m 0644 ${S}/include/* ${D}${includedir}
-}
-
-FILES:${PN} = " \
-    ${libdir} \
+SRC_COMMON_DEBS = "\
+    libcudnn8_${PV}+cuda${CUDA_VERSION}_arm64.deb;name=lib;subdir=cudnn \
+    libcudnn8-dev_${PV}+cuda${CUDA_VERSION}_arm64.deb;name=dev;subdir=cudnn \
 "
 
-FILES:${PN}-dev = " \
-    ${includedir} \
-"
-
-DEPENDS = " \
-    libcublas \
-"
-
-RDEPENDS:${PN} = " \
-    cuda-toolkit \
-    zlib \
-"
-
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
-
-INSANE_SKIP:${PN} += "already-stripped"
+SRC_URI[lib.sha256sum] = "4583c7730d53de98278c55e3beb329dc4df57ad3b4213df9a7330777e3516d06"
+SRC_URI[dev.sha256sum] = "cacb8a3179eaf142e584da1638f4717480cda6f76885f416828d34c14bb5260a"

@@ -123,11 +123,6 @@ into and then run `git checkout {commit id}`.
 
     The current list of manually downloaded packages is as follows:
 
-    * #### cuDNN (8.7.0.84)
-
-      Download: https://developer.nvidia.com/downloads/c118-cudnn-linux-sbsa-87084cuda11-archivetarz  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/cudnn/files/cudnn-linux-sbsa-8.7.0.84_cuda11-archive.tar.xz`
-
     * #### TensorRT (8.5.3.1)
 
       Download: https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.5.3/tars/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz  
@@ -171,7 +166,7 @@ given in the following table:
 | --------------- | ---------- | ---------------- |
 | Display Drivers | L4T 35.3.1 | OpenRM 530.30.02 |
 | CUDA            | 11.4.19    | 12.1.1           |
-| cuDNN           | 8.6.0.166  | 8.7.0.84         |
+| cuDNN           | 8.6.0.166  | 8.9.0.131        |
 | TensorRT        | 8.5.2      | 8.5.3.1          |
 
 #### Build Configuration
