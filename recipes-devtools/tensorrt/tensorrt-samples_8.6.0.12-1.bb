@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,4 +18,15 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SRC_URI = "file://TensorRT-${PV}.Ubuntu-20.04.${TARGET_ARCH}-gnu.cuda-11.8.cudnn8.6.tar.gz"
+inherit nvidia_deb_pkgfeed
+
+# This recipe builds on top of the meta-tegra version.
+require recipes-devtools/gie/tensorrt-samples_8.5.2-1.bb
+
+LIC_FILES_CHKSUM = "file://../../../share/doc/libnvinfer-samples/copyright;md5=32ccc6a9bbc79616807b9bc252844b2f"
+
+SRC_COMMON_DEBS = "\
+    libnvinfer-samples_${PV}+cuda12.0_all.deb;downloadfilename=libnvinfer-samples_${PV}+cuda12.0_all.deb;name=samples;subdir=tensorrt \
+"
+
+SRC_URI[samples.sha256sum] = "56f94de23df037e5cbc4f0eae8ccd6780e1ba31a71feade880747f58fb4936ca"

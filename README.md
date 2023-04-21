@@ -123,11 +123,6 @@ into and then run `git checkout {commit id}`.
 
     The current list of manually downloaded packages is as follows:
 
-    * #### TensorRT (8.5.3.1)
-
-      Download: https://developer.nvidia.com/downloads/compute/machine-learning/tensorrt/secure/8.5.3/tars/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/tensorrt/files/TensorRT-8.5.3.1.Ubuntu-20.04.aarch64-gnu.cuda-11.8.cudnn8.6.tar.gz`
-
     * #### GXF (2.5.0)
 
       Download: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/gxf_arm64_holoscan_sdk  
@@ -167,7 +162,7 @@ given in the following table:
 | Display Drivers | L4T 35.3.1 | OpenRM 530.30.02 |
 | CUDA            | 11.4.19    | 12.1.1           |
 | cuDNN           | 8.6.0.166  | 8.9.0.131        |
-| TensorRT        | 8.5.2      | 8.5.3.1          |
+| TensorRT        | 8.5.2      | 8.6.0.12         |
 
 #### Build Configuration
 
