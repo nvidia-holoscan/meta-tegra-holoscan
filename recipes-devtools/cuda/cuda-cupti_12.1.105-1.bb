@@ -18,17 +18,14 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}-dev"
-
 require cuda-binaries-common.inc
 
-DEPENDS:tegra = "nvidia-dgpu-drivers"
+MAINSUM:aarch64 = "3b44e8e87d06992c18ed7edf3c3d75c1abcc237f8f76ffac8f8a2dc946fd4eac"
+MAINSUM:x86-64 = "0476ff6b40b32351ed149066f4ecc092f94dc8787b2e6afb4e02f8dad6ad3a39"
 
-DEVSUM:aarch64 = "b7339ad993631d3aed5e41c1eeac04c9f2c1169bbdda17bd17a9665811fabd8d"
-DEVSUM:x86-64 = "ee491628df1b08a633d7ca580d11d6aad48bd95af8e5ddb5c382d19ce1fc3596"
+DEVSUM:aarch64 = "f5a64bf7701df7715aa157f2157aa0fc64bd25ba989a3baf18a54bbe512aedf8"
+DEVSUM:x86-64 = "cabef4484d35873c040e292492c50424c6c82f1ecbc004687b8d403d1545cc88"
 
-ALLOW_EMPTY:${PN} = "1"
-EXCLUDE_PACKAGES_FROM_SHLIBS = ""
-PRIVATE_LIBS = "libcuda.so.1"
+RDEPENDS:${PN}-dev += "perl"
 
 BBCLASSEXTEND = "native nativesdk"

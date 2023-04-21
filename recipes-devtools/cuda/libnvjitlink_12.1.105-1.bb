@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,16 @@
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "80a2c233d81d81d9e2958c76b08c5af3413b7a7ee3214c5039a39936ce1532be"
-MAINSUM:x86-64 = "1af8f0163cf37874fd7f4c4ed2e0f77e6676badda2572773c559c0a42e371dde"
+MAINSUM:aarch64 = "a00999da5d8833337776c32cc0581871a095e7954e6ba59f764382a1c22330da"
+MAINSUM:x86-64 = "a0c90c96e503f27bd283e6e5e3f8086c4d4bd7abe28288b75fccbba2b6c96ea5"
 
-DEVSUM:aarch64 = "dd892e3ded7ebca64513ca8cfdd3c890b313188292c67429f6fab5c7429a3f1e"
-DEVSUM:x86-64 = "e94801f76bb6af2c09f9d4166fb33478d08ae205355f3f2d7ae01baff9320ff9"
+DEVSUM:aarch64 = "4d46ffc4be9c48b0fedccec3d44601fe001d9f9d68f6b722b7b9037c70a4c308"
+DEVSUM:x86-64 = "44662c3304cd5742a5f04c8545664ab0bb48f1949fc1e1b1348b8f4eb2b0b363"
+
+do_compile:prepend() {
+	rm ${B}/usr/local/cuda-${CUDA_VERSION}/res
+}
+
+FILES:${PN} += "${prefix}/local/cuda-${CUDA_VERSION}/res"
 
 BBCLASSEXTEND = "native nativesdk"

@@ -20,15 +20,16 @@
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "330061e0b1ed93209b162e336d8b53d54b76fd1839dd79882c2deba363023645"
-MAINSUM:x86-64 = "6f083fcd63b7f8ef7478bfb7b8aba938d8ca0b5684d610df1243302b12a54f06"
+MAINSUM:aarch64 = "56499191fe74ac2c1aff271c17f9bdae33e0914da0ad038039dc5347eb5611f2"
+MAINSUM:x86-64 = "ef4d9f5daf647fdcdb4970b5a20c65b1b074bd5eb8332fea059dfd00ac78cbab"
 
-DEVSUM:aarch64 = "ae19b6895ce27e7df3e14dca38afb255bbc0288488a94887b4d5119505e66cd8"
-DEVSUM:x86-64 = "ebf060e5a84fa0c19f7ab444e6be904b5e38c976baef6b1cf6c7887a2543b171"
+DEVSUM:aarch64 = "6c8180bfd24beedf1ecc18c7865b1f0acbd02434b7c3530beb3688fbe7f90731"
+DEVSUM:x86-64 = "fcad647b3f79acc8ceeb2bf2ec0d0efe48fa21f46ff89a3b8dc2a36d40363d92"
 
-FILES:${PN}-dev:remove = "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/*${SOLIBSDEV}"
-FILES:${PN} += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc-builtins.so"
-FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc.so"
-INSANE_SKIP:${PN} += "dev-so"
+RDEPENDS:${PN} = " \
+    libcublas \
+    libcusparse \
+    libnvjitlink \
+"
 
 BBCLASSEXTEND = "native nativesdk"

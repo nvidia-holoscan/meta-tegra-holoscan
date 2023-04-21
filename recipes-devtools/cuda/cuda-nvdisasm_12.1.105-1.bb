@@ -22,24 +22,7 @@ CUDA_PKG = "${BPN}"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "36d77d27076910dfcb691f6f58471dc7c956e2370e09fc616ad6a0865edfa8ff"
-MAINSUM:x86-64 = "5b1a177f8986554a336927eaca0a2033e0bbd0af32f9f9aa6dd9f489bba64340"
-
-FILES:${PN} += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherSubreaper \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/compute-sanitizer \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherTargetLdPreloadHelper \
-"
-
-FILES:${PN}-dev += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/*${SOLIBSDEV} \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/include \
-"
-
-FILES:${PN}-doc += " \
-    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/docs \
-"
-
-RDEPENDS:${PN} += "bash"
+MAINSUM:aarch64 = "5d324bbf0d4ad052dc4f3da92f513d9d25be4af6eeb53fcc04639d59fb57ee7f"
+MAINSUM:x86-64 = "ca14cd1a20d44e93da03225c1b5be9a1c936e67a72e2d3c35970431087ab4940"
 
 BBCLASSEXTEND = "native nativesdk"

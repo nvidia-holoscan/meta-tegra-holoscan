@@ -22,8 +22,8 @@ CUDA_PKG = "cuda-nvcc"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "11f987d9003cac457385b950f5e4fe83f93412a0f6089ae1ee17a988e85401ed"
-MAINSUM:x86-64 = "f72fcab60e94ae2ffbf7c24bedde5329fd7f3ca8fd07b6a5e92fd85759ecabdf"
+MAINSUM:aarch64 = "bd8bc98cfc85e5d114034bd9e91b02ea90ceac001767042f0275a06f3c0709d8"
+MAINSUM:x86-64 = "170e93112857f858882858ee69ae7dfb5755aab74730210f74383be4cc9e189a"
 
 do_install:append() {
     for d in bin lib nvvm nvvmx; do

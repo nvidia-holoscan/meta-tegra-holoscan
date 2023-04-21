@@ -18,11 +18,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}"
-
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "35a9577abddbc892bbca1172c34fe7b71e72675c853547fd2daea9084bff9a6e"
-MAINSUM:x86-64 = "e7c8fbfd2d0f515ddf9b98aac9ac43da9c126ee3d0ab9f14789e86f4cd654655"
+MAINSUM:aarch64 = "5c50ee0006922049d7868634bfecd10760cb8f06d521a2f9fb55e2bedf03fcb0"
+MAINSUM:x86-64 = "7ff5c2ba3d14383240487664eb3aabcea17ab577dc61a55f4b1316a80d72293e"
+
+DEVSUM:aarch64 = "d1d862ac2f6de88a17b29ebc13fd7d8da9b1a521893ba5d4266ed766ee8bac0c"
+DEVSUM:x86-64 = "c724205243ea00a9c6fb6282476b3a30fd5ea1a32af91d1618ba563d350386cd"
+
+FILES:${PN}-dev:remove = "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/*${SOLIBSDEV}"
+FILES:${PN} += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc-builtins.so"
+FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc.so"
+INSANE_SKIP:${PN} += "dev-so"
 
 BBCLASSEXTEND = "native nativesdk"

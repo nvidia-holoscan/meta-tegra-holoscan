@@ -22,7 +22,7 @@ CUDA_PKG = "${BPN}"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "95ad57af187ba48b98e56fd099e28cd30bb50923b1664ec3fe24437f8e88eafc"
-MAINSUM:x86-64 = "a601f412a86563269fa1f9fcf164806e319af502f2e0584935c085ba7931c2c3"
+MAINSUM:aarch64 = "a25fdd36f66f3e02c240a6c481370fadcdc5f93ccbddc7003aded75eacbbe8fa"
+MAINSUM:x86-64 = "d5fcfc6336167beb333efa7c5c980907f8b5a801a76c3147631f9512fca7a609"
 
 BBCLASSEXTEND = "native nativesdk"

@@ -22,8 +22,8 @@ CUDA_PKG = "${BPN}"
 
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "387db4fdb05098cd1c5f2cd8c6f32f2e2030ec886a38f000362377ee549ae5f4"
-MAINSUM:x86-64 = "692b474c088788a7d3ebb0c72c70c998133fc02158f07a6ad9be5ee32d59fa52"
+MAINSUM:aarch64 = "78b8daf4f100e65fd0e91fe8c06579e79c1bb65197796aa62abd0847b629c6f4"
+MAINSUM:x86-64 = "1f41c87e17bf9b3092d4dfe0b5f590780494b6ee4060715a4fedffeb9c37e433"
 
 DEPENDS = "ncurses expat"
 
@@ -32,6 +32,7 @@ do_compile:append() {
 }
 
 FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/share/gdb"
+RDEPENDS:${PN} += "gmp"
 RDEPENDS:${PN}-dev += "python3"
 INSANE_SKIP:${PN}-dev += "staticdev"
 

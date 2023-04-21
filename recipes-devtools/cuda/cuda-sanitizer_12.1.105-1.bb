@@ -18,14 +18,28 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+CUDA_PKG = "${BPN}"
+
 require cuda-binaries-common.inc
 
-MAINSUM:aarch64 = "c92d66864653aaa22a00c2931615fda6de46ba984c8c4daf2eb9d3200ffec13c"
-MAINSUM:x86-64 = "7922e002784d4569902b2e0c3ac0396411e61e64a7bc4ac62c6bda678c4a590a"
+MAINSUM:aarch64 = "c7685be718660eb85e96749b9b43f727d4ba2a7c35c924a28ec632fd0c89499c"
+MAINSUM:x86-64 = "c881de5423a5117f0eff1f1224c61b371a6df70f317ebd051213f584ff4c27e6"
 
-DEVSUM:aarch64 = "2364edd47c3b1d93eea2f3af82cd3c2c577341c38e78d42c8292b9724db31cf5"
-DEVSUM:x86-64 = "3af21112a3a26ddd72e0dcde81f6af8973a817bdcce8d99ed06e81d6a667f9c0"
+FILES:${PN} += " \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherSubreaper \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/compute-sanitizer \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/TreeLauncherTargetLdPreloadHelper \
+"
 
-RDEPENDS:${PN}-dev += "perl"
+FILES:${PN}-dev += " \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/*${SOLIBSDEV} \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/include \
+"
+
+FILES:${PN}-doc += " \
+    ${prefix}/local/cuda-${CUDA_VERSION}/compute-sanitizer/docs \
+"
+
+RDEPENDS:${PN} += "bash"
 
 BBCLASSEXTEND = "native nativesdk"

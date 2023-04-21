@@ -18,16 +18,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-inherit nvidia_deb_pkgfeed
+CUDA_PKG = "${BPN}"
 
-# Override the meta-tegra 'targets' path used for the CUDA install.
-CUDA_INSTALL_ARCH = "${@nvidia_package_arch(d)}"
+require cuda-binaries-common.inc
 
-# Override the meta-tegra CUDA license details.
-CUDA_LICENSE_PKG ?= "cuda-documentation-${CUDA_VERSION_DASHED}_12.1.105-1_${CUDA_DEB_PKGARCH}.deb;name=lic;subdir=${BP}"
-LICSUM:aarch64 = "f3d7b4a86100cba53b98242825193dd4fa4cad904809ff0e1ccbc11709c47cb2"
-LICSUM:x86-64 = "5a07592fe78277a74e80ce94c8fafa2ecc4ce1d14c043334615e10d673414efc"
-LIC_FILES_CHKSUM ?= "file://usr/local/cuda-${CUDA_VERSION}/EULA.txt;md5=d43b70e08c9cd63c838dc661b6f1a763"
+MAINSUM:aarch64 = "4b3203b2c5e861cd345df50497877a4ac0811b5757ee80dac441a0274ebf621d"
+MAINSUM:x86-64 = "16a11a4921bb6e2c58ae448e59d91246ecc77756c24f42f969a9e00dee3d2a15"
 
-# Include the meta-tegra CUDA binary package include.
-require recipes-devtools/cuda/cuda-shared-binaries.inc
+BBCLASSEXTEND = "native nativesdk"
