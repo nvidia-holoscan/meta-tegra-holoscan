@@ -24,7 +24,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=bb28b97ff25ae39de442985ec577dbd8"
 
 SRC_URI = "git://github.com/NVIDIA/cuda-samples.git;branch=master;protocol=https"
-SRCREV = "81992093d2b8c33cab22dbf6852c070c330f1715"
+SRCREV = "81cf058e306462d615019b6d6eb86977949b2834"
 
 S = "${WORKDIR}/git/Samples"
 
@@ -326,6 +326,7 @@ DEPENDS:append = " \
     cuda-profiler-api \
     libglvnd \
     libglu \
+    libnvjitlink \
     freeglut \
 "
 
