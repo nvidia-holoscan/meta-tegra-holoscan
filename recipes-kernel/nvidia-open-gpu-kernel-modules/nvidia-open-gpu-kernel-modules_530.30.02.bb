@@ -23,7 +23,7 @@ LICENSE = "MIT | GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1d5fa2a493e937d5a4b96e5e03b90f7c"
 
 SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=main;protocol=https"
-SRCREV = "811073c51e1f098834e90e67a074f1746b6e2831"
+SRCREV = "4397463e738d2d90aa1164cc5948e723701f7b53"
 
 SRC_URI:append = " file://nvidia.conf"
 
