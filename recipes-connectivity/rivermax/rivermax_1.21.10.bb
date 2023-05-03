@@ -25,7 +25,7 @@ SRC_URI = "file://rivermax_ubuntu2004_${PV}.tar.gz"
 
 extract_deb() {
     cd ${S}
-    ar -x ${WORKDIR}/${PV}/Ubuntu.20.04/deb-dist/aarch64/rivermax_14.1.13.10_arm64.deb
+    ar -x ${WORKDIR}/${PV}/Ubuntu.20.04/deb-dist/aarch64/rivermax_15.1.14.10_arm64.deb
     tar xf data.tar.xz
     rm -rf control.tar.xz data.tar.xz debian debian-binary
 }

@@ -133,10 +133,10 @@ into and then run `git checkout {commit id}`.
       > this `tar.gz` file from the archive and move it to the destination given
       > above.
 
-    * #### Rivermax SDK (1.20.10)
+    * #### Rivermax SDK (1.21.10)
 
-      Download: https://developer.nvidia.com/networking/secure/rivermax-linux-sdk/installation-package/version-1.20.x/1.20/rivermax_ubuntu2004_1.20.10.tar.gz  
-      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.20.10.tar.gz`
+      Download: https://developer.nvidia.com/downloads/remma-linu-sdkinstallation-packageversion-121121rivermaubuntu200412110targz  
+      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz`
 
     * #### Nsight Systems (2023.1.1)
 
