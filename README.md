@@ -138,11 +138,6 @@ into and then run `git checkout {commit id}`.
       Download: https://developer.nvidia.com/downloads/remma-linu-sdkinstallation-packageversion-121121rivermaubuntu200412110targz  
       Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz`
 
-    * #### Nsight Systems (2023.1.1)
-
-      Download: https://developer.nvidia.com/downloads/nsight-systems20231-202311127-1-arm64deb  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb`
-
 #### iGPU and dGPU Configurations
 
 This layer provides both iGPU and dGPU support for the Holoscan platforms
@@ -539,6 +534,46 @@ debugging can begin.
 > written to the `armv8a_tegra234-poky-linux` directory of the build tree. This
 > may need to change if the application was written to another directory
 > (e.g. `armv8a-poky-linux`).
+
+## System Profiling with Nsight Systems
+
+[NVIDIA Nsight Systems](https://developer.nvidia.com/nsight-systems) can be used
+by installing the CLI on the target device in order to capture a runtime trace
+of an application, which can then be loaded into the Nsight Systems UI on the
+host machine to view the trace.
+
+To install the Nsight Systems CLI on the Holoscan device, include the
+`nsight-systems-cli` package in the image configuration (`local.conf`):
+
+```
+EXTRA_IMAGE_FEATURES:append = " nsight-systems-cli"
+```
+
+To install the Nsight Systems UI on the host machine, follow the [CUDA
+installation guide](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#package-manager-installation)
+to setup the host package manager to download from the NVIDIA package
+repository, then use it to install the corresponding `nsight-systems` package
+that matches the version of the CLI that was installed onto the target. For
+example, to install Nsight Systems 2023.1.2 on an Ubuntu 22.04 system, use the
+following:
+
+```sh
+$ wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.0-1_all.deb
+$ sudo dpkg -i cuda-keyring_1.0-1_all.deb
+$ sudo apt-get update
+$ sudo apt-get install nsight-systems-2023.1.2
+```
+
+> **_Note:_** To check which version of the CLI will be installed on the target,
+> use the following `bitbake` command:
+>
+> ```sh
+> $ bitbake nsight-systems-cli -e | grep ^PV= | cut -d'"' -f2 | cut -d'.' -f1,2,3
+> 2023.1.2
+> ```
+
+For further instructions on how to use Nsight Systems, see the [Nsight Systems
+User Guide](https://docs.nvidia.com/nsight-systems/UserGuide/index.html).
 
 ## Enabling Secure Boot
 

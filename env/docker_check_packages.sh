@@ -27,7 +27,6 @@
 
 GXF_PACKAGE="recipes-devtools/gxf/files/gxf_22.11_20230223_6b2e34ec_holoscan-sdk_arm64.tar.gz"
 RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz"
-NSIGHT_SYSTEMS_PACKAGE="recipes-devtools/nsight-systems/files/nsight-systems-2023.1.1_2023.1.1.127-1_arm64.deb"
 
 script_path=$(readlink -f ${0})
 env_path=$(dirname ${script_path})
@@ -42,6 +41,5 @@ check_package() {
 
 check_package ${GXF_PACKAGE}
 check_package ${RIVERMAX_PACKAGE}
-check_package ${NSIGHT_SYSTEMS_PACKAGE}
 
 exit 0

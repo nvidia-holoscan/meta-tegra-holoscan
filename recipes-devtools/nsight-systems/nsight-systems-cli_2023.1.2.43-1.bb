@@ -18,18 +18,48 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
+SUMMARY = "NVIDIA Nsight Systems CLI"
 LICENSE = "CLOSED"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/${BPN}/${NSIGHT_DIR}/EULA.txt;md5=5c45accabbea4eeeb539ce4cd133d5c2"
 
-MAIN_VER = "${@'.'.join(d.getVar('PV').split('.')[:-1])}"
-NSIGHT_DIR = "/opt/nvidia/nsight-systems/${MAIN_VER}"
-
-SRC_URI = "file://nsight-systems-${MAIN_VER}_${PV}_arm64.deb"
+inherit nvidia_deb_pkgfeed
 
 PACKAGES = "${PN}"
+
+MAIN_VER = "${@'.'.join(d.getVar('PV').split('.')[:-1])}"
+NSIGHT_DIR = "/opt/nvidia/nsight-systems-cli/${MAIN_VER}"
+
+SRC_COMMON_DEBS = "nsight-systems-cli-${MAIN_VER}_${PV}_arm64.deb;subdir=${BPN}"
+SRC_URI[sha256sum] = "4bbc8f0188ef047c7293bbfa95476657c95ba902f1b266c96ce81c08f38034ce"
+
+do_install() {
+    install -d ${D}${NSIGHT_DIR}
+    cp -rd --no-preserve=ownership ${WORKDIR}${NSIGHT_DIR}/target-linux-sbsa-armv8 ${D}${NSIGHT_DIR}
+
+    # Create nsys symlink in the system bin directory.
+    install -d ${D}${bindir}
+    ln -s ${NSIGHT_DIR}/target-linux-sbsa-armv8/nsys ${D}${bindir}/nsys
+}
 
 FILES:${PN} = " \
     ${NSIGHT_DIR} \
     ${bindir} \
+"
+
+RDEPENDS:${PN} += " \
+    glibc \
+    libcomerr \
+    libcurl \
+    libgcc \
+    libgssapi-krb5 \
+    libibmad5 \
+    libibumad3 \
+    libibverbs1 \
+    libk5crypto \
+    libkrb5 \
+    libstdc++ \
+    ucx \
+    zlib \
 "
 
 do_patch[noexec] = "1"
