@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,11 +18,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox ibverbs-utils"
+SUMMARY = "Mellanox ethtool"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
+do_install:append() {
+    install -d ${D}${sbindir}
+    install -m 0755 ${S}/opt/mellanox/ethtool/sbin/ethtool ${D}${sbindir}/mlnx-ethtool
+}
+
 RDEPENDS:${PN} += " \
-    libibverbs1 \
+    libmnl \
 "

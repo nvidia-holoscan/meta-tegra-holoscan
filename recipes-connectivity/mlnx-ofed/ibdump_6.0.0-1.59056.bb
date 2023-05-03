@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,19 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox mft"
+SUMMARY = "Mellanox ibdump"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-do_install:append() {
-    install -d ${D}${sysconfdir}
-    cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-}
-
 RDEPENDS:${PN} += " \
     bash \
-    python3 \
+    libibverbs1 \
 "
-
-INSANE_SKIP:${PN} += "ldflags"

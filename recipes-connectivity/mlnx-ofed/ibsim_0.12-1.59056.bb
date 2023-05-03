@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,11 +18,28 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libxlio-utils"
+SUMMARY = "Mellanox ibsim"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
+PACKAGES = "${PN} ${PN}-doc"
+
+DEB_FILES = " \
+    ibsim_${PV}_arm64.deb \
+    ibsim-doc_${PV}_all.deb \
+"
+
+do_install:append() {
+    mv ${D}${libdir}/umad2sim/* ${D}${libdir}
+    rm -r ${D}${libdir}/umad2sim
+}
+
+FILES:${PN} += " \
+    ${libdir} \
+"
+
 RDEPENDS:${PN} += " \
-    libxlio \
+    libibmad5 \
+    libibumad3 \
 "

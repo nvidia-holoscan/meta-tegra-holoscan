@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,12 +18,15 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox ibdump"
+SUMMARY = "NVIDIA MLNX_OFED Package Download"
 LICENSE = "CLOSED"
 
-require mlnx-ofed-package.inc
+SRC_URI = "https://www.mellanox.com/downloads/ofed/MLNX_OFED-${PV}/MLNX_OFED_LINUX-${PV}-ubuntu20.04-${TARGET_ARCH}.tgz"
+SRC_URI[sha256sum] = "50b4162d8ce4e8907fe62d0e4f139fead7c2ba931bd24566cc357135e48cf9f5"
 
-RDEPENDS:${PN} += " \
-    bash \
-    libibverbs1 \
-"
+WORKDIR = "${TMPDIR}/work-shared/mlnx-ofed-${PV}"
+
+# Disable unused tasks for this download recipe.
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_install[noexec] = "1"

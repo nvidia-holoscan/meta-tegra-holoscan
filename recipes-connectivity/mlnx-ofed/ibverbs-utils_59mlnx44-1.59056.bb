@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,17 +18,11 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libibmad5"
+SUMMARY = "Mellanox ibverbs-utils"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-DEB_FILES = " \
-    libibmad5_${PV}_arm64.deb \
-    libibmad5-dbg_${PV}_arm64.deb \
-    libibmad-dev_${PV}_arm64.deb \
-"
-
-DEPENDS = " \
-    libibumad3 \
+RDEPENDS:${PN} += " \
+    libibverbs1 \
 "

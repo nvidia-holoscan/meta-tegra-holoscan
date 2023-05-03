@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,24 +18,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox ibutils2"
+SUMMARY = "Mellanox libibmad5"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-PACKAGES = "${PN} ${PN}-dev ${PN}-doc ${PN}-staticdev"
-
-FILES:${PN} += " \
-    ${libdir}/libibdiag-*.so \
-    ${libdir}/libibdiagnet_plugins_ifc-*.so \
-    ${libdir}/libibdmcom-*.so \
-    ${libdir}/libibsysapi-*.so \
-    ${datadir} \
+DEB_FILES = " \
+    libibmad5_${PV}_arm64.deb \
+    libibmad5-dbg_${PV}_arm64.deb \
+    libibmad-dev_${PV}_arm64.deb \
 "
 
-RDEPENDS:${PN} += " \
+DEPENDS = " \
     libibumad3 \
-    libibverbs1 \
 "
-
-INSANE_SKIP:${PN} += "dev-so libdir"

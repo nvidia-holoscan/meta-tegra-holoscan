@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,11 +18,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libvma-utils"
+SUMMARY = "Mellanox infiniband-diags"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
+FILES:${PN} += " \
+    ${datadir} \
+"
+
 RDEPENDS:${PN} += " \
-    libvma \
+    libibmad5 \
+    libibnetdisc5 \
+    libibumad3 \
+    perl \
 "

@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,16 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libopensm"
+SUMMARY = "Mellanox dpcp"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-DEB_FILES = " \
-    libopensm_${PV}_arm64.deb \
-    libopensm-devel_${PV}_arm64.deb \
-"
-
 RDEPENDS:${PN} += " \
-    libibumad3 \
+    ibverbs-providers \
+    libibverbs1 \
 "

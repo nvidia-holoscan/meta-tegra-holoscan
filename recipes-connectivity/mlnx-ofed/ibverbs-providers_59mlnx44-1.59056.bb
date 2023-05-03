@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,20 +18,25 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox Kernel Utilities"
+SUMMARY = "Mellanox ibverbs-providers"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-do_install:append() {
-    cp ${S}/bin/* ${D}${bindir}
-}
+RDEPENDS:${PN} += " \
+    libibverbs1 \
+"
 
 FILES:${PN} += " \
-    ${datadir}/mlnx_ofed \
+    ${libdir}/libibverbs \
 "
 
-RDEPENDS:${PN} += " \
-    bash \
-    perl \
-"
+do_install:append() {
+    ln -s libmlx5.so.1.24.44.0 ${D}${libdir}/libmlx5-rdmav34.so
+    rm -rf ${D}${libdir}/libibverbs
+}
+
+FILES_SOLIBSDEV = ""
+FILES:${PN} += "${libdir}/libmlx5-rdmav34.so"
+
+INSANE_SKIP:${PN} += "dev-so"

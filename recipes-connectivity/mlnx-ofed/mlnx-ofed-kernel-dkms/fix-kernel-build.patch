@@ -1,6 +1,6 @@
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/compat/config/build-linux.m4 new/usr/src/mlnx-ofed-kernel-5.8/compat/config/build-linux.m4
---- old/usr/src/mlnx-ofed-kernel-5.8/compat/config/build-linux.m4	2022-12-01 13:11:05.418783197 -0700
-+++ new/usr/src/mlnx-ofed-kernel-5.8/compat/config/build-linux.m4	2022-12-01 13:09:45.467175367 -0700
+diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4 new/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4
+--- old/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4	2023-05-03 12:46:18.803685494 -0600
++++ new/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4	2023-05-03 12:55:12.805389651 -0600
 @@ -337,7 +337,7 @@
  [m4_ifvaln([$1], [AC_LANG_CONFTEST([$1])])dnl
  MAKE=${MAKE:-make}
@@ -10,9 +10,9 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/compat/config/build-linux.m4 new/usr
  	[$4],
  	[_AC_MSG_LOG_CONFTEST
  m4_ifvaln([$5],[$5])dnl])
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/compat/config/parallel-build.m4 new/usr/src/mlnx-ofed-kernel-5.8/compat/config/parallel-build.m4
---- old/usr/src/mlnx-ofed-kernel-5.8/compat/config/parallel-build.m4	2022-12-01 13:11:05.418783197 -0700
-+++ new/usr/src/mlnx-ofed-kernel-5.8/compat/config/parallel-build.m4	2022-12-01 13:09:45.467175367 -0700
+diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4 new/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4
+--- old/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4	2023-05-03 12:46:18.803685494 -0600
++++ new/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4	2023-05-03 12:55:30.861579637 -0600
 @@ -101,7 +101,7 @@
  tmpbuild=$(/bin/mktemp -d $PWD/build/build_XXXXX)
  /bin/cp build/Makefile $tmpbuild/
@@ -22,10 +22,10 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/compat/config/parallel-build.m4 new/
  	[$4],
  	[_MLNX_AC_MSG_LOG_CONFTEST
  m4_ifvaln([$5],[$5])dnl])
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure new/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure
---- old/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure	2022-12-01 13:11:05.390783333 -0700
-+++ new/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure	2022-12-01 13:21:52.999669202 -0700
-@@ -740,7 +740,7 @@
+diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure new/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure
+--- old/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure	2023-05-03 12:52:22.471590245 -0600
++++ new/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure	2023-05-03 12:53:14.952146133 -0600
+@@ -784,7 +784,7 @@
          # Parsing parameters
          while [ ! -z "$1" ]
          do
@@ -34,7 +34,7 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure new/usr/src/m
                          -prefix | --prefix | --prefi | --pref | --pre | --pr | --p | -p)
                                  shift
                                  prefix=$1
-@@ -760,6 +760,9 @@
+@@ -804,6 +804,9 @@
                                  ofed_patch_params="$ofed_patch_params $1"
                                  KVERSION=`expr "x$1" : 'x[^=]*=\(.*\)'`
                          ;;
@@ -44,7 +44,7 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure new/usr/src/m
  
                          -modules-dir | --modules-dir | --mod-dir)
                                  shift
-@@ -1991,7 +1994,7 @@
+@@ -2033,7 +2036,7 @@
          /bin/cp -f Makefile.real Makefile
          /bin/cp -f Makefile.real Makefile.in
  
@@ -53,7 +53,7 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.8/ofed_scripts/configure new/usr/src/m
  
          cd -
  
-@@ -1999,7 +2002,7 @@
+@@ -2041,7 +2044,7 @@
      fi
  }
  

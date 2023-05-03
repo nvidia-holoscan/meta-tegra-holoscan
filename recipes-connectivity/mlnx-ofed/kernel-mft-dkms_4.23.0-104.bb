@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,18 +18,20 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox infiniband-diags"
+SUMMARY = "Mellanox kernel-mft-dkms"
 LICENSE = "CLOSED"
 
-require mlnx-ofed-package.inc
+DEB_FILES = "${BPN}_${PV}_all.deb"
 
-FILES:${PN} += " \
-    ${datadir} \
+require mlnx-ofed-common.inc
+
+inherit module
+
+SRC_URI += " \
+    file://0001-Fix-OE-build.patch \
 "
 
-RDEPENDS:${PN} += " \
-    libibmad5 \
-    libibnetdisc5 \
-    libibumad3 \
-    perl \
-"
+BASE_VER = "${@d.getVar('PV').split('-')[0]}"
+do_configure:prepend() {
+    cp -rf ${S}/usr/src/${BPN}-${BASE_VER}/* ${B}
+}

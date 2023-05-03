@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,22 +18,19 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox librdmacm1"
+SUMMARY = "Mellanox mft"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-DEB_FILES = " \
-    librdmacm1_${PV}_arm64.deb \
-    librdmacm1-dbg_${PV}_arm64.deb \
-    librdmacm-dev_${PV}_arm64.deb \
-"
-
-FILES:${PN} += " \
-    ${libdir}/rsocket \
-"
+do_install:append() {
+    install -d ${D}${sysconfdir}
+    cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
+}
 
 RDEPENDS:${PN} += " \
-    libibverbs1 \
-    libnl \
+    bash \
+    python3 \
 "
+
+INSANE_SKIP:${PN} += "ldflags"

@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,28 +18,27 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox ibsim"
+SUMMARY = "Mellanox libvma"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-PACKAGES = "${PN} ${PN}-doc"
-
 DEB_FILES = " \
-    ibsim_${PV}_arm64.deb \
-    ibsim-doc_${PV}_all.deb \
+    libvma_${PV}_arm64.deb \
+    libvma-dbg_${PV}_arm64.deb \
+    libvma-dev_${PV}_arm64.deb \
 "
 
-do_install:append() {
-    mv ${D}${libdir}/umad2sim/* ${D}${libdir}
-    rm -r ${D}${libdir}/umad2sim
-}
-
-FILES:${PN} += " \
-    ${libdir} \
-"
+FILES_SOLIBSDEV = ""
+FILES:${PN} += "${libdir}"
 
 RDEPENDS:${PN} += " \
-    libibmad5 \
-    libibumad3 \
+    dpcp \
+    ibverbs-providers \
+    libibverbs1 \
+    libnl \
+    libnl-route \
+    librdmacm1 \
 "
+
+INSANE_SKIP:${PN} += "dev-so"

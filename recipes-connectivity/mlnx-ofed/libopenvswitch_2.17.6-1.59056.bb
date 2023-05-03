@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,48 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Meta recipe for bringing in all Mellanox OFED components"
+SUMMARY = "Mellanox libopenvswitch"
 LICENSE = "CLOSED"
 
-MLNX_OFED_INSTALL_PACKAGES = " \
-    dpcp \
-    ibacm \
-    ibdump \
-    ibsim \
-    ibutils2 \
-    ibverbs-providers \
-    ibverbs-utils \
-    infiniband-diags \
-    libibmad5 \
-    libibnetdisc5 \
-    libibumad3 \
-    libibverbs1 \
-    libopensm \
-    librdmacm1 \
-    libvma \
-    libvma-utils \
-    libxlio \
-    libxlio-utils \
-    mft \
-    mlnx-ethtool \
-    mlnx-ofed-kernel-dkms \
-    mlnx-ofed-kernel-utils \
-    mlnx-tools \
+require mlnx-ofed-package.inc
+
+DEB_FILES = " \
+    libopenvswitch_${PV}_arm64.deb \
+    libopenvswitch-dev_${PV}_arm64.deb \
 "
-
-MLNX_OFED_BUILD_PACKAGES = " \
-    libopenvswitch \
-"
-
-DEPENDS = "${MLNX_OFED_INSTALL_PACKAGES} ${MLNX_OFED_BUILD_PACKAGES}"
-RDEPENDS:${PN} = "${MLNX_OFED_INSTALL_PACKAGES}"
-
-# Disable unused tasks for this dummy recipe.
-do_fetch[noexec] = "1"
-do_unpack[noexec] = "1"
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
-do_install[noexec] = "1"
-
-ALLOW_EMPTY:${PN} = "1"

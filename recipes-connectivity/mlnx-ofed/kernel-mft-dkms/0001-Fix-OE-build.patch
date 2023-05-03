@@ -1,0 +1,68 @@
+From 551753f6a8f7ce4a8e0e5b562f08c7102ca9ebfb Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 20 Jul 2023 12:56:54 -0600
+Subject: Fix OE build
+
+
+diff --git a/usr/src/kernel-mft-dkms-4.23.0/Makefile b/usr/src/kernel-mft-dkms-4.23.0/Makefile
+index e10cf42..3789a71 100644
+--- a/usr/src/kernel-mft-dkms-4.23.0/Makefile
++++ b/usr/src/kernel-mft-dkms-4.23.0/Makefile
+@@ -15,3 +15,8 @@ clean:
+ ifneq ($(findstring ppc64, $(CPU_ARCH)),)
+ 	$(MAKE) clean -C mst_backward_compatibility/mst_ppc
+ endif
++
++modules_install:
++	cd mst_backward_compatibility/mst_pci && $(MAKE) modules_install
++	cd mst_backward_compatibility/mst_pciconf && $(MAKE) modules_install
++	touch Module.symvers
+diff --git a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
+index 0721343..ea61857 100644
+--- a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
++++ b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
+@@ -1,5 +1,4 @@
+ KPVER ?= $(shell uname -r)
+-KSRC ?= /lib/modules/$(KPVER)/build
+ 
+ # Oracle Linux OS.
+ ifneq ($(shell if (echo $(KPVER) | grep -qE 'uek'); then \
+@@ -26,7 +25,10 @@ mst_pci-objs += $(NNT_DRIVER_LOCATION)/nnt_device.o $(NNT_DRIVER_LOCATION)/nnt_d
+ 		   		$(NNT_DRIVER_LOCATION)/nnt_ioctl.o mst_pci_bc.o
+ 
+ all:
+-	make -C $(KSRC) M=$(PWD) CONFIG_CTF= CONFIG_CC_STACKPROTECTOR_STRONG= $(WITH_MAKE_PARAMS) modules
++	make -C $(KERNEL_SRC) M=$(PWD) CONFIG_CTF= CONFIG_CC_STACKPROTECTOR_STRONG= $(WITH_MAKE_PARAMS) modules
+ 
+ clean:
+-	make -C $(KSRC) M=$(PWD) clean
++	make -C $(KERNEL_SRC) M=$(PWD) clean
++
++modules_install:
++	make -C $(KERNEL_SRC) M=$(PWD) modules_install
+diff --git a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
+index 646a869..8a1bfc3 100644
+--- a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
++++ b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
+@@ -1,5 +1,4 @@
+ KPVER ?= $(shell uname -r)
+-KSRC ?= /lib/modules/$(KPVER)/build
+ 
+ # Oracle Linux OS.
+ ifneq ($(shell if (echo $(KPVER) | grep -qE 'uek'); then \
+@@ -26,7 +25,10 @@ mst_pciconf-objs += $(NNT_DRIVER_LOCATION)/nnt_device.o $(NNT_DRIVER_LOCATION)/n
+ 		   	        $(NNT_DRIVER_LOCATION)/nnt_ioctl.o mst_pciconf_bc.o
+ 
+ all:
+-	make -C $(KSRC) M=$(PWD) CONFIG_CTF= CONFIG_CC_STACKPROTECTOR_STRONG= $(WITH_MAKE_PARAMS) modules
++	make -C $(KERNEL_SRC) M=$(PWD) CONFIG_CTF= CONFIG_CC_STACKPROTECTOR_STRONG= $(WITH_MAKE_PARAMS) modules
+ 
+ clean:
+-	make -C $(KSRC) M=$(PWD) clean
++	make -C $(KERNEL_SRC) M=$(PWD) clean
++
++modules_install:
++	make -C $(KERNEL_SRC) M=$(PWD) modules_install
+-- 
+2.34.1
+

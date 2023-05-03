@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,17 +18,18 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libibnetdisc5"
+SUMMARY = "Mellanox Tools"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
-DEB_FILES = " \
-    libibnetdisc5_${PV}_arm64.deb \
-    libibnetdisc5-dbg_${PV}_arm64.deb \
-    libibnetdisc-dev_${PV}_arm64.deb \
+FILES:${PN} += " \
+    ${libdir}/python3 \
 "
 
-DEPENDS = " \
-    libibmad5 \
+RDEPENDS:${PN} += " \
+    bash \
+    python3 \
 "
+
+INSANE_SKIP:${PN} += "file-rdeps"

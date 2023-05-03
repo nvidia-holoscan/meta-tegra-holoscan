@@ -18,25 +18,31 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-MLNX_OFED_VER = "5.9"
-MLNX_OFED_PATCH_VER = "0.5.6.0"
+SUMMARY = "Mellanox libxlio"
+LICENSE = "CLOSED"
 
-DEB_FILES ?= "${PN}_${PV}_arm64.deb"
+require mlnx-ofed-package.inc
 
-do_fetch[noexec] = "1"
-
-do_unpack[depends] += " \
-    mlnx-ofed-download:do_unpack \
-    xz-native:do_populate_sysroot \
+DEB_FILES = " \
+    libxlio_${PV}_arm64.deb \
+    libxlio-dbg_${PV}_arm64.deb \
+    libxlio-dev_${PV}_arm64.deb \
 "
 
-do_unpack() {
-    rm -rf ${S}
-    mkdir ${S}
-    cd ${S}
-    for deb in ${DEB_FILES}; do
-        ar x ${TMPDIR}/work-shared/mlnx-ofed-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}/MLNX_OFED_LINUX-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}-ubuntu20.04-aarch64/DEBS/${deb}
-        tar xf data.tar.xz
-        rm -f control.tar.* data.tar.xz debian-binary
-    done
-}
+RDEPENDS_COMMON = " \
+    dpcp \
+    ibverbs-providers \
+    libibverbs1 \
+    libnl \
+    libnl-route \
+    librdmacm1 \
+"
+
+FILES_SOLIBSDEV = ""
+FILES:${PN} += "${libdir}/libxlio-debug.so"
+FILES:${PN}-dev += "${libdir}/libxlio.so"
+
+RDEPENDS:${PN} += "${RDEPENDS_COMMON}"
+RDEPENDS:${PN}-dev += "${RDEPENDS_COMMON}"
+
+INSANE_SKIP:${PN}-dev += "dev-elf"

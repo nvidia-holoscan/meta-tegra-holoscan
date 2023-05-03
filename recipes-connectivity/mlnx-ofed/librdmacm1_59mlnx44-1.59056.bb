@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,12 +18,22 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libopenvswitch"
+SUMMARY = "Mellanox librdmacm1"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
 DEB_FILES = " \
-    libopenvswitch_${PV}_arm64.deb \
-    libopenvswitch-dev_${PV}_arm64.deb \
+    librdmacm1_${PV}_arm64.deb \
+    librdmacm1-dbg_${PV}_arm64.deb \
+    librdmacm-dev_${PV}_arm64.deb \
+"
+
+FILES:${PN} += " \
+    ${libdir}/rsocket \
+"
+
+RDEPENDS:${PN} += " \
+    libibverbs1 \
+    libnl \
 "

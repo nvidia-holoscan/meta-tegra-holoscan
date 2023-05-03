@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,31 +18,16 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox libxlio"
+SUMMARY = "Mellanox libopensm"
 LICENSE = "CLOSED"
 
 require mlnx-ofed-package.inc
 
 DEB_FILES = " \
-    libxlio_${PV}_arm64.deb \
-    libxlio-dbg_${PV}_arm64.deb \
-    libxlio-dev_${PV}_arm64.deb \
+    libopensm_${PV}_arm64.deb \
+    libopensm-devel_${PV}_arm64.deb \
 "
 
-RDEPENDS_COMMON = " \
-    dpcp \
-    ibverbs-providers \
-    libibverbs1 \
-    libnl \
-    libnl-route \
-    librdmacm1 \
+RDEPENDS:${PN} += " \
+    libibumad3 \
 "
-
-FILES_SOLIBSDEV = ""
-FILES:${PN} += "${libdir}/libxlio-debug.so"
-FILES:${PN}-dev += "${libdir}/libxlio.so"
-
-RDEPENDS:${PN} += "${RDEPENDS_COMMON}"
-RDEPENDS:${PN}-dev += "${RDEPENDS_COMMON}"
-
-INSANE_SKIP:${PN}-dev += "dev-elf"
