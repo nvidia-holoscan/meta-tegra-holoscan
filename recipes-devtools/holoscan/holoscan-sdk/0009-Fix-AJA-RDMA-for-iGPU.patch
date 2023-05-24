@@ -1,0 +1,69 @@
+From c8bb7b85aec7046b4c972c2c4f1f4db2ea6d1cfe Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 24 May 2023 17:00:01 -0600
+Subject: [PATCH] Fix AJA RDMA for iGPU
+
+---
+ include/operators/aja_source/aja_source.hpp  |  2 ++
+ src/operators/aja_source/aja_source.cpp      | 18 ++++++++++++++++--
+ 2 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/include/holoscan/operators/aja_source/aja_source.hpp b/include/holoscan/operators/aja_source/aja_source.hpp
+index 4a86428e..3f6d537d 100644
+--- a/include/holoscan/operators/aja_source/aja_source.hpp
++++ b/include/holoscan/operators/aja_source/aja_source.hpp
+@@ -88,6 +88,8 @@ class AJASourceOp : public holoscan::Operator {
+   uint8_t current_buffer_ = 0;
+   uint8_t current_hw_frame_ = 0;
+   uint8_t current_overlay_hw_frame_ = 0;
++
++  bool is_igpu_ = false;
+ };
+ 
+ }  // namespace holoscan::ops
+diff --git a/src/operators/aja_source/aja_source.cpp b/src/operators/aja_source/aja_source.cpp
+index 15aeced5..ca914e18 100644
+--- a/src/operators/aja_source/aja_source.cpp
++++ b/src/operators/aja_source/aja_source.cpp
+@@ -297,7 +297,11 @@ bool AJASourceOp::AllocateBuffers(std::vector<void*>& buffers, size_t num_buffer
+   buffers.resize(num_buffers);
+   for (auto& buf : buffers) {
+     if (rdma) {
+-      cudaMalloc(&buf, buffer_size);
++      if (is_igpu_) {
++        cudaHostAlloc(&buf, buffer_size, cudaHostAllocDefault);
++      } else {
++        cudaMalloc(&buf, buffer_size);
++      }
+       unsigned int syncFlag = 1;
+       if (cuPointerSetAttribute(
+               &syncFlag, CU_POINTER_ATTRIBUTE_SYNC_MEMOPS, reinterpret_cast<CUdeviceptr>(buf))) {
+@@ -325,7 +329,11 @@ bool AJASourceOp::AllocateBuffers(std::vector<void*>& buffers, size_t num_buffer
+ void AJASourceOp::FreeBuffers(std::vector<void*>& buffers, bool rdma) {
+   for (auto& buf : buffers) {
+     if (rdma) {
+-      cudaFree(buf);
++      if (is_igpu_) {
++        cudaFreeHost(buf);
++      } else {
++        cudaFree(buf);
++      }
+     } else {
+       free(buf);
+     }
+@@ -354,6 +362,12 @@ void AJASourceOp::initialize() {
+ }
+ 
+ void AJASourceOp::start() {
++  // Determine whether or not we're using the iGPU.
++  // TODO: This assumes we're using the GPU device (as does the rest of the operator).
++  cudaDeviceProp prop;
++  cudaGetDeviceProperties(&prop, 0);
++  is_igpu_ = prop.integrated;
++
+   HOLOSCAN_LOG_INFO("AJA Source: Capturing from NTV2_CHANNEL{}", (channel_.get() + 1));
+   HOLOSCAN_LOG_INFO("AJA Source: RDMA is {}", use_rdma_ ? "enabled" : "disabled");
+   if (enable_overlay_) {
+-- 
+2.34.1
+

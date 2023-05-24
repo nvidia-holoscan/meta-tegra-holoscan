@@ -35,6 +35,7 @@ SRC_URI += " \
     file://0006-Move-required-3rdparty-headers-to-holoscan-core.patch \
     file://0007-Remove-multiai_ultrasound-dataset.patch \
     file://0008-Remove-extra-CUDA-toolchain-include.patch \
+    file://0009-Fix-AJA-RDMA-for-iGPU.patch \
 "
 
 S = "${WORKDIR}/git"
