@@ -1,0 +1,47 @@
+From a6db536ba8e2d012a0b07560884fd299e78d1c16 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 1 Jun 2023 14:50:25 -0600
+Subject: [PATCH] Enable MOFED peer memory symbols
+
+---
+ kernel-open/conftest.sh | 27 +++------------------------
+ 1 file changed, 3 insertions(+), 24 deletions(-)
+
+diff --git a/kernel-open/conftest.sh b/kernel-open/conftest.sh
+index b6a152a..1d2ac04 100755
+--- a/kernel-open/conftest.sh
++++ b/kernel-open/conftest.sh
+@@ -4754,30 +4754,9 @@ compile_test() {
+ 
+         ib_peer_memory_symbols)
+             #
+-            # Determine if the following symbols exist in Module.symvers:
+-            # 1. ib_register_peer_memory_client
+-            # 2. ib_unregister_peer_memory_client
+-            # The conftest first checks in the kernel's own Module.symvers in
+-            # the regular path. If the symbols are not found there, it's possible
+-            # that MOFED is installed and check for these symbols in MOFED's
+-            # Module.symvers whose path is different from the kernel's symvers.
+-            #
+-            # Note: KERNELRELEASE and ARCH are defined by Kbuild and automatically
+-            # passed down to conftest.sh as env vars.
+-
+-            MLNX_OFED_KERNEL_DIR=/usr/src/ofa_kernel
+-            VAR_DKMS_SOURCES_DIR=$(test -d /var/lib/dkms/mlnx-ofed-kernel &&
+-                                   ls -d /var/lib/dkms/mlnx-ofed-kernel/*/build 2>/dev/null)
+-
+-            if check_for_ib_peer_memory_symbols "$OUTPUT" || \
+-               check_for_ib_peer_memory_symbols "$MLNX_OFED_KERNEL_DIR/$ARCH/$KERNELRELEASE" || \
+-               check_for_ib_peer_memory_symbols "$MLNX_OFED_KERNEL_DIR/$KERNELRELEASE" || \
+-               check_for_ib_peer_memory_symbols "$MLNX_OFED_KERNEL_DIR/default" || \
+-               check_for_ib_peer_memory_symbols "$VAR_DKMS_SOURCES_DIR"; then
+-                echo "#define NV_MLNX_IB_PEER_MEM_SYMBOLS_PRESENT" | append_conftest "symbols"
+-            else
+-                echo "#undef NV_MLNX_IB_PEER_MEM_SYMBOLS_PRESENT" | append_conftest "symbols"
+-            fi
++            # MOFED's peer memory symbols are always available for Holoscan platform builds.
++            #
++            echo "#define NV_MLNX_IB_PEER_MEM_SYMBOLS_PRESENT" | append_conftest "symbols"
+         ;;
+ 
+         add_memory_driver_managed)
