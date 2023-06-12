@@ -23,6 +23,7 @@ SRC_URI:append = " \
     file://Add-nvidia-platform-t23x-mandalore-kernel-dts.patch \
     file://Add-nvidia-platform-t23x-prometheus-kernel-dts.patch \
     file://prometheus-dts-support-large-BAR1.patch \
+    file://Fix-HDMI-input-pixel-format.patch \
     file://Enable-module-signing.cfg \
     file://Disable-modules-provided-by-mlnx-ofed.cfg \
 "
