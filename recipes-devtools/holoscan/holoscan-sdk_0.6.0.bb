@@ -24,17 +24,17 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "f4095926e9e643b96e8d50ad7e4501bdc6a28a6b"
+SRCREV = "90763fae219f27b36b758809fc052a416ee7a377"
 
 SRC_URI += " \
     file://0001-Fix-GXF-TypenameAsString-error.patch \
     file://0002-Use-external-library-dependencies.patch \
     file://0003-Build-python-libs-with-install-RPATH.patch \
     file://0004-Fix-ONNX-and-TensorRT-include-interfaces.patch \
-    file://0005-Fix-double-install-of-gxf_holoscan_wrapper-library.patch \
-    file://0006-Move-required-3rdparty-headers-to-holoscan-core.patch \
-    file://0007-Remove-multiai_ultrasound-dataset.patch \
-    file://0008-Remove-extra-CUDA-toolchain-include.patch \
+    file://0005-Move-required-3rdparty-headers-to-holoscan-core.patch \
+    file://0006-Disable-narrowing-conversion-warning-as-error.patch \
+    file://0007-Remove-CONFIG-from-Protobuf-find_package.patch \
+    file://0008-Fix-RPATH-for-holoinfer.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -42,10 +42,6 @@ S = "${WORKDIR}/git"
 HOLOSCAN_INSTALL_PATH = "/opt/nvidia/holoscan"
 
 inherit pkgconfig cmake cuda setuptools3
-
-# Fetch and unpack the datasets using custom bitbake tasks instead of
-# downloading them at compile time via CMake.
-require holoscan_download_datasets.inc
 
 # Allow CMake to fetch dependencies during the configure and compile steps.
 # TODO: This should be removed when OE-provided versions of the dependencies
@@ -59,7 +55,7 @@ EXTRA_OECMAKE:append = " \
 # Add extra build paths.
 EXTRA_OECMAKE:append = " \
     -DCMAKE_INSTALL_PREFIX=${HOLOSCAN_INSTALL_PATH} \
-    -DGXF_SDK_PATH=${RECIPE_SYSROOT}/opt/nvidia/gxf \
+    -DGXF_ROOT=${RECIPE_SYSROOT}/opt/nvidia/gxf \
     -Dyaml-cpp_DIR=${RECIPE_SYSROOT}${datadir}/cmake/yaml-cpp \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
     -Dglad_DIR=${RECIPE_SYSROOT}${libdir}/cmake/glad \
@@ -68,7 +64,6 @@ EXTRA_OECMAKE:append = " \
 
 # Disable unused Holoscan build steps and components.
 EXTRA_OECMAKE:append = " \
-    -DHOLOSCAN_DOWNLOAD_DATASETS=OFF \
     -DHOLOSCAN_INSTALL_EXAMPLE_SOURCE=OFF \
     -DHOLOSCAN_BUILD_TESTS=OFF \
     -DHOLOSCAN_BUILD_DOCS=OFF \
@@ -87,28 +82,43 @@ DEPENDS += " \
     glad \
     glfw \
     glslang-native \
+    grpc \
+    grpc-native \
     gxf-core \
+    ffmpeg-native \
     libcublas-native \
     libnpp-native \
     libxcursor \
     libxinerama \
     onnxruntime \
     patchelf-native \
+    protobuf \
+    protobuf-native \
+    pytorch \
     tensorrt-core \
     tensorrt-plugins \
+    torchvision \
+    ucx \
+    v4l-utils \
     vulkan-headers \
     vulkan-loader \
     yaml-cpp \
 "
 
 RDEPENDS:${PN} = " \
+    bash \
     libnpp \
     libv4l \
+    python3-cloudpickle \
     python3-cupy \
     python3-numpy \
     tegra-libraries-multimedia \
     tegra-libraries-multimedia-utils \
     tegra-libraries-multimedia-v4l \
+"
+
+RDEPENDS:${PN}-dev = " \
+    bash \
 "
 
 # This explicit do_configure avoids conflicts between the cmake and setuptools3 classes.
@@ -158,6 +168,10 @@ FILES:${PN} += " \
 FILES:${PN}-dev += " \
     ${HOLOSCAN_INSTALL_PATH}/include \
     ${HOLOSCAN_INSTALL_PATH}/lib/cmake \
+"
+
+FILES:${PN}-staticdev += " \
+    ${HOLOSCAN_INSTALL_PATH}/lib/*.a \
 "
 
 SYSROOT_DIRS = " \

@@ -1,0 +1,22 @@
+From aab12f1159e2cd2ce4fb7b2e912ef26ce44f0595 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 7 Jul 2023 10:28:46 -0600
+Subject: Fix RPATH for holoinfer
+
+
+diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
+index 01dbe73f..abe8c09c 100644
+--- a/modules/holoinfer/src/CMakeLists.txt
++++ b/modules/holoinfer/src/CMakeLists.txt
+@@ -30,7 +30,7 @@ if (${HOLOSCAN_BUILD_LIBTORCH})
+         EXPORT_NAME infer::torch
+         SOVERSION ${PROJECT_VERSION_MAJOR}
+         VERSION ${PROJECT_VERSION}
+-        INSTALL_RPATH_USE_LINK_PATH true # find libtorch and torchvision in install tree
++        INSTALL_RPATH_USE_LINK_PATH FALSE
+     )
+     target_link_libraries(holoinfer_torch
+         PRIVATE
+-- 
+2.34.1
+

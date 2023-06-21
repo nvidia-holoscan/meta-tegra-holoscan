@@ -1,6 +1,6 @@
-From c2123d84239fe08acbbc642383e527d624fcff92 Mon Sep 17 00:00:00 2001
+From 2dd4ad83b75cf11997ed68a9c45ecd0f25b8a75c Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
-Date: Wed, 28 Dec 2022 12:12:55 -0700
+Date: Mon, 12 Jun 2023 15:05:29 -0600
 Subject: Use external library dependencies
 
 This changes the dependencies on the following libraries so
@@ -11,20 +11,14 @@ fetched, built, and installed by CMake:
  - glad
  - glfw3
  - yaml-cpp
----
- CMakeLists.txt                   | 10 ------
- cmake/deps/glad_rapids.cmake     | 24 +-------------
- cmake/deps/glfw_rapids.cmake     | 27 +---------------
- cmake/deps/yaml-cpp_rapids.cmake | 54 +-------------------------------
- 4 files changed, 3 insertions(+), 112 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 27b607a..8daee31 100644
+index d62dee24..f1e2aa87 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -182,16 +182,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
-     op_video_stream_replayer
- )
+@@ -198,16 +198,6 @@ if (${HOLOSCAN_BUILD_LIBTORCH})
+     list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_torch)
+ endif()
  
 -# Add PUBLIC dependencies to our install target
 -# Note: required due to. However, could only export but not install?
@@ -40,7 +34,7 @@ index 27b607a..8daee31 100644
  install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
      DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
 diff --git a/cmake/deps/glad_rapids.cmake b/cmake/deps/glad_rapids.cmake
-index 5c9b695..0b507c0 100644
+index 5c9b6950..0b507c00 100644
 --- a/cmake/deps/glad_rapids.cmake
 +++ b/cmake/deps/glad_rapids.cmake
 @@ -13,26 +13,4 @@
@@ -73,7 +67,7 @@ index 5c9b695..0b507c0 100644
 \ No newline at end of file
 +rapids_find_package(glad 0.1.36 REQUIRED)
 diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
-index 0051d3f..159310f 100644
+index 0051d3fc..159310fc 100644
 --- a/cmake/deps/glfw_rapids.cmake
 +++ b/cmake/deps/glfw_rapids.cmake
 @@ -13,9 +13,6 @@
@@ -115,7 +109,7 @@ index 0051d3f..159310f 100644
 -endif()
 +rapids_find_package(glfw3 3.3 REQUIRED)
 diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
-index 34e04bf..0f1e927 100644
+index 34e04bf5..0f1e9273 100644
 --- a/cmake/deps/yaml-cpp_rapids.cmake
 +++ b/cmake/deps/yaml-cpp_rapids.cmake
 @@ -13,56 +13,4 @@
