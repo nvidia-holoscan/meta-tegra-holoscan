@@ -1,0 +1,64 @@
+From 84a4064e6e973bd478f094d18074293ed45651d2 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 21 Jun 2023 14:59:19 -0600
+Subject: [PATCH] Fix CMAKE library import paths
+
+---
+ cmake/ucx-targets.cmake.in | 33 +++++++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 6 deletions(-)
+
+diff --git a/cmake/ucx-targets.cmake.in b/cmake/ucx-targets.cmake.in
+index d70b780a9..ba591f7de 100644
+--- a/cmake/ucx-targets.cmake.in
++++ b/cmake/ucx-targets.cmake.in
+@@ -7,23 +7,44 @@
+ set(prefix "@prefix@")
+ set(exec_prefix "@exec_prefix@")
+ 
++# Compute the installation prefix relative to this file.
++get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
++# Use original install prefix when loaded through a
++# cross-prefix symbolic link such as /lib -> /usr/lib.
++get_filename_component(_realCurr "${_IMPORT_PREFIX}" REALPATH)
++get_filename_component(_realOrig "/usr/lib/cmake/ucx" REALPATH)
++if(_realCurr STREQUAL _realOrig)
++  set(_IMPORT_PREFIX "/usr/lib/cmake/ucx")
++endif()
++unset(_realOrig)
++unset(_realCurr)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
++if(_IMPORT_PREFIX STREQUAL "/")
++  set(_IMPORT_PREFIX "")
++endif()
++
+ add_library(ucx::ucs SHARED IMPORTED)
+ 
+ set_target_properties(ucx::ucs PROPERTIES
+-  IMPORTED_LOCATION "@libdir@/libucs.so"
+-  INTERFACE_INCLUDE_DIRECTORIES "@includedir@"
++  IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libucs.so"
++  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+ )
+ 
+ add_library(ucx::ucp SHARED IMPORTED)
+ 
+ set_target_properties(ucx::ucp PROPERTIES
+-  IMPORTED_LOCATION "@libdir@/libucp.so"
+-  INTERFACE_INCLUDE_DIRECTORIES "@includedir@"
++  IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libucp.so"
++  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+ )
+ 
+ add_library(ucx::uct SHARED IMPORTED)
+ 
+ set_target_properties(ucx::uct PROPERTIES
+-  IMPORTED_LOCATION "@libdir@/libuct.so"
+-  INTERFACE_INCLUDE_DIRECTORIES "@includedir@"
++  IMPORTED_LOCATION "${_IMPORT_PREFIX}/lib/libuct.so"
++  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+ )
++
++# Cleanup temporary variables.
++set(_IMPORT_PREFIX)

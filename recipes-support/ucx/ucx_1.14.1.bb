@@ -20,13 +20,36 @@
 
 SUMMARY = "Unified Communication X"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=f8bb65a4435659f29218a5dafa66cb51"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
 
-SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.13.x"
-SRCREV = "09f27c0efb04beb110d3a05dab274269309c4e23"
+SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.14.x"
+SRCREV = "04897a079ac88713842f7209c5e82430d095444e"
+
+SRC_URI += " \
+    file://0001-Fix-CMAKE-library-import-paths.patch \
+"
 
 S = "${WORKDIR}/git"
 
-inherit autotools
+inherit autotools pkgconfig cuda
+
+EXTRA_OECONF:append = " \
+    --with-cuda=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION} \
+    --with-rdmacm=${RECIPE_SYSROOT}${prefix} \
+    --with-verbs=${RECIPE_SYSROOT}${prefix} \
+    --with-mlx5-dv \
+    --disable-logging \
+    --disable-debug \
+    --disable-assertions \
+    --disable-params-check \
+    --enable-mt \
+"
+
+DEPENDS += " \
+    cuda-nvml \
+    libibverbs1 \
+    libnl \
+    librdmacm1 \
+"
 
 INSANE_SKIP:${PN} += "dev-so"
