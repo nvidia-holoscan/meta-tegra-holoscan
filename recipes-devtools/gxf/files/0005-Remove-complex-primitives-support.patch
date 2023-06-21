@@ -1,14 +1,11 @@
-From 648f10b0fec32ba3bed8c1c847e5af8ec2204a99 Mon Sep 17 00:00:00 2001
+From 07149cf22133d5bd014cfd1230fe507814bcbf25 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 16 Nov 2022 13:04:33 -0700
-Subject: [PATCH 6/6] Remove complex primitives support
+Subject: Remove complex primitives support
 
----
- gxf/std/tensor.hpp | 5 -----
- 1 file changed, 5 deletions(-)
 
 diff --git a/gxf/std/tensor.hpp b/gxf/std/tensor.hpp
-index 7146f20..7b72998 100644
+index 9e0712f..2cd9d8f 100644
 --- a/gxf/std/tensor.hpp
 +++ b/gxf/std/tensor.hpp
 @@ -27,7 +27,6 @@
@@ -19,7 +16,7 @@ index 7146f20..7b72998 100644
  #include "gxf/std/memory_buffer.hpp"
  
  namespace nvidia {
-@@ -46,8 +45,6 @@ enum class PrimitiveType {
+@@ -46,8 +45,6 @@ enum class PrimitiveType : int32_t {
    kUnsigned64,
    kFloat32,
    kFloat64,
@@ -38,5 +35,5 @@ index 7146f20..7b72998 100644
  // Type to hold the shape of a tensor
  class Shape {
 -- 
-2.17.1
+2.34.1
 

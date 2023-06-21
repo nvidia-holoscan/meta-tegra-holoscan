@@ -1,11 +1,8 @@
-From 017e0a561a122fea82c7dfe746aa63faff828f93 Mon Sep 17 00:00:00 2001
+From 71411fc103a0a053c8a526afbab25f515552f5f1 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 16 Nov 2022 13:03:26 -0700
-Subject: [PATCH 3/6] Fix std::iterator deprecation
+Subject: Fix std::iterator deprecation
 
----
- common/iterator.hpp | 21 ++++++++++++++-------
- 1 file changed, 14 insertions(+), 7 deletions(-)
 
 diff --git a/common/iterator.hpp b/common/iterator.hpp
 index d1e3d80..b0ade7b 100644
@@ -67,5 +64,5 @@ index d1e3d80..b0ade7b 100644
    constexpr explicit ReverseIterator(TIterator iter) : iter_{iter} {}
  
 -- 
-2.17.1
+2.34.1
 

@@ -123,16 +123,6 @@ into and then run `git checkout {commit id}`.
 
     The current list of manually downloaded packages is as follows:
 
-    * #### GXF (2.5.0)
-
-      Download: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/resources/gxf_arm64_holoscan_sdk  
-      Local Destination: `meta-tegra-holoscan/recipes-devtools/gxf/files/gxf_22.11_20230223_6b2e34ec_holoscan-sdk_arm64.tar.gz`
-
-      > **_Note:_** When GXF is downloaded from NGC it will download a ZIP
-      > archive named `files.zip` that contains the above `tar.gz` file; extract
-      > this `tar.gz` file from the archive and move it to the destination given
-      > above.
-
     * #### Rivermax SDK (1.21.10)
 
       Download: https://developer.nvidia.com/downloads/remma-linu-sdkinstallation-packageversion-121121rivermaubuntu200412110targz  

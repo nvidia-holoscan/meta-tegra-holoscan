@@ -1,0 +1,149 @@
+From e5e1d09ce5a2eded3b9c9ae40aa1e3f62e79120a Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 16 Nov 2022 13:14:45 -0700
+Subject: Fix unused parameters
+
+
+diff --git a/gxf/serialization/endpoint.hpp b/gxf/serialization/endpoint.hpp
+index e242b42..b23c2b5 100644
+--- a/gxf/serialization/endpoint.hpp
++++ b/gxf/serialization/endpoint.hpp
+@@ -37,7 +37,7 @@ class Endpoint : public Component {
+   // Reads data from the endpoint and returns the number of bytes read
+   virtual gxf_result_t read_abi(void* data, size_t size, size_t* bytes_read) = 0;
+   // Writes pointer to the data and size of the data to a vector
+-  virtual gxf_result_t write_ptr_abi(const void* pointer, size_t size, MemoryStorageType type) {
++  virtual gxf_result_t write_ptr_abi(const void* /*pointer*/, size_t /*size*/, MemoryStorageType /*type*/) {
+     return GXF_NOT_IMPLEMENTED;
+   }
+ 
+diff --git a/gxf/std/parameter_parser.hpp b/gxf/std/parameter_parser.hpp
+index 679f0a7..0bb2ca0 100644
+--- a/gxf/std/parameter_parser.hpp
++++ b/gxf/std/parameter_parser.hpp
+@@ -57,9 +57,9 @@ struct ParameterParser<T> {
+ // though it might contain sub children.
+ template <>
+ struct ParameterParser<std::string> {
+-  static Expected<std::string> Parse(gxf_context_t context, gxf_uid_t component_uid,
++  static Expected<std::string> Parse(gxf_context_t /*context*/, gxf_uid_t /*component_uid*/,
+                                      const char* key, const YAML::Node& node,
+-                                     const std::string& prefix) {
++                                     const std::string& /*prefix*/) {
+     try {
+       std::stringstream ss;
+       ss << node;
+@@ -85,9 +85,9 @@ struct FilePath : public std::string {
+ 
+ template <>
+ struct ParameterParser<FilePath> {
+-  static Expected<FilePath> Parse(gxf_context_t context, gxf_uid_t component_uid,
++  static Expected<FilePath> Parse(gxf_context_t /*context*/, gxf_uid_t /*component_uid*/,
+                                   const char* key, const YAML::Node& node,
+-                                  const std::string& prefix) {
++                                  const std::string& /*prefix*/) {
+     try {
+       FilePath path;
+       std::stringstream ss;
+@@ -106,9 +106,9 @@ struct ParameterParser<FilePath> {
+ // Specialization of ParameterParser for uint8_t because it is not supported natively by yaml-cpp
+ template <>
+ struct ParameterParser<uint8_t> {
+-  static Expected<uint8_t> Parse(gxf_context_t context, gxf_uid_t component_uid,
++  static Expected<uint8_t> Parse(gxf_context_t /*context*/, gxf_uid_t /*component_uid*/,
+                                  const char* key, const YAML::Node& node,
+-                                 const std::string& prefix) {
++                                 const std::string& /*prefix*/) {
+     try {
+       return static_cast<uint8_t>(node.as<uint32_t>());
+     } catch (...) {
+diff --git a/gxf/std/parameter_wrapper.hpp b/gxf/std/parameter_wrapper.hpp
+index 0d0ae6e..531d7e7 100644
+--- a/gxf/std/parameter_wrapper.hpp
++++ b/gxf/std/parameter_wrapper.hpp
+@@ -33,7 +33,7 @@ struct ParameterWrapper;
+ template <typename T>
+ struct ParameterWrapper<T> {
+   // Wrap the value to a YAML::Node instance
+-  static Expected<YAML::Node> Wrap(gxf_context_t context, const T& value) {
++  static Expected<YAML::Node> Wrap(gxf_context_t /*context*/, const T& value) {
+     return YAML::Node(value);
+   }
+ };
+diff --git a/gxf/std/scheduling_term.hpp b/gxf/std/scheduling_term.hpp
+index 7078c61..7860a64 100644
+--- a/gxf/std/scheduling_term.hpp
++++ b/gxf/std/scheduling_term.hpp
+@@ -40,7 +40,7 @@ class SchedulingTerm : public Component {
+   virtual gxf_result_t onExecute_abi(int64_t dt) = 0;
+ 
+   // Checks if the state of the scheduling term can be updated and updates it
+-  virtual gxf_result_t update_state_abi(int64_t timestamp) { return GXF_SUCCESS; }
++  virtual gxf_result_t update_state_abi(int64_t /*timestamp*/) { return GXF_SUCCESS; }
+ 
+   Expected<SchedulingCondition> check(int64_t timestamp) {
+     SchedulingConditionType status;
+diff --git a/gxf/std/scheduling_terms.hpp b/gxf/std/scheduling_terms.hpp
+index 9e4a1c1..3e47ffb 100644
+--- a/gxf/std/scheduling_terms.hpp
++++ b/gxf/std/scheduling_terms.hpp
+@@ -58,9 +58,9 @@ enum class PeriodicSchedulingPolicy {
+   // Custom parameter parser for PeriodicSchedulingPolicy
+ template <>
+ struct ParameterParser<PeriodicSchedulingPolicy> {
+-  static Expected<PeriodicSchedulingPolicy> Parse(gxf_context_t context, gxf_uid_t component_uid,
+-                                      const char* key, const YAML::Node& node,
+-                                      const std::string& prefix) {
++  static Expected<PeriodicSchedulingPolicy> Parse(gxf_context_t /*context*/, gxf_uid_t /*component_uid*/,
++                                      const char* /*key*/, const YAML::Node& node,
++                                      const std::string& /*prefix*/) {
+     const std::string value = node.as<std::string>();
+     if (strcmp(value.c_str(), "CatchUpMissedTicks") == 0) {
+       return PeriodicSchedulingPolicy::kCatchUpMissedTicks;
+@@ -78,7 +78,7 @@ struct ParameterParser<PeriodicSchedulingPolicy> {
+ // Custom parameter wrapper for PeriodicSchedulingPolicy
+ template<>
+ struct ParameterWrapper<PeriodicSchedulingPolicy> {
+-  static Expected<YAML::Node> Wrap(gxf_context_t context, const PeriodicSchedulingPolicy& value) {
++  static Expected<YAML::Node> Wrap(gxf_context_t /*context*/, const PeriodicSchedulingPolicy& value) {
+     YAML::Node node(YAML::NodeType::Scalar);
+     switch (value) {
+       case PeriodicSchedulingPolicy::kCatchUpMissedTicks: {
+@@ -228,9 +228,9 @@ enum struct SamplingMode {
+ // Custom parameter parser for SamplingMode
+ template <>
+ struct ParameterParser<SamplingMode> {
+-  static Expected<SamplingMode> Parse(gxf_context_t context, gxf_uid_t component_uid,
+-                                       const char* key, const YAML::Node& node,
+-                                       const std::string& prefix) {
++  static Expected<SamplingMode> Parse(gxf_context_t /*context*/, gxf_uid_t /*component_uid*/,
++                                       const char* /*key*/, const YAML::Node& node,
++                                       const std::string& /*prefix*/) {
+     const std::string value = node.as<std::string>();
+     if (strcmp(value.c_str(), "SumOfAll") == 0) {
+       return SamplingMode::kSumOfAll;
+@@ -245,7 +245,7 @@ struct ParameterParser<SamplingMode> {
+ // Custom parameter wrapper for SamplingMode
+ template<>
+ struct ParameterWrapper<SamplingMode> {
+-  static Expected<YAML::Node> Wrap(gxf_context_t context, const SamplingMode& value) {
++  static Expected<YAML::Node> Wrap(gxf_context_t /*context*/, const SamplingMode& value) {
+   YAML::Node node(YAML::NodeType::Scalar);
+   switch (value) {
+     case SamplingMode::kSumOfAll: {
+diff --git a/gxf/std/transmitter.hpp b/gxf/std/transmitter.hpp
+index ab206a4..6ad19a9 100644
+--- a/gxf/std/transmitter.hpp
++++ b/gxf/std/transmitter.hpp
+@@ -37,7 +37,7 @@ class Transmitter : public Queue {
+ 
+   virtual gxf_result_t sync_io_abi() { return GXF_SUCCESS; }
+ 
+-  virtual gxf_result_t pop_io_abi(gxf_uid_t* uid) { return GXF_NOT_IMPLEMENTED; }
++  virtual gxf_result_t pop_io_abi(gxf_uid_t* /*uid*/) { return GXF_NOT_IMPLEMENTED; }
+ 
+   Expected<void> publish(const Entity& other);
+ 
+-- 
+2.34.1
+

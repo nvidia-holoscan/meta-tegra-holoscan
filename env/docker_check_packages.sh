@@ -25,7 +25,6 @@
 # exist in the current build context.
 #
 
-GXF_PACKAGE="recipes-devtools/gxf/files/gxf_22.11_20230223_6b2e34ec_holoscan-sdk_arm64.tar.gz"
 RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz"
 
 script_path=$(readlink -f ${0})
@@ -39,7 +38,6 @@ check_package() {
     fi
 }
 
-check_package ${GXF_PACKAGE}
 check_package ${RIVERMAX_PACKAGE}
 
 exit 0

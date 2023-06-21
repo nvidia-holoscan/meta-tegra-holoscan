@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -29,29 +29,36 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_22.11_20230223_6b2e34ec_holoscan-sdk_${GXF_ARCH}"
-SRC_URI = " \
-    file://${GXF_PACKAGE}.tar.gz \
-    file://0001-Fix-parameter_storage-build-error.patch \
-    file://0002-Remove-TypenameAsString-from-nvidia-namespace.patch \
-    file://0003-Fix-std-iterator-deprecation.patch \
-    file://0004-Fix-unused-parameters.patch \
-    file://0005-Fix-GxfEntityCreateInfo-initializer.patch \
-    file://0006-Remove-complex-primitives-support.patch \
+GXF_PACKAGE = "gxf_23.05_20230717_d105fa1c_holoscan-sdk_${GXF_ARCH}${@ '_cuda12' if float(d.getVar('CUDA_VERSION')) > 12.0 else ''}"
+SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz"
+CUDA_11_SHA = "d1679cb243f8946897eaa154af7fcef5058d064093173339e8f5ff29eadbae01"
+CUDA_12_SHA = "863b1e5a8fb39d749e62c5e55be96d990ffda74f5a324ac0121a3a98e8ade3f9"
+SRC_URI[sha256sum] = "${CUDA_${@ d.getVar('CUDA_VERSION').split('.')[0]}_SHA}"
+
+SRC_URI += " \
+    file://0001-Remove-TypenameAsString-from-nvidia-namespace.patch \
+    file://0002-Fix-std-iterator-deprecation.patch \
+    file://0003-Fix-unused-parameters.patch \
+    file://0004-Fix-GxfEntityCreateInfo-initializer.patch \
+    file://0005-Remove-complex-primitives-support.patch \
 "
 
 S = "${WORKDIR}/${GXF_PACKAGE}"
 
 do_install () {
     install -d ${D}/opt/nvidia/gxf
+
     cp -rd --no-preserve=ownership ${S}/common ${D}/opt/nvidia/gxf
     cp -rd --no-preserve=ownership ${S}/gxf ${D}/opt/nvidia/gxf
     cp -rd --no-preserve=ownership ${S}/${GXF_ARCH} ${D}/opt/nvidia/gxf
     find ${D}/opt/nvidia/gxf -regex "\(.*pybind.so\)\|\(.*python_codelet\)" | xargs rm -rf
 
-    # Remove currently unused libraries that use unavailable dependencies.
-    rm ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream/libgxf_stream.so
-    rm ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream/libgxf_test_stream_sync_cuda.so
+    # Remove currently unused extensions that use unavailable dependencies.
+    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream
+
+    # Remove tests.
+    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/cuda/tests
+    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/test
 }
 
 FILES:${PN} += " \
@@ -67,20 +74,16 @@ SYSROOT_DIRS = " \
     /opt/nvidia/gxf \
 "
 
-DEPENDS = " \
-    tensorrt-core \
-    tensorrt-plugins \
-    cuda-nvtx \
-"
-
 RDEPENDS:${PN} += " \
+    cuda-cudart \
+    cuda-nvtx \
     libnpp \
     libv4l \
+    tegra-libraries-cuda \
     tegra-libraries-multimedia \
     tegra-libraries-multimedia-utils \
     tegra-libraries-multimedia-v4l \
+    ucx \
 "
 
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-INHIBIT_PACKAGE_STRIP = "1"
-INSANE_SKIP:${PN} += "dev-so"
