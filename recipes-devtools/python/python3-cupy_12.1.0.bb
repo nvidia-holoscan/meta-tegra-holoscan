@@ -23,12 +23,15 @@ HOMEPAGE = "https://cupy.dev/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file:///${S}/${WHEEL_BASE}.dist-info/license.rst;md5=b459cbee05a9bd6f6fecc52c37c2cce4"
 
-WHEEL_BASE = "cupy_cuda11x-${PV}"
+CUDA_BASE_VER = "${@ d.getVar('CUDA_VERSION').split('.')[0] }"
+WHEEL_BASE = "cupy_cuda${CUDA_BASE_VER}x-${PV}"
 WHEEL_PYVER = "${@ "cp" + d.getVar('PYTHON_BASEVERSION').replace('.','') }"
 WHEEL_NAME = "${WHEEL_BASE}-${WHEEL_PYVER}-${WHEEL_PYVER}-manylinux2014_${TARGET_ARCH}"
 
 SRC_URI = "https://github.com/cupy/cupy/releases/download/v${PV}/${WHEEL_NAME}.whl;downloadfilename=${WHEEL_NAME}.zip;subdir=${BP}"
-SRC_URI[sha256sum] = "ccc3744e50ff31b4fc760631f8c753db9c1995157a0167b892cd330d774dbe40"
+CUDA_11_SHA = 'f9d7a77200e5539c496a1a2a0d30b427fec81b5cd4e28ecc738d26689c54e132'
+CUDA_12_SHA = 'a3dbc76ce0f697a943061ddd2c47bc2138bc23ab56a020f1f5ff9141861b5245'
+SRC_URI[sha256sum] = "${@ d.getVar('CUDA_%s_SHA' % d.getVar('CUDA_BASE_VER'))}"
 
 inherit python3-dir cuda
 
