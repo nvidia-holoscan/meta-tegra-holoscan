@@ -1,27 +1,21 @@
-From daac9cc058cc0f1e3d311e6dbdca65c7915b99be Mon Sep 17 00:00:00 2001
+From e98297a2e0fe6ecd84acb106b9616d0344833bac Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 1 Mar 2023 15:58:05 -0700
 Subject: Fix ajantv2 dependencies
 
----
- applications/endoscopy_out_of_body_detection/CMakeLists.txt | 2 ++
- applications/endoscopy_tool_tracking/cpp/CMakeLists.txt     | 2 ++
- applications/multiai_ultrasound/cpp/CMakeLists.txt          | 2 ++
- applications/ultrasound_segmentation/cpp/CMakeLists.txt     | 2 ++
- 4 files changed, 8 insertions(+)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index b6ee64a..e93ccca 100644
+index e8e4fd0..a839c2f 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_out_of_body_detection CXX)
- find_package(holoscan 0.5 REQUIRED CONFIG
+ find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 +find_package(ajantv2 16.2 REQUIRED CONFIG)
 +
  option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
-              
+ 
  add_executable(endoscopy_out_of_body_detection
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 index 2ad2abd..daaaad8 100644
@@ -36,12 +30,51 @@ index 2ad2abd..daaaad8 100644
  add_executable(endoscopy_tool_tracking
    main.cpp
  )
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+index 456be97..e350c0e 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+@@ -21,6 +21,8 @@ project(multiai_endoscopy CXX)
+ find_package(Holoscan REQUIRED CONFIG 
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++find_package(ajantv2 16.2 REQUIRED CONFIG)
++
+ add_executable(multiai_endoscopy
+   multi_ai.cpp
+ )
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
+index db6f19b..384d552 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
+@@ -21,6 +21,8 @@ project(multi_ai CXX)
+ find_package(Holoscan REQUIRED CONFIG 
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++find_package(ajantv2 16.2 REQUIRED CONFIG)
++
+ # Enable cuda language
+ set(CMAKE_CUDA_ARCHITECTURES "70;80") 
+ enable_language(CUDA)
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
+index e084797..b0cd252 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
+@@ -21,6 +21,8 @@ project(multi_ai CXX)
+ find_package(Holoscan REQUIRED CONFIG 
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++find_package(ajantv2 16.2 REQUIRED CONFIG)
++
+ # Enable cuda language
+ set(CMAKE_CUDA_ARCHITECTURES "70;80") 
+ enable_language(CUDA)
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index 1bb0595..0c6a8d0 100644
+index 8d845ee..b62ca61 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(multiai_ultrasound CXX)
- find_package(holoscan 0.5 REQUIRED CONFIG
+ find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 +find_package(ajantv2 16.2 REQUIRED CONFIG)
@@ -49,12 +82,25 @@ index 1bb0595..0c6a8d0 100644
  add_executable(multiai_ultrasound
      main.cpp
  )
+diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
+index ea177ef..0c7ca03 100644
+--- a/applications/object_detection_torch/CMakeLists.txt
++++ b/applications/object_detection_torch/CMakeLists.txt
+@@ -19,6 +19,8 @@ project(object_detection_torch CXX)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++find_package(ajantv2 16.2 REQUIRED CONFIG)
++
+ add_executable(object_detection_torch
+     main.cpp
+ )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 6628553..eeecd52 100644
+index 7ac3ca7..84130db 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
- find_package(holoscan 0.5 REQUIRED CONFIG
+ find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 +find_package(ajantv2 16.2 REQUIRED CONFIG)

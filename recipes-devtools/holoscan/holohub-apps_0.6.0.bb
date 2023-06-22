@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "eeeb44e5aafa3fdb1d69ba10801044d4ae2bc9cd"
+SRCREV = "2badea15d633685d296cf7e9411aee739df13fea"
 
 SRC_URI += " \
     file://0001-Add-install-rules.patch \
@@ -34,6 +34,7 @@ SRC_URI += " \
     file://0005-Build-python-libs-with-install-RPATH.patch \
     file://0006-Enable-Emergent-apps.patch \
     file://0007-Fix-default-data-paths-in-python-apps.patch \
+    file://0008-Fix-volume_renderer-application.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -82,6 +83,7 @@ do_install:append() {
 
 DEPENDS += " \
     ajantv2-sdk \
+    claraviz \
     ffmpeg-native \
     holoscan-sdk \
     libcublas-native \
@@ -93,6 +95,10 @@ DEPENDS += " \
 
 RDEPENDS:${PN} += " \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
+"
+
+FILES:${PN}-staticdev += " \
+    ${HOLOHUB_INSTALL_PATH}/lib/*.a \
 "
 
 FILES:${PN} += " \

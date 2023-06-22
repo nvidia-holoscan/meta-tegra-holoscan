@@ -1,16 +1,11 @@
-From 6879eaaf200935c94074db4bbec5d34da554871d Mon Sep 17 00:00:00 2001
+From 436f6e1724f0e690fbae8cd68fe116a6af41fb4d Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 1 Mar 2023 17:02:57 -0700
 Subject: Fix undefined fmt errors
 
----
- operators/tensor_to_video_buffer/CMakeLists.txt      | 2 ++
- operators/tool_tracking_postprocessor/CMakeLists.txt | 2 ++
- operators/visualizer_icardio/CMakeLists.txt          | 2 ++
- 3 files changed, 6 insertions(+)
 
 diff --git a/operators/tensor_to_video_buffer/CMakeLists.txt b/operators/tensor_to_video_buffer/CMakeLists.txt
-index 0da9ab0..ddc01b7 100644
+index 964822c..9dfff8c 100644
 --- a/operators/tensor_to_video_buffer/CMakeLists.txt
 +++ b/operators/tensor_to_video_buffer/CMakeLists.txt
 @@ -31,4 +31,6 @@ target_link_libraries(
@@ -34,12 +29,12 @@ index 8b471a1..9467998 100644
  
  if(HOLOHUB_BUILD_PYTHON)
 diff --git a/operators/visualizer_icardio/CMakeLists.txt b/operators/visualizer_icardio/CMakeLists.txt
-index 65b9cc3..f20538b 100644
+index 91e5730..73c508a 100644
 --- a/operators/visualizer_icardio/CMakeLists.txt
 +++ b/operators/visualizer_icardio/CMakeLists.txt
-@@ -30,6 +30,8 @@ target_link_libraries(visualizer_icardio
- 
- target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -32,6 +32,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
+ target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
+ target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
  
 +target_compile_definitions(visualizer_icardio PUBLIC FMT_HEADER_ONLY)
 +

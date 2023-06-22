@@ -1,14 +1,8 @@
-From e2a6c1e895815a3e3363d0b5b15e9d94adf3b54c Mon Sep 17 00:00:00 2001
+From 005d98b56e717921c73409437ef3384bab105351 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 1 Mar 2023 23:41:05 -0700
 Subject: Remove relative gxf_extension paths
 
----
- .../endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml    | 2 +-
- .../endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml | 2 +-
- .../h264_endoscopy_tool_tracking.yaml                           | 2 +-
- applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 index 180ccc2..fae536c 100644
@@ -37,7 +31,7 @@ index 5910a40..9a322f2 100644
  aja:
    width: 1920
 diff --git a/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml b/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
-index 3d5f525..d47e87e 100644
+index 6f5a079..dcf22fc 100644
 --- a/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
 @@ -21,7 +21,7 @@ extensions:
@@ -47,10 +41,10 @@ index 3d5f525..d47e87e 100644
 -  - ../../gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
  
- bitstream_reader:
-   outbuf_storage_type: 0
+ record_output: false # Setting this to `true` enables H264 encoding of output and recording it to the file.
+ 
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index d67444f..35c4e4d 100644
+index e71a444..575ef1b 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@

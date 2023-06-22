@@ -1,37 +1,11 @@
-From 461facb0a69671c680b84558afed7ab3188eb318 Mon Sep 17 00:00:00 2001
+From 13a93c8a9771eabd3098224a25c5dab696197cc0 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 1 Mar 2023 19:09:23 -0700
 Subject: Add install rules
 
----
- applications/colonoscopy_segmentation/CMakeLists.txt     | 8 ++++++++
- .../endoscopy_out_of_body_detection/CMakeLists.txt       | 9 +++++++++
- applications/endoscopy_tool_tracking/cpp/CMakeLists.txt  | 9 +++++++++
- .../endoscopy_tool_tracking/python/CMakeLists.txt        | 8 ++++++++
- applications/h264_endoscopy_tool_tracking/CMakeLists.txt | 9 +++++++++
- applications/h264_video_decode/CMakeLists.txt            | 9 +++++++++
- applications/high_speed_endoscopy/cpp/CMakeLists.txt     | 9 +++++++++
- applications/high_speed_endoscopy/python/CMakeLists.txt  | 8 ++++++++
- applications/multiai_ultrasound/cpp/CMakeLists.txt       | 9 +++++++++
- applications/multiai_ultrasound/python/CMakeLists.txt    | 8 ++++++++
- applications/ultrasound_segmentation/cpp/CMakeLists.txt  | 9 +++++++++
- .../ultrasound_segmentation/python/CMakeLists.txt        | 8 ++++++++
- cmake/pybind11_add_holohub_module.cmake                  | 5 +++++
- gxf_extensions/emergent_source/CMakeLists.txt            | 2 ++
- gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt   | 2 ++
- operators/emergent_source/CMakeLists.txt                 | 2 ++
- operators/lstm_tensor_rt_inference/CMakeLists.txt        | 2 ++
- operators/tensor_to_video_buffer/CMakeLists.txt          | 2 ++
- operators/tool_tracking_postprocessor/CMakeLists.txt     | 2 ++
- operators/video_decoder/CMakeLists.txt                   | 2 ++
- operators/video_encoder/CMakeLists.txt                   | 2 ++
- operators/video_read_bitstream/CMakeLists.txt            | 2 ++
- operators/video_write_bitstream/CMakeLists.txt           | 2 ++
- operators/visualizer_icardio/CMakeLists.txt              | 2 ++
- 24 files changed, 130 insertions(+)
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
-index f14133b..c568617 100644
+index d246ca6..2cdb3d3 100644
 --- a/applications/colonoscopy_segmentation/CMakeLists.txt
 +++ b/applications/colonoscopy_segmentation/CMakeLists.txt
 @@ -33,6 +33,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -50,7 +24,7 @@ index f14133b..c568617 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index 0c70318..b6ee64a 100644
+index 8ad93dd..e8e4fd0 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -60,6 +60,15 @@ add_custom_target(endoscopy_out_of_body_detection_yaml
@@ -109,12 +83,12 @@ index 9088346..e29ab03 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/h264_endoscopy_tool_tracking/CMakeLists.txt b/applications/h264_endoscopy_tool_tracking/CMakeLists.txt
-index 1757728..5605704 100644
+index df5f274..ca048d6 100644
 --- a/applications/h264_endoscopy_tool_tracking/CMakeLists.txt
 +++ b/applications/h264_endoscopy_tool_tracking/CMakeLists.txt
 @@ -58,6 +58,15 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
    add_dependencies(h264_endoscopy_tool_tracking endoscopy_data)
- endif()  
+ endif()
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -129,7 +103,7 @@ index 1757728..5605704 100644
  if(BUILD_TESTING)
    add_test(NAME h264_endoscopy_tool_tracking_cpp_test
 diff --git a/applications/h264_video_decode/CMakeLists.txt b/applications/h264_video_decode/CMakeLists.txt
-index c130acf..6228aad 100644
+index b097c1e..ee537b2 100644
 --- a/applications/h264_video_decode/CMakeLists.txt
 +++ b/applications/h264_video_decode/CMakeLists.txt
 @@ -52,6 +52,15 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -187,20 +161,63 @@ index 77527a4..e98e100 100644
  # Add testing
  if(BUILD_TESTING)
    # To get the environment path
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+index 868f6c8..456be97 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+@@ -50,6 +50,16 @@ add_custom_target(app_config_yaml
+ )
+ add_dependencies(multiai_endoscopy app_config_yaml)
+ 
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(TARGETS multiai_endoscopy
++  DESTINATION ${install_path}
++)
++install(FILES
++    ${CMAKE_CURRENT_SOURCE_DIR}/app_config.yaml
++  DESTINATION ${install_path}
++)
++
+ # Add testing
+ if(BUILD_TESTING)
+   # Configure the yaml file to only play 10 frames
+diff --git a/applications/multiai_endoscopy/python/CMakeLists.txt b/applications/multiai_endoscopy/python/CMakeLists.txt
+index 4929ef5..e34bde3 100644
+--- a/applications/multiai_endoscopy/python/CMakeLists.txt
++++ b/applications/multiai_endoscopy/python/CMakeLists.txt
+@@ -13,6 +13,15 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(FILES
++  ${CMAKE_CURRENT_SOURCE_DIR}/multi_ai.py
++  ${CMAKE_CURRENT_SOURCE_DIR}/multi_ai.yaml
++  ${CMAKE_CURRENT_SOURCE_DIR}/endo_ref_data_labels.csv
++  DESTINATION ${install_path}
++)
++
+ # Add testing
+ if(BUILD_TESTING)
+   # To get the environment path
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index a3fb374..1bb0595 100644
+index d4c9196..8d845ee 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-@@ -48,6 +48,15 @@ add_custom_target(multiai_ultrasound_yaml
+@@ -55,6 +55,17 @@ add_custom_target(mgpu_multiai_ultrasound_yaml
  )
- add_dependencies(multiai_ultrasound multiai_ultrasound_yaml)
+ add_dependencies(multiai_ultrasound mgpu_multiai_ultrasound_yaml)
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 +install(TARGETS multiai_ultrasound
 +  DESTINATION ${install_path}
 +)
-+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound.yaml
++install(FILES
++    ${CMAKE_CURRENT_SOURCE_DIR}/multiai_ultrasound.yaml
++    ${CMAKE_CURRENT_SOURCE_DIR}/mgpu_multiai_ultrasound.yaml
 +  DESTINATION ${install_path}
 +)
 +
@@ -208,7 +225,7 @@ index a3fb374..1bb0595 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/multiai_ultrasound/python/CMakeLists.txt b/applications/multiai_ultrasound/python/CMakeLists.txt
-index 6c477ed..ded3f1f 100644
+index 879dedf..93bd5f0 100644
 --- a/applications/multiai_ultrasound/python/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -226,8 +243,25 @@ index 6c477ed..ded3f1f 100644
  # Add testing
  if(BUILD_TESTING)
    # To get the environment path
+diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
+index 2c093ce..ea177ef 100644
+--- a/applications/object_detection_torch/CMakeLists.txt
++++ b/applications/object_detection_torch/CMakeLists.txt
+@@ -41,3 +41,12 @@ add_custom_target(object_detection_torch_yaml
+     BYPRODUCTS "object_detection_torch.yaml"
+ )
+ add_dependencies(object_detection_torch object_detection_torch_yaml)
++
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(TARGETS object_detection_torch
++  DESTINATION ${install_path}
++)
++install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/object_detection_torch.yaml
++  DESTINATION ${install_path}
++)
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index fe8f197..6628553 100644
+index 1ed61ae..7ac3ca7 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -47,6 +47,15 @@ add_custom_target(ultrasound_segmentation_yaml
@@ -247,7 +281,7 @@ index fe8f197..6628553 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/ultrasound_segmentation/python/CMakeLists.txt b/applications/ultrasound_segmentation/python/CMakeLists.txt
-index 6648375..9919922 100644
+index 0729e35..9fdbadf 100644
 --- a/applications/ultrasound_segmentation/python/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -265,6 +299,20 @@ index 6648375..9919922 100644
  # Add testing
  if(BUILD_TESTING)
    # To get the environment path
+diff --git a/applications/volume_rendering/CMakeLists.txt b/applications/volume_rendering/CMakeLists.txt
+index ff8d48f..0952125 100644
+--- a/applications/volume_rendering/CMakeLists.txt
++++ b/applications/volume_rendering/CMakeLists.txt
+@@ -28,3 +28,9 @@ target_link_libraries(volume_rendering
+   holoscan::ops::volume_renderer
+   holoscan::ops::holoviz
+ )
++
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(TARGETS volume_rendering
++  DESTINATION ${install_path}
++)
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
 index c25df73..2cc3aef 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
@@ -326,7 +374,7 @@ index 7bcbf41..995d929 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/tensor_to_video_buffer/CMakeLists.txt b/operators/tensor_to_video_buffer/CMakeLists.txt
-index 3657255..0da9ab0 100644
+index b73573d..964822c 100644
 --- a/operators/tensor_to_video_buffer/CMakeLists.txt
 +++ b/operators/tensor_to_video_buffer/CMakeLists.txt
 @@ -30,3 +30,5 @@ target_link_libraries(
@@ -349,58 +397,84 @@ index 19e1767..8b471a1 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/video_decoder/CMakeLists.txt b/operators/video_decoder/CMakeLists.txt
-index ab767ae..6a1c508 100644
+index 8ff3734..cf39c2b 100644
 --- a/operators/video_decoder/CMakeLists.txt
 +++ b/operators/video_decoder/CMakeLists.txt
-@@ -27,3 +27,5 @@ add_library(holoscan::video_decoder ALIAS video_decoder)
+@@ -29,4 +29,6 @@ add_library(holoscan::ops::video_decoder ALIAS video_decoder)
+ 
  target_include_directories(video_decoder INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  
- target_link_libraries(video_decoder holoscan::core)
+-target_link_libraries(video_decoder holoscan::core)
+\ No newline at end of file
++target_link_libraries(video_decoder holoscan::core)
 +
 +install(TARGETS video_decoder)
 diff --git a/operators/video_encoder/CMakeLists.txt b/operators/video_encoder/CMakeLists.txt
-index 8084ddd..51444ac 100644
+index f17bd01..4948cba 100644
 --- a/operators/video_encoder/CMakeLists.txt
 +++ b/operators/video_encoder/CMakeLists.txt
-@@ -26,3 +26,5 @@ add_library(holoscan::video_encoder ALIAS video_encoder)
+@@ -29,4 +29,6 @@ add_library(holoscan::ops::video_encoder ALIAS video_encoder)
+ 
  target_include_directories(video_encoder INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  
- target_link_libraries(video_encoder holoscan::core)
+-target_link_libraries(video_encoder holoscan::core)
+\ No newline at end of file
++target_link_libraries(video_encoder holoscan::core)
 +
 +install(TARGETS video_encoder)
 diff --git a/operators/video_read_bitstream/CMakeLists.txt b/operators/video_read_bitstream/CMakeLists.txt
-index ac5d3d4..e845dcc 100644
+index 6ec8c1b..d45225e 100644
 --- a/operators/video_read_bitstream/CMakeLists.txt
 +++ b/operators/video_read_bitstream/CMakeLists.txt
-@@ -27,3 +27,5 @@ add_library(holoscan::video_read_bitstream ALIAS video_read_bitstream)
+@@ -27,3 +27,5 @@ add_library(holoscan::ops::video_read_bitstream ALIAS video_read_bitstream)
  target_include_directories(video_read_bitstream INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  
  target_link_libraries(video_read_bitstream holoscan::core)
 +
 +install(TARGETS video_read_bitstream)
 diff --git a/operators/video_write_bitstream/CMakeLists.txt b/operators/video_write_bitstream/CMakeLists.txt
-index cc765e2..6575af0 100644
+index ff4af21..5283c13 100644
 --- a/operators/video_write_bitstream/CMakeLists.txt
 +++ b/operators/video_write_bitstream/CMakeLists.txt
-@@ -27,3 +27,5 @@ add_library(holoscan::video_write_bitstream ALIAS video_write_bitstream)
+@@ -27,3 +27,5 @@ add_library(holoscan::ops::video_write_bitstream ALIAS video_write_bitstream)
  target_include_directories(video_write_bitstream INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
  
  target_link_libraries(video_write_bitstream holoscan::core)
 +
 +install(TARGETS video_write_bitstream)
 diff --git a/operators/visualizer_icardio/CMakeLists.txt b/operators/visualizer_icardio/CMakeLists.txt
-index 215b9d6..65b9cc3 100644
+index 65367ec..91e5730 100644
 --- a/operators/visualizer_icardio/CMakeLists.txt
 +++ b/operators/visualizer_icardio/CMakeLists.txt
-@@ -30,6 +30,8 @@ target_link_libraries(visualizer_icardio
- 
- target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -32,6 +32,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
+ target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
+ target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
  
 +install(TARGETS visualizer_icardio)
 +
  if(HOLOHUB_BUILD_PYTHON)
      add_subdirectory(python)
  endif()
+diff --git a/operators/volume_loader/CMakeLists.txt b/operators/volume_loader/CMakeLists.txt
+index e1ca18b..8c44d55 100644
+--- a/operators/volume_loader/CMakeLists.txt
++++ b/operators/volume_loader/CMakeLists.txt
+@@ -54,3 +54,5 @@ target_link_libraries(volume_loader
+ target_include_directories(volume_loader INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+ target_compile_definitions(volume_loader PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
+ target_compile_definitions(volume_loader PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
++
++install(TARGETS volume_loader)
+diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
+index 8dfb95f..40efb60 100644
+--- a/operators/volume_renderer/CMakeLists.txt
++++ b/operators/volume_renderer/CMakeLists.txt
+@@ -71,3 +71,5 @@ target_link_libraries(volume_renderer
+ target_include_directories(volume_renderer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+ target_compile_definitions(volume_renderer PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
+ target_compile_definitions(volume_renderer PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
++
++install(TARGETS volume_renderer)
 -- 
 2.34.1
 

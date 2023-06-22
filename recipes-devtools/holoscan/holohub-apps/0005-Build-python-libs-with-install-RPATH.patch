@@ -1,11 +1,8 @@
-From fd074d8d4a607139e9f81b735ca44c88c3b4a879 Mon Sep 17 00:00:00 2001
+From 0e2684fd239f38c18ce79fb126f5f40fc4e2caf0 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Thu, 9 Mar 2023 16:11:37 -0700
 Subject: Build python libs with install RPATH
 
----
- cmake/pybind11_add_holohub_module.cmake | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
 index 2cc3aef..4a2690d 100644
