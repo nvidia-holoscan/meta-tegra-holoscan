@@ -1,0 +1,29 @@
+From 6aa0eadeabfdf81b94272be8d3726c13553598d8 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 6 Jul 2023 14:49:09 -0600
+Subject: [PATCH 5/5] Remove nvToolsExt dependency from TorchConfig.cmake
+
+---
+ cmake/TorchConfig.cmake.in | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
+index 6fecc86f..ddce753b 100644
+--- a/cmake/TorchConfig.cmake.in
++++ b/cmake/TorchConfig.cmake.in
+@@ -148,11 +148,10 @@ if(@USE_CUDA@)
+       ${CUDA_TOOLKIT_ROOT_DIR}/lib/libnvToolsExt.dylib
+       ${CUDA_LIBRARIES})
+   else()
+-    find_library(LIBNVTOOLSEXT libnvToolsExt.so PATHS ${CUDA_TOOLKIT_ROOT_DIR}/lib64/)
++    find_package(CUDAToolkit REQUIRED)
+     set(TORCH_CUDA_LIBRARIES
+       ${CUDA_CUDA_LIB}
+       ${CUDA_NVRTC_LIB}
+-      ${LIBNVTOOLSEXT}
+       ${CUDA_LIBRARIES})
+   endif()
+   if(@BUILD_SHARED_LIBS@)
+-- 
+2.34.1
+
