@@ -1,51 +1,52 @@
-From e835e05f947b7a3c32d4835d8c9b00f557e0df1c Mon Sep 17 00:00:00 2001
+From ffb13a2fab5230a17a4f95079f4f42f4df614622 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 26 Jan 2023 16:20:51 -0700
-Subject: Update CMakefile for OE build
+Date: Thu, 6 Jul 2023 14:54:02 -0600
+Subject: [PATCH] Update CMakefile for OE build
 
 ---
- CMakeLists.txt | 98 +++++---------------------------------------------
- 1 file changed, 9 insertions(+), 89 deletions(-)
+ CMakeLists.txt | 77 ++++----------------------------------------------
+ 1 file changed, 6 insertions(+), 71 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index fd58cce..4a44b90 100644
+index c94fe7a..2a768fe 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,104 +1,24 @@
+@@ -1,16 +1,12 @@
 -cmake_minimum_required(VERSION 3.8.0)
-+cmake_minimum_required(VERSION 3.22)
- 
+-
 -set(CUDA_HOME "/usr/local/cuda" CACHE STRING "" FORCE)
--set(GPUStressTest_HOME "/home/dfisk/GPUStressTest" CACHE STRING "" FORCE)
+-set(GPUStressTest_HOME "/home/nv/dfisk/GPUStressTest" CACHE STRING "" FORCE)
 -set(LD_LIBRARY_PATH "${CUDA_HOME}/lib64;${LD_LIBRARY_PATH}")
 -set(CMAKE_VERBOSE_MAKEFILE "ON" CACHE STRING "" FORCE)
-+project(gst LANGUAGES CXX CUDA)
+-
++cmake_minimum_required(VERSION 3.22.0)
+ 
+ project(gst LANGUAGES CXX CUDA C)
+ 
+ # For debugging matrix sizes; cmake -DDEBUG_MATRIX_SIZES:BOOL="ON" ..
+ set(DEBUG_MATRIX_SIZES "OFF" CACHE STRING "")
  
 +find_package(CUDAToolkit REQUIRED)
++
+ # Set a default build type if none was specified
+ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     message(STATUS "Setting build type to 'Debug' as none was specified.")
+@@ -18,78 +14,18 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+ endif()
  
--project(gst LANGUAGES CXX CUDA C)
--
--# For debugging matrix sizes; cmake -DDEBUG_MATRIX_SIZES:BOOL="ON" ..
--set(DEBUG_MATRIX_SIZES "OFF" CACHE STRING "")
--
--# Set a default build type if none was specified
--if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
--    message(STATUS "Setting build type to 'Debug' as none was specified.")
--    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose the type of build." FORCE)
--    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "" "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
--endif()
--
 -
 -#Config CUDA for this project:
 -
 -set(FLAGS "")
 -set(CMAKE_CUDA_FLAGS "" CACHE STRING "" FORCE)
 -# Note that cmake will insert semicolons between these item automatically...
--set(SM_LIST_IN "70,75,80" CACHE STRING "Please input compute capability")
+-set(SM_LIST_IN "70,75,80,90" CACHE STRING "Please input compute capability")
 -MARK_AS_ADVANCED(SM_LIST)
 -string(REPLACE "\," "\ " DISPLAY_SMS_LIST ${SM_LIST_IN})
 -string(REPLACE "\," "\;" SM_LIST ${SM_LIST_IN})
 -
+-message("SMS_LIST:" ${SMS_LIST})
 -foreach(SM ${SMS_LIST})
 -    string(APPEND CMAKE_CUDA_FLAGS " -gencode arch=compute_${SM},code=sm_${SM}")
 -endforeach(SM)
@@ -67,22 +68,22 @@ index fd58cce..4a44b90 100644
 -    # -fvisibility=hidde}
 -    CACHE STRING "Common CXX/CUDA flags")
 -
--# Global CXX flags/options
+ # Global CXX flags/options
  set(CMAKE_CXX_STANDARD 14)
  set(CMAKE_CXX_STANDARD_REQUIRED ON)
  set(CMAKE_CXX_EXTENSIONS OFF)
 -set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CUDALIB_CUDA_CXX_FLAGS}")
--if(CMAKE_BUILD_TYPE STREQUAL "Debug")
--    add_definitions("-DDEBUG=1")
--endif()
--
+ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+     add_definitions("-DDEBUG=1")
+ endif()
+ 
 -set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined -Wl,--no-allow-shlib-undefined")
 -
--# Global CUDA CXX flags/options
+ # Global CUDA CXX flags/options
 -set(CUDA_HOST_COMPILER ${CMAKE_CXX_COMPILER})
--set(CMAKE_CUDA_STANDARD 14)
--set(CMAKE_CUDA_STANDARD_REQUIRED ON)
--set(CMAKE_CUDA_EXTENSIONS OFF)
+ set(CMAKE_CUDA_STANDARD 14)
+ set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+ set(CMAKE_CUDA_EXTENSIONS OFF)
 -if(CMAKE_CUDA_COMPILER_ID MATCHES CLANG)
 -    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} ${CUDALIB_CUDA_CXX_FLAGS} -fPIC")
 -    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS}")
@@ -109,20 +110,16 @@ index fd58cce..4a44b90 100644
  
  LIST(APPEND SRC_FILES
      ${PROJECT_SOURCE_DIR}/util/test_args.cu
-     ${PROJECT_SOURCE_DIR}/util/measure.cc
--    ${PROJECT_SOURCE_DIR}/util/device_info.cu
--    )
-+    ${PROJECT_SOURCE_DIR}/util/device_info.cu)
+@@ -99,8 +35,7 @@ LIST(APPEND SRC_FILES
+     )
  
  add_executable(gst main.cu ${SRC_FILES})
 -set_target_properties(gst PROPERTIES CUDA_ARCHITECTURES ${SM_LIST})
 -target_link_libraries(gst cublas cublasLt)
- 
-+target_include_directories(gst PRIVATE
-+    ${PROJECT_SOURCE_DIR}/util
-+    ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
- 
-+target_link_libraries(gst PRIVATE CUDA::cublasLt)
+-
+-
++target_include_directories(gst PRIVATE ${PROJECT_SOURCE_DIR}/util)
++target_link_libraries(gst CUDA::cudart CUDA::cublasLt)
  
 +install(TARGETS gst)
 -- 
