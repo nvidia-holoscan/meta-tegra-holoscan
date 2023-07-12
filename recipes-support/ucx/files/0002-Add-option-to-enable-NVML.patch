@@ -1,0 +1,133 @@
+From 5f7b034152e496343442213939d7b0f02b19ff53 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 12 Jul 2023 14:00:27 -0600
+Subject: [PATCH 2/2] Add option to enable NVML
+
+---
+ config/m4/cuda.m4                      | 33 ++++++++++++++++----------
+ src/uct/cuda/base/cuda_iface.h         |  4 ++++
+ src/uct/cuda/cuda_ipc/cuda_ipc_iface.c |  9 +++++++
+ 3 files changed, 34 insertions(+), 12 deletions(-)
+
+diff --git a/config/m4/cuda.m4 b/config/m4/cuda.m4
+index a13584796..8d87f0807 100644
+--- a/config/m4/cuda.m4
++++ b/config/m4/cuda.m4
+@@ -11,6 +11,11 @@ AS_IF([test "x$cuda_checked" != "xyes"],
+                 [AS_HELP_STRING([--with-cuda=(DIR)], [Enable the use of CUDA (default is guess).])],
+                 [], [with_cuda=guess])
+ 
++    AC_ARG_ENABLE([nvml],
++                  AS_HELP_STRING([--enable-nvml]
++                                 [Enable the use of NVIDIA Management Library (NVML)]),
++                  [enable_nvml=yes])
++
+     AS_IF([test "x$with_cuda" = "xno"],
+         [
+          cuda_happy=no
+@@ -52,21 +57,25 @@ AS_IF([test "x$cuda_checked" != "xyes"],
+                [AC_CHECK_LIB([cudart], [cudaGetDeviceCount],
+                              [CUDA_LIBS="$CUDA_LIBS -lcudart"], [cuda_happy="no"])])
+ 
+-         # Check nvml header files
+-         AS_IF([test "x$cuda_happy" = "xyes"],
+-               [AC_CHECK_HEADERS([nvml.h],
+-                                 [cuda_happy="yes"],
++         if test "$enable_nvml" = "yes"; then
++             # Check nvml header files
++             AS_IF([test "x$cuda_happy" = "xyes"],
++                   [AC_CHECK_HEADERS([nvml.h],
++                                     [cuda_happy="yes"],
++                                     [AS_IF([test "x$with_cuda" != "xguess"],
++                                            [AC_MSG_ERROR([nvml header not found. Install appropriate cuda-nvml-devel package])])
++                                      cuda_happy="no"])])
++
++             # Check nvml library
++             AS_IF([test "x$cuda_happy" = "xyes"],
++                   [AC_CHECK_LIB([nvidia-ml], [nvmlInit],
++                                 [CUDA_LIBS="$CUDA_LIBS -lnvidia-ml"],
+                                  [AS_IF([test "x$with_cuda" != "xguess"],
+-                                        [AC_MSG_ERROR([nvml header not found. Install appropriate cuda-nvml-devel package])])
++                                        [AC_MSG_ERROR([libnvidia-ml not found. Install appropriate nvidia-driver package])])
+                                   cuda_happy="no"])])
+ 
+-         # Check nvml library
+-         AS_IF([test "x$cuda_happy" = "xyes"],
+-               [AC_CHECK_LIB([nvidia-ml], [nvmlInit],
+-                             [CUDA_LIBS="$CUDA_LIBS -lnvidia-ml"],
+-                             [AS_IF([test "x$with_cuda" != "xguess"],
+-                                    [AC_MSG_ERROR([libnvidia-ml not found. Install appropriate nvidia-driver package])])
+-                              cuda_happy="no"])])
++             AC_DEFINE([ENABLE_NVML], , [Enable NVML])
++         fi
+ 
+          LDFLAGS="$save_LDFLAGS"
+ 
+diff --git a/src/uct/cuda/base/cuda_iface.h b/src/uct/cuda/base/cuda_iface.h
+index 85f7ac2ce..fdcb5faa6 100644
+--- a/src/uct/cuda/base/cuda_iface.h
++++ b/src/uct/cuda/base/cuda_iface.h
+@@ -12,7 +12,9 @@
+ #include <ucs/async/eventfd.h>
+ #include <cuda_runtime.h>
+ #include <cuda.h>
++#ifdef ENABLE_NVML
+ #include <nvml.h>
++#endif
+ 
+ 
+ #define UCT_CUDA_DEV_NAME       "cuda"
+@@ -76,6 +78,7 @@
+     UCT_CUDA_FUNC(_func, UCS_LOG_LEVEL_ERROR)
+ 
+ 
++#ifdef ENABLE_NVML
+ #define UCT_NVML_FUNC(_func, _log_level)                        \
+     ({                                                          \
+         ucs_status_t _status = UCS_OK;                          \
+@@ -94,6 +97,7 @@
+ 
+ #define UCT_NVML_FUNC_LOG_ERR(_func) \
+     UCT_NVML_FUNC(_func, UCS_LOG_LEVEL_ERROR)
++#endif // ENABLE_NVML
+ 
+ 
+ #define UCT_CUDADRV_FUNC(_func, _log_level)                     \
+diff --git a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
+index 3194109c5..1ba63979c 100644
+--- a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
++++ b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
+@@ -17,7 +17,9 @@
+ #include <ucs/debug/assert.h>
+ #include <ucs/async/eventfd.h>
+ #include <pthread.h>
++#ifdef ENABLE_NVML
+ #include <nvml.h>
++#endif
+ 
+ static ucs_config_field_t uct_cuda_ipc_iface_config_table[] = {
+ 
+@@ -117,6 +119,7 @@ static double uct_cuda_ipc_iface_get_bw()
+     }
+ }
+ 
++#ifdef ENABLE_NVML
+ /* calls nvmlInit_v2 and nvmlShutdown which are expensive but
+  * get_device_nvlinks should be outside critical path */
+ static int uct_cuda_ipc_get_device_nvlinks(int ordinal)
+@@ -170,6 +173,12 @@ err_sd:
+ err:
+     return 0;
+ }
++#else
++static int uct_cuda_ipc_get_device_nvlinks(int ordinal)
++{
++    return 0;
++}
++#endif // ENABLE_NVML
+ 
+ static size_t uct_cuda_ipc_iface_get_max_get_zcopy(uct_cuda_ipc_iface_t *iface)
+ {
+-- 
+2.34.1
+

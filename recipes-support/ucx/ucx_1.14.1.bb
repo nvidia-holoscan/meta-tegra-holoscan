@@ -27,6 +27,7 @@ SRCREV = "04897a079ac88713842f7209c5e82430d095444e"
 
 SRC_URI += " \
     file://0001-Fix-CMAKE-library-import-paths.patch \
+    file://0002-Add-option-to-enable-NVML.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -43,13 +44,14 @@ EXTRA_OECONF:append = " \
     --disable-assertions \
     --disable-params-check \
     --enable-mt \
+    ${@"--enable-nvml" if d.getVar("TEGRA_DGPU") == "1" else ""} \
 "
 
 DEPENDS += " \
-    cuda-nvml \
     libibverbs1 \
     libnl \
     librdmacm1 \
+    ${@"cuda-nvml" if d.getVar("TEGRA_DGPU") == "1" else ""} \
 "
 
 INSANE_SKIP:${PN} += "dev-so"
