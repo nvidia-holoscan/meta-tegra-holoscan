@@ -23,11 +23,14 @@ LICENSE = "GPL-2.0-only & BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=79e20039679d6414176a6a04804e40be"
 
 SRC_URI = "git://github.com/Mellanox/mstflint.git;branch=master;protocol=https"
-SRCREV = "b47b67c50d4664f101a12c9e4d960d531fb45a79"
+SRCREV = "885b2418543128ba2ae6a8095f39002d7c56c0ef"
 
 SRC_URI += " \
-    file://0001-Fix-OE-build.patch \
-    file://0002-Remove-EXTERNAL-build-flag.patch \
+    file://0001-Remove-host-paths-from-build.patch \
+    file://0002-Remove-gitversion.h-include.patch \
+    file://0003-Fix-include-and-library-build-paths.patch \
+    file://0004-Remove-duplicate-pylib_DATA-files.patch \
+    file://0005-Remove-EXTERNAL-build-flag.patch \
 "
 
 inherit autotools pkgconfig
@@ -36,10 +39,6 @@ S = "${WORKDIR}/git"
 
 EXTRA_OECONF = "TOOLS_GIT_SHA=${SRCREV}"
 TARGET_CC_ARCH += "${LDFLAGS}"
-
-do_install:append() {
-    rm -rf ${D}${libdir}/*.a
-}
 
 DEPENDS = " \
     libibmad5 \

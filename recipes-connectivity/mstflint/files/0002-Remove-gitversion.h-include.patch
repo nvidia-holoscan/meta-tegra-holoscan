@@ -1,0 +1,28 @@
+From f5029e4b193ec36dca86d5127ae108ab9bbc2d07 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 20 Jul 2023 16:36:26 -0600
+Subject: Remove gitversion.h include
+
+
+diff --git a/common/tools_version.h b/common/tools_version.h
+index c656076..c38efed 100644
+--- a/common/tools_version.h
++++ b/common/tools_version.h
+@@ -41,14 +41,6 @@
+ #include <string.h>
+ #include <stdlib.h>
+ 
+-// To be replaced by an external script:
+-#ifdef MST_UL
+-#include "gitversion.h"
+-#endif
+-#ifndef TOOLS_GIT_SHA
+-#define TOOLS_GIT_SHA "6469M"
+-#endif
+-
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #ifndef MSTFLINT_VERSION_STR
+-- 
+2.34.1
+
