@@ -28,6 +28,7 @@ SRCREV = "04897a079ac88713842f7209c5e82430d095444e"
 SRC_URI += " \
     file://0001-Fix-CMAKE-library-import-paths.patch \
     file://0002-Add-option-to-enable-NVML.patch \
+    file://0003-Fix-ucs_topo_get_distance-error-handling.patch \
 "
 
 S = "${WORKDIR}/git"
