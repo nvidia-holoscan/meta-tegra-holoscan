@@ -1,3 +1,74 @@
+## [0.6.0] - 2023-08-01
+### Added
+- Various dependency recipes
+    - Clara Viz 0.3.1
+    - PyTorch 2.0.1
+    - torchvision 0.15.2
+    - libnvjpeg 12.2.0.2
+    - nlohmann-json 3.9.1
+    - Jansson 2.14
+    - cloudpickle 2.2.1
+- `nvidia_deb_pkgfeed` class to simplify fetching NVIDIA packages from the
+  SBSA repository.
+
+### Changed
+- Updated dGPU components
+    - Drivers 530.30.02
+    - CUDA 12.1.1
+    - cuDNN 8.9.0.131
+    - TensorRT 8.6.0.12
+    - Nsight Systems 2023.1.2
+- Other updated components
+    - MLNX OFED 5.9-0.5.6.0
+    - Rivermax 1.21.10
+    - mstflint 4.24.0-1
+    - NVIDIA GPU Stress Test 2.4.0
+    - UCX 1.14.1
+    - CuPy 12.1.0
+    - GXF 23.05
+- Use public download locations for the following NVIDIA components to avoid the
+  need to manually download them outside of the bitbake build process
+    - cuDNN
+    - TensorRT
+    - GXF
+    - Nsight Systems
+- Replaces deprecated `nv_peer_mem` module with `nvidia-peermem` module built
+  from the `nvidia-open-gpu-kernel-modules` source.
+
+### Fixed
+- Added patch to `nvidia-display-driver` to fix `nvidia-p2p` symbol conflicts
+  with `nvidia.ko`, which fixes RDMA for the iGPU.
+- Added missing fan control settings for the IGX Orin Devkit.
+- Fixed the iGPU build of the AJA drivers with RDMA enabled.
+- Added kernel patch to fix the color format for the Lontium HDMI input board
+  supplied with the IGX Orin Devkit.
+- Added kernel parameter to disable ACS for the CX7 device in the IGX Orin
+  Devkit since RDMA does not work with ACS enabled.
+
+### Known Issues
+- The `h264` Holohub applications do not work with the dGPU configuration.
+- Emergent cameras and the `high_speed_endoscopy` Holohub application
+  do not work with the dGPU configuration.
+
+### Component Versions
+|                 | iGPU and dGPU |
+| --------------- | ------------- |
+| L4T             | 35.3.1        |
+| Holoscan SDK    | 0.6.0         |
+| MLNX OFED       | 5.9-0.5.6.0   |
+| Rivermax        | 1.21.10       |
+| AJA NTV2        | 16.2.0        |
+
+|                 | iGPU      | dGPU      |
+| --------------- | --------- | --------- |
+| GPU Drivers     | 35.2.1    | 530.30.02 |
+| CUDA            | 11.4.19   | 12.1.1    |
+| cuDNN           | 8.6.0.166 | 8.9.0.131 |
+| TensorRT        | 8.5.2.1   | 8.6.0.12  |
+| Nsight Systems  | 2022.5.2  | 2023.1.2  |
+| Emergent Camera | 2.37.05   | N/A       |
+
+
 ## [0.5.1] - 2023-04-25
 ### Added
 - Secure Boot documentation section
@@ -169,6 +240,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[0.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.3.0...v0.4.0
