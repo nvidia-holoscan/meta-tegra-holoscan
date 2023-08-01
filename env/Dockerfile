@@ -30,6 +30,7 @@ RUN apt-get update -y \
     gawk \
     wget \
     git-core \
+    git-lfs \
     diffstat \
     unzip \
     texinfo \
@@ -41,6 +42,8 @@ RUN apt-get update -y \
     python \
     python3 \
     python3-pip \
+    python3-typing-extensions \
+    python3-yaml \
     python-pexpect \
     xz-utils \
     debianutils \
