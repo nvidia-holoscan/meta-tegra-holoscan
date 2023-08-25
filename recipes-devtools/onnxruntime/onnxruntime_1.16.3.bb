@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${B}/LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
 
 SRC_URI = "https://github.com/microsoft/onnxruntime/releases/download/v${PV}/onnxruntime-linux-${TARGET_ARCH}-${PV}.tgz"
-SRC_URI[sha256sum] = "638e2ec3122a8deac4808670be51e607c5aaacbb662d54ede77bffa0a239d300"
+SRC_URI[sha256sum] = "784dbef93b40196aa668d29d78294a81c0d21361d36530b817bb24d87e8730e8"
 
 B = "${WORKDIR}/onnxruntime-linux-${TARGET_ARCH}-${PV}"
 
