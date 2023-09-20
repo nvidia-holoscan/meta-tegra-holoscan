@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,8 +18,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-MLNX_OFED_VER = "5.9"
-MLNX_OFED_PATCH_VER = "0.5.6.0"
+MLNX_OFED_VER = "23.10"
+MLNX_OFED_PATCH_VER = "1.1.9.0"
 
 DEB_FILES ?= "${PN}_${PV}_arm64.deb"
 
@@ -35,8 +35,8 @@ do_unpack() {
     mkdir ${S}
     cd ${S}
     for deb in ${DEB_FILES}; do
-        ar x ${TMPDIR}/work-shared/mlnx-ofed-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}/MLNX_OFED_LINUX-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}-ubuntu20.04-aarch64/DEBS/${deb}
-        tar xf data.tar.xz
-        rm -f control.tar.* data.tar.xz debian-binary
+        ar x ${TMPDIR}/work-shared/mlnx-ofed-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}/MLNX_OFED_LINUX-${MLNX_OFED_VER}-${MLNX_OFED_PATCH_VER}-ubuntu22.04-aarch64/DEBS/${deb}
+        tar xf data.tar.*
+        rm -f control.tar.* data.tar.* debian-binary
     done
 }

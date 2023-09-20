@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,19 +18,15 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Mellanox mft"
+SUMMARY = "NVIDIA MLNX_OFED Package Download"
 LICENSE = "CLOSED"
 
-require mlnx-ofed-package.inc
+SRC_URI = "https://www.mellanox.com/downloads/ofed/MLNX_OFED-${PV}/MLNX_OFED_LINUX-${PV}-ubuntu22.04-${TARGET_ARCH}.tgz"
+SRC_URI[sha256sum] = "a95daa85de5d9a9ca2b8f0000fdfb15a5f664713b5c54474d2c22c62af804476"
 
-do_install:append() {
-    install -d ${D}${sysconfdir}
-    cp -rd --no-preserve=ownership ${S}/usr/* ${D}${prefix}
-}
+WORKDIR = "${TMPDIR}/work-shared/mlnx-ofed-${PV}"
 
-RDEPENDS:${PN} += " \
-    bash \
-    python3 \
-"
-
-INSANE_SKIP:${PN} += "ldflags"
+# Disable unused tasks for this download recipe.
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_install[noexec] = "1"

@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,11 +22,12 @@ SUMMARY = "Mellanox ofed-kernel-dkms"
 LICENSE = "CLOSED"
 
 DEB_FILES = "mlnx-ofed-kernel-dkms_${PV}_all.deb"
+BASE_VER = "${@d.getVar('PV').split('-')[0]}"
 
 require mlnx-ofed-common.inc
 
 SRC_URI += " \
-    file://fix-kernel-build.patch \
+    file://0001-Fix-kernel-build.patch \
 "
 
 inherit autotools module
@@ -47,7 +48,7 @@ MLNX_MODULE_CONFIG = " \
 "
 
 do_configure() {
-    cp -rf ${S}/usr/src/mlnx-ofed-kernel-${MLNX_OFED_VER}/* ${B}
+    cp -rf ${S}/usr/src/mlnx-ofed-kernel-${BASE_VER}/* ${B}
 
     ./configure ${PARALLEL_MAKE} \
         --force-autogen \
@@ -62,16 +63,16 @@ do_configure() {
 MODULES_INSTALL_TARGET = "install_modules"
 
 do_install:prepend() {
-    install -d ${D}/usr/src/mlnx-ofed-kernel-dkms
-    cp -rd --no-preserve=ownership ${S}/usr/src/mlnx-ofed-kernel-${MLNX_OFED_VER}/* ${D}/usr/src/mlnx-ofed-kernel-dkms
-    export INSTALL_MOD_PATH=${D}
+    install -d ${D}${prefix}/src/mlnx-ofed-kernel-dkms
+    cp -rd --no-preserve=ownership ${S}/usr/src/mlnx-ofed-kernel-${BASE_VER}/* ${D}${prefix}/src/mlnx-ofed-kernel-dkms
+    export INSTALL_MOD_PATH=${D}${prefix}
 }
 
 FILES:${PN}-dev += " \
-    /usr/src/mlnx-ofed-kernel-dkms \
+    ${prefix}/src/mlnx-ofed-kernel-dkms \
 "
 
 SYSROOT_DIRS = " \
-    /usr/src/mlnx-ofed-kernel-dkms \
-    /usr/include/mlnx-ofed-kernel-dkms \
+    ${prefix}/src/mlnx-ofed-kernel-dkms \
+    ${includedir}/mlnx-ofed-kernel-dkms \
 "

@@ -1,26 +1,26 @@
-From 551753f6a8f7ce4a8e0e5b562f08c7102ca9ebfb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 20 Jul 2023 12:56:54 -0600
+Date: Wed, 10 Jan 2024 15:19:56 -0700
 Subject: Fix OE build
 
 
-diff --git a/usr/src/kernel-mft-dkms-4.23.0/Makefile b/usr/src/kernel-mft-dkms-4.23.0/Makefile
-index e10cf42..3789a71 100644
---- a/usr/src/kernel-mft-dkms-4.23.0/Makefile
-+++ b/usr/src/kernel-mft-dkms-4.23.0/Makefile
-@@ -15,3 +15,8 @@ clean:
- ifneq ($(findstring ppc64, $(CPU_ARCH)),)
- 	$(MAKE) clean -C mst_backward_compatibility/mst_ppc
+diff --git a/usr/src/kernel-mft-dkms-4.26.1.3/Makefile b/usr/src/kernel-mft-dkms-4.26.1.3/Makefile
+index d7e0480..f3062cc 100644
+--- a/usr/src/kernel-mft-dkms-4.26.1.3/Makefile
++++ b/usr/src/kernel-mft-dkms-4.26.1.3/Makefile
+@@ -23,3 +23,8 @@ endif
+ ifneq ($(findstring aarch64, $(CPU_ARCH)),)
+ 	$(MAKE) clean -C misc_drivers/bf3_livefish
  endif
 +
 +modules_install:
 +	cd mst_backward_compatibility/mst_pci && $(MAKE) modules_install
 +	cd mst_backward_compatibility/mst_pciconf && $(MAKE) modules_install
 +	touch Module.symvers
-diff --git a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
+diff --git a/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pci/Makefile b/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pci/Makefile
 index 0721343..ea61857 100644
---- a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
-+++ b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pci/Makefile
+--- a/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pci/Makefile
++++ b/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pci/Makefile
 @@ -1,5 +1,4 @@
  KPVER ?= $(shell uname -r)
 -KSRC ?= /lib/modules/$(KPVER)/build
@@ -40,10 +40,10 @@ index 0721343..ea61857 100644
 +
 +modules_install:
 +	make -C $(KERNEL_SRC) M=$(PWD) modules_install
-diff --git a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
+diff --git a/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pciconf/Makefile b/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pciconf/Makefile
 index 646a869..8a1bfc3 100644
---- a/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
-+++ b/usr/src/kernel-mft-dkms-4.23.0/mst_backward_compatibility/mst_pciconf/Makefile
+--- a/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pciconf/Makefile
++++ b/usr/src/kernel-mft-dkms-4.26.1.3/mst_backward_compatibility/mst_pciconf/Makefile
 @@ -1,5 +1,4 @@
  KPVER ?= $(shell uname -r)
 -KSRC ?= /lib/modules/$(KPVER)/build

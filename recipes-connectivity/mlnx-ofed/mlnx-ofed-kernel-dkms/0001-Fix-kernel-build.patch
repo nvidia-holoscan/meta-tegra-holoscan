@@ -1,7 +1,14 @@
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4 new/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4
---- old/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4	2023-05-03 12:46:18.803685494 -0600
-+++ new/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4	2023-05-03 12:55:12.805389651 -0600
-@@ -337,7 +337,7 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 10 Jan 2024 15:10:22 -0700
+Subject: Fix kernel build
+
+
+diff --git a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/build-linux.m4 b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/build-linux.m4
+index 9d1b55c..23ee3ee 100644
+--- a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/build-linux.m4
++++ b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/build-linux.m4
+@@ -341,7 +341,7 @@ AC_DEFUN([LB_LINUX_COMPILE_IFELSE],
  [m4_ifvaln([$1], [AC_LANG_CONFTEST([$1])])dnl
  MAKE=${MAKE:-make}
  rm -f build/conftest.o build/conftest.mod.c build/conftest.ko build/output.log
@@ -10,10 +17,11 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/build-linux.m4 new/usr
  	[$4],
  	[_AC_MSG_LOG_CONFTEST
  m4_ifvaln([$5],[$5])dnl])
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4 new/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4
---- old/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4	2023-05-03 12:46:18.803685494 -0600
-+++ new/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4	2023-05-03 12:55:30.861579637 -0600
-@@ -101,7 +101,7 @@
+diff --git a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/parallel-build.m4 b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/parallel-build.m4
+index 396140d..06bebc8 100644
+--- a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/parallel-build.m4
++++ b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/compat/config/parallel-build.m4
+@@ -101,7 +101,7 @@ MAKE=${MAKE:-make}
  tmpbuild=$(/bin/mktemp -d $PWD/build/build_XXXXX)
  /bin/cp build/Makefile $tmpbuild/
  m4_ifvaln([$1], [MLNX_AC_LANG_CONFTEST([$1])])dnl
@@ -22,38 +30,32 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/compat/config/parallel-build.m4 new/
  	[$4],
  	[_MLNX_AC_MSG_LOG_CONFTEST
  m4_ifvaln([$5],[$5])dnl])
-diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure new/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure
---- old/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure	2023-05-03 12:52:22.471590245 -0600
-+++ new/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure	2023-05-03 12:53:14.952146133 -0600
-@@ -784,7 +784,7 @@
+diff --git a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/ofed_scripts/configure b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/ofed_scripts/configure
+index 1fec5c7..82034a0 100755
+--- a/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/ofed_scripts/configure
++++ b/usr/src/mlnx-ofed-kernel-23.10.OFED.23.10.1.1.9.1/ofed_scripts/configure
+@@ -1027,7 +1027,10 @@ main()
          # Parsing parameters
          while [ ! -z "$1" ]
          do
 -                case $1 in
 +                case "$1" in
-                         -prefix | --prefix | --prefi | --pref | --pre | --pr | --p | -p)
-                                 shift
-                                 prefix=$1
-@@ -804,6 +804,9 @@
-                                 ofed_patch_params="$ofed_patch_params $1"
-                                 KVERSION=`expr "x$1" : 'x[^=]*=\(.*\)'`
-                         ;;
 +                        --configureopts=*)
 +                                CONFIGUREOPTS=`expr "x$1" : 'x[^=]*=\(.*\)'`
 +                        ;;
- 
-                         -modules-dir | --modules-dir | --mod-dir)
+                         -prefix | --prefix | --prefi | --pref | --pre | --pr | --p | -p)
                                  shift
-@@ -2033,7 +2036,7 @@
+                                 prefix=$1
+@@ -2305,7 +2308,7 @@ EOFAUTOCONF
          /bin/cp -f Makefile.real Makefile
          /bin/cp -f Makefile.real Makefile.in
  
--        ex ./configure --with-linux-obj=$KSRC_OBJ --with-linux=$KSRC --with-njobs=$NJOBS
-+        ex ./configure $CONFIGUREOPTS --with-linux-obj=$KSRC_OBJ --with-linux=$KSRC --with-njobs=$NJOBS
- 
-         cd -
- 
-@@ -2041,7 +2044,7 @@
+-        ./configure --with-linux-obj=$KSRC_OBJ --with-linux=$KSRC --with-njobs=$NJOBS
++        ./configure $CONFIGUREOPTS --with-linux-obj=$KSRC_OBJ --with-linux=$KSRC --with-njobs=$NJOBS
+         rc=$?
+         if [ $rc -ne 0 ]; then
+             check_autoconf_log
+@@ -2318,7 +2321,7 @@ EOFAUTOCONF
      fi
  }
  
@@ -62,3 +64,6 @@ diff -Naur old/usr/src/mlnx-ofed-kernel-5.9/ofed_scripts/configure new/usr/src/m
  if [ "X$BUILD_DUMMY_MODS" == "X1" ]; then
      echo
      echo "Going to build dummy modules for ULPs and storage drivers..."
+-- 
+2.34.1
+
