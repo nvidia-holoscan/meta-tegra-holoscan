@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,18 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "1bb4a2e3f8e3891da986f0174a98134eadcffbad50fa12323269942670f73d24"
+SRC_URI[sha256sum] = "a50877636b649d1f6b04851abac562ca3e769039fd9350b19b0a7f988551f1e6"
 
-RDEPENDS:${PN} = " \
-    libglvnd \
-    libx11 \
-    libxext \
+do_install:append() {
+    install -d ${D}${libdir}
+    cp -rd --no-preserve=ownership ${S}/lib/* ${D}${libdir}
+}
+
+FILES:${PN} += " \
+    ${base_libdir} \
 "
+
+RDEPENDS:${PN} += "nvidia-open-gpu-kernel-modules"
+
+# The GPU firmware binaries do not match the arm64 expected by bitbake's arch check.
+INSANE_SKIP:${PN} += "arch"

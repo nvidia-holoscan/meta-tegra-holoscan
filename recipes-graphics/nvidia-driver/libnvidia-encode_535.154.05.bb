@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,7 +20,8 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "20eb5377a410e45829b09f4350b76bd771f20200d2c608a7c1bc35ccebb43a7c"
+SRC_URI[sha256sum] = "bff701c1dd93f085bb70d75877eb81421786b5c01dff60942cf72a51816981fe"
 
-RPROVIDES:${PN} += "tegra-libraries-cuda"
-RCONFLICTS:${PN} += "tegra-libraries-cuda"
+RDEPENDS:${PN} = " \
+    libnvidia-decode \
+"

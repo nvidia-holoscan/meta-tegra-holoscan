@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,4 +20,23 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "27d31dcd6b5d36a3a3204b5081f4634aae61f92c2dc9e3498fb2cf22da84a9bb"
+SRC_URI[sha256sum] = "752023e57d5490ed94323a0eae0c774496655561c09f949149c9793d4912042f"
+
+do_install:append() {
+    install -d ${D}${libdir}/xorg/modules/drivers
+    ln -s ${libdir}/nvidia/xorg/nvidia_drv.so ${D}${libdir}/xorg/modules/drivers/
+}
+
+RDEPENDS:${PN} += " \
+    libnvidia-gl \
+    xserver-xorg-module-libwfb \
+"
+
+# Add the ABI dependency at package generation time, as otherwise bitbake will
+# attempt to find a provider for it (and fail) when it does the parse.
+python populate_packages:prepend() {
+    d.appendVar("RDEPENDS:" + d.getVar("PN", True), " xorg-abi-video-25")
+}
+
+RPROVIDES:${PN} += "xserver-xorg-extension-glx"
+RCONFLICTS:${PN} = "xserver-xorg-extension-glx"

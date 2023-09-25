@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
 require nvidia-driver-common.inc
 
 SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
-SRC_URI[sha256sum] = "73b290f3f523ce40fa27eec7be11bf979d71db88c23625bd8831a285856fa417"
+SRC_URI[sha256sum] = "b8006bd52a60f051fa9b834601dd2593f8ccc6b7d855449f72289296e771e503"
 
 RDEPENDS:${PN} = " \
     libx11 \

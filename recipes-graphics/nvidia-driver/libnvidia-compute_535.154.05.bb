@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,30 +20,7 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "276da764dbcbcda87e20335a7b69d72947b96aac50cd8911189527a015e242be"
+SRC_URI[sha256sum] = "397ae044e6d957c4e62a43b58c77111b01a8a7c8379a78414afa972482935262"
 
-do_install:append() {
-    install -d ${D}${libdir}/xorg/modules/extensions
-    ln -s ${libdir}/nvidia/xorg/libglxserver_nvidia.so ${D}${libdir}/xorg/modules/extensions/
-}
-
-RDEPENDS:${PN} = " \
-    libnvidia-common \
-    libdrm \
-    libgbm \
-    libglvnd \
-    libx11 \
-    libxcb-glx \
-    libxext \
-"
-
-TEGRA_LIBRARIES = " \
-    egl-gbm \
-    tegra-libraries-eglcore \
-    tegra-libraries-glescore \
-    tegra-libraries-glxcore \
-    tegra-libraries-vulkan \
-"
-
-RPROVIDES:${PN} += "${TEGRA_LIBRARIES}"
-RCONFLICTS:${PN} += "${TEGRA_LIBRARIES}"
+RPROVIDES:${PN} += "tegra-libraries-cuda"
+RCONFLICTS:${PN} += "tegra-libraries-cuda"

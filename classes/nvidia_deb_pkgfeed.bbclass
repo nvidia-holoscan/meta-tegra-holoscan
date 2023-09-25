@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -27,5 +27,5 @@ def nvidia_package_arch(d):
     return 'sbsa' if arch == 'aarch64' else arch
 
 # Override the meta-tegra L4T deb package feed.
-L4T_DEB_FEED_BASE = "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/${@nvidia_package_arch(d)}"
+L4T_DEB_FEED_BASE = "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/${@nvidia_package_arch(d)}"
 L4T_DEB_FEED_SKIP_POOL_APPEND = "1"

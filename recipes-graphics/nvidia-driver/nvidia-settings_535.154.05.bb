@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,20 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "d7f53166b2661047107d249e7f8f9e3d93873bfc7eba8cf110af5763dbe2335b"
+SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
+SRC_URI[sha256sum] = "74a57c029ab371b3d68a322f5589dda3c6686cc1511f5083b53e74f6fa4e7045"
 
-RDEPENDS:${PN} = " \
-    libnvidia-compute \
+RDEPENDS:${PN} += " \
+    cairo \
+    gdk-pixbuf \
+    glib-2.0 \
+    gtk+ \
+    gtk+3 \
+    jansson \
+    libvdpau \
     libx11 \
-    libxext \
+    libxnvctrl0 \
+    libxxf86vm \
+    pango \
+    pkgconfig \
 "

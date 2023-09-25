@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,4 +20,30 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "d15ee816fc9e2e1da813d602697bd97d226b72a069c0d922435a12e3db6a5980"
+SRC_URI[sha256sum] = "cad6b57e8a5ff872b562555fcbc6ab35aed450177b22399709f0bd4eff9e05ea"
+
+do_install:append() {
+    install -d ${D}${libdir}/xorg/modules/extensions
+    ln -s ${libdir}/nvidia/xorg/libglxserver_nvidia.so ${D}${libdir}/xorg/modules/extensions/
+}
+
+RDEPENDS:${PN} = " \
+    libnvidia-common \
+    libdrm \
+    libgbm \
+    libglvnd \
+    libx11 \
+    libxcb-glx \
+    libxext \
+"
+
+TEGRA_LIBRARIES = " \
+    egl-gbm \
+    tegra-libraries-eglcore \
+    tegra-libraries-glescore \
+    tegra-libraries-glxcore \
+    tegra-libraries-vulkan \
+"
+
+RPROVIDES:${PN} += "${TEGRA_LIBRARIES}"
+RCONFLICTS:${PN} += "${TEGRA_LIBRARIES}"

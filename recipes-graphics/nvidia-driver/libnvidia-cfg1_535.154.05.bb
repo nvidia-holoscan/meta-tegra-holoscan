@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,8 +20,4 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "5954e8f61482a417d08c830025f958424809fb430728cbe7fc3daf72cb5f917e"
-
-RDEPENDS:${PN} = " \
-    libnvidia-decode \
-"
+SRC_URI[sha256sum] = "4fb922dfdf98351d090f043b0fc4d89db00a7877ac60c77af1fabb5ebad77975"
