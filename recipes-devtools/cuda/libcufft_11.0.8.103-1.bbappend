@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,18 +18,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require cuda-binaries-common.inc
+require cuda-sbsa.inc
 
-MAINSUM:aarch64 = "56499191fe74ac2c1aff271c17f9bdae33e0914da0ad038039dc5347eb5611f2"
-MAINSUM:x86-64 = "ef4d9f5daf647fdcdb4970b5a20c65b1b074bd5eb8332fea059dfd00ac78cbab"
+MAINSUM:dgpu:aarch64 = "f2e199a95a21287c3b6856f8c50098bc5fe83c60f08782cb071dd344c155a918"
+MAINSUM:dgpu:x86-64 = "bf8f1f6454db4a2737a24abc41af05c46e591c8bdcc8591238cdd8a61fcc36ba"
 
-DEVSUM:aarch64 = "6c8180bfd24beedf1ecc18c7865b1f0acbd02434b7c3530beb3688fbe7f90731"
-DEVSUM:x86-64 = "fcad647b3f79acc8ceeb2bf2ec0d0efe48fa21f46ff89a3b8dc2a36d40363d92"
-
-RDEPENDS:${PN} = " \
-    libcublas \
-    libcusparse \
-    libnvjitlink \
-"
-
-BBCLASSEXTEND = "native nativesdk"
+DEVSUM:dgpu:aarch64 = "f46b1892826336966dc6014c078e0ca58d165a77b8fe3ebb4cb733e5617fefac"
+DEVSUM:dgpu:x86-64 = "be54ad19bf4f90a4195170f063f5f997b747ca1054f7c62ddc9c30f4a973a31c"

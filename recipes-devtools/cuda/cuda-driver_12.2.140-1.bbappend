@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,17 +18,9 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}-dev"
+require cuda-sbsa.inc
 
-require cuda-binaries-common.inc
+DEPENDS:dgpu:class-target = "libnvidia-compute"
 
-DEPENDS:tegra = "libnvidia-compute"
-
-DEVSUM:aarch64 = "a754ccdb4ced4891072f30dae99797d2def5d76ac945edd8b33e4d91b5818c71"
-DEVSUM:x86-64 = "49a0807b1f37da920a9417b3fa16d5e281c306595412e40ba4af04195d1655f4"
-
-ALLOW_EMPTY:${PN} = "1"
-EXCLUDE_PACKAGES_FROM_SHLIBS = ""
-PRIVATE_LIBS = "libcuda.so.1"
-
-BBCLASSEXTEND = "native nativesdk"
+DEVSUM:dgpu:aarch64 = "30ef861e0c4653e0ab43d8cf63f0d7a19889403684714c148d9ee5b7799f0a7f"
+DEVSUM:dgpu:x86-64 = "e5e88840e652e764ad1bd4775ff61ba3d37caf3079be4b448c674ae797b37efc"

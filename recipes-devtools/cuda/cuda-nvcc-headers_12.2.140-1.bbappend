@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,22 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}"
+require cuda-sbsa.inc
 
-require cuda-binaries-common.inc
-
-MAINSUM:aarch64 = "bd8bc98cfc85e5d114034bd9e91b02ea90ceac001767042f0275a06f3c0709d8"
-MAINSUM:x86-64 = "170e93112857f858882858ee69ae7dfb5755aab74730210f74383be4cc9e189a"
-
-# header files are populated by cuda-nvcc-headers recipes
-do_install:append() {
-    rm -rf ${D}${prefix}/local/cuda-${CUDA_VERSION}/include
-}
-
-FILES:${PN} = "${prefix}/local/cuda-${CUDA_VERSION}"
-FILES:${PN}-dev = ""
-INSANE_SKIP:${PN} += "dev-so"
-RDEPENDS:${PN} = "${BPN}-headers"
-RDEPENDS:${PN}:append:class-nativesdk = " nativesdk-cuda-environment"
-
-BBCLASSEXTEND = "native nativesdk"
+MAINSUM:dgpu:aarch64 = "07bce960b95d15ae0e5a7ed89732b84fb4990943810221a91e890f09881ac19d"
+MAINSUM:dgpu:x86-64 = "3769ab2315423b8430b9dc56ef86d342d7fa79aadcfa8ef8ebe2cec5d644b79a"

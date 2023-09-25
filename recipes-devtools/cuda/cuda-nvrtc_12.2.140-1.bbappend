@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,22 +18,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-CUDA_PKG = "${BPN}"
+require cuda-sbsa.inc
 
-require cuda-binaries-common.inc
+MAINSUM:dgpu:aarch64 = "93b077928c0e24afaa0911969a3c42d26c2b88ac7b87b788cb9049e58645aa51"
+MAINSUM:dgpu:x86-64 = "6a162a2a529679a2b433bd48b6d39e772d1768276c1befc63214e3aa9cea0af2"
 
-MAINSUM:aarch64 = "78b8daf4f100e65fd0e91fe8c06579e79c1bb65197796aa62abd0847b629c6f4"
-MAINSUM:x86-64 = "1f41c87e17bf9b3092d4dfe0b5f590780494b6ee4060715a4fedffeb9c37e433"
-
-DEPENDS = "ncurses expat"
-
-do_compile:append() {
-    sed -i -r -e 's,^(\s*)print (.*)$,\1print(\2),' ${B}/usr/local/cuda-${CUDA_VERSION}/share/gdb/system-gdbinit/*.py
-}
-
-FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/share/gdb"
-RDEPENDS:${PN} += "gmp"
-RDEPENDS:${PN}-dev += "python3"
-INSANE_SKIP:${PN}-dev += "staticdev"
-
-BBCLASSEXTEND = "native nativesdk"
+DEVSUM:dgpu:aarch64 = "4c62dacbb8644f86c1f09a90e0755b57ce8978e572106999924d22c30a6eee1a"
+DEVSUM:dgpu:x86-64 = "f040564f2167b2ca9645a900a48bba465c824541a511028bc966f47af11a5ff9"

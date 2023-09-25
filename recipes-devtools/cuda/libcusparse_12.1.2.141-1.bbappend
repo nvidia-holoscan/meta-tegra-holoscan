@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,12 +18,10 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require cuda-binaries-common.inc
+require cuda-sbsa.inc
 
-MAINSUM:aarch64 = "2ef931bc0b2a66203421b4c2f2d6c57cf8292333ceedf7de4420f44ec8775c4f"
-MAINSUM:x86-64 = "90ebf9e63e03c8374f293d212f14a9b6b22c1a1b8236560dde9bba778cf985f2"
+MAINSUM:dgpu:aarch64 = "6ed5d09f8747a654ce678861880d4fe18dd8810b86c2e435e7c6fae003a6fa0f"
+MAINSUM:dgpu:x86-64 = "606f900742cf9a50c478571ee05609598dca9dbd62c519a288313073894d57cd"
 
-DEVSUM:aarch64 = "8b9a8fc22aa31cabec49dcca72648ebfbb3c9844ab23913fe9544e1645cc9de5"
-DEVSUM:x86-64 = "e8796103763dac8c04cab845c91b68186147ea3afe6c270badfd7d04c84fc7f2"
-
-BBCLASSEXTEND = "native nativesdk"
+DEVSUM:dgpu:aarch64 = "1bfc40c96f534032bbecb35cedb7943d012b4fc689c07f33294c7876d041def1"
+DEVSUM:dgpu:x86-64 = "bbf21a003d279676ade234a0a6e93cc2b0a90370c45aa74fc038bfb4c8961f94"

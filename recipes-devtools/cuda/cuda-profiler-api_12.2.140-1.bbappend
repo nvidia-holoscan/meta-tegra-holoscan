@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,17 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require cuda-binaries-common.inc
+require cuda-sbsa.inc
 
-MAINSUM:aarch64 = "5c50ee0006922049d7868634bfecd10760cb8f06d521a2f9fb55e2bedf03fcb0"
-MAINSUM:x86-64 = "7ff5c2ba3d14383240487664eb3aabcea17ab577dc61a55f4b1316a80d72293e"
-
-DEVSUM:aarch64 = "d1d862ac2f6de88a17b29ebc13fd7d8da9b1a521893ba5d4266ed766ee8bac0c"
-DEVSUM:x86-64 = "c724205243ea00a9c6fb6282476b3a30fd5ea1a32af91d1618ba563d350386cd"
-
-FILES:${PN}-dev:remove = "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/*${SOLIBSDEV}"
-FILES:${PN} += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc-builtins.so"
-FILES:${PN}-dev += "${prefix}/local/cuda-${CUDA_VERSION}/${baselib}/libnvrtc.so"
-INSANE_SKIP:${PN} += "dev-so"
-
-BBCLASSEXTEND = "native nativesdk"
+MAINSUM:dgpu:aarch64 = "22c0aa1b8fa8a02293721cbb4baa2b14ce49c132b36b8df03e2a03a26572e670"
+MAINSUM:dgpu:x86-64 = "a4ef3ffa8927e66d6a3f1fe04ccd4ef4953e7789611daee8673b8d0a6834280f"

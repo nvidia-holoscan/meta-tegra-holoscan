@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,4 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require recipes-devtools/cuda/cuda-toolkit_11.4.19-1.bb
+require cuda-sbsa.inc
+
+MAINSUM:dgpu:aarch64 = "c2a1c4e15d94c23e7971d16c7b850f55619de51fde959137892ca36af11cd33d"
+MAINSUM:dgpu:x86-64 = "23afa3c12d87dcc7423b0ad0489d0f2df68d95a021b27c6ab3ee431ec50cd2b7"

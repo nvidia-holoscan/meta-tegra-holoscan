@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,6 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require recipes-devtools/cuda/cuda-libraries_11.4.14-1.bb
+require cuda-sbsa.inc
 
-CUDA_COMPONENTS:remove = "libcudla"
+MAINSUM:dgpu:aarch64 = "07bce960b95d15ae0e5a7ed89732b84fb4990943810221a91e890f09881ac19d"
+MAINSUM:dgpu:x86-64 = "3769ab2315423b8430b9dc56ef86d342d7fa79aadcfa8ef8ebe2cec5d644b79a"
