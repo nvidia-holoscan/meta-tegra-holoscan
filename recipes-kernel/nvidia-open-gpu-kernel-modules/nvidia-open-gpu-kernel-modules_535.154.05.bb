@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,12 +22,11 @@ SUMMARY = "NVIDIA Linux Open GPU Kernel Modules"
 LICENSE = "MIT | GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1d5fa2a493e937d5a4b96e5e03b90f7c"
 
-SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=main;protocol=https"
-SRCREV = "4397463e738d2d90aa1164cc5948e723701f7b53"
+SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=${@d.getVar('PV').split('.')[0]};protocol=https"
+SRCREV = "ee55481a49edc10d823ce5aabc75422b9b487b78"
 
 SRC_URI:append = " \
     file://0001-Enable-MOFED-peer-memory-symbols.patch \
-    file://nvidia.conf \
 "
 
 inherit module
@@ -52,14 +51,12 @@ python __anonymous() {
     d.setVar('KBUILD_EXTRA_SYMBOLS', "${STAGING_INCDIR}/mlnx-ofed-kernel-dkms/Module.symvers")
 }
 
-# Disable the yocto-enabled stack protection, which leads to this error when enabled:
-#    ERROR: modpost: "__stack_chk_guard" [nvidia-modeset.ko] undefined!
-SECURITY_STACK_PROTECTOR = ""
-
 do_install:append() {
-    install -m 0644 -D ${WORKDIR}/nvidia.conf ${D}${sysconfdir}/modprobe.d/nvidia.conf
     install -m 0644 -D ${S}/kernel-open/nvidia/nv-p2p.h ${D}${includedir}/nvidia/nv-p2p.h
 }
+
+KERNEL_MODULE_PROBECONF = "nvidia"
+module_conf_nvidia = "options nvidia NVreg_OpenRmEnableUnsupportedGpus=1 NVreg_DmaRemapPeerMmio=0"
 
 RPROVIDES:${PN} += " \
     kernel-module-nvidia \
@@ -67,8 +64,4 @@ RPROVIDES:${PN} += " \
     kernel-module-nvidia-modeset \
     kernel-module-nvidia-peermem \
     kernel-module-nvidia-uvm \
-"
-
-RCONFLICTS:${PN} += " \
-    nvidia-display-driver \
 "
