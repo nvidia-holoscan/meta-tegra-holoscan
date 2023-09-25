@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,15 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-inherit nvidia_deb_pkgfeed
+L4T_DEB_FEED_BASE:dgpu = "https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/sbsa"
+L4T_DEB_FEED_SKIP_POOL_APPEND:dgpu = "1"
 
-# This recipe builds on top of the meta-tegra version.
-require recipes-devtools/cudnn/cudnn_8.6.0.166-1.bb
-
-SRC_COMMON_DEBS = "\
-    libcudnn8_${PV}+cuda${CUDA_VERSION}_arm64.deb;name=lib;subdir=cudnn \
-    libcudnn8-dev_${PV}+cuda${CUDA_VERSION}_arm64.deb;name=dev;subdir=cudnn \
+# We patch the download name of SBSA packages to append 'sbsa' so that the iGPU and
+# dGPU downloads do not conflict if the tree is ever used to build both configurations.
+SRC_COMMON_DEBS:dgpu = "\
+    libcudnn8_${PV}+cuda12.2_arm64.deb;subdir=cudnn;downloadfilename=libcudnn8_${PV}+cuda12.2_arm64_sbsa.deb;sha256sum=0de94609f6936e44b3ece98626ad4d4590376e163d0cbc12d721ba4f7ac566a4 \
+    libcudnn8-dev_${PV}+cuda12.2_arm64.deb;subdir=cudnn;downloadfilename=libcudnn8-dev_${PV}+cuda12.2_arm64_sbsa.deb;sha256sum=5c3dca83efe325cad7cc74f3a11e48c6111f779e4e1098adc6e1b7a548956033 \
 "
-
-SRC_URI[lib.sha256sum] = "4583c7730d53de98278c55e3beb329dc4df57ad3b4213df9a7330777e3516d06"
-SRC_URI[dev.sha256sum] = "cacb8a3179eaf142e584da1638f4717480cda6f76885f416828d34c14bb5260a"
