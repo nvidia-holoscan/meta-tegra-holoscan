@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
 inherit nvidia_deb_pkgfeed
 
 # This recipe builds on top of the meta-tegra version.
-require recipes-devtools/gie/tensorrt-plugins-prebuilt_8.5.2-1.bb
+require recipes-devtools/gie/tensorrt-plugins-prebuilt_8.6.2.3-1.bb
 
 LIC_FILES_CHKSUM = "file://usr/include/aarch64-linux-gnu/NvInferPlugin.h;endline=11;md5=117f6d17a39656035fa9d36b73ca4916"
 
@@ -33,8 +33,24 @@ SRC_COMMON_DEBS = "\
     libnvinfer-headers-plugin-dev_${PV}+cuda12.0_arm64.deb;downloadfilename=libnvinfer-headers-plugin-dev_${PV}+cuda12.0_arm64.deb;name=headerplugindev;subdir=tensorrt \
 "
 
-SRC_URI[onnx.sha256sum] = "d2b33e02cbb8f5111f07d0373788a52fa0eb3dc8817d852c97bad37b53f849fe"
-SRC_URI[onnxdev.sha256sum] = "8b86703fff083d9e95a094dee47e48f55d68be058f5b7e4a416bdf1238ff3a0b"
-SRC_URI[plugin.sha256sum] = "663199fb9b55a728f23ba765272b095700c3947cf81e02819b7a9aa56a5c5830"
-SRC_URI[plugindev.sha256sum] = "558fbe8b30194fd4f34d04c2571ee3916a4da5d5b056a5c0796e4245c3246792"
-SRC_URI[headerplugindev.sha256sum] = "f344a691dc2c33988dd3979d6882272b28426b3a9055542da56a900d81d89b2c"
+SRC_URI[onnx.sha256sum] = "1355700bd25a674d2cb3dcc1cc0a2526673ab586a5a74039e63fb859a3e1a668"
+SRC_URI[onnxdev.sha256sum] = "3264d812248a7902c85cb761abb6119bd2a0a039bfadf537179e254c5fb386dd"
+SRC_URI[plugin.sha256sum] = "0639786d0db2cec39d2e581d2153fa62fa84e4656b68ea54a91726305f8fe646"
+SRC_URI[plugindev.sha256sum] = "e9ee1ce87566b585af733a65423483ce0ca7191104c31896a573cd1aca9638f3"
+SRC_URI[headerplugindev.sha256sum] = "1caee24d23b7cd9b34e13e6c472a44f01c868f242480b401b9362d68c9668243"
+
+do_install() {
+    install -d ${D}${includedir}
+    install -m 0644 ${S}/usr/include/aarch64-linux-gnu/*.h ${D}${includedir}
+    install -d ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/libnvinfer_plugin.so.${BASEVER} ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/libnvonnxparser.so.${BASEVER} ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/libnvinfer_plugin_static.a ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/libnvonnxparser_static.a ${D}${libdir}
+    install -m 0644 ${S}/usr/lib/aarch64-linux-gnu/libonnx_proto.a ${D}${libdir}
+
+    ln -s libnvinfer_plugin.so.${BASEVER} ${D}${libdir}/libnvinfer_plugin.so.${MAJVER}
+    ln -s libnvinfer_plugin.so.${BASEVER} ${D}${libdir}/libnvinfer_plugin.so
+    ln -s libnvonnxparser.so.${BASEVER} ${D}${libdir}/libnvonnxparser.so.${MAJVER}
+    ln -s libnvonnxparser.so.${MAJVER} ${D}${libdir}/libnvonnxparser.so
+}

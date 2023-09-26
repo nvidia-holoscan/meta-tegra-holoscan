@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
 inherit nvidia_deb_pkgfeed
 
 # This recipe builds on top of the meta-tegra version.
-require recipes-devtools/gie/tensorrt-samples_8.5.2-1.bb
+require recipes-devtools/gie/tensorrt-samples_8.6.2.3-1.bb
 
 LIC_FILES_CHKSUM = "file://../../../share/doc/libnvinfer-samples/copyright;md5=32ccc6a9bbc79616807b9bc252844b2f"
 
@@ -29,4 +29,4 @@ SRC_COMMON_DEBS = "\
     libnvinfer-samples_${PV}+cuda12.0_all.deb;downloadfilename=libnvinfer-samples_${PV}+cuda12.0_all.deb;name=samples;subdir=tensorrt \
 "
 
-SRC_URI[samples.sha256sum] = "56f94de23df037e5cbc4f0eae8ccd6780e1ba31a71feade880747f58fb4936ca"
+SRC_URI[samples.sha256sum] = "23bc16a5cb11be647b21ad44fd2a4b6f51eb4b117c7ab79335a9921ec9571ad6"
