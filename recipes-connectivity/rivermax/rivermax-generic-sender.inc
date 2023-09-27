@@ -64,4 +64,5 @@ FILES:rivermax-generic-sender = " \
 
 DEPENDS += " \
     cuda-nvml \
+    librdmacm1 \
 "

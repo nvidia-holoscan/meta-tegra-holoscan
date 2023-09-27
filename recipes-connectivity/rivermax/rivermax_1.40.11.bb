@@ -21,13 +21,13 @@
 SUMMARY = "NVIDIA Rivermax"
 LICENSE = "CLOSED"
 
-SRC_URI = "file://rivermax_ubuntu2004_${PV}.tar.gz"
+SRC_URI = "file://rivermax_ubuntu2204_${PV}.tar.gz"
 
 extract_deb() {
     cd ${S}
-    ar -x ${WORKDIR}/${PV}/Ubuntu.20.04/deb-dist/aarch64/rivermax_15.1.14.10_arm64.deb
-    tar xf data.tar.xz
-    rm -rf control.tar.xz data.tar.xz debian debian-binary
+    ar -x ${WORKDIR}/${PV}/Ubuntu.22.04/deb-dist/aarch64/rivermax_${PV}_arm64.deb
+    tar xf data.tar.zst
+    rm -rf control.tar.zst data.tar.zstxz debian-binary
 }
 
 do_unpack[depends] += "xz-native:do_populate_sysroot"

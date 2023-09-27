@@ -1,0 +1,60 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 27 Sep 2023 12:36:49 -0600
+Subject: Fix generic_receiver build
+
+
+diff --git a/generic_receiver/generic_receiver.cpp b/generic_receiver/generic_receiver.cpp
+index d2fee58..6e060ea 100644
+--- a/generic_receiver/generic_receiver.cpp
++++ b/generic_receiver/generic_receiver.cpp
+@@ -74,28 +74,20 @@ int main(int argc, char *argv[])
+     // Print the library and app version.
+     const char *rmax_version = rmax_get_version_string();
+     static std::string app_version =
+-        std::to_string(RMAX_API_MAJOR) + std::string(".") +
+-        std::to_string(RMAX_API_MINOR) + std::string(".") +
+-        std::to_string(RMAX_RELEASE_VERSION) + std::string(".") +
+-        std::to_string(RMAX_BUILD);
++        std::to_string(RMX_VERSION_MAJOR) + std::string(".") +
++        std::to_string(RMX_VERSION_MINOR) + std::string(".") +
++        std::to_string(RMX_VERSION_PATCH);
+     std::cout << "#########################################\n";
+     std::cout << "## Rivermax library version:    " << rmax_version << "\n";
+     std::cout << "## Application version:         " << app_version << "\n";
+     std::cout << "#########################################\n";
+ 
+     // Verify Rivermax library version matches (or is compatible) with this application.
+-    unsigned int api_major;
+-    unsigned int api_minor;
+-    unsigned int release;
+-    unsigned int build;
+-    rmax_get_version(&api_major, &api_minor, &release, &build);
+-    if (api_major != RMAX_API_MAJOR || api_minor < RMAX_API_MINOR) {
++    const rmx_version *rmx_ver = rmx_get_version_numbers();
++    if (rmx_ver->major != RMX_VERSION_MAJOR || rmx_ver->minor < RMX_VERSION_MINOR) {
+         std::cerr << "The current Rivermax version is not compatible with this application." << std::endl;
+         exit(-1);
+     }
+-    if (api_minor > RMAX_API_MINOR || release != RMAX_RELEASE_VERSION || build != RMAX_BUILD) {
+-        std::cout << "WARNING!!! Rivermax and application versions are not aligned" << std::endl;
+-    }
+ 
+     // Initializes signals caught by the application
+     initialize_signals();
+diff --git a/util/defs.h b/util/defs.h
+index 7c28891..42f9c90 100644
+--- a/util/defs.h
++++ b/util/defs.h
+@@ -18,6 +18,8 @@
+ #ifndef TESTS_UTIL_DEFS_H_
+ #define TESTS_UTIL_DEFS_H_
+ 
++#include <cstdint>
++
+ #define NOT_IN_USE(a) ((void)(a))
+ 
+ #define SLEEP_THRESHOLD_MS (2)
+-- 
+2.34.1
+

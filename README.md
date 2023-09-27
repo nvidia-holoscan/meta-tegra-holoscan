@@ -121,10 +121,10 @@ into and then run `git checkout {commit id}`.
 
     The current list of manually downloaded packages is as follows:
 
-    * #### Rivermax SDK (1.21.10)
+    * #### Rivermax SDK (1.40.11)
 
-      Download: https://developer.nvidia.com/downloads/remma-linu-sdkinstallation-packageversion-121121rivermaubuntu200412110targz  
-      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz`
+      Download: https://developer.nvidia.com/downloads/networking/secure/rivermax-linux-sdk/installation-package/version-1.40.x/rivermax_ubuntu2204_1.40.11.tar.gz
+      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2204_1.40.11.tar.gz`
 
 #### iGPU and dGPU Configurations
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -25,7 +25,7 @@
 # exist in the current build context.
 #
 
-RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2004_1.21.10.tar.gz"
+RIVERMAX_PACKAGE="recipes-connectivity/rivermax/files/rivermax_ubuntu2204_1.40.11.tar.gz"
 
 script_path=$(readlink -f ${0})
 env_path=$(dirname ${script_path})

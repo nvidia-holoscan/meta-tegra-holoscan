@@ -24,7 +24,11 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/../License.md;md5=b5b0ba1bc19282f7e114407166a20719"
 
 SRC_URI = "git://github.com/NVIDIA/Rivermax.git;branch=master;protocol=https"
-SRCREV = "eafc9affb751eec082f5257768ca04e2995bfcfa"
+SRCREV = "ac7cf67886eeda19f48fb845ef0f437d38482c3f"
+
+SRC_URI += " \
+    file://0001-Fix-generic_receiver-build.patch;patchdir=${WORKDIR}/git \
+"
 
 S = "${WORKDIR}/git/generic_receiver"
 
@@ -41,6 +45,7 @@ do_install() {
 }
 
 DEPENDS = " \
+    libvma \
     rivermax \
 "
 
