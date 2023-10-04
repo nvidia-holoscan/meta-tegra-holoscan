@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,16 +18,27 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-EMERGENT_CAMERA = "1"
+SUMMARY = "NVIDIA GPUDirect Peer Mem Module"
+LICENSE = "GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://README.md;md5=5a4d62b0f44a21b1e51ad898279d152e"
 
-CORE_IMAGE_EXTRA_INSTALL:append = " \
-    emergent-camera \
+SRC_URI = "git://github.com/Mellanox/nv_peer_memory.git;branch=master;protocol=https"
+SRCREV = "a15f0f666f40efa33b2719f80fe3d968586d2d4d"
+
+SRC_URI += "file://0001-Makefile-changes-for-MGX-build.patch"
+
+inherit module
+
+S = "${WORKDIR}/git"
+
+DEPENDS:append = " \
+    mlnx-ofed-kernel-dkms \
+    ${PREFERRED_RPROVIDER_kernel-module-nvidia} \
 "
 
-KERNEL_MODULE_AUTOLOAD:append = " \
-    ${@'nv_peer_mem' if d.getVar('TEGRA_DGPU') == '1' else ''} \
+EXTRA_OEMAKE += " \
+    OFA_KERNEL=${RECIPE_SYSROOT}${prefix}/src/mlnx-ofed-kernel-dkms \
+    OFA_SYMVERS=${RECIPE_SYSROOT}${includedir}/mlnx-ofed-kernel-dkms/Module.symvers \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/${PREFERRED_RPROVIDER_kernel-module-nvidia}/Module.symvers \
+    KDIR=${STAGING_KERNEL_DIR} \
 "
-
-# This flag is required in order to enable ffmpeg, which is a
-# dependency for emergent-camera.
-LICENSE_FLAGS_ACCEPTED = "commercial"

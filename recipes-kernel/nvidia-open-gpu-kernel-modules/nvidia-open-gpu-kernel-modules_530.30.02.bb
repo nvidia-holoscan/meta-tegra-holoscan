@@ -25,10 +25,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=1d5fa2a493e937d5a4b96e5e03b90f7c"
 SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=main;protocol=https"
 SRCREV = "4397463e738d2d90aa1164cc5948e723701f7b53"
 
-SRC_URI:append = " \
-    file://0001-Enable-MOFED-peer-memory-symbols.patch \
-    file://nvidia.conf \
-"
+SRC_URI:append = " file://nvidia.conf"
 
 inherit module
 
@@ -36,21 +33,11 @@ S = "${WORKDIR}/git"
 
 MODULES_MODULE_SYMVERS_LOCATION = "kernel-open"
 
-DEPENDS:append = " \
-    mlnx-ofed-kernel-dkms \
-"
-
 EXTRA_OEMAKE += " \
     TARGET_ARCH='${HOST_ARCH}' \
     SYSSRC='${STAGING_KERNEL_DIR}' \
     SYSOUT='${STAGING_KERNEL_BUILDDIR}' \
 "
-
-# The Mellanox OFED symvers file must be explicitly provided since the mlnx-ofed recipe
-# doesn't use the kernel-module prefix required for automatic inclusion by module.class
-python __anonymous() {
-    d.setVar('KBUILD_EXTRA_SYMBOLS', "${STAGING_INCDIR}/mlnx-ofed-kernel-dkms/Module.symvers")
-}
 
 # Disable the yocto-enabled stack protection, which leads to this error when enabled:
 #    ERROR: modpost: "__stack_chk_guard" [nvidia-modeset.ko] undefined!
