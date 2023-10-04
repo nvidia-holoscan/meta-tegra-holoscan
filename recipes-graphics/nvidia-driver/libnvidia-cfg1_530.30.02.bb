@@ -20,4 +20,5 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "27d31dcd6b5d36a3a3204b5081f4634aae61f92c2dc9e3498fb2cf22da84a9bb"
+SRC_URI[arm64.sha256sum] = "27d31dcd6b5d36a3a3204b5081f4634aae61f92c2dc9e3498fb2cf22da84a9bb"
+SRC_URI[amd64.sha256sum] = "3ee3a471a518cbaa1bb6e6b153e085fef45cde07251d1f6c002c556a8b9ccdda"

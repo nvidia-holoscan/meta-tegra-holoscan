@@ -20,7 +20,8 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "d7f53166b2661047107d249e7f8f9e3d93873bfc7eba8cf110af5763dbe2335b"
+SRC_URI[arm64.sha256sum] = "d7f53166b2661047107d249e7f8f9e3d93873bfc7eba8cf110af5763dbe2335b"
+SRC_URI[amd64.sha256sum] = "783e4c4a521dd6983397a78f87ea84a66d095c1c7fc7de272671357ecf513b41"
 
 RDEPENDS:${PN} = " \
     libnvidia-compute \

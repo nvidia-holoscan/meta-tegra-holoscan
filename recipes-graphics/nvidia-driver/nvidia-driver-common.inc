@@ -24,9 +24,20 @@ inherit nvidia_deb_pkgfeed
 
 PACKAGES = "${PN}-doc ${PN}"
 
+def deb_pkg_arch(d):
+    arch = d.getVar('HOST_ARCH')
+    if arch == 'x86_64':
+        return 'amd64'
+    elif arch == 'aarch64':
+        return 'arm64'
+    bb.error("unrecognized HOST_ARCH: %s" % arch)
+    return 'UNKNOWN'
+
+DEB_PKGARCH = "${@deb_pkg_arch(d)}"
+
 MAJVER = "${@d.getVar('PV').split('.')[0]}"
 
-SRC_COMMON_DEBS = "${BPN}-${MAJVER}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
+SRC_COMMON_DEBS = "${BPN}-${MAJVER}_${PV}-0ubuntu1_${DEB_PKGARCH}.deb;subdir=${BP};name=${DEB_PKGARCH}"
 
 do_install() {
     if [ -d ${S}${libdir} ]; then
