@@ -24,7 +24,7 @@ SRC_URI[arm64.sha256sum] = "f256f6ba002a8b40976450b074db02d1a5f68ca50c03dad1a01a
 SRC_URI[amd64.sha256sum] = "25c91a776883f9004778e2f48c733642aac451058653eb435d80ea929f964b79"
 
 do_install:append() {
-    cp -rd --no-preserve=ownership ${S}${base_libdir} ${D}
+    cp -rd --no-preserve=ownership ${S}/${baselib} ${D}${libdir}
 }
 
 FILES:${PN} += " \
