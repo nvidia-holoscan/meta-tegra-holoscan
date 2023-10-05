@@ -90,10 +90,11 @@ container image is used again for the actual `bitbake` build process. This
 can be done using the `bitbake.sh` build wrapper that is written to the
 root of the development directory. This script simply runs the `bitbake`
 process in the container and passes the arguments to the script to this
-process. For example, to build a core Sato image, use the following:
+process. For example, to build a Holoscan reference image, use the
+following:
 
 ```sh
-$ ./bitbake.sh core-image-sato
+$ ./bitbake.sh core-image-holoscan
 ```
 
 This build is expected to take at least an hour with build times of 3 or 4
@@ -115,19 +116,19 @@ Using the default configuration, the above script will build the BSP image and
 write the final output to:
 
 ```
-build/tmp/deploy/images/igx-orin-devkit/core-image-sato-igx-orin-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.tegraflash.tar.gz
 ```
 
 ## 4. Flash the Image
 
 The `flash.sh` script can be used to flash the BSP image that is output by the
 previous step onto the Holoscan Developer Kit hardware. For example, to flash the
-`core-image-sato` image that was produced by the previous step, connect the
+`core-image-holoscan` image that was produced by the previous step, connect the
 developer kit to the host via the USB-C debug port, put it into recovery
 mode, ensure the developer kit is visible to the host using `lsusb`, then run:
 
 ```sh
-$ ./flash.sh core-image-sato
+$ ./flash.sh core-image-holoscan
 ```
 
 > **_Note:_** If the `doflash.sh` command fails due to a `No such file: 'dtc'`
@@ -155,6 +156,21 @@ you will see a black screen with only a cursor for a few moments before an X11
 terminal or GUI appears (depending on your image type).
 
 #### Running the Holoscan SDK and HoloHub Applications
+
+When the `core-image-holoscan` reference image is used, the Holoscan SDK and
+Holohub apps are built into the image, including some tweaks to make running the
+samples even easier. Upon boot, the `core-image-holoscan` image presents a
+Matchbox UI with icons for a variety of Holoscan SDK and Holohob sample
+applications, all of which can be run with just a single click.
+
+Note that the first execution of these samples will rebuild the model engine
+files and it will take a few minutes before the application fully loads. These
+engine files are then cached and will significantly reduce launch times for
+successive executions. Check the console windows with the application logs for
+additional information.
+
+While a handful of graphical Holoscan applications have icons installed on the
+desktop, many more are console-only and must be launched from a console.
 
 When the `holoscan-sdk` component is installed, the Holoscan SDK is installed
 into the image in the `/opt/nvidia/holoscan` directory, with examples present in
@@ -195,8 +211,3 @@ To run the Python version of an application, run the application in the
 $ cd /opt/nvidia/holohub
 $ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 ```
-
-Note that the first execution of the samples will rebuild the model engine files
-and it will take a few minutes before the application fully loads. These engine
-files are then cached and will significantly reduce launch times for successive
-executions.

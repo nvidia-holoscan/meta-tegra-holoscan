@@ -32,7 +32,7 @@ For example, on a system with the following specifications:
 * Network: 1 Gigabit Fiber Internet
 * Operating System: Ubuntu 18.04
 
-a complete build using the `core-image-x11` target and the default
+a complete build using the `core-image-holoscan` target and the default
 package configuration (including CUDA, TensorRT, and Holoscan SDK) takes:
 
 * Build Time: 3 hours and 5 minutes
@@ -172,12 +172,13 @@ require conf/holoscan-dgpu.conf
 > ```
 
 Additional components from this layer can then be added to the BSP by appending
-them to `CORE_IMAGE_EXTRA_INSTALL`. For example, to install the Holoscan SDK
-and its dependencies, add the following:
+them to `CORE_IMAGE_EXTRA_INSTALL`. For example, to install the AJA NTV2 kernel
+module and SDK, add the following:
 
 ```
 CORE_IMAGE_EXTRA_INSTALL:append = " \
-    holoscan-sdk \
+    kernel-module-ajantv2 \
+    ajantv2-sdk \
 "
 ```
 
@@ -255,11 +256,18 @@ CORE_IMAGE_EXTRA_INSTALL:append = " kernel-module-ajantv2"
 
 #### Building and Flashing
 
-Building a BSP is done with `bitbake`; for example, to build a `core-image-sato`
-image, use the following:
+This `meta-tegra-holoscan` layer provides a `core-image-holoscan` OE image type
+which defines the Holoscan Deployment Stack Reference Image. This image is
+a stripped down version of the `core-image-sato` image with a few
+Holoscan-specific tweaks, such as a custom application group and desktop icons
+for the Holoscan SDK examples and Holohub applications.
+
+Building a BSP is done with `bitbake`; for example, to build a
+`core-image-holoscan` image, use the following:
+
 
 ```sh
-$ bitbake core-image-sato
+$ bitbake core-image-holoscan
 ```
 
 > **_Note:_** If the `bitbake` command is not found, ensure that the current
@@ -288,14 +296,14 @@ $ bitbake core-image-sato
 > ```sh
 > $ bitbake rivermax -c cleansstate
 > $ bitbake rivermax
-> $ bitbake core-image-sato
+> $ bitbake core-image-holoscan
 > ```
 
 Using the configuration described above, this will build the BSP image and write
 the output to
 
 ```
-build/tmp/deploy/images/igx-orin-devkit/core-image-sato-igx-orin-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.tegraflash.tar.gz
 ```
 
 The above file can then be extracted and the `doflash.sh` script that it
@@ -342,6 +350,21 @@ terminal or GUI appears (depending on your image type).
 
 #### Running the Holoscan SDK and HoloHub Applications
 
+When the `core-image-holoscan` reference image is used, the Holoscan SDK and
+Holohub apps are built into the image, including some tweaks to make running the
+samples even easier. Upon boot, the `core-image-holoscan` image presents a
+Matchbox UI with icons for a variety of Holoscan SDK and Holohob sample
+applications, all of which can be run with just a single click.
+
+Note that the first execution of these samples will rebuild the model engine
+files and it will take a few minutes before the application fully loads. These
+engine files are then cached and will significantly reduce launch times for
+successive executions. Check the console windows with the application logs for
+additional information.
+
+While a handful of graphical Holoscan applications have icons installed on the
+desktop, many more are console-only and must be launched from a console.
+
 When the `holoscan-sdk` component is installed, the Holoscan SDK is installed
 into the image in the `/opt/nvidia/holoscan` directory, with examples present in
 the `examples` subdirectory. Due to relative data paths being used by the apps,
@@ -381,11 +404,6 @@ To run the Python version of an application, run the application in the
 $ cd /opt/nvidia/holohub
 $ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 ```
-
-Note that the first execution of the samples will rebuild the model engine files
-and it will take a few minutes before the application fully loads. These engine
-files are then cached and will significantly reduce launch times for successive
-executions.
 
 ### 2. Holoscan OpenEmbedded/Yocto Build Container
 
@@ -447,18 +465,18 @@ $ gdb ./apps/multiai/cpp/multiai
 
 Debugging remotely requires the SDK for the image to be built and installed
 on the host device from which debugging will be performed. To build the SDK
-package for an image (e.g. `core-image-sato`), run the following:
+package for an image (e.g. `core-image-holoscan`), run the following:
 
 ```sh
-$ bitbake core-image-sato -c populate_sdk
+$ bitbake core-image-holoscan -c populate_sdk
 ```
 
 Once built, the script to install the SDK will be present in
 `build/tmp/deploy/sdk`. To install the SDK, run the script that corresponds to
-the image. For example, to install the `core-image-sato` SDK, run the following:
+the image. For example, to install the `core-image-holoscan` SDK, run the following:
 
 ```sh
-$ ./build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-sato-armv8a-igx-orin-devkit-toolchain-4.0.7.sh
+$ ./build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-holoscan-armv8a-igx-orin-devkit-toolchain-4.0.7.sh
 ```
 
 Follow the prompts to specify the install path for the SDK. The rest of these
