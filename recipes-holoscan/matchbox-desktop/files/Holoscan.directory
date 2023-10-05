@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Holoscan
+Comment=Holoscan SDK examples and Holohub applications
+Icon=mbfolder.png
+Type=Directory
+Match=Holoscan

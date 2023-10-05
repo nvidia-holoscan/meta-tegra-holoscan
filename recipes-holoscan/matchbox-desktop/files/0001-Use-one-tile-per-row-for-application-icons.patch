@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 5 Oct 2023 12:01:04 -0600
+Subject: Use one tile per row for application icons
+
+Upstream-Status: Inappropriate
+
+diff --git a/src/desktop.c b/src/desktop.c
+index a1943eb..95931d1 100644
+--- a/src/desktop.c
++++ b/src/desktop.c
+@@ -141,7 +141,8 @@ static void table_size_allocate_cb (GtkWidget    *table,
+                                     GdkRectangle *allocation,
+                                     gpointer      user_data)
+ {
+-  gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (table), allocation->width / 200); 
++  gtk_flow_box_set_min_children_per_line (GTK_FLOW_BOX (table), 1);
++  gtk_flow_box_set_max_children_per_line (GTK_FLOW_BOX (table), 1);
+ }
+ 
+ static gboolean
+-- 
+2.34.1
+

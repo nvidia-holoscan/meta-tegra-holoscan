@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 5 Oct 2023 12:44:21 -0600
+Subject: Hide secondary icon text
+
+Upstream-Status: Inappropriate
+
+diff --git a/libtaku/taku-icon-tile.c b/libtaku/taku-icon-tile.c
+index 110db6b..07bd444 100644
+--- a/libtaku/taku-icon-tile.c
++++ b/libtaku/taku-icon-tile.c
+@@ -44,10 +44,9 @@ static void
+ tile_arrange (TakuIconTile *tile)
+ {
+   GtkOrientation orientation = GTK_ORIENTATION_HORIZONTAL;
+-  gboolean show_secondary = TRUE;
++  gboolean show_secondary = FALSE;
+   
+   gtk_widget_style_get (GTK_WIDGET (tile),
+-                        "show-secondary-text", &show_secondary,
+                         "orientation", &orientation,
+                         NULL);
+   
+-- 
+2.34.1
+
