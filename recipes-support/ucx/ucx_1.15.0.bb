@@ -22,8 +22,8 @@ SUMMARY = "Unified Communication X"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
 
-SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.14.x"
-SRCREV = "04897a079ac88713842f7209c5e82430d095444e"
+SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.15.x"
+SRCREV = "348d14f111de710f12247b6a3ae12aefd0fe7b99"
 
 SRC_URI += " \
     file://0001-Fix-CMAKE-library-import-paths.patch \
