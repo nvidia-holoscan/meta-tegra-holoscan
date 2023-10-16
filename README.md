@@ -12,8 +12,6 @@ drivers and toolkits that are used by the NVIDIA Holoscan SDK.
 
 ## Supported Boards
 
-* Clara AGX Developer Kit (clara-agx-xavier-devkit)
-* NVIDIA IGX Orin Developer Kit ES (holoscan-devkit)
 * NVIDIA IGX Orin Developer Kit (igx-orin-devkit)
 
 ## System Requirements
@@ -318,7 +316,6 @@ $ sudo ./doflash.sh
 
 > **_Note:_** For instructions on how to put the developer kit into recovery
 > mode, see the developer kit user guide:
->  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
 >  - [IGX Orin Developer Kit User Guide](https://developer.nvidia.com/igx-orin-developer-kit-user-guide).
 
 Once flashed, the Holoscan Developer Kit can then be disconnected from the host

@@ -139,7 +139,6 @@ $ ./flash.sh core-image-sato
 
 > For instructions on how to put the developer kit into recovery mode and how to
 > check that it is visible using `lsusb`, see the developer kit user guide:
->  - [Clara AGX Developer Kit User Guide](https://developer.nvidia.com/clara-agx-developer-kit-user-guide).
 >  - [IGX Orin Developer Kit User Guide](https://developer.nvidia.com/igx-orin-developer-kit-user-guide).
 
 Note that flashing the device will require root privileges and so you may be
