@@ -47,6 +47,10 @@ do_install() {
             mv ${D}${libdir}/aarch64-linux-gnu/* ${D}${libdir}
             rm -rf ${D}${libdir}/aarch64-linux-gnu
         fi
+        if [ -d ${D}${libdir}/x86_64-linux-gnu ]; then
+            mv ${D}${libdir}/x86_64-linux-gnu/* ${D}${libdir}
+            rm -rf ${D}${libdir}/x86_64-linux-gnu
+        fi
     fi
     if [ -d ${S}${bindir} ]; then
         install -d ${D}${bindir}
