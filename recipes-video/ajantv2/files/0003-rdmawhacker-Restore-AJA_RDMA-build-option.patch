@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Wed, 1 Nov 2023 14:56:27 -0600
+Subject: rdmawhacker: Restore AJA_RDMA build option
+
+
+diff --git a/tools/rdmawhacker/CMakeLists.txt b/tools/rdmawhacker/CMakeLists.txt
+index db6d7b67..e3a2463e 100644
+--- a/tools/rdmawhacker/CMakeLists.txt
++++ b/tools/rdmawhacker/CMakeLists.txt
+@@ -43,6 +43,7 @@ message(STATUS "CUDA Libs: ${CUDA_LIBRARIES}")
+ 
+ add_executable(${PROJECT_NAME} ${TARGET_SOURCES})
+ add_dependencies(${PROJECT_NAME} ajantv2)
++target_compile_definitions(${PROJECT_NAME} PRIVATE ${TARGET_COMPILE_DEFS})
+ target_include_directories(${PROJECT_NAME} PUBLIC ${TARGET_INCLUDE_DIRS})
+ target_link_libraries(${PROJECT_NAME} PUBLIC ${TARGET_LINK_LIBS} ajantv2)
+ 
+-- 
+2.34.1
+

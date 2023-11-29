@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,29 +18,35 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 SDK"
+SUMMARY = "AJA NTV2 Driver"
 
 require ajantv2-common_${PV}.inc
 
-S = "${WORKDIR}/git"
+S = "${WORKDIR}/git/driver/linux"
 
-inherit pkgconfig cmake cuda
+inherit module
 
-EXTRA_OECMAKE:append = " \
-  -DAJA_BUILD_DRIVER=0 \
-  -DAJA_INSTALL_HEADERS=1 \
+EXTRA_OEMAKE:append = " \
+    KDIR=${STAGING_KERNEL_DIR} \
+    AJA_CREATE_DEVICE_NODES=1 \
+    AJA_RDMA=1 \
+    ${GPU_FLAGS} \
 "
 
-DEPENDS:append = " \
-    glew \
-    freeglut \
+# The RDMA (nvidia-p2p) API differs between iGPU and dGPU:
+#   For dGPU, RDMA is supported by nvidia.ko provided by nvidia-open-gpu-kernel-modules.
+#   For iGPU, RDMA is supported by nvidia-p2p.ko provided by nvidia-kernel-oot.
+GPU_FLAGS = " \
+    AJA_IGPU=1 \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/linux \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-kernel-oot/Module.symvers \
+"
+GPU_FLAGS:dgpu = " \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-open-gpu-kernel-modules/Module.symvers \
 "
 
-FILES:${PN}-dev += " \
-    ${prefix}/ajalibraries \
-    ${libdir}/AJANTV2 \
-"
+DEPENDS = " nvidia-kernel-oot"
+DEPENDS:dgpu = " nvidia-open-gpu-kernel-modules"
 
-SYSROOT_DIRS += " \
-    ${prefix}/ajalibraries \
-"
+RPROVIDES:${PN} += "kernel-module-ajantv2"

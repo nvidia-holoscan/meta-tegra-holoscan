@@ -19,12 +19,16 @@
 # DEALINGS IN THE SOFTWARE.
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=4f44fe1188f6450557e2b28f7ae0d5b9"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=0ce9f69a0af4b70f1ae5d12b9f986694"
 
-SRC_URI = "git://github.com/nvidia-holoscan/ntv2.git;branch=main;protocol=https"
-SRCREV = "1321a8d4c1a8de696c996d05b65e5aa2934f89d1"
+SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=main"
+SRCREV = "9fbd04bd35f10202be6f84c7b77b11f1de32800c"
 
 SRC_URI += " \
-    file://0001-Disable-outlining-atomics.patch;patchdir=${WORKDIR}/git \
-    file://0002-Fix-CUDA-samples-build.patch;patchdir=${WORKDIR}/git \
+    file://0001-Fix-nvidia-ko-to-module-symvers-pattern-matching.patch;patchdir=${WORKDIR}/git \
+    file://0002-Update-nvidia-ko-to-module-symvers-to-support-CRC-ta.patch;patchdir=${WORKDIR}/git \
+    file://0003-rdmawhacker-Restore-AJA_RDMA-build-option.patch;patchdir=${WORKDIR}/git \
+    file://0004-Add-ajantv2-CMake-package-config.patch;patchdir=${WORKDIR}/git \
+    file://0005-Disable-dvplowlatencydemo-for-OE-build.patch;patchdir=${WORKDIR}/git \
+    file://0006-Fix-nv-p2p-symbols-for-iGPU.patch;patchdir=${WORKDIR}/git \
 "

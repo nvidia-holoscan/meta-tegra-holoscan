@@ -31,11 +31,12 @@
 #define AJALinux 1
 #define AJA_LINUX 1
 #define AJAExport
+#define AJA_USE_CPLUSPLUS11
 
 #include <ajantv2/includes/ajatypes.h>
 #include <ajantv2/includes/ntv2enums.h>
 #include <ajantv2/includes/ntv2driverinterface.h>
-#include <ajantv2/includes/ntv2linuxdriverinterface.h>
+#include <ajantv2/src/lin/ntv2linuxdriverinterface.h>
 #include <ajantv2/includes/ntv2card.h>
 #include <ajantv2/includes/ntv2devicescanner.h>
 %}
@@ -43,6 +44,7 @@
 #define AJALinux 1
 #define AJA_LINUX 1
 #define AJAExport
+#define AJA_USE_CPLUSPLUS11
 
 %include <std_string.i>
 %include <stdint.i>
@@ -66,6 +68,6 @@
 %include <ajantv2/includes/ajatypes.h>
 %include <ajantv2/includes/ntv2enums.h>
 %include <ajantv2/includes/ntv2driverinterface.h>
-%include <ajantv2/includes/ntv2linuxdriverinterface.h>
+%include <ajantv2/src/lin/ntv2linuxdriverinterface.h>
 %include <ajantv2/includes/ntv2card.h>
 %include <ajantv2/includes/ntv2devicescanner.h>

@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 25 Jan 2024 00:59:12 -0700
+Subject: Fix nv-p2p symbols for iGPU
+
+
+diff --git a/driver/linux/Makefile b/driver/linux/Makefile
+index b39ef5ea..a488d729 100644
+--- a/driver/linux/Makefile
++++ b/driver/linux/Makefile
+@@ -218,12 +218,7 @@ default: all
+ 	@echo linux distro flags: '$(DISTRO_INFO)'
+ 	@echo lib: $(LIB)
+ ifdef AJA_RDMA
+-ifdef AJA_IGPU
+-	$(MAKE) -C $(KDIR) M=$(A_LINUX_DRIVER_PATH) DRIVERDIR=$(A_LINUX_DRIVER_PATH) modules
+-else
+-	${NVIDIA_GEN_SYMVERS}
+ 	$(MAKE) -C $(KDIR) M=$(A_LINUX_DRIVER_PATH) DRIVERDIR=$(A_LINUX_DRIVER_PATH) modules KBUILD_EXTRA_SYMBOLS=$(NVIDIA_SYMVERS)
+-endif
+ else
+ 	$(MAKE) -C $(KDIR) M=$(A_LINUX_DRIVER_PATH) DRIVERDIR=$(A_LINUX_DRIVER_PATH) modules
+ endif
+-- 
+2.34.1
+
