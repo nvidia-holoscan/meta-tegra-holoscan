@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -26,19 +26,25 @@ S = "${WORKDIR}/git/ajadriver/linux"
 
 inherit module
 
-# The RDMA (nvidia-p2p) API differs between iGPU and dGPU:
-#   For dGPU, RDMA is supported by nvidia.ko provided by nvidia-open-gpu-kernel-modules.
-#   For iGPU, RDMA is supported by nvidia-p2p.ko provided by the L4T kernel (linux-tegra).
 EXTRA_OEMAKE:append = " \
     KDIR=${STAGING_KERNEL_DIR} \
     AJA_CREATE_DEVICE_NODES=1 \
     AJA_RDMA=1 \
-    ${@'AJA_IGPU=1' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-    ${@'NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia' if d.getVar('TEGRA_DGPU') == '1' else \
-       'NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia/include/linux'} \
-    ${@'NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-open-gpu-kernel-modules/Module.symvers' if d.getVar('TEGRA_DGPU') == '1' else ''} \
+    ${GPU_FLAGS} \
 "
 
-DEPENDS:append = " ${@'nvidia-open-gpu-kernel-modules' if d.getVar('TEGRA_DGPU') == '1' else ''}"
+# The RDMA (nvidia-p2p) API differs between iGPU and dGPU:
+#   For dGPU, RDMA is supported by nvidia.ko provided by nvidia-open-gpu-kernel-modules.
+#   For iGPU, RDMA is supported by nvidia-p2p.ko provided by the L4T kernel (linux-tegra).
+GPU_FLAGS = " \
+    AJA_IGPU=1 \
+    NVIDIA_SRC_DIR=${STAGING_KERNEL_DIR}/nvidia-oot/include/linux \
+"
+GPU_FLAGS:dgpu = " \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-open-gpu-kernel-modules/Module.symvers \
+"
+
+DEPENDS:append:dgpu = " nvidia-open-gpu-kernel-modules"
 
 RPROVIDES:${PN} += "kernel-module-ajantv2"

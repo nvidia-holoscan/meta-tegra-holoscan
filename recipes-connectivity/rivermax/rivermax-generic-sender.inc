@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -41,11 +41,17 @@ EXTRA_OEMAKE:append = " \
     NVCC='${CUDACXX} -ccbin ${CUDA_HOST_CXX}' \
     CUDA='y' \
     CFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${S}${includedir}/mellanox -I. -O3 --sysroot=${RECIPE_SYSROOT}' \
-    NVCFLAGS='-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${S}${includedir}/mellanox -I. -I./cuda -O3 -m64 -DCUDA_ENABLED ${CUDAFLAGS} \
-              ${@"-DTEGRA_ENABLED" if d.getVar("TEGRA_DGPU") == "0" else ""}' \
-    NVLFLAGS='-L${S}${libdir}/aarch64-linux-gnu -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/stubs -Xcompiler --sysroot=${RECIPE_SYSROOT} ${@cuda_meson_ldflags(d)} -lrivermax -lcuda \
-              ${@"-lnvidia-ml" if d.getVar("TEGRA_DGPU") == "1" else ""}' \
+    NVCFLAGS='${NVCFLAGS}' \
+    NVLFLAGS='${NVLFLAGS}' \
 "
+
+NVCFLAGS_COMMON="-std=c++11 -I${RECIPE_SYSROOT}${includedir} -I${S}${includedir}/mellanox -I. -I./cuda -O3 -m64 -DCUDA_ENABLED ${CUDAFLAGS}"
+NVCFLAGS = "${NVCFLAGS_COMMON} -DTEGRA_ENABLED"
+NVCFLAGS:dgpu = "${NVCFLAGS_COMMON}"
+
+NVLFLAGS_COMMON="-L${S}${libdir}/aarch64-linux-gnu -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib -L${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/stubs -Xcompiler --sysroot=${RECIPE_SYSROOT} ${@cuda_meson_ldflags(d)} -lrivermax -lcuda"
+NVLFLAGS = "${NVLFLAGS_COMMON}"
+NVLFLAGS:dgpu = "${NVLFLAGS_COMMON} -lnvidia-ml"
 
 do_install:append() {
     install -d ${D}${bindir}

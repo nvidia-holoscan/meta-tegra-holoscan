@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -30,10 +30,10 @@ S = "${WORKDIR}/git/generic_receiver"
 
 inherit pkgconfig cmake cuda
 
-EXTRA_OECMAKE += " \
-    -DCMAKE_SKIP_RPATH=TRUE \
-    ${@'-DRIVERMAX_ENABLE_TEGRA=ON' if d.getVar('TEGRA_DGPU') == '0' else ''} \
-"
+EXTRA_OECMAKE += "-DCMAKE_SKIP_RPATH=TRUE ${GPU_FLAGS}"
+
+GPU_FLAGS = "-DRIVERMAX_ENABLE_TEGRA=ON"
+GPU_FLAGS:dgpu = ""
 
 do_install() {
     install -d ${D}${bindir}
@@ -42,5 +42,6 @@ do_install() {
 
 DEPENDS = " \
     rivermax \
-    ${@'cuda-nvml-native' if d.getVar('TEGRA_DGPU') == '1' else ''} \
 "
+
+DEPENDS:append:dgpu = " cuda-nvml-native"

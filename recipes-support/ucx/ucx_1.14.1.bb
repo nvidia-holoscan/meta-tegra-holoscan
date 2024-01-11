@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -45,14 +45,16 @@ EXTRA_OECONF:append = " \
     --disable-assertions \
     --disable-params-check \
     --enable-mt \
-    ${@"--enable-nvml" if d.getVar("TEGRA_DGPU") == "1" else ""} \
 "
+
+EXTRA_OECONF:append:dgpu = " --enable-nvml"
 
 DEPENDS += " \
     libibverbs1 \
     libnl \
     librdmacm1 \
-    ${@"cuda-nvml" if d.getVar("TEGRA_DGPU") == "1" else ""} \
 "
+
+DEPENDS:append:dgpu = " cuda-nvml"
 
 INSANE_SKIP:${PN} += "dev-so"
