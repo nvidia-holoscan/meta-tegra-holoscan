@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Tue, 13 Jun 2023 12:10:48 -0600
+Subject: Disable various warnings as errors
+
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 393a05d..6edc544 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -91,6 +91,14 @@ set(CMAKE_CXX_EXTENSIONS NO)
+ # Don't append suffix to shared libraries for debug build
+ set(CMAKE_DEBUG_POSTFIX "")
+ 
++# Disable various warnings as errors
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=narrowing>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=dangling-pointer>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=dangling-reference>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=ignored-attributes>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=pessimizing-move>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=overloaded-virtual>)
++
+ # ##############################################################################
+ # # RAPIDS CMAKE configurations
+ # # (https://docs.rapids.ai/api/rapids-cmake/stable/api.html)
+-- 
+2.34.1
+

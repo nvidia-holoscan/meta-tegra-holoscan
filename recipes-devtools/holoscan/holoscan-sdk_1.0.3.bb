@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -24,17 +24,20 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "90763fae219f27b36b758809fc052a416ee7a377"
+SRCREV = "6e62f849439dc32f603d9a68dec640f9422ed6e6"
 
 SRC_URI += " \
+    file://desktop-icons \
     file://0001-Fix-GXF-TypenameAsString-error.patch \
     file://0002-Use-external-library-dependencies.patch \
     file://0003-Build-python-libs-with-install-RPATH.patch \
-    file://0004-Fix-ONNX-and-TensorRT-include-interfaces.patch \
+    file://0004-Fix-TensorRT-include-interface.patch \
     file://0005-Move-required-3rdparty-headers-to-holoscan-core.patch \
-    file://0006-Disable-narrowing-conversion-warning-as-error.patch \
+    file://0006-Disable-various-warnings-as-errors.patch \
     file://0007-Remove-CONFIG-from-Protobuf-find_package.patch \
     file://0008-Fix-RPATH-for-holoinfer.patch \
+    file://0009-Fix-ONNXRuntime-include-paths.patch \
+    file://0010-Replace-deprecated-AJA-NTV2-enums.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -58,7 +61,6 @@ EXTRA_OECMAKE:append = " \
     -DGXF_ROOT=${RECIPE_SYSROOT}/opt/nvidia/gxf \
     -Dyaml-cpp_DIR=${RECIPE_SYSROOT}${datadir}/cmake/yaml-cpp \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
-    -Dglad_DIR=${RECIPE_SYSROOT}${libdir}/cmake/glad \
     -Dglfw3_DIR=${RECIPE_SYSROOT}${libdir}/cmake/glfw3 \
 "
 
@@ -79,7 +81,6 @@ EXTRA_OECMAKE:append = " \
 
 DEPENDS += " \
     ajantv2-sdk \
-    glad \
     glfw \
     glslang-native \
     grpc \
@@ -115,6 +116,7 @@ RDEPENDS:${PN} = " \
     tegra-libraries-multimedia \
     tegra-libraries-multimedia-utils \
     tegra-libraries-multimedia-v4l \
+    tegra-libraries-vulkan \
 "
 
 RDEPENDS:${PN}-dev = " \
@@ -146,6 +148,10 @@ do_install() {
     do_component_install holoscan-python_libs
     do_component_install holoscan-data
 
+    # Note that the holoscan component currently needs to be installed after holoscan-core
+    # in order for the CMake configuration files to be installed correctly.
+    do_component_install holoscan
+
     # Create symlinks to the SDK libraries in the system lib directory.
     install -d ${D}${libdir}
     for i in $(find ${D}/${HOLOSCAN_INSTALL_PATH}/lib -name "*.so*" -printf "%P\n"); do
@@ -158,11 +164,18 @@ do_install() {
 
     # Create a data directory symlink to fix some relative runtime path issues.
     ln -s ${HOLOSCAN_INSTALL_PATH}/data ${D}/opt/nvidia/data
+
+    # Install desktop icons for the applications.
+    install -d ${D}${datadir}/applications
+    install -m 0644 ${WORKDIR}/desktop-icons/*.desktop ${D}${datadir}/applications
+    install -d ${D}${datadir}/pixmaps
+    install -m 0644 ${WORKDIR}/desktop-icons/*.png ${D}${datadir}/pixmaps
 }
 
 FILES:${PN} += " \
     ${HOLOSCAN_INSTALL_PATH} \
     /opt/nvidia/data \
+    ${libdir} \
 "
 
 FILES:${PN}-dev += " \

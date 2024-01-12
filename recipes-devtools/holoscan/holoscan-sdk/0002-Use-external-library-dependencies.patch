@@ -1,4 +1,4 @@
-From 2dd4ad83b75cf11997ed68a9c45ecd0f25b8a75c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Mon, 12 Jun 2023 15:05:29 -0600
 Subject: Use external library dependencies
@@ -8,16 +8,15 @@ that they are provided at build time instead of being
 fetched, built, and installed by CMake:
 
  - ajantv2
- - glad
  - glfw3
  - yaml-cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d62dee24..f1e2aa87 100644
+index 47bd06f..3c969ad 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -198,16 +198,6 @@ if (${HOLOSCAN_BUILD_LIBTORCH})
-     list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_torch)
+@@ -201,16 +201,6 @@ if(HOLOSCAN_BUILD_ORT)
+     list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_ort)
  endif()
  
 -# Add PUBLIC dependencies to our install target
@@ -33,41 +32,50 @@ index d62dee24..f1e2aa87 100644
  # Copy library files
  install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
      DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
-diff --git a/cmake/deps/glad_rapids.cmake b/cmake/deps/glad_rapids.cmake
-index 5c9b6950..0b507c00 100644
---- a/cmake/deps/glad_rapids.cmake
-+++ b/cmake/deps/glad_rapids.cmake
-@@ -13,26 +13,4 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
+diff --git a/cmake/deps/ajantv2_rapids.cmake b/cmake/deps/ajantv2_rapids.cmake
+index 5cd2da9..6f39512 100644
+--- a/cmake/deps/ajantv2_rapids.cmake
++++ b/cmake/deps/ajantv2_rapids.cmake
+@@ -16,36 +16,4 @@
+ # https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+ include(${rapids-cmake-dir}/cpm/find.cmake)
  
--# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
--include(${rapids-cmake-dir}/cpm/find.cmake)
--
--rapids_cpm_find(GLAD 0.1.36
--    GLOBAL_TARGETS glad
+-rapids_cpm_find(ajantv2 16.2.0
+-    GLOBAL_TARGETS AJA::ajantv2
 -
 -    CPM_ARGS
 -
--    GITHUB_REPOSITORY Dav1dde/glad
--    VERSION 0.1.36
--
+-    GITHUB_REPOSITORY nvidia-holoscan/ntv2
+-    GIT_TAG 1321a8d4c1a8de696c996d05b65e5aa2934f89d1
 -    OPTIONS
--    "GLAD_INSTALL OFF"
+-    "AJA_BUILD_APPS OFF"
+-    "AJA_BUILD_DOCS OFF"
+-    "AJA_BUILD_DRIVER OFF"
+-    "AJA_BUILD_LIBS ON"
+-    "AJA_BUILD_PLUGINS OFF"
+-    "AJA_BUILD_QA OFF"
+-    "AJA_BUILD_TESTS OFF"
+-    "AJA_INSTALL_HEADERS OFF"
+-    "AJA_INSTALL_SOURCES OFF"
 -    EXCLUDE_FROM_ALL
 -)
 -
--if(GLAD_ADDED)
--    add_library(glad::glad ALIAS glad)
--    install(TARGETS glad
--        DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
+-if(ajantv2_ADDED)
+-    set_target_properties(ajantv2 PROPERTIES POSITION_INDEPENDENT_CODE ON)
+-
+-    # ajantv2 is a static library so we do not need to install it.
+-    add_library(AJA::ajantv2 ALIAS ajantv2)
+-
+-    # Install the headers needed for development with the SDK
+-    install(DIRECTORY ${ajantv2_SOURCE_DIR}/ajalibraries
+-        DESTINATION "include"
 -        COMPONENT "holoscan-dependencies"
--    )
+-        FILES_MATCHING PATTERN "*.h" PATTERN "*.hh"
+-        )
 -endif()
-\ No newline at end of file
-+rapids_find_package(glad 0.1.36 REQUIRED)
++rapids_find_package(ajantv2 17.1 REQUIRED)
 diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
-index 0051d3fc..159310fc 100644
+index 0051d3f..159310f 100644
 --- a/cmake/deps/glfw_rapids.cmake
 +++ b/cmake/deps/glfw_rapids.cmake
 @@ -13,9 +13,6 @@
@@ -109,7 +117,7 @@ index 0051d3fc..159310fc 100644
 -endif()
 +rapids_find_package(glfw3 3.3 REQUIRED)
 diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
-index 34e04bf5..0f1e9273 100644
+index 34e04bf..0f1e927 100644
 --- a/cmake/deps/yaml-cpp_rapids.cmake
 +++ b/cmake/deps/yaml-cpp_rapids.cmake
 @@ -13,56 +13,4 @@

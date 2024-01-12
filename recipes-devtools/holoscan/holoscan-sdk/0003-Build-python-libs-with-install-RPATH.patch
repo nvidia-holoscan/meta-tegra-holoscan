@@ -1,11 +1,11 @@
-From 39dbb1591816580daac9fe1a25aeecd302347a48 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Tue, 13 Jun 2023 12:25:22 -0600
 Subject: Build python libs with install RPATH
 
 
 diff --git a/python/holoscan/CMakeLists.txt b/python/holoscan/CMakeLists.txt
-index 148063c2..7f4e5820 100644
+index 19e46da..9efbbff 100644
 --- a/python/holoscan/CMakeLists.txt
 +++ b/python/holoscan/CMakeLists.txt
 @@ -48,9 +48,8 @@ function(holoscan_pybind11_module pybind11_module_name)
