@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,6 @@
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI:append = " \
-    file://Add-nvidia-platform-t23x-mandalore-kernel-dts.patch \
-    file://Add-nvidia-platform-t23x-prometheus-kernel-dts.patch \
-    file://prometheus-dts-support-large-BAR1.patch \
-    file://Fix-HDMI-input-pixel-format.patch \
     file://Enable-module-signing.cfg \
     file://Disable-modules-provided-by-mlnx-ofed.cfg \
 "
