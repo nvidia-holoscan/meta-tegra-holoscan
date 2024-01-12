@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -29,9 +29,7 @@ WHEEL_PYVER = "${@ "cp" + d.getVar('PYTHON_BASEVERSION').replace('.','') }"
 WHEEL_NAME = "${WHEEL_BASE}-${WHEEL_PYVER}-${WHEEL_PYVER}-manylinux2014_${TARGET_ARCH}"
 
 SRC_URI = "https://github.com/cupy/cupy/releases/download/v${PV}/${WHEEL_NAME}.whl;downloadfilename=${WHEEL_NAME}.zip;subdir=${BP}"
-CUDA_11_SHA = 'f9d7a77200e5539c496a1a2a0d30b427fec81b5cd4e28ecc738d26689c54e132'
-CUDA_12_SHA = 'a3dbc76ce0f697a943061ddd2c47bc2138bc23ab56a020f1f5ff9141861b5245'
-SRC_URI[sha256sum] = "${@ d.getVar('CUDA_%s_SHA' % d.getVar('CUDA_BASE_VER'))}"
+SRC_URI[sha256sum] = "e8a4906da820f6ce39a3a1d18c4504da4e0faad87598761ea9d6bf8288423d69"
 
 inherit python3-dir cuda
 
