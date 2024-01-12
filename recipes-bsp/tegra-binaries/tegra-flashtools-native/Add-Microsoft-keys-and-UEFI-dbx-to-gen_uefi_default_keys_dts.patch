@@ -1,9 +1,9 @@
 diff -urN Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh Linux_for_Tegra/tools/gen_uefi_default_keys_dts.sh
---- Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh	2023-04-20 10:54:30.227619065 -0600
-+++ Linux_for_Tegra/tools/gen_uefi_default_keys_dts.sh	2023-04-20 10:56:30.707416133 -0600
-@@ -67,6 +67,17 @@
- #   UEFI_DB_2_KEY_FILE="db_2.key";
- #   UEFI_DB_2_CERT_FILE="db_2.crt";
+--- Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh	2023-09-19 10:55:08.033037928 -0600
++++ Linux_for_Tegra/tools/gen_uefi_default_keys_dts.sh	2023-09-19 11:09:50.702063771 -0600
+@@ -74,6 +74,17 @@
+ #   UEFI_APPEND_DB_ESL_FILE_1="db_3.esl"
+ #   UEFI_APPEND_DB_ESL_FILE_2="db_4.esl"
  #
 +# The following variables can also be set to 1 in the <uefi_keys.conf> file to
 +# enable downloading and appending the corresponding Microsoft keys:
@@ -19,31 +19,7 @@ diff -urN Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh Linux_for_Tegr
  # Notes:
  #   1). All files specified in <uefi_keys.conf> must be in the same directory
  #       of <uefi_keys.conf>.
-@@ -154,6 +165,23 @@
- EOF
- }
- 
-+dbxdefault_header ()
-+{
-+	cat << EOF >> ${dts_file}
-+                            dbxDefault {
-+                                data = [
-+EOF
-+}
-+
-+dbxdefault_tail ()
-+{
-+	cat << EOF >> ${dts_file}
-+                                ];
-+                                non-volatile;
-+                            };
-+EOF
-+}
-+
- kekdefault_header ()
- {
- 	cat << EOF >> ${dts_file}
-@@ -280,6 +308,45 @@
+@@ -308,6 +319,45 @@
  rm -rf ${OUT_DIR}
  mkdir ${OUT_DIR}
  
@@ -89,7 +65,7 @@ diff -urN Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh Linux_for_Tegr
  # Generate all *.cer, *.esl and *.auth files in _out directory
  # All .cer, .esl and .auth names are based on the .key name (UEFI_XX_KEY_FILE)
  #
-@@ -313,6 +380,25 @@
+@@ -341,6 +391,25 @@
  	sign-efi-sig-list -k "${UEFI_KEK_KEY_FILE}" -c "${UEFI_KEK_CERT_FILE}" db ${OUT_DIR}/"${UEFI_DB_2_BASENAME}".esl ${OUT_DIR}/"${UEFI_DB_2_BASENAME}".auth
  fi
  
@@ -115,7 +91,7 @@ diff -urN Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh Linux_for_Tegr
  ### Begin generating dts file:
  dts_header;
  
-@@ -323,11 +409,26 @@
+@@ -351,6 +420,10 @@
  	data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_DB_2_BASENAME}".esl)
  	echo "${data}" >> ${dts_file}
  fi
@@ -123,28 +99,54 @@ diff -urN Linux_for_Tegra.orig/tools/gen_uefi_default_keys_dts.sh Linux_for_Tegr
 +	data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_DB_MSFT_UEFI_BASENAME}".esl)
 +	echo "${data}" >> ${dts_file}
 +fi
+ if [ "${UEFI_APPEND_DB_ESL_FILE_1}" ]; then
+ 	if [ ! -f "${UEFI_APPEND_DB_ESL_FILE_1}" ]; then
+ 		echo "${UEFI_APPEND_DB_ESL_FILE_1} does not exist"
+@@ -370,14 +443,22 @@
+ fi
  dbdefault_tail;
  
-+if [ "${UEFI_DBX_REVOCATION_LIST_BASENAME}" ]; then
-+	dbxdefault_header;
-+	data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_DBX_REVOCATION_LIST_BASENAME}".esl)
-+	echo "${data}" >> ${dts_file}
-+	dbxdefault_tail;
-+fi
+-if [ "${UEFI_DBX_ESL_FILE_1}" ]; then
+-	if [ ! -f "${UEFI_DBX_ESL_FILE_1}" ]; then
+-		echo "${UEFI_DBX_ESL_FILE_1} does not exist"
+-		exit 1
+-	fi
 +
- kekdefault_header;
++if [ "${UEFI_DBX_ESL_FILE_1}" ] || [ "${UEFI_DBX_REVOCATION_LIST_BASENAME}" ]; then
+ 	dbxdefault_header;
+-	data=$(od -t x1 -An ./"${UEFI_DBX_ESL_FILE_1}")
+-	echo "${data}" >> ${dts_file}
++	if [ "${UEFI_DBX_REVOCATION_LIST_BASENAME}" ]; then
++		data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_DBX_REVOCATION_LIST_BASENAME}".esl)
++		echo "${data}" >> ${dts_file}
++	fi
++
++	if [ "${UEFI_DBX_ESL_FILE_1}" ]; then
++		if [ ! -f "${UEFI_DBX_ESL_FILE_1}" ]; then
++			echo "${UEFI_DBX_ESL_FILE_1} does not exist"
++			exit 1
++		fi
++		data=$(od -t x1 -An ./"${UEFI_DBX_ESL_FILE_1}")
++		echo "${data}" >> ${dts_file}
++	fi
+ 
+ 	if [ "${UEFI_DBX_ESL_FILE_2}" ]; then
+ 		if [ ! -f "${UEFI_DBX_ESL_FILE_2}" ]; then
+@@ -394,6 +475,11 @@
  data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_KEK_BASENAME}".esl)
  echo "${data}" >> ${dts_file}
+ 
 +if [ "${UEFI_KEK_MSFT_BASENAME}" ]; then
 +	data=$(od -t x1 -An ${OUT_DIR}/"${UEFI_KEK_MSFT_BASENAME}".esl)
 +	echo "${data}" >> ${dts_file}
 +fi
- kekdefault_tail;
- 
- pkdefault_header;
++
+ if [ "${UEFI_APPEND_KEK_ESL_FILE_1}" ]; then
+ 	if [ ! -f "${UEFI_APPEND_KEK_ESL_FILE_1}" ]; then
+ 		echo "${UEFI_APPEND_KEK_ESL_FILE_1} does not exist"
 diff -urN Linux_for_Tegra.orig/tools/splitdbxcontent.py Linux_for_Tegra/tools/splitdbxcontent.py
 --- Linux_for_Tegra.orig/tools/splitdbxcontent.py	1969-12-31 17:00:00.000000000 -0700
-+++ Linux_for_Tegra/tools/splitdbxcontent.py	2023-04-19 17:03:47.948375468 -0600
++++ Linux_for_Tegra/tools/splitdbxcontent.py	2023-09-19 11:06:43.079623558 -0600
 @@ -0,0 +1,57 @@
 +#!/usr/bin/env python3
 +#

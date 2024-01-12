@@ -611,7 +611,7 @@ for the commands to work:
   has setup the L4T native build tools. This path depends on the current L4T
   version that is being used; for example, for a build using L4T 35.3.1 this
   path will be
-  `${BUILD_ROOT}/build/tmp/work-shared/L4T-native-35.3.1-r0/Linux_for_Tegra`
+  `${BUILD_ROOT}/build/tmp/work-shared/L4T-native-36.2.0-r0/Linux_for_Tegra`
 
 ### A) Enabling PKC/SBK Signing
 
