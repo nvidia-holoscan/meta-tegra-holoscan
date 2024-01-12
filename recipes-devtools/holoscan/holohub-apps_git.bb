@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -24,9 +24,11 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "2badea15d633685d296cf7e9411aee739df13fea"
+SRCREV = "9e189de8869928f0eebe4bb855c0cd213b7b48c3"
+PV = "1.0.3+git${SRCPV}"
 
 SRC_URI += " \
+    file://desktop-icons \
     file://0001-Add-install-rules.patch \
     file://0002-Fix-undefined-fmt-errors.patch \
     file://0003-Fix-ajantv2-dependencies.patch \
@@ -35,6 +37,7 @@ SRC_URI += " \
     file://0006-Enable-Emergent-apps.patch \
     file://0007-Fix-default-data-paths-in-python-apps.patch \
     file://0008-Fix-volume_renderer-application.patch \
+    file://0009-Update-AJA-NTV2-dependency-to-17.1.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -64,6 +67,9 @@ EXTRA_OECMAKE:append = " \
     -DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
 "
 
+EXCLUDE_ICONS = "volume-rendering"
+EXCLUDE_ICONS:dgpu = ""
+
 do_install:append() {
     # Create symlinks to the libraries in the system lib directory.
     install -d ${D}${libdir}
@@ -79,6 +85,18 @@ do_install:append() {
     if [ -d ${B}/data ]; then
         cp -rd --no-preserve=ownership ${B}/data ${D}${HOLOHUB_INSTALL_PATH}
     fi
+
+    # Install desktop icons for the applications.
+    install -d ${D}${datadir}/applications
+    install -m 0644 ${WORKDIR}/desktop-icons/*.desktop ${D}${datadir}/applications
+    for i in ${EXCLUDE_ICONS}; do
+        rm ${D}${datadir}/applications/holohub-${i}.desktop
+    done
+    install -d ${D}${datadir}/pixmaps
+    install -m 0644 ${WORKDIR}/desktop-icons/*.png ${D}${datadir}/pixmaps
+    for i in ${EXCLUDE_ICONS}; do
+        rm ${D}${datadir}/pixmaps/holohub-${i}.png
+    done
 }
 
 DEPENDS += " \

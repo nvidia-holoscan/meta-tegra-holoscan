@@ -1,4 +1,4 @@
-From dda8e39678197c7b9c90071949793085308bc0f1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Thu, 23 Mar 2023 13:36:09 -0600
 Subject: Fix default data paths in python apps

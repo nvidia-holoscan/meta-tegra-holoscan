@@ -1,11 +1,11 @@
-From f56fec2c4a86417f027093c20b9dd25458caf2ae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Thu, 22 Jun 2023 10:11:38 -0600
 Subject: Enable Emergent apps
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 29d4979..3cd23ee 100644
+index 7861934..f05b802 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -31,6 +31,7 @@ include(CTest)
@@ -14,15 +14,15 @@ index 29d4979..3cd23ee 100644
  option(BUILD_SAMPLE_APPS "Build Holoscan SDK sample applications" OFF)
 +option(HOLOHUB_ENABLE_EMERGENT "Build Emergent-based sample applications" OFF)
  
- # Set the default data directory
- set(HOLOHUB_DATA_DIR "${CMAKE_BINARY_DIR}/data" CACHE PATH "Data Download directory")
+ # Enable flow benchmarking
+ option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index bd60d6c..deb4f00 100644
+index 4d79a57..fb39f0b 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -55,8 +55,11 @@ add_holohub_application(h264_video_decode DEPENDS
-                         OPERATORS video_decoder video_read_bitstream
-                         HOLOSCAN_SAMPLE_APP)
+@@ -50,8 +50,11 @@ add_holohub_application(h264_endoscopy_tool_tracking DEPENDS
+ add_holohub_application(h264_video_decode DEPENDS
+                         OPERATORS video_decoder video_read_bitstream)
  
 +if(HOLOHUB_ENABLE_EMERGENT)
  add_holohub_application(high_speed_endoscopy DEPENDS
@@ -31,7 +31,7 @@ index bd60d6c..deb4f00 100644
 +                        HOLOSCAN_SAMPLE_APP)
 +endif()
  
- add_holohub_application(multiai_endoscopy HOLOSCAN_SAMPLE_APP)
+ add_holohub_application(hyperspectral_segmentation)
  
 diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
 index be77b47..6317dec 100644
