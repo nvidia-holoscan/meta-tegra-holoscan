@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,6 +22,6 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/edk2-firmware-tegra:"
 
 # Use Holoscan images for the UEFI boot screen.
 SRC_URI += " \
-    file://holoscan-boot-images.patch;patchdir=.. \
+    file://0001-Use-Holoscan-boot-images.patch;patchdir=.. \
     file://holoscan-boot-images.tgz;subdir=edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Assets \
 "

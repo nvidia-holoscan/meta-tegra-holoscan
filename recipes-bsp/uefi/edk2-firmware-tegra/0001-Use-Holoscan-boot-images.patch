@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Tue, 19 Sep 2023 12:16:23 -0600
+Subject: Use Holoscan boot images
+
+
+diff --git a/edk2-nvidia/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc b/edk2-nvidia/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
+index 1650ae44..cd08326d 100644
+--- a/edk2-nvidia/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
++++ b/edk2-nvidia/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
+@@ -296,9 +296,9 @@
+   # Logo Files
+   #
+   FILE FREEFORM = gNVIDIAPlatformLogoGuid {
+-    SECTION RAW = Silicon/NVIDIA/Assets/nvidiagray480.bmp
+-    SECTION RAW = Silicon/NVIDIA/Assets/nvidiagray720.bmp
+-    SECTION RAW = Silicon/NVIDIA/Assets/nvidiagray1080.bmp
++    SECTION RAW = Silicon/NVIDIA/Assets/holoscan-480.bmp
++    SECTION RAW = Silicon/NVIDIA/Assets/holoscan-720.bmp
++    SECTION RAW = Silicon/NVIDIA/Assets/holoscan-1080.bmp
+   }
+ 
+ 
+-- 
+2.34.1
+
