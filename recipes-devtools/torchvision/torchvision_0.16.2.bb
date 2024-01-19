@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -23,8 +23,8 @@ HOMEPAGE = "https://github.com/pytorch/vision"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=bd7749a3307486a4d4bfefbc81c8b796"
 
-SRC_URI = "git://github.com/pytorch/vision.git;branch=release/0.15;protocol=https"
-SRCREV = "fa99a5360fbcd1683311d57a76fcc0e7323a4c1e"
+SRC_URI = "git://github.com/pytorch/vision.git;branch=release/0.16;protocol=https"
+SRCREV = "c6f39778e636ec40a69bdbc74386818c57a65af3"
 
 S = "${WORKDIR}/git"
 
@@ -43,3 +43,5 @@ DEPENDS += " \
 
 SOLIBS = "*.so*"
 FILES_SOLIBSDEV = ""
+
+INSANE_SKIP:${PN} += "buildpaths"
