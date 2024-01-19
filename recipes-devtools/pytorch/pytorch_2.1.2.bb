@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -24,14 +24,16 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=5c853508d63a8090fa952ff1af58217d"
 
 SRC_URI = "https://github.com/pytorch/pytorch/releases/download/v${PV}/pytorch-v${PV}.tar.gz"
-SRC_URI[sha256sum] = "9c564ca440265c69400ef5fdd48bf15e28af5aa4bed84c95efaad960a6699998"
+SRC_URI[sha256sum] = "85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7"
 
 SRC_URI += " \
     file://0001-Remove-Modules_CUDA_fix.patch \
     file://0002-Fix-CUDA-build-rules.patch \
     file://0003-Fix-RPATH.patch \
     file://0004-Fix-nvfuser-install-path.patch \
-    file://0005-Remove-nvToolsExt-dependency-from-TorchConfig.cmake.patch \
+    file://0005-Use-C-17-for-onnx-build.patch \
+    file://0006-Use-native-protobuf-compiler.patch \
+    file://0007-Disable-various-warnings.patch \
 "
 
 S = "${WORKDIR}/${PN}-v${PV}"
@@ -45,8 +47,14 @@ EXTRA_OECMAKE += " \
     -DUSE_OPENMP=OFF \
     -DUSE_XNNPACK=OFF \
     -DUSE_NCCL=OFF \
-    -DCAFFE2_USE_TENSORRT=OFF \
-    -DCAFFE2_USE_CUDNN=OFF \
+    -DUSE_CUSPARSELT=OFF \
+    -DPROTOBUF_PROTOC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/protoc \
+"
+
+# Disable installing the fmt third-party library, which may cause conflicts
+# with other components that depend on PyTorch.
+EXTRA_OECMAKE += " \
+    -DFMT_INSTALL=OFF \
 "
 
 # Set flags required for CUDA compilation (which have been removed from
@@ -94,20 +102,15 @@ do_compile:prepend() {
 
 # PyTorch builds tend to fail or crash with too many threads.
 # Limit the thread count to 1/4 of the CPUs available.
-PARALLEL_MAKE = "-j ${@int(oe.utils.cpu_count() / 4)}"
+CMAKE_BUILD_PARALLEL_LEVEL:task-compile = \
+    "${@ min(int(d.getVar('PARALLEL_MAKE').split()[1]), int(oe.utils.cpu_count() / 4))}"
 
 DEPENDS += " \
     cuda-nvml \
-    cuda-nvrtc-native \
     cuda-nvtx \
-    cuda-nvtx-native \
-    libcublas-native \
-    libcusolver-native \
-    libcusparse-native \
+    cudnn \
     protobuf \
     protobuf-native \
-    python3-pyyaml-native \
-    python3-typing-extensions-native \
 "
 
 FILES:${PN} += " \
@@ -117,3 +120,9 @@ FILES:${PN} += " \
 
 SOLIBS = "*.so*"
 FILES_SOLIBSDEV = ""
+
+# The build flags (including local build paths) are recorded within the
+# library and generated headers. This is harmless and can be ignored.
+INSANE_SKIP:${PN} += "buildpaths"
+INSANE_SKIP:${PN}-dev += "buildpaths"
+INSANE_SKIP:${PN}-src += "buildpaths"
