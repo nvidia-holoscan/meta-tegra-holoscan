@@ -1,4 +1,4 @@
-From d796a1474d1b882cd71b6c2520271ed15c3fd12b Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 19 Jul 2023 15:00:16 -0600
 Subject: Fix OE build
@@ -322,6 +322,18 @@ index 0000000..27eeb95
 +include(${CMAKE_CURRENT_LIST_DIR}/clara_viz_core-targets.cmake)
 +include(${CMAKE_CURRENT_LIST_DIR}/clara_viz_core_hw-targets.cmake)
 +include(${CMAKE_CURRENT_LIST_DIR}/clara_viz_renderer-targets.cmake)
+diff --git a/src/claraviz/util/Exception.h b/src/claraviz/util/Exception.h
+index eaf2cb2..fa9fbee 100644
+--- a/src/claraviz/util/Exception.h
++++ b/src/claraviz/util/Exception.h
+@@ -16,6 +16,7 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
+ #include <sstream>
+ #include <stdexcept>
+ 
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
 index 4453847..c8d64b2 100644
 --- a/thirdparty/CMakeLists.txt
