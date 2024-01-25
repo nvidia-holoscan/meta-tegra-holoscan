@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -30,11 +30,14 @@ MAIN_VER = "${@'.'.join(d.getVar('PV').split('.')[:-1])}"
 NSIGHT_DIR = "/opt/nvidia/nsight-systems-cli/${MAIN_VER}"
 
 SRC_COMMON_DEBS = "nsight-systems-cli-${MAIN_VER}_${PV}_arm64.deb;subdir=${BPN}"
-SRC_URI[sha256sum] = "4bbc8f0188ef047c7293bbfa95476657c95ba902f1b266c96ce81c08f38034ce"
+SRC_URI[sha256sum] = "c5e7c53183f7e47ef53cd62cbe3c8e2483ee97b524d4e4df43c9cc8b9a630609"
 
 do_install() {
     install -d ${D}${NSIGHT_DIR}
-    cp -rd --no-preserve=ownership ${WORKDIR}${NSIGHT_DIR}/target-linux-sbsa-armv8 ${D}${NSIGHT_DIR}
+    cp -rd --no-preserve=ownership ${WORKDIR}/nsight-systems-cli/${NSIGHT_DIR}/target-linux-sbsa-armv8 ${D}${NSIGHT_DIR}
+
+    # Remove non-aarch64 libraries.
+    rm ${D}${NSIGHT_DIR}/target-linux-sbsa-armv8/python/packages/nsys_recipe/third_party/_sqlite3.cpython-310-x86_64-linux-gnu.so
 
     # Create nsys symlink in the system bin directory.
     install -d ${D}${bindir}
