@@ -24,6 +24,11 @@ RPROVIDES:${PN} += " \
     kernel-module-nvidia-modeset \
 "
 
+do_install:append() {
+    install -d ${D}${includedir}/linux
+    install -m 0644 ${S}/nvidia-oot/include/linux/nv-p2p.h ${D}${includedir}/linux
+}
+
 do_install:append:dgpu() {
     rm ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra/nvidia*.ko
 }
