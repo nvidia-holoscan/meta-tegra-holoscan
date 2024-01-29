@@ -69,7 +69,7 @@ layer and thus should be used to ensure the build completes. To use these
 commit IDs, change into the directory that a dependency has been cloned
 into and then run `git checkout {commit id}`.
 
-* #### Poky: https://git.yoctoproject.org/poky/ (commit: `65dafea2`, tag: `kirkstone-4.0.7`)
+* #### Poky: https://git.yoctoproject.org/poky/ (commit: `f768ffb8`, tag: `nanbield-4.3.2`)
 
     The Poky Build Tool and Metadata for the Yocto Project.
 
@@ -105,9 +105,9 @@ into and then run `git checkout {commit id}`.
 
     | Layer | Repo | Commit |
     | -------------- | ---- | ------ |
-    | meta-openembedded/meta-oe <br/> meta-openemdedded/meta-filesystems <br/> meta-openembedded/meta-networking <br/> meta-openembedded/meta-python | https://github.com/openembedded/meta-openembedded | `278ec081` |
-    | meta-virtualization | https://git.yoctoproject.org/meta-virtualization | `9a94fa2a` |
-    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `98fa4f70` |
+    | meta-openembedded/meta-oe <br/> meta-openemdedded/meta-filesystems <br/> meta-openembedded/meta-networking <br/> meta-openembedded/meta-python | https://github.com/openembedded/meta-openembedded | `da9063bdf` |
+    | meta-virtualization | https://git.yoctoproject.org/meta-virtualization | `ac125d88` |
+    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `69148ee2` |
 
 * #### Proprietary NVIDIA Binary Packages
 
