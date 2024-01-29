@@ -35,7 +35,7 @@ would like to initialize the development environment and run the following
 (making sure `IMAGE` matches the name and tag of this container image):
 
 ```sh
-$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v0.5.1
+$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v1.0.0
 $ docker run -it --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 

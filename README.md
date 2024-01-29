@@ -136,16 +136,8 @@ When using the iGPU configuration, the majority of the runtime components come
 from the standard Tegra packages used by the `meta-tegra` layer. When using the
 dGPU configuration, some of the Tegra packages are overridden with drivers and
 binary packages defined by this recipe layer that are needed to support the dGPU.
-
-The versions of the components used for iGPU and dGPU mode differ slightly, as
-given in the following table:
-
-| Component       | iGPU       | dGPU             |
-| --------------- | ---------- | ---------------- |
-| Display Drivers | L4T 35.3.1 | OpenRM 530.30.02 |
-| CUDA            | 11.4.19    | 12.1.1           |
-| cuDNN           | 8.6.0.166  | 8.9.0.131        |
-| TensorRT        | 8.5.2      | 8.6.0.12         |
+See the iGPU and dGPU configuration files above for any component or version
+differences between the two builds.
 
 #### Build Configuration
 
@@ -161,15 +153,10 @@ MACHINE ??= "igx-orin-devkit"
 require conf/holoscan-dgpu.conf
 ```
 
-> **_Note:_** If the configuration is switched between iGPU and dGPU, the
-> graphics driver packages need to be cleaned before building the BSP in order
-> to prevent file conflict errors. To clean these packages, issue these
-> commands:
->
-> ```sh
-> $ bitbake nvidia-display-driver -c clean
-> $ bitbake nvidia-open-gpu-kernel-modules -c clean
-> ```
+> **_Note:_** Due to conflicts between the iGPU and dGPU build configurations,
+> it is recommended that the GPU configuration not be changed between builds.
+> If the GPU configuration needs to be changed, a new build tree should be
+> created.
 
 Additional components from this layer can then be added to the BSP by appending
 them to `CORE_IMAGE_EXTRA_INSTALL`. For example, to install the AJA NTV2 kernel
@@ -193,19 +180,11 @@ section at the bottom of the file.
 ##### Adding Additional Kernel Modules
 
 The machine configuration for a Holoscan devkit includes the minimal set of
-kernel modules required to support the onboard components, but it does not
+kernel modules required to support the onboard components, but it may not
 include modules to support additional peripherals such as USB cameras or
 wireless keyboards and mice. If such peripherals will be used, it will be
 required to add the corresponding kernel modules to the image to support these
-devices. For example, to enable a Logitech wireless keyboard or mouse, the
-following kernel modules are needed:
-
-```
-CORE_IMAGE_EXTRA_INSTALL:append = " \
-    kernel-module-hid-logitech-dj \
-    kernel-module-hid-logitech-hidpp \
-"
-```
+devices.
 
 If you are unsure what drivers are needed, the generic `kernel-modules` package
 can be added to the install list instead to install all of the upstream kernel
@@ -476,11 +455,11 @@ Once built, the script to install the SDK will be present in
 the image. For example, to install the `core-image-holoscan` SDK, run the following:
 
 ```sh
-$ ./build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-holoscan-armv8a-igx-orin-devkit-toolchain-4.0.7.sh
+$ ./build/tmp/deploy/sdk/poky-glibc-x86_64-core-image-holoscan-armv8a-igx-orin-devkit-toolchain-4.3.2.sh
 ```
 
 Follow the prompts to specify the install path for the SDK. The rest of these
-instructions will assume that the default install path of `/opt/poky/4.0.7` is
+instructions will assume that the default install path of `/opt/poky/4.3.2` is
 used.
 
 #### 2. Running the Remote Debugging Server on the Target
@@ -502,7 +481,7 @@ The SDK installed on the host includes an `environment-setup-armv8a-poky-linux`
 script that must be sourced from any terminal before the SDK can be used:
 
 ```sh
-$ source /opt/poky/4.0.7/environment-setup-armv8a-poky-linux
+$ source /opt/poky/4.3.2/environment-setup-armv8a-poky-linux
 ```
 
 This environment provides the `$GDB` environment variable that points to the
