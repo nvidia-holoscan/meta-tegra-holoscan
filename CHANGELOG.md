@@ -1,3 +1,40 @@
+## [1.0.0] - 2024-02-09
+### Added
+- A `core-image-holoscan` reference image, based on `core-image-sato` with some
+  Holoscan-specific modifications.
+- Matchbox desktop customizations for Holoscan SDK and Holohub, including a
+  Holoscan application group and desktop icons for the sample applications.
+
+### Changed
+- Updated L4T to 36.2.0
+- Updated layer for Yocto Nanbield (4.3.2)
+- Replaced `TEGRA_DGPU` build variable with `dgpu` machine override.
+- Removed support for Clara AGX and Holoscan devkits.
+- Common iGPU and dGPU components now use the same major/minor/patch versions.
+- Most component versions were updated; see component version table below.
+
+### Component Versions
+| Component       | Version       |
+| --------------- | ------------- |
+| L4T             | 36.2.0        |
+| Kernel          | 5.15.122      |
+| dGPU Drivers    | 535.154.05    |
+| CUDA            | 12.2.2        |
+| cuDNN           | 8.9.4.25      |
+| CuPy            | 12.3.0        |
+| GXF             | 3.1-24.01     |
+| Holoscan SDK    | 1.0.3         |
+| MLNX OFED       | 23.10-1.1.9.0 |
+| Nsight Systems  | 2023.3.3.42   |
+| ONNX Runtime    | 1.16.3        |
+| PyTorch         | 2.1.2         |
+| Rivermax        | 1.40.11       |
+| TensorRT        | 8.6.2         |
+| Torchvision     | 0.16.2        |
+| UCX             | 1.15.0        |
+| AJA NTV2        | 17.1          |
+
+
 ## [0.6.0] - 2023-08-01
 ### Added
 - Various dependency recipes
@@ -240,6 +277,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[1.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.4.0...v0.5.0
