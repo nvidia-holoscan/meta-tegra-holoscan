@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,8 +22,9 @@ SUMMARY = "NVIDIA Container Toolkit"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRC_URI = "git://${GO_IMPORT};branch=main;protocol=https"
-SRCREV = "56ad97b8e51245795c7610e275116ae5417a7c34"
+BRANCH_VER = "${@d.getVar('PV')[:d.getVar('PV').rindex('.')]}"
+SRC_URI = "git://${GO_IMPORT};branch=release-${BRANCH_VER};protocol=https"
+SRCREV = "d167812ce3a55ec04ae2582eff1654ec812f42e1"
 
 SRC_URI += " \
     file://docker-daemon.json \
@@ -34,15 +35,14 @@ inherit go
 
 GO_IMPORT = "github.com/NVIDIA/nvidia-container-toolkit"
 GO_INSTALL = " \
+    ${GO_IMPORT}/cmd/nvidia-container-runtime-hook \
     ${GO_IMPORT}/cmd/nvidia-container-runtime \
-    ${GO_IMPORT}/cmd/nvidia-container-toolkit \
+    ${GO_IMPORT}/cmd/nvidia-ctk \
 "
 
 export GO111MODULE="off"
 
 do_install:append() {
-    ln -s nvidia-container-toolkit ${D}${bindir}/nvidia-container-runtime-hook
-
     install -m 0644 -D ${WORKDIR}/docker-daemon.json ${D}${sysconfdir}/docker/daemon.json
     install -m 0644 -D ${WORKDIR}/runtime-config.toml ${D}${sysconfdir}/nvidia-container-runtime/config.toml
 }
@@ -57,5 +57,5 @@ RDEPENDS:${PN}-dev = " \
 "
 
 RRECOMMENDS:${PN} = " \
-    docker-ce \
+    docker-moby \
 "
