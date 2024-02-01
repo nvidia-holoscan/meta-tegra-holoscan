@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -45,7 +45,7 @@ if ! command -v dtc &> /dev/null; then
 fi
 
 image_name="${1}"
-image_file="${image_name}-${machine}.tegraflash.tar.gz"
+image_file="${image_name}-${machine}.rootfs.tegraflash.tar.gz"
 image_dir="${workspace_path}/build/tmp/deploy/images/${machine}"
 image_path="${image_dir}/${image_file}"
 
