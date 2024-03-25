@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,8 +21,9 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=0ce9f69a0af4b70f1ae5d12b9f986694"
 
-SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=main"
-SRCREV = "9fbd04bd35f10202be6f84c7b77b11f1de32800c"
+SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=release"
+# tag: ntv2_17_0_1
+SRCREV = "b6acce6b135c3d9ae7a2bce966180b159ced619f"
 
 SRC_URI += " \
     file://0001-Fix-nvidia-ko-to-module-symvers-pattern-matching.patch;patchdir=${WORKDIR}/git \

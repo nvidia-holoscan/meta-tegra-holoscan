@@ -38,8 +38,8 @@ index 8b0b3308..d386c844 100644
  )
  
 +set(INSTALL_INCLUDE_DIRS
-+    libajantv2
-+    libajantv2/ajantv2/includes
++    ${CMAKE_INSTALL_INCLUDEDIR}/libajantv2
++    ${CMAKE_INSTALL_INCLUDEDIR}/libajantv2/ajantv2/includes
 +)
 +
  # ajantv2
@@ -57,7 +57,7 @@ index 8b0b3308..d386c844 100644
 +        ${CMAKE_SOURCE_DIR}/ajabase/system/windows)
 +
 +    list(APPEND INSTALL_INCLUDE_DIRS
-+        libajantv2/ajantv2/src/win)
++        ${CMAKE_INSTALL_INCLUDEDIR}/libajantv2/ajantv2/src/win)
  
      set(AJABASE_HEADERS
          ${AJABASE_HEADERS}
@@ -72,7 +72,7 @@ index 8b0b3308..d386c844 100644
 +        ${CMAKE_SOURCE_DIR}/ajabase/pnp/linux
 +        ${CMAKE_SOURCE_DIR}/ajabase/system/linux)
 +    list(APPEND INSTALL_INCLUDE_DIRS
-+        libajantv2/ajantv2/src/lin)
++        ${CMAKE_INSTALL_INCLUDEDIR}/libajantv2/ajantv2/src/lin)
      list(APPEND AJABASE_HEADERS
          ${AJABASE_PNP_LIN_HEADERS}
          ${AJABASE_SYS_LIN_HEADERS})
@@ -88,7 +88,7 @@ index 8b0b3308..d386c844 100644
 +        ${CMAKE_SOURCE_DIR}/ajabase/system/mac
          /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include)
 +    list(APPEND INSTALL_INCLUDE_DIRS
-+        libajantv2/ajantv2/src/mac)
++        ${CMAKE_INSTALL_INCLUDEDIR}/libajantv2/ajantv2/src/mac)
      list(APPEND AJABASE_HEADERS
          ${AJABASE_PNP_MAC_HEADERS}
          ${AJABASE_SYS_MAC_HEADERS})
