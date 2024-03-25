@@ -73,7 +73,7 @@ index 5cd2da9..6f39512 100644
 -        FILES_MATCHING PATTERN "*.h" PATTERN "*.hh"
 -        )
 -endif()
-+rapids_find_package(ajantv2 17.1 REQUIRED)
++rapids_find_package(ajantv2 17.0 REQUIRED)
 diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
 index 0051d3f..159310f 100644
 --- a/cmake/deps/glfw_rapids.cmake

@@ -37,7 +37,7 @@ SRC_URI += " \
     file://0006-Enable-Emergent-apps.patch \
     file://0007-Fix-default-data-paths-in-python-apps.patch \
     file://0008-Fix-volume_renderer-application.patch \
-    file://0009-Update-AJA-NTV2-dependency-to-17.1.patch \
+    file://0009-Update-AJA-NTV2-dependency-to-17.0.patch \
 "
 
 S = "${WORKDIR}/git"

@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 29 Nov 2023 17:00:19 -0700
-Subject: Update AJA NTV2 dependency to 17.1
+Subject: Update AJA NTV2 dependency to 17.0
 
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
@@ -13,7 +13,7 @@ index a839c2f..d4f3848 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
  
@@ -26,7 +26,7 @@ index b78edb8..d9fb01a 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  add_executable(endoscopy_tool_tracking
    main.cpp
@@ -39,7 +39,7 @@ index 83515c2..0cb7fd8 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  add_executable(multiai_endoscopy
    multi_ai.cpp
@@ -52,7 +52,7 @@ index c2036b7..af556b5 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  # Enable cuda language
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
@@ -65,7 +65,7 @@ index c42eabe..21dd630 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  # Enable cuda language
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
@@ -78,7 +78,7 @@ index b62ca61..a005fc4 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  add_executable(multiai_ultrasound
      main.cpp
@@ -91,7 +91,7 @@ index 496a819..ad1ffc0 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  add_executable(object_detection_torch
      main.cpp
@@ -104,7 +104,7 @@ index 84130db..fa5b8ae 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 -find_package(ajantv2 16.2 REQUIRED CONFIG)
-+find_package(ajantv2 17.1 REQUIRED CONFIG)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
  
  add_executable(ultrasound_segmentation
      main.cpp
