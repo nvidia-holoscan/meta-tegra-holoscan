@@ -5,20 +5,24 @@ Subject: Disable various warnings as errors
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 393a05d..6edc544 100644
+index a79eba3..179bcd8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -91,6 +91,14 @@ set(CMAKE_CXX_EXTENSIONS NO)
+@@ -91,6 +91,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
  # Don't append suffix to shared libraries for debug build
  set(CMAKE_DEBUG_POSTFIX "")
  
 +# Disable various warnings as errors
-+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=narrowing>)
 +add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=dangling-pointer>)
 +add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=dangling-reference>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=deprecated-declarations>)
 +add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=ignored-attributes>)
-+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=pessimizing-move>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=ignored-qualifiers>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=missing-field-initializers>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=narrowing>)
 +add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=overloaded-virtual>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=pessimizing-move>)
++add_compile_options($<$<COMPILE_LANGUAGE:CXX>:-Wno-error=unused-parameter>)
 +
  # ##############################################################################
  # # RAPIDS CMAKE configurations

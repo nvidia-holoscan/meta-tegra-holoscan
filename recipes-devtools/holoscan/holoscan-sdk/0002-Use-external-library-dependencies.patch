@@ -12,10 +12,10 @@ fetched, built, and installed by CMake:
  - yaml-cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 47bd06f..3c969ad 100644
+index a260f30..46ca08b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -201,16 +201,6 @@ if(HOLOSCAN_BUILD_ORT)
+@@ -202,16 +202,6 @@ if(HOLOSCAN_BUILD_ORT)
      list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_ort)
  endif()
  
@@ -33,7 +33,7 @@ index 47bd06f..3c969ad 100644
  install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
      DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
 diff --git a/cmake/deps/ajantv2_rapids.cmake b/cmake/deps/ajantv2_rapids.cmake
-index 5cd2da9..6f39512 100644
+index 5cd2da9..ee72385 100644
 --- a/cmake/deps/ajantv2_rapids.cmake
 +++ b/cmake/deps/ajantv2_rapids.cmake
 @@ -16,36 +16,4 @@
@@ -75,20 +75,10 @@ index 5cd2da9..6f39512 100644
 -endif()
 +rapids_find_package(ajantv2 17.0 REQUIRED)
 diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
-index 0051d3f..159310f 100644
+index ab2861a..c779cf8 100644
 --- a/cmake/deps/glfw_rapids.cmake
 +++ b/cmake/deps/glfw_rapids.cmake
-@@ -13,9 +13,6 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
- 
--# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
--include(${rapids-cmake-dir}/cpm/find.cmake)
--
- find_package(X11)
- 
- if(NOT X11_FOUND)
-@@ -47,26 +44,4 @@ if(NOT X11_Xinput_INCLUDE_PATH)
+@@ -47,20 +47,4 @@ if(NOT X11_Xinput_INCLUDE_PATH)
      message(FATAL_ERROR "XInput headers not found. Please install XInput ('sudo apt-get install libxi-dev') and try again.")
  endif()
  
@@ -100,6 +90,7 @@ index 0051d3f..159310f 100644
 -    GITHUB_REPOSITORY glfw/glfw
 -    GIT_TAG 3.3.7
 -    OPTIONS
+-    "BUILD_SHARED_LIBS OFF"
 -    "CXXOPTS_BUILD_EXAMPLES OFF"
 -    "CXXOPTS_BUILD_TESTS OFF"
 -    "GLFW_BUILD_TESTS OFF"
@@ -108,25 +99,15 @@ index 0051d3f..159310f 100644
 -    "GLFW_INSTALL OFF"
 -    EXCLUDE_FROM_ALL
 -)
--
--if(GLFW_ADDED)
--    install(TARGETS glfw
--        DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
--        COMPONENT "holoscan-dependencies"
--    )
--endif()
 +rapids_find_package(glfw3 3.3 REQUIRED)
 diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
-index 34e04bf..0f1e927 100644
+index 34e04bf..df112cf 100644
 --- a/cmake/deps/yaml-cpp_rapids.cmake
 +++ b/cmake/deps/yaml-cpp_rapids.cmake
-@@ -13,56 +13,4 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
+@@ -16,53 +16,4 @@
+ # https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+ include(${rapids-cmake-dir}/cpm/find.cmake)
  
--# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
--include(${rapids-cmake-dir}/cpm/find.cmake)
--
 -# Unfortunately, yaml-cpp project's CMakeLists.txt registers the user package
 -# (see below) which creates an item in '~/.cmake/packages/yaml-cpp/' and makes
 -# `find_package()` command in CPM try to look at the registered packages for

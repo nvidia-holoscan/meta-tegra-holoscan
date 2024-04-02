@@ -5,41 +5,32 @@ Subject: Fix GXF TypenameAsString error
 
 
 diff --git a/include/holoscan/core/gxf/entity.hpp b/include/holoscan/core/gxf/entity.hpp
-index 2bd1af3..369bd89 100644
+index 7bb0e9d..501471f 100644
 --- a/include/holoscan/core/gxf/entity.hpp
 +++ b/include/holoscan/core/gxf/entity.hpp
-@@ -74,7 +74,7 @@ class Entity : public nvidia::gxf::Entity {
-     // We first try to get holoscan::gxf::GXFTensor from GXF Entity.
+@@ -73,7 +73,7 @@ class Entity : public nvidia::gxf::Entity {
+     // Try to get nvidia::gxf::Tensor from GXF Entity.
      gxf_tid_t tid;
      auto tid_result =
--        GxfComponentTypeId(context(), nvidia::TypenameAsString<holoscan::gxf::GXFTensor>(), &tid);
-+        GxfComponentTypeId(context(), TypenameAsString<holoscan::gxf::GXFTensor>(), &tid);
+-        GxfComponentTypeId(context(), nvidia::TypenameAsString<nvidia::gxf::Tensor>(), &tid);
++        GxfComponentTypeId(context(), TypenameAsString<nvidia::gxf::Tensor>(), &tid);
      if (tid_result != GXF_SUCCESS) {
-       if (log_errors) { HOLOSCAN_LOG_ERROR("Unable to get component type id: {}", tid_result); }
-       return nullptr;
-@@ -85,7 +85,7 @@ class Entity : public nvidia::gxf::Entity {
-     if (cid_result != GXF_SUCCESS) {
-       // Then, we try to get nvidia::gxf::Tensor from GXF Entity.
-       tid_result =
--          GxfComponentTypeId(context(), nvidia::TypenameAsString<nvidia::gxf::Tensor>(), &tid);
-+          GxfComponentTypeId(context(), TypenameAsString<nvidia::gxf::Tensor>(), &tid);
-       if (tid_result != GXF_SUCCESS) {
-         if (log_errors) {
-           HOLOSCAN_LOG_ERROR(
-@@ -130,7 +130,7 @@ class Entity : public nvidia::gxf::Entity {
+       if (log_errors) {
+         HOLOSCAN_LOG_ERROR(
+@@ -114,7 +114,7 @@ class Entity : public nvidia::gxf::Entity {
    void add(std::shared_ptr<DataT>& data, const char* name = nullptr) {
      gxf_tid_t tid;
      HOLOSCAN_GXF_CALL_FATAL(
--        GxfComponentTypeId(context(), nvidia::TypenameAsString<holoscan::gxf::GXFTensor>(), &tid));
-+        GxfComponentTypeId(context(), TypenameAsString<holoscan::gxf::GXFTensor>(), &tid));
+-        GxfComponentTypeId(context(), nvidia::TypenameAsString<nvidia::gxf::Tensor>(), &tid));
++        GxfComponentTypeId(context(), TypenameAsString<nvidia::gxf::Tensor>(), &tid));
  
      gxf_uid_t cid;
      HOLOSCAN_GXF_CALL_FATAL(GxfComponentAdd(context(), eid(), tid, name, &cid));
 diff --git a/include/holoscan/core/gxf/gxf_utils.hpp b/include/holoscan/core/gxf/gxf_utils.hpp
-index 89f121e..81d3051 100644
+index 5076f04..999ce4e 100644
 --- a/include/holoscan/core/gxf/gxf_utils.hpp
 +++ b/include/holoscan/core/gxf/gxf_utils.hpp
-@@ -263,7 +263,7 @@ inline gxf_uid_t find_component_handle(gxf_context_t context, gxf_uid_t componen
+@@ -198,7 +198,7 @@ inline gxf_uid_t find_component_handle(gxf_context_t context, gxf_uid_t componen
  
    // Get the type id of the component we are are looking for.
    gxf_tid_t tid;

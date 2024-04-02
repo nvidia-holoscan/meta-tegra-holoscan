@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "6e62f849439dc32f603d9a68dec640f9422ed6e6"
+SRCREV = "1e011a475781d7537b50c2dd432eb0d8a348de0d"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -38,6 +38,7 @@ SRC_URI += " \
     file://0008-Fix-RPATH-for-holoinfer.patch \
     file://0009-Fix-ONNXRuntime-include-paths.patch \
     file://0010-Replace-deprecated-AJA-NTV2-enums.patch \
+    file://0011-Remove-UCX-header-workaround.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -91,6 +92,8 @@ DEPENDS += " \
     libnpp-native \
     libxcursor \
     libxinerama \
+    magic-enum \
+    numactl \
     onnxruntime \
     patchelf-native \
     protobuf \
