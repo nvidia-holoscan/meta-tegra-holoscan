@@ -1,11 +1,11 @@
-From b4791ea4ec2acd2033d892ae4c1252b5d542cd21 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Ian Stewart <istewart@nvidia.com>
 Date: Wed, 31 Aug 2022 09:23:38 -0600
 Subject: Remove TypenameAsString from nvidia namespace
 
 
 diff --git a/common/type_name.hpp b/common/type_name.hpp
-index 49b3f7f..94e0b63 100644
+index 2807c1f..2430d26 100644
 --- a/common/type_name.hpp
 +++ b/common/type_name.hpp
 @@ -27,8 +27,6 @@
@@ -20,7 +20,7 @@ index 49b3f7f..94e0b63 100644
 @@ -52,11 +50,9 @@ const char* TypenameAsString() {
    static char s_name[kMaxNameLength] = {0};  // Initialize with 0 to get a null-terminated string.
    static char* result = s_name;
-   if (s_name[0] == 0 && result != nullptr) {  // Check for first invokation of this function.
+   if (s_name[0] == 0 && result != nullptr) {  // Check for first invocation of this function.
 -    result = TypenameAsStringImpl(__PRETTY_FUNCTION__, s_name, kMaxNameLength);
 +    result = nvidia::TypenameAsStringImpl(__PRETTY_FUNCTION__, s_name, kMaxNameLength);
    }

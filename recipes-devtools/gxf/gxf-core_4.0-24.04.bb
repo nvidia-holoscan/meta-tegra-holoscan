@@ -29,58 +29,38 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_3.1_20240103_6bf4fcd2_holoscan-sdk_${GXF_ARCH}"
+GXF_PACKAGE = "gxf_4.0_20240409_bc03d9d_holoscan-sdk_${GXF_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz"
-SRC_URI[sha256sum] = "37cb82c03d72b931177a848cb896e714c57a72e85a36d940dd3923c5d78234ea"
+SRC_URI[sha256sum] = "29679672a603c570d23290a0ea8455f7c1331c9d6952530d4affa6a534cd50db"
 
 SRC_URI += " \
     file://0001-Remove-TypenameAsString-from-nvidia-namespace.patch \
-    file://0002-Fix-std-iterator-deprecation.patch \
-    file://0003-Fix-unused-parameters.patch \
-    file://0004-Fix-GxfEntityCreateInfo-initializer.patch \
 "
 
-S = "${WORKDIR}/${GXF_PACKAGE}"
+S = "${WORKDIR}/gxf_236_20240409_bc03d9d_holoscan-sdk_${GXF_ARCH}"
 
 do_install () {
     install -d ${D}/opt/nvidia/gxf
-
     cp -rd --no-preserve=ownership ${S}/common ${D}/opt/nvidia/gxf
     cp -rd --no-preserve=ownership ${S}/gxf ${D}/opt/nvidia/gxf
-    cp -rd --no-preserve=ownership ${S}/${GXF_ARCH} ${D}/opt/nvidia/gxf
-    find ${D}/opt/nvidia/gxf -regex "\(.*pybind.so\)\|\(.*python_codelet\)" | xargs rm -rf
-
-    # Remove currently unused extensions that use unavailable dependencies.
-    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/stream
-
-    # Remove tests.
-    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/cuda/tests
-    rm -rf ${D}/opt/nvidia/gxf/${GXF_ARCH}/test
+    cp -rd --no-preserve=ownership ${S}/lib ${D}/opt/nvidia/gxf
 }
 
-FILES:${PN} += " \
-    /opt/nvidia/gxf/${GXF_ARCH} \
-"
+# The GXF library is built for and used exclusively by the Holoscan SDK, and it
+# is installed to the target as part of the Holoscan SDK installation (see the
+# `holoscan-sdk` recipe). This gxf-core recipe is therefore responsible for
+# just fetching and extracting the package to make it available during the
+# Holoscan SDK installation (where all additional installation steps and
+# bitbake dependency checking is performed).
 
 FILES:${PN}-dev += " \
-    /opt/nvidia/gxf/common \
-    /opt/nvidia/gxf/gxf \
+    /opt/nvidia/gxf \
 "
 
 SYSROOT_DIRS = " \
     /opt/nvidia/gxf \
 "
 
-RDEPENDS:${PN} += " \
-    cuda-cudart \
-    cuda-nvtx \
-    libnpp \
-    libv4l \
-    tegra-libraries-cuda \
-    tegra-libraries-multimedia \
-    tegra-libraries-multimedia-utils \
-    tegra-libraries-multimedia-v4l \
-    ucx \
-"
-
+EXCLUDE_FROM_SHLIBS = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+INSANE_SKIP:${PN}-dev += "dev-elf file-rdeps"
