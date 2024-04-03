@@ -17,12 +17,12 @@ index 7861934..f05b802 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index 4d79a57..fb39f0b 100644
+index 0a64f7f..440e6b1 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -50,8 +50,11 @@ add_holohub_application(h264_endoscopy_tool_tracking DEPENDS
- add_holohub_application(h264_video_decode DEPENDS
-                         OPERATORS video_decoder video_read_bitstream)
+@@ -43,8 +43,11 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
+ 
+ add_subdirectory(h264)
  
 +if(HOLOHUB_ENABLE_EMERGENT)
  add_holohub_application(high_speed_endoscopy DEPENDS

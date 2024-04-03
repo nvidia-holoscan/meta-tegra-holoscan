@@ -5,7 +5,7 @@ Subject: Update AJA NTV2 dependency to 17.0
 
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index a839c2f..d4f3848 100644
+index a839c2f..f92e12b 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -19,7 +19,7 @@ project(endoscopy_out_of_body_detection CXX)
@@ -18,7 +18,7 @@ index a839c2f..d4f3848 100644
  option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
  
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index b78edb8..d9fb01a 100644
+index 642079f..2469cdf 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,7 +19,7 @@ project(endoscopy_tool_tracking CXX)
@@ -31,7 +31,7 @@ index b78edb8..d9fb01a 100644
  add_executable(endoscopy_tool_tracking
    main.cpp
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index 83515c2..0cb7fd8 100644
+index 8ae6987..7abf8a5 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -20,7 +20,7 @@ project(multiai_endoscopy CXX)
@@ -44,7 +44,7 @@ index 83515c2..0cb7fd8 100644
  add_executable(multiai_endoscopy
    multi_ai.cpp
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
-index c2036b7..af556b5 100644
+index c2036b7..afeadd8 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 @@ -20,7 +20,7 @@ project(multi_ai CXX)
@@ -57,7 +57,7 @@ index c2036b7..af556b5 100644
  # Enable cuda language
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
-index c42eabe..21dd630 100644
+index c42eabe..9762a7b 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 @@ -20,7 +20,7 @@ project(multi_ai CXX)
@@ -70,7 +70,7 @@ index c42eabe..21dd630 100644
  # Enable cuda language
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index b62ca61..a005fc4 100644
+index b62ca61..95e479b 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
 @@ -19,7 +19,7 @@ project(multiai_ultrasound CXX)
@@ -83,7 +83,7 @@ index b62ca61..a005fc4 100644
  add_executable(multiai_ultrasound
      main.cpp
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 496a819..ad1ffc0 100644
+index 496a819..05b51e0 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -19,7 +19,7 @@ project(object_detection_torch CXX)
@@ -96,7 +96,7 @@ index 496a819..ad1ffc0 100644
  add_executable(object_detection_torch
      main.cpp
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 84130db..fa5b8ae 100644
+index 62f2e3b..fa30504 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,7 +19,7 @@ project(ultrasound_segmentation CXX)

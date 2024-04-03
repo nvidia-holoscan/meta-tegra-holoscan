@@ -18,10 +18,10 @@ index 1788c47..6e3b2a2 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index e9d680e..eb93cdc 100644
+index 2ee1e04..c6430d6 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-@@ -62,7 +62,7 @@ class EndoscopyApp(Application):
+@@ -65,7 +65,7 @@ class EndoscopyApp(Application):
          self.source = source
  
          if data == "none":

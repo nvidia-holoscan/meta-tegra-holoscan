@@ -18,7 +18,7 @@ index e8e4fd0..a839c2f 100644
  
  add_executable(endoscopy_out_of_body_detection
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index d949709..b78edb8 100644
+index 958f220..642079f 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
@@ -31,7 +31,7 @@ index d949709..b78edb8 100644
    main.cpp
  )
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index 6a922ad..83515c2 100644
+index f0c93ea..8ae6987 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multiai_endoscopy CXX)
@@ -96,7 +96,7 @@ index 4e5b81b..496a819 100644
      main.cpp
  )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 7ac3ca7..84130db 100644
+index 97e8a4d..62f2e3b 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
