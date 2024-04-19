@@ -1,3 +1,14 @@
+## [2.0.0] - 2024-04-19
+### Added
+- Magic Enum C++ 0.9.5 recipe
+
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.0.0
+- Updated GXF to 4.0-24.04
+- AJA NTV2 now uses official 17.0.1 release instead of the main (unstable)
+  development branch.
+
+
 ## [1.0.0] - 2024-02-09
 ### Added
 - A `core-image-holoscan` reference image, based on `core-image-sato` with some
@@ -277,6 +288,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.1...v0.6.0
 [0.5.1]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.0...v0.5.1
