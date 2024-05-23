@@ -5,7 +5,7 @@ Subject: Disable various warnings as errors
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a79eba3..179bcd8 100644
+index cd7a459..a37ce00 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -91,6 +91,18 @@ set(CMAKE_CXX_EXTENSIONS NO)

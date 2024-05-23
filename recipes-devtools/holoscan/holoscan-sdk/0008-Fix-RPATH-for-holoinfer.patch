@@ -5,7 +5,7 @@ Subject: Fix RPATH for holoinfer
 
 
 diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
-index d1ec21d..3276bcc 100644
+index f95c408..4e632db 100644
 --- a/modules/holoinfer/src/CMakeLists.txt
 +++ b/modules/holoinfer/src/CMakeLists.txt
 @@ -29,7 +29,7 @@ if(HOLOSCAN_BUILD_LIBTORCH)

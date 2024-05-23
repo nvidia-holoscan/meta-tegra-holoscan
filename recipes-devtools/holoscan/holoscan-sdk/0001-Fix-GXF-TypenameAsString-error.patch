@@ -39,6 +39,19 @@ index 5076f04..999ce4e 100644
    if (result_2 != GXF_SUCCESS) { return 0; }
  
    // Find the component in the indicated entity
+diff --git a/include/holoscan/core/io_context.hpp b/include/holoscan/core/io_context.hpp
+index 030d700..d548a7b 100644
+--- a/include/holoscan/core/io_context.hpp
++++ b/include/holoscan/core/io_context.hpp
+@@ -371,7 +371,7 @@ class InputContext {
+         auto error_message = fmt::format(
+             "Unable to cast the received data to the specified type ({}) for input {} of type {}: "
+             "{}",
+-            nvidia::TypenameAsString<DataT>(),
++            TypenameAsString<DataT>(),
+             name,
+             value.type().name(),
+             e.what());
 diff --git a/src/core/gxf/entity.cpp b/src/core/gxf/entity.cpp
 index dcb2209..d2b23e9 100644
 --- a/src/core/gxf/entity.cpp
