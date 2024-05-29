@@ -44,10 +44,10 @@ index 8ad93dd..e8e4fd0 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 4995322..958f220 100644
+index e8a7806..cec5fcb 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-@@ -52,6 +52,15 @@ add_custom_target(endoscopy_tool_tracking_deps
+@@ -53,6 +53,15 @@ add_custom_target(endoscopy_tool_tracking_deps
  )
  add_dependencies(endoscopy_tool_tracking endoscopy_tool_tracking_deps)
  
@@ -244,14 +244,13 @@ index d18eb31..15a0a27 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index adfde26..4e5b81b 100644
+index b13607d..8336cc8 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -66,3 +66,12 @@ add_custom_target(object_detection_torch_yaml
-     BYPRODUCTS "object_detection_torch.yaml" "postprocessing.yaml" "frcnn_resnet50_t.yaml" "labels.txt"
+@@ -75,6 +75,15 @@ add_custom_target(object_detection_torch_yaml
  )
  add_dependencies(object_detection_torch object_detection_torch_yaml)
-+
+ 
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 +install(TARGETS object_detection_torch
@@ -260,6 +259,10 @@ index adfde26..4e5b81b 100644
 +install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/object_detection_torch.yaml
 +  DESTINATION ${install_path}
 +)
++
+ # Add testing
+ if(BUILD_TESTING)
+ 
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 index 0f1fff3..97e8a4d 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
@@ -451,26 +454,6 @@ index 65367ec..91e5730 100644
  if(HOLOHUB_BUILD_PYTHON)
      add_subdirectory(python)
  endif()
-diff --git a/operators/volume_loader/CMakeLists.txt b/operators/volume_loader/CMakeLists.txt
-index 597be6d..ee110f0 100644
---- a/operators/volume_loader/CMakeLists.txt
-+++ b/operators/volume_loader/CMakeLists.txt
-@@ -64,3 +64,5 @@ target_link_libraries(volume_loader
- target_include_directories(volume_loader INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
- target_compile_definitions(volume_loader PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
- target_compile_definitions(volume_loader PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
-+
-+install(TARGETS volume_loader)
-diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index f979e0f..faf6569 100644
---- a/operators/volume_renderer/CMakeLists.txt
-+++ b/operators/volume_renderer/CMakeLists.txt
-@@ -86,3 +86,5 @@ target_link_libraries(volume_renderer
- target_include_directories(volume_renderer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
- target_compile_definitions(volume_renderer PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
- target_compile_definitions(volume_renderer PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
-+
-+install(TARGETS volume_renderer)
 -- 
 2.34.1
 

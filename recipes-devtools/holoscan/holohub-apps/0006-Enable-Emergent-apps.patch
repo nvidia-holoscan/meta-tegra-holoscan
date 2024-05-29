@@ -5,30 +5,28 @@ Subject: Enable Emergent apps
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7861934..f05b802 100644
+index 9bc72ec..bb1587e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -31,6 +31,7 @@ include(CTest)
+@@ -30,6 +30,7 @@ include(CTest)
+ # Options
  option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
  option(HOLOHUB_BUILD_PYTHON "Build Holoscan SDK Python Bindings" ON)
- option(BUILD_SAMPLE_APPS "Build Holoscan SDK sample applications" OFF)
 +option(HOLOHUB_ENABLE_EMERGENT "Build Emergent-based sample applications" OFF)
  
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index 0a64f7f..440e6b1 100644
+index e70f5d2..42ad324 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -43,8 +43,11 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
+@@ -47,8 +47,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
  
  add_subdirectory(h264)
  
 +if(HOLOHUB_ENABLE_EMERGENT)
  add_holohub_application(high_speed_endoscopy DEPENDS
--                        OPERATORS emergent_source)
-+                        OPERATORS emergent_source
-+                        HOLOSCAN_SAMPLE_APP)
+                         OPERATORS emergent_source)
 +endif()
  
  add_holohub_application(hyperspectral_segmentation)

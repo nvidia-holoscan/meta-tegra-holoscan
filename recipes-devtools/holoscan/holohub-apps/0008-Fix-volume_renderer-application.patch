@@ -5,10 +5,10 @@ Subject: Fix volume_renderer application
 
 
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index faf6569..5650e51 100644
+index 572fd13..9ecd949 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
-@@ -18,52 +18,9 @@ project(volume_renderer)
+@@ -18,55 +18,9 @@ project(volume_renderer)
  find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
@@ -50,7 +50,7 @@ index faf6569..5650e51 100644
 -if(NOT claraviz_POPULATED)
 -    FetchContent_Populate(ClaraViz)
 -    set(CLARA_VIZ_PUBLIC_CMAKE_TOOLS_DIR "${claraviz_SOURCE_DIR}/cmake")
--    add_subdirectory(${claraviz_SOURCE_DIR}/thirdparty ${claraviz_BINARY_DIR}/thirdpary)
+-    add_subdirectory(${claraviz_SOURCE_DIR}/thirdparty ${claraviz_BINARY_DIR}/thirdparty)
 -    add_subdirectory(${claraviz_SOURCE_DIR}/src ${claraviz_BINARY_DIR}/src)
 -endif()
 -set(FETCHCONTENT_QUIET ON)
@@ -58,6 +58,9 @@ index faf6569..5650e51 100644
 -set(CLARA_VIZ_PUBLIC_CMAKE_TOOLS_DIR "${claraviz_SOURCE_DIR}/cmake")
 -
 -find_package(clara_viz_renderer REQUIRED HINTS ${claraviz_SOURCE_DIR}/cmake)
+-install(IMPORTED_RUNTIME_ARTIFACTS clara::viz::renderer
+-  COMPONENT "volume_renderer"
+-)
 +find_package(claraviz REQUIRED)
 +find_package(nlohmann_json REQUIRED)
 +find_package(ZLIB REQUIRED)

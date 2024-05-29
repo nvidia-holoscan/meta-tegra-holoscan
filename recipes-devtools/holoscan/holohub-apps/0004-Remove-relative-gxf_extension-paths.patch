@@ -5,7 +5,7 @@ Subject: Remove relative gxf_extension paths
 
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 2f22f47..d4dad13 100644
+index ca9f9bd..27511d9 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 @@ -20,7 +20,7 @@ extensions:
@@ -33,7 +33,7 @@ index a8b5bd6..04f8bbd 100644
  aja:
    width: 1920
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
-index 0782bce..deb23a1 100644
+index 7cfde37..07395e9 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
 @@ -21,7 +21,7 @@ extensions:

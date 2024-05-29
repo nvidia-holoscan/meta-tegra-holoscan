@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "79758770ed0ffb0bd0b1fd84e4ffa31fe857926f"
-PV = "2.0.0+git${SRCPV}"
+SRCREV = "58cc7ffb52916f34caaeeab7e88433cc848fa32e"
+PV = "2.1.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -37,7 +37,7 @@ SRC_URI += " \
     file://0006-Enable-Emergent-apps.patch \
     file://0007-Fix-default-data-paths-in-python-apps.patch \
     file://0008-Fix-volume_renderer-application.patch \
-    file://0009-Update-AJA-NTV2-dependency-to-17.0.patch \
+    file://0009-Skip-model-download-for-object_detection_torch.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -52,6 +52,14 @@ EXTRA_OECMAKE:append = " \
     -DCMAKE_INSTALL_PREFIX=${HOLOHUB_INSTALL_PATH} \
     -Dholoscan_DIR=${RECIPE_SYSROOT}/opt/nvidia/holoscan/lib/cmake/holoscan \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
+    -DAPP_colonoscopy_segmentation=1 \
+    -DAPP_endoscopy_out_of_body_detection=1 \
+    -DAPP_endoscopy_tool_tracking=1 \
+    -DAPP_multiai_endoscopy=1 \
+    -DAPP_multiai_ultrasound=1 \
+    -DAPP_object_detection_torch=1 \
+    -DAPP_ultrasound_segmentation=1 \
+    -DAPP_volume_rendering=1 \
 "
 
 # Enable the Emergent apps if Emergent Camera support is enabled.
