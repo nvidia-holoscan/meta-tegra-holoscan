@@ -1,3 +1,8 @@
+## [2.1.0] - 2024-06-04
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.1.0
+
+
 ## [2.0.0] - 2024-04-19
 ### Added
 - Magic Enum C++ 0.9.5 recipe
@@ -288,6 +293,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.5.1...v0.6.0
