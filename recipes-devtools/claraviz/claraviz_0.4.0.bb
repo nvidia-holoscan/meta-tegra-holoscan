@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=7bb1df9531208a3d5eaeaa657cc1205b"
 
 SRC_URI = "git://github.com/NVIDIA/clara-viz.git;branch=main;protocol=https"
-SRCREV = "19a1b943dab2fc0a47587dd61ff1752b2d7fb21f"
+SRCREV = "b48d0dccfb3a20ddebd6bc23d9fe0f28a591e166"
 
 SRC_URI += " \
     file://0001-Fix-OE-build.patch \

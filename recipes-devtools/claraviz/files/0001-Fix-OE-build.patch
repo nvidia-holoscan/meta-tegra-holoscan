@@ -5,7 +5,7 @@ Subject: Fix OE build
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 698176b..8d3549a 100644
+index 5b2e73e..a810e92 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -29,7 +29,6 @@ project(ClaraViz
@@ -56,10 +56,10 @@ index 698176b..8d3549a 100644
 -)
 +add_subdirectory(src)
 diff --git a/cmake/Project.cmake b/cmake/Project.cmake
-index 9008824..39365b2 100644
+index d28e088..fdc56f2 100644
 --- a/cmake/Project.cmake
 +++ b/cmake/Project.cmake
-@@ -23,34 +23,6 @@ macro(setup_project)
+@@ -21,34 +21,6 @@ macro(setup_project)
          set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE)
      endif()
  
@@ -176,12 +176,12 @@ index 0000000..f00bf0f
 +# Import target "clara::viz::renderer" for configuration "Release"
 +set_property(TARGET clara::viz::renderer APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 +set_target_properties(clara::viz::renderer PROPERTIES
-+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libclara_viz_renderer.so.0.3.1"
++  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libclara_viz_renderer.so.0.4.0"
 +  IMPORTED_SONAME_RELEASE "libclara_viz_renderer.so.0"
 +  )
 +
 +list(APPEND _IMPORT_CHECK_TARGETS clara::viz::renderer )
-+list(APPEND _IMPORT_CHECK_FILES_FOR_clara::viz::renderer "${_IMPORT_PREFIX}/lib/libclara_viz_renderer.so.0.3.1" )
++list(APPEND _IMPORT_CHECK_FILES_FOR_clara::viz::renderer "${_IMPORT_PREFIX}/lib/libclara_viz_renderer.so.0.4.0" )
 +
 +# Cleanup temporary variables.
 +set(_IMPORT_PREFIX)
@@ -212,12 +212,12 @@ index 0000000..f00bf0f
 +set(CMAKE_IMPORT_FILE_VERSION)
 +cmake_policy(POP)
 diff --git a/src/claraviz/CMakeLists.txt b/src/claraviz/CMakeLists.txt
-index f25715e..99b4706 100644
+index 24ad8e3..fe4c5a1 100644
 --- a/src/claraviz/CMakeLists.txt
 +++ b/src/claraviz/CMakeLists.txt
-@@ -13,6 +13,9 @@
+@@ -12,6 +12,9 @@
+ # See the License for the specific language governing permissions and
  # limitations under the License.
- cmake_minimum_required(VERSION 3.12)
  
 +set(CLARA_VIZ_CMAKE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/claraviz)
 +set(CLARA_VIZ_INCLUDE_INSTALL_DIR ${CMAKE_INSTALL_INCLUDEDIR}/claraviz)
@@ -225,7 +225,7 @@ index f25715e..99b4706 100644
  ######################
  # core
  ######################
-@@ -23,10 +26,7 @@ add_library(clara::viz::core ALIAS ${PROJECT_NAME})
+@@ -22,10 +25,7 @@ add_library(clara::viz::core ALIAS ${PROJECT_NAME})
  
  find_package(CUDAToolkit REQUIRED)
  find_package(OpenH264 CONFIG)
@@ -237,7 +237,7 @@ index f25715e..99b4706 100644
  
  target_code_coverage(${PROJECT_NAME})
  
-@@ -65,7 +65,7 @@ target_sources(${PROJECT_NAME}
+@@ -64,7 +64,7 @@ target_sources(${PROJECT_NAME}
  target_include_directories(${PROJECT_NAME}
      PUBLIC
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
@@ -246,7 +246,7 @@ index f25715e..99b4706 100644
          ${CUDAToolkit_INCLUDE_DIRS}
      )
  
-@@ -89,6 +89,15 @@ if(OpenH264_FOUND)
+@@ -88,6 +88,15 @@ if(OpenH264_FOUND)
          )
  endif()
  
@@ -262,7 +262,7 @@ index f25715e..99b4706 100644
  ######################
  # core hw
  ######################
-@@ -188,6 +197,15 @@ target_link_libraries(${PROJECT_NAME}
+@@ -187,6 +196,15 @@ target_link_libraries(${PROJECT_NAME}
          CUDA::cudart_static
      )
  
@@ -278,7 +278,7 @@ index f25715e..99b4706 100644
  if (CLARA_VIZ_WITH_GRPC)
      ######################
      # core grpc
-@@ -263,4 +281,28 @@ if (CLARA_VIZ_WITH_GRPC)
+@@ -262,4 +280,28 @@ if (CLARA_VIZ_WITH_GRPC)
              clara::viz::proto
              clara::viz::core::hw
          )
@@ -303,7 +303,7 @@ index f25715e..99b4706 100644
 +    INSTALL_DESTINATION ${CLARA_VIZ_CMAKE_INSTALL_DIR})
 +write_basic_package_version_file(
 +    ${CMAKE_CURRENT_BINARY_DIR}/claraviz-config-version.cmake
-+    VERSION 0.3.1
++    VERSION 0.4.0
 +    COMPATIBILITY SameMajorVersion)
 +install(FILES
 +    ${CMAKE_CURRENT_BINARY_DIR}/claraviz-config.cmake
@@ -335,18 +335,18 @@ index eaf2cb2..fa9fbee 100644
  #include <stdexcept>
  
 diff --git a/thirdparty/CMakeLists.txt b/thirdparty/CMakeLists.txt
-index 4453847..c8d64b2 100644
+index 32ee53b..4a3aec9 100644
 --- a/thirdparty/CMakeLists.txt
 +++ b/thirdparty/CMakeLists.txt
-@@ -15,7 +15,6 @@
- cmake_minimum_required(VERSION 3.12)
+@@ -13,7 +13,6 @@
+ # limitations under the License.
  
  add_subdirectory(cuda_helper)
 -add_subdirectory(nlohmann_json)
  if (CLARA_VIZ_WITH_OPENH264)
      add_subdirectory(openh264)
  endif()
-@@ -24,4 +23,4 @@ if (CLARA_VIZ_WITH_GRPC)
+@@ -22,4 +21,4 @@ if (CLARA_VIZ_WITH_GRPC)
      add_subdirectory(openssl)
      add_subdirectory(grpc)
      add_subdirectory(grpc-web)
