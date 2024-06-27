@@ -32,15 +32,15 @@ index a8b5bd6..04f8bbd 100644
  
  aja:
    width: 1920
-diff --git a/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
-index 7cfde37..07395e9 100644
---- a/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
-+++ b/applications/h264/h264_endoscopy_tool_tracking/h264_endoscopy_tool_tracking.yaml
-@@ -21,7 +21,7 @@ extensions:
+diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
+index 57254ef..6b72dbe 100644
+--- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
++++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
+@@ -19,7 +19,7 @@ extensions:
    - libgxf_videodecoderio.so
    - libgxf_videoencoder.so
    - libgxf_videoencoderio.so
--  - ../../../gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
+-  - ../../../../gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
  
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.

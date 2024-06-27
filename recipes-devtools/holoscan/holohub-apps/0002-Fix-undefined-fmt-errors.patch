@@ -5,16 +5,18 @@ Subject: Fix undefined fmt errors
 
 
 diff --git a/operators/tensor_to_video_buffer/CMakeLists.txt b/operators/tensor_to_video_buffer/CMakeLists.txt
-index 964822c..9dfff8c 100644
+index 0c6de59..d9fca7a 100644
 --- a/operators/tensor_to_video_buffer/CMakeLists.txt
 +++ b/operators/tensor_to_video_buffer/CMakeLists.txt
-@@ -31,4 +31,6 @@ target_link_libraries(
+@@ -31,6 +31,8 @@ target_link_libraries(
    holoscan::core
  )
  
 +target_compile_definitions(tensor_to_video_buffer PUBLIC FMT_HEADER_ONLY)
 +
  install(TARGETS tensor_to_video_buffer)
+ 
+ if(HOLOHUB_BUILD_PYTHON)
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
 index 8b471a1..9467998 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt

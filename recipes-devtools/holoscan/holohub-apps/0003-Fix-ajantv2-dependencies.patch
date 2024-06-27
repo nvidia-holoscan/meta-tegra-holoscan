@@ -96,7 +96,7 @@ index 8336cc8..6da18b0 100644
      main.cpp
  )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 97e8a4d..fa30504 100644
+index 6429a6c..21b546e 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
