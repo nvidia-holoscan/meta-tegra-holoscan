@@ -1,3 +1,9 @@
+## [2.2.0] - 2024-07-02
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.2.0
+- Updated Clara Viz to 0.4.0
+
+
 ## [2.1.0] - 2024-06-04
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 2.1.0
@@ -293,6 +299,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v0.6.0...v1.0.0
