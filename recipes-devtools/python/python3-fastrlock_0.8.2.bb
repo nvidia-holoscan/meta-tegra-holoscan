@@ -27,4 +27,4 @@ PYPI_PACKAGE = "fastrlock"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "8a5f2f00021c4ac72e4dab910dc1863c0e008a2e7fb5c843933ae9bcfc3d0802"
+SRC_URI[sha256sum] = "644ec9215cf9c4df8028d8511379a15d9c1af3e16d80e47f1b6fdc6ba118356a"
