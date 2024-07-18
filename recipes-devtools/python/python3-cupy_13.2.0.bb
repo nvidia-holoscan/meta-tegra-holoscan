@@ -21,7 +21,7 @@
 SUMMARY = "NumPy/SciPy-compatible Array Library for GPU-accelerated Computing with Python"
 HOMEPAGE = "https://cupy.dev/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file:///${S}/${WHEEL_BASE}.dist-info/license.rst;md5=b459cbee05a9bd6f6fecc52c37c2cce4"
+LIC_FILES_CHKSUM = "file:///${S}/${WHEEL_BASE}.dist-info/license.rst;md5=54fcf80aa086f2c7bb44f2a34c28bfbc"
 
 CUDA_BASE_VER = "${@ d.getVar('CUDA_VERSION').split('.')[0] }"
 WHEEL_BASE = "cupy_cuda${CUDA_BASE_VER}x-${PV}"
@@ -29,7 +29,7 @@ WHEEL_PYVER = "${@ "cp" + d.getVar('PYTHON_BASEVERSION').replace('.','') }"
 WHEEL_NAME = "${WHEEL_BASE}-${WHEEL_PYVER}-${WHEEL_PYVER}-manylinux2014_${TARGET_ARCH}"
 
 SRC_URI = "https://github.com/cupy/cupy/releases/download/v${PV}/${WHEEL_NAME}.whl;downloadfilename=${WHEEL_NAME}.zip;subdir=${BP}"
-SRC_URI[sha256sum] = "e8a4906da820f6ce39a3a1d18c4504da4e0faad87598761ea9d6bf8288423d69"
+SRC_URI[sha256sum] = "b8298b3e081b6a599f263aa01e0fa02520454358634f1ba7a8adb07be3e05526"
 
 inherit python3-dir cuda
 
