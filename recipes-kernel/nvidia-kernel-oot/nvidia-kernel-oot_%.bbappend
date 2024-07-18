@@ -30,5 +30,5 @@ do_install:append() {
 }
 
 do_install:append:dgpu() {
-    rm ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/extra/nvidia*.ko
+    rm ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/updates/nvidia*.ko
 }
