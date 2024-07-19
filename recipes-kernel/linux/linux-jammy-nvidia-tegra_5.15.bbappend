@@ -22,6 +22,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 SRC_URI:append = " \
     file://Enable-module-signing.cfg \
     file://Disable-modules-provided-by-mlnx-ofed.cfg \
+    ${@bb.utils.contains('IMAGE_FEATURES', 'kata-containers', 'file://Enable-kata-container-module-dependencies.cfg', '', d)} \
 "
 
 SRC_URI:append = "${@'file://Add-MMU_NOTIFIER-dependency-in-nv-p2p-Kconfig.patch' if 'RT_PATCH' in d else ''}"
@@ -30,7 +31,7 @@ do_patch:append () {
     if [ "${@d.getVar('RT_PATCH', True)}" = "1" ]; then
         cd ${S}/scripts
         ./rt-patch.sh apply-patches
-        # The below changes are needed so that the symlinks are 
+        # The below changes are needed so that the symlinks are
         # relative to the local directories and not absolute
         cd ${S}/arch/arm64/configs/
         mv .updated.defconfig updated.defconfig

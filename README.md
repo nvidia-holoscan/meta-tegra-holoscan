@@ -233,6 +233,30 @@ built into the image by adding the `kernel-module-ajantv2` component to
 CORE_IMAGE_EXTRA_INSTALL:append = " kernel-module-ajantv2"
 ```
 
+##### Enabling Kata Container Support
+
+To enable support for [Kata Containers](https://katacontainers.io/), add
+`kata-containers` to the list of enabled image features using the following:
+
+```
+EXTRA_IMAGE_FEATURES:append = " kata-containers"
+```
+
+This will install the Kata Container runtime/shim, prebuilt guest kernel, and
+prebuilt guest root filesystem as provided by the official
+[Kata Containers release](https://github.com/kata-containers/kata-containers/releases).
+It will also ensure that any required kernel modules will be included in the
+image. To replace the default guest kernel and root filesystem, provide
+replacement components using the `kata-containers-guest` recipe.
+
+An example of running a Kata container on the target device using the Docker
+CLI, running `uname -r` to output the guest OS kernel version, is as follows:
+
+```sh
+# docker run -it --runtime io.containerd.kata.v2 docker.io/library/busybox:latest uname -r
+6.1.62
+```
+
 #### Building and Flashing
 
 This `meta-tegra-holoscan` layer provides a `core-image-holoscan` OE image type

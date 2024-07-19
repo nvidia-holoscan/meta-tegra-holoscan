@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,19 +18,8 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "Holoscan Reference Image"
+# Disable the GL renderer due to build errors.
+PACKAGECONFIG:remove = "virglrenderer epoxy"
 
-FEATURE_PACKAGES_holoscan = "packagegroup-core-holoscan"
-
-IMAGE_FEATURES += "splash package-management x11-base holoscan ssh-server-dropbear"
-
-LICENSE = "MIT"
-
-inherit core-image
-
-MACHINE_HWCODECS:remove = "gstreamer1.0-plugins-nvvideo4linux2"
-
-QB_MEM = '${@bb.utils.contains("DISTRO_FEATURES", "opengl", "-m 512", "-m 256", d)}'
-
-IMAGE_FEATURES[validitems] += "kata-containers"
-IMAGE_INSTALL:append = " ${@bb.utils.contains('IMAGE_FEATURES', 'kata-containers', 'kata-containers-runtime', '', d)}"
+# Enable vhost support for Kata containers.
+PACKAGECONFIG:append = " ${@bb.utils.contains('IMAGE_FEATURES', 'kata-containers', 'vhost', '', d)}"
