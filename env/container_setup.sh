@@ -50,19 +50,19 @@ git_clone() {
 }
 
 # Poky
-POKY_REV="bf9f2f6f60387b3a7cd570919cef6c4570edcb82"
+POKY_REV="f7def85be9f99dcb4ba488bead201f670304379b"
 git_clone "https://git.yoctoproject.org/poky.git" ${POKY_REV}
 
 # meta-openembedded layer
-META_OPENEMBEDDED_REV="2da6e1b0e43a8993fd422fee3f83940100b59f4c"
+META_OPENEMBEDDED_REV="18f939a5fb37528a5415b05077ece383c346a119"
 git_clone "https://github.com/openembedded/meta-openembedded.git" ${META_OPENEMBEDDED_REV}
 
 # meta-virtualization layer
-META_VIRTUALIZATION_REV="9e92984ff47b3ca2106b1d27a93af061b28d1e8a"
+META_VIRTUALIZATION_REV="6a80f140e387621f62964209a2e07d3bcfb125ce"
 git_clone "https://git.yoctoproject.org/meta-virtualization.git" ${META_VIRTUALIZATION_REV}
 
 # meta-tegra layer
-META_TEGRA_REV="69148ee2121329c1cfb81644ec1a97ba09d6af29"
+META_TEGRA_REV="caf164e4917dc56d59990c72f9d8284abb6621f5"
 git_clone "https://github.com/nvidia-holoscan/meta-tegra.git" ${META_TEGRA_REV}
 
 # meta-tegra-holoscan layer (copied from build container)
