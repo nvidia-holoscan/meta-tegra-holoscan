@@ -19,9 +19,9 @@
 # DEALINGS IN THE SOFTWARE.
 
 RPROVIDES:${PN} += " \
-    kernel-module-nvidia \
-    kernel-module-nvidia-drm \
-    kernel-module-nvidia-modeset \
+    nv-kernel-module-nvidia \
+    nv-kernel-module-nvidia-drm \
+    nv-kernel-module-nvidia-modeset \
 "
 
 do_install:append() {

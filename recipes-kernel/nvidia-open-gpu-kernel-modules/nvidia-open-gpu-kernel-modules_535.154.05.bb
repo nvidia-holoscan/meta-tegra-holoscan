@@ -59,9 +59,9 @@ KERNEL_MODULE_PROBECONF = "nvidia"
 module_conf_nvidia = "options nvidia NVreg_OpenRmEnableUnsupportedGpus=1 NVreg_DmaRemapPeerMmio=0"
 
 RPROVIDES:${PN} += " \
-    kernel-module-nvidia \
-    kernel-module-nvidia-drm \
-    kernel-module-nvidia-modeset \
-    kernel-module-nvidia-peermem \
-    kernel-module-nvidia-uvm \
+    nv-kernel-module-nvidia \
+    nv-kernel-module-nvidia-drm \
+    nv-kernel-module-nvidia-modeset \
+    nv-kernel-module-nvidia-peermem \
+    nv-kernel-module-nvidia-uvm \
 "
