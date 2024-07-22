@@ -282,7 +282,7 @@ Using the configuration described above, this will build the BSP image and write
 the output to
 
 ```
-build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.tegraflash.tar.gz
+build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.rootfs.tegraflash.tar.gz
 ```
 
 The above file can then be extracted and the `doflash.sh` script that it
