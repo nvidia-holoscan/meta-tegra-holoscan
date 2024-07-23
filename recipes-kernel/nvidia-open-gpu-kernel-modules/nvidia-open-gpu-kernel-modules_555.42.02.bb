@@ -23,7 +23,7 @@ LICENSE = "MIT | GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1d5fa2a493e937d5a4b96e5e03b90f7c"
 
 SRC_URI = "git://github.com/NVIDIA/open-gpu-kernel-modules.git;branch=${@d.getVar('PV').split('.')[0]};protocol=https"
-SRCREV = "ee55481a49edc10d823ce5aabc75422b9b487b78"
+SRCREV = "5a1c474040e1c3ed20760267510cc9d9332898f1"
 
 SRC_URI:append = " \
     file://0001-Enable-MOFED-peer-memory-symbols.patch \
