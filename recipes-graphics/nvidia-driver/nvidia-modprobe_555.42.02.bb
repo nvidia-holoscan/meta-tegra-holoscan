@@ -20,5 +20,5 @@
 
 require nvidia-driver-common.inc
 
-SRC_COMMON_DEBS = "${BPN}-${MAJVER}_${PV}-0ubuntu1_all.deb;subdir=${BP}"
-SRC_URI[sha256sum] = "8390a10647c4806e034ec7136d383fc76af99e436842ce85ae1f898831aa30bc"
+SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
+SRC_URI[sha256sum] = "bb514b2f333a6c666e630f4c4e943718c8877c8bfd86ea85f600b41e522d90cd"

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,32 +18,35 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-require nvidia-driver-common.inc
+DESCRIPTION = "Meta-package for bringing in NVIDIA drivers and tools"
+LICENSE = "CLOSED"
 
-SRC_URI[sha256sum] = "cad6b57e8a5ff872b562555fcbc6ab35aed450177b22399709f0bd4eff9e05ea"
-
-do_install:append() {
-    install -d ${D}${libdir}/xorg/modules/extensions
-    ln -s ${libdir}/nvidia/xorg/libglxserver_nvidia.so ${D}${libdir}/xorg/modules/extensions/
-}
-
-RDEPENDS:${PN} = " \
+NVIDIA_DRIVER_PACKAGES = " \
+    libnvidia-cfg1 \
     libnvidia-common \
-    libdrm \
-    libgbm \
-    libglvnd \
-    libx11 \
-    libxcb-glx \
-    libxext \
+    libnvidia-compute \
+    libnvidia-decode \
+    libnvidia-encode \
+    libnvidia-extra \
+    libnvidia-fbc1 \
+    libnvidia-gl \
+    nvidia-compute-utils \
+    nvidia-firmware \
+    nvidia-kernel-common \
+    nvidia-modprobe \
+    nvidia-settings \
+    nvidia-utils \
+    xserver-xorg-video-nvidia (= ${PV}) \
 "
 
-TEGRA_LIBRARIES = " \
-    egl-gbm \
-    tegra-libraries-eglcore \
-    tegra-libraries-glescore \
-    tegra-libraries-glxcore \
-    tegra-libraries-vulkan \
-"
+DEPENDS = "${NVIDIA_DRIVER_PACKAGES}"
+RDEPENDS:${PN} = "${NVIDIA_DRIVER_PACKAGES}"
 
-RPROVIDES:${PN} += "${TEGRA_LIBRARIES}"
-RCONFLICTS:${PN} += "${TEGRA_LIBRARIES}"
+do_fetch[noexec] = "1"
+do_unpack[noexec] = "1"
+do_patch[noexec] = "1"
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_install[noexec] = "1"
+
+ALLOW_EMPTY:${PN} = "1"

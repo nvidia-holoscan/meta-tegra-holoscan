@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,34 +18,12 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-DESCRIPTION = "Meta-package for bringing in NVIDIA drivers and tools"
-LICENSE = "CLOSED"
+require nvidia-driver-common.inc
 
-NVIDIA_DRIVER_PACKAGES = " \
-    libnvidia-cfg1 \
-    libnvidia-common \
-    libnvidia-compute \
-    libnvidia-decode \
-    libnvidia-encode \
-    libnvidia-extra \
-    libnvidia-fbc1 \
-    libnvidia-gl \
-    nvidia-compute-utils \
-    nvidia-kernel-common \
-    nvidia-modprobe \
-    nvidia-settings \
-    nvidia-utils \
-    xserver-xorg-video-nvidia (= ${PV}) \
+SRC_URI[sha256sum] = "b95bacad5b771d7f696ef79c1252e15060dd397181052fcc0fe79e458ee2e4c4"
+
+RDEPENDS:${PN} = " \
+    libglvnd \
+    libx11 \
+    libxext \
 "
-
-DEPENDS = "${NVIDIA_DRIVER_PACKAGES}"
-RDEPENDS:${PN} = "${NVIDIA_DRIVER_PACKAGES}"
-
-do_fetch[noexec] = "1"
-do_unpack[noexec] = "1"
-do_patch[noexec] = "1"
-do_configure[noexec] = "1"
-do_compile[noexec] = "1"
-do_install[noexec] = "1"
-
-ALLOW_EMPTY:${PN} = "1"

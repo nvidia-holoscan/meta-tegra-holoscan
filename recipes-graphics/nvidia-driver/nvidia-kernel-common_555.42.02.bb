@@ -20,4 +20,14 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "72df1634cd6e8f2685edb8efd8881a1e523d92fa6dc1daa5db86faaafd1affed"
+SRC_URI[sha256sum] = "c1d40f2367b19de4bf5c6cc0cfe9f60adcfb9fb13059b3dc8cdfc1d2d7ac5e99"
+
+do_install:append() {
+    install -d ${D}${libdir}
+    cp -rd --no-preserve=ownership ${S}/lib/* ${D}${libdir}
+}
+
+RDEPENDS:${PN} += " \
+    nvidia-open-gpu-kernel-modules \
+    bash \
+"

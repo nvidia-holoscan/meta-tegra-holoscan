@@ -20,20 +20,23 @@
 
 require nvidia-driver-common.inc
 
-SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
-SRC_URI[sha256sum] = "74a57c029ab371b3d68a322f5589dda3c6686cc1511f5083b53e74f6fa4e7045"
+SRC_URI[sha256sum] = "eeb40a981bc3ded2fe3a47bd69e8eec48778ebba77fb07a4e5f15cb49a5c42d3"
+
+do_install:append() {
+    install -d ${D}${libdir}/xorg/modules/drivers
+    ln -s ${libdir}/nvidia/xorg/nvidia_drv.so ${D}${libdir}/xorg/modules/drivers/
+}
 
 RDEPENDS:${PN} += " \
-    cairo \
-    gdk-pixbuf \
-    glib-2.0 \
-    gtk+ \
-    gtk+3 \
-    jansson \
-    libvdpau \
-    libx11 \
-    libxnvctrl0 \
-    libxxf86vm \
-    pango \
-    pkgconfig \
+    libnvidia-gl \
+    xserver-xorg-module-libwfb \
 "
+
+# Add the ABI dependency at package generation time, as otherwise bitbake will
+# attempt to find a provider for it (and fail) when it does the parse.
+python populate_packages:prepend() {
+    d.appendVar("RDEPENDS:" + d.getVar("PN", True), " xorg-abi-video-25")
+}
+
+RPROVIDES:${PN} += "xserver-xorg-extension-glx"
+RCONFLICTS:${PN} = "xserver-xorg-extension-glx"

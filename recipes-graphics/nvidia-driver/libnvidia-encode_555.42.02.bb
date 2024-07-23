@@ -20,4 +20,8 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "d447ef325d38f8824ba6eeb446053c2474426028b943aa2d97167ae32b875990"
+SRC_URI[sha256sum] = "c5ba49f668b895393fddf61bc340379f3a67f03420748affa2d8c6e098676548"
+
+RDEPENDS:${PN} = " \
+    libnvidia-decode \
+"

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,10 +20,13 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "1e9f10f100d348195835b1da99933e4ad930056aedbf7f18550b6261bd9704c7"
+SRC_COMMON_DEBS = "${BPN}-${MAJVER}-${PV}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
+SRC_URI[sha256sum] = "266071b762ed15d6b2abd2a07a45027d50216a337beb389c98193c2c0d089129"
 
-RDEPENDS:${PN} = " \
-    libnvidia-compute \
-    libx11 \
-    libxext \
-"
+do_install:append() {
+    install -d ${D}${libdir}
+    cp -rd --no-preserve=ownership ${S}/lib/* ${D}${libdir}
+}
+
+# The GPU firmware binaries do not match the arm64 expected by bitbake's arch check.
+INSANE_SKIP:${PN} += "arch"

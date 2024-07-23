@@ -21,4 +21,9 @@
 require nvidia-driver-common.inc
 
 SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
-SRC_URI[sha256sum] = "127402dddc092c06f8ba34e6381a54791952b0f181317c23e447d76acbe3441a"
+SRC_URI[sha256sum] = "621ca8591592da3e1c69c74bb9f706a856509e4ed5d9a7de7f7c9e166efc605a"
+
+RDEPENDS:${PN} = " \
+    libx11 \
+    libxext \
+"

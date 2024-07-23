@@ -20,8 +20,5 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "e385eff72eeda22547df3c79c25383364f0fd5b3cff931d085a29f3ffa39fdd0"
-
-RDEPENDS:${PN} += " \
-    libnvidia-compute \
-"
+SRC_COMMON_DEBS = "${BPN}-${MAJVER}_${PV}-0ubuntu1_all.deb;subdir=${BP}"
+SRC_URI[sha256sum] = "83bd9d2ac6e81a77dc19b705e227b2d0437cc475e1ae9f6f5437f4ab9c61324d"

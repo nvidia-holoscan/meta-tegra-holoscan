@@ -20,4 +20,7 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "4fb922dfdf98351d090f043b0fc4d89db00a7877ac60c77af1fabb5ebad77975"
+SRC_URI[sha256sum] = "3ee98e0401ef67bb4cc486bbd8c593d280ca36854805028b35714bd9f02f1f43"
+
+RPROVIDES:${PN} += "tegra-libraries-cuda"
+RCONFLICTS:${PN} += "tegra-libraries-cuda"

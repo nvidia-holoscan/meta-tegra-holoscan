@@ -20,10 +20,10 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "2a664ed7254cbda092555f6b91c10ae4a075ca7de8c963bfffaf71db372c9e71"
+SRC_URI[sha256sum] = "8325870587859e4ae21df84bcc1305c536bee55306d5e7ddbe75a4f7581bbc4b"
 
 RDEPENDS:${PN} = " \
-    libglvnd \
+    libnvidia-compute \
     libx11 \
     libxext \
 "

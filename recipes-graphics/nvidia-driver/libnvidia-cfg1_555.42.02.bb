@@ -20,18 +20,4 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "a50877636b649d1f6b04851abac562ca3e769039fd9350b19b0a7f988551f1e6"
-
-do_install:append() {
-    install -d ${D}${libdir}
-    cp -rd --no-preserve=ownership ${S}/lib/* ${D}${libdir}
-}
-
-FILES:${PN} += " \
-    ${base_libdir} \
-"
-
-RDEPENDS:${PN} += "nvidia-open-gpu-kernel-modules"
-
-# The GPU firmware binaries do not match the arm64 expected by bitbake's arch check.
-INSANE_SKIP:${PN} += "arch"
+SRC_URI[sha256sum] = "161b2b88217c10013b371cf27c62e9b2cb9b2ff561e0fc12c65f4299d03ff83a"

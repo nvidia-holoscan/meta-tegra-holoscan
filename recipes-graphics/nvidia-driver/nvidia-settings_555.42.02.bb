@@ -20,8 +20,20 @@
 
 require nvidia-driver-common.inc
 
-SRC_URI[sha256sum] = "bff701c1dd93f085bb70d75877eb81421786b5c01dff60942cf72a51816981fe"
+SRC_COMMON_DEBS = "${BPN}_${PV}-0ubuntu1_arm64.deb;subdir=${BP}"
+SRC_URI[sha256sum] = "c6cc60e557c7815ba7ff51477488cf95c25e8048db6ef61ed922bfa34fcb8f4b"
 
-RDEPENDS:${PN} = " \
-    libnvidia-decode \
+RDEPENDS:${PN} += " \
+    cairo \
+    gdk-pixbuf \
+    glib-2.0 \
+    gtk+ \
+    gtk+3 \
+    jansson \
+    libvdpau \
+    libx11 \
+    libxnvctrl0 \
+    libxxf86vm \
+    pango \
+    pkgconfig \
 "
