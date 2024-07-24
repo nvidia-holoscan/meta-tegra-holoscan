@@ -18,11 +18,11 @@ index e8e4fd0..f92e12b 100644
  
  add_executable(endoscopy_out_of_body_detection
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index cec5fcb..4e6da91 100644
+index 1b4f530..152b9e6 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
- find_package(holoscan 0.5 REQUIRED CONFIG
+ find_package(holoscan 1.0 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 +find_package(ajantv2 17.0 REQUIRED CONFIG)

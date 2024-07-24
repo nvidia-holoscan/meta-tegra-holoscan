@@ -5,20 +5,20 @@ Subject: Remove relative gxf_extension paths
 
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index ca9f9bd..27511d9 100644
+index 5cb52f4..76db2f0 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-@@ -20,7 +20,7 @@ extensions:
-   - libgxf_multimedia.so
-   - libgxf_serialization.so
-   - libgxf_stream_playback.so
+@@ -15,7 +15,7 @@
+ # limitations under the License.
+ ---
+ extensions:
 -  - gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
  # Uncomment the following extension when using deltacast as a source
  #  - gxf_extensions/deltacast_videomaster/libgxf_videomaster.so
  # Uncomment the following extension when using yuan as source
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index a8b5bd6..04f8bbd 100644
+index 4247280..bf3e2cb 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 @@ -15,8 +15,8 @@
@@ -30,8 +30,8 @@ index a8b5bd6..04f8bbd 100644
 +- libgxf_lstm_tensor_rt_inference.so
 +- libgxf_qcap_source.so
  
- aja:
-   width: 1920
+ visualizer: "holoviz" # "holoviz" or "vtk"
+ 
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 index 57254ef..6b72dbe 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml

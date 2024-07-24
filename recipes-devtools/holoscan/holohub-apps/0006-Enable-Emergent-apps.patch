@@ -5,7 +5,7 @@ Subject: Enable Emergent apps
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9bc72ec..bb1587e 100644
+index 096e5de..6cb6d84 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -30,6 +30,7 @@ include(CTest)
@@ -17,11 +17,11 @@ index 9bc72ec..bb1587e 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index b9288cf..24401a3 100644
+index 8f87822..f5d38d3 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -47,8 +47,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
- 
+@@ -50,8 +50,10 @@ add_holohub_application(endoscopy_tool_tracking_distributed DEPENDS
+                                   tool_tracking_postprocessor)
  add_subdirectory(h264)
  
 +if(HOLOHUB_ENABLE_EMERGENT)

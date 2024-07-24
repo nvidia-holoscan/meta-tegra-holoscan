@@ -44,7 +44,7 @@ index 8ad93dd..e8e4fd0 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index e8a7806..cec5fcb 100644
+index eacb93b..1b4f530 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -53,6 +53,15 @@ add_custom_target(endoscopy_tool_tracking_deps
@@ -64,7 +64,7 @@ index e8a7806..cec5fcb 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/endoscopy_tool_tracking/python/CMakeLists.txt b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-index 007f5a5..d3ce4af 100644
+index e26de61..8da0b0a 100644
 --- a/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -103,12 +103,12 @@ index 36b5212..61b3d6c 100644
  if(BUILD_TESTING)
    add_test(NAME h264_endoscopy_tool_tracking_cpp_test
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt b/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
-index bd55e3c..762ecbc 100644
+index aa3c787..ca0ee29 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
-@@ -13,6 +13,14 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
+@@ -21,6 +21,14 @@ find_package(holoscan 2.1.0 REQUIRED CONFIG
+ add_library(nvidia_nim_imaging INTERFACE)
+ target_link_libraries(nvidia_nim_imaging INTERFACE holoscan::core holoscan::ops::holoviz holoscan::ops::lstm_tensor_rt_inference holoscan::ops::tensor_to_video_buffer holoscan::ops::tool_tracking_postprocessor)
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -120,11 +120,11 @@ index bd55e3c..762ecbc 100644
 +
  # Add testing
  if(BUILD_TESTING)
-   # To get the environment path
-diff --git a/applications/h264/h264_video_decode/CMakeLists.txt b/applications/h264/h264_video_decode/CMakeLists.txt
+   add_test(NAME h264_endoscopy_tool_tracking_python_test
+diff --git a/applications/h264/h264_video_decode/cpp/CMakeLists.txt b/applications/h264/h264_video_decode/cpp/CMakeLists.txt
 index 9e5be1e..bbc024d 100644
---- a/applications/h264/h264_video_decode/CMakeLists.txt
-+++ b/applications/h264/h264_video_decode/CMakeLists.txt
+--- a/applications/h264/h264_video_decode/cpp/CMakeLists.txt
++++ b/applications/h264/h264_video_decode/cpp/CMakeLists.txt
 @@ -51,6 +51,15 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
    add_dependencies(h264_video_decode endoscopy_data)
  endif()
@@ -141,6 +141,25 @@ index 9e5be1e..bbc024d 100644
  # Add testing
  if(BUILD_TESTING)
    add_test(NAME h264_video_decode_cpp_test
+diff --git a/applications/h264/h264_video_decode/python/CMakeLists.txt b/applications/h264/h264_video_decode/python/CMakeLists.txt
+index b024ff3..8a6fdb0 100644
+--- a/applications/h264/h264_video_decode/python/CMakeLists.txt
++++ b/applications/h264/h264_video_decode/python/CMakeLists.txt
+@@ -17,6 +17,14 @@ cmake_minimum_required(VERSION 3.20)
+ find_package(holoscan 2.1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(FILES
++  ${CMAKE_CURRENT_SOURCE_DIR}/h264_video_decode.py
++  ${CMAKE_CURRENT_SOURCE_DIR}/h264_video_decode.yaml
++  DESTINATION ${install_path}
++)
++
+ # Add testing
+ if(BUILD_TESTING)
+   add_test(NAME h264_video_decode_python_test
 diff --git a/applications/high_speed_endoscopy/cpp/CMakeLists.txt b/applications/high_speed_endoscopy/cpp/CMakeLists.txt
 index ea261e0..311a441 100644
 --- a/applications/high_speed_endoscopy/cpp/CMakeLists.txt
@@ -322,9 +341,18 @@ index 240fbb5..848bb1a 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/volume_rendering/CMakeLists.txt b/applications/volume_rendering/CMakeLists.txt
-index df8d721..aeb189f 100644
+index bdcb8c9..bad9c16 100644
 --- a/applications/volume_rendering/CMakeLists.txt
 +++ b/applications/volume_rendering/CMakeLists.txt
+@@ -15,4 +15,3 @@
+ 
+ add_subdirectory(cpp)
+ add_subdirectory(python)
+-
+diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
+index c9c5e51..d7a3088 100644
+--- a/applications/volume_rendering/cpp/CMakeLists.txt
++++ b/applications/volume_rendering/cpp/CMakeLists.txt
 @@ -54,3 +54,9 @@ if(BUILD_TESTING)
    set_tests_properties(volume_rendering_test PROPERTIES
                         PASS_REGULAR_EXPRESSION "Application has finished running.")
@@ -335,6 +363,25 @@ index df8d721..aeb189f 100644
 +install(TARGETS volume_rendering
 +  DESTINATION ${install_path}
 +)
+diff --git a/applications/volume_rendering/python/CMakeLists.txt b/applications/volume_rendering/python/CMakeLists.txt
+index 4e29a8d..5506f13 100644
+--- a/applications/volume_rendering/python/CMakeLists.txt
++++ b/applications/volume_rendering/python/CMakeLists.txt
+@@ -35,4 +35,12 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
+     ALL
+   )
+   add_dependencies(volume_rendering volume_rendering_data)
+-endif()
+\ No newline at end of file
++endif()
++
++# Install the application
++file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
++install(FILES
++  ${CMAKE_CURRENT_SOURCE_DIR}/volume_rendering.py
++  DESTINATION ${install_path}
++)
++
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
 index cb9bd6b..3f30510 100644
 --- a/cmake/pybind11_add_holohub_module.cmake

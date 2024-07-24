@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "557413ec76bf13961f48903952862ea83d04d8b6"
-PV = "2.2.0+git${SRCPV}"
+SRCREV = "4c1573261b60c7924c707d68e9d596939d660fd1"
+PV = "2.3.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
