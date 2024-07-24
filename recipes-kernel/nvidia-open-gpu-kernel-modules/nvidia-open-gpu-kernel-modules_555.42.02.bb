@@ -59,6 +59,17 @@ KERNEL_MODULE_PROBECONF = "nvidia"
 module_conf_nvidia = "options nvidia NVreg_OpenRmEnableUnsupportedGpus=1 NVreg_DmaRemapPeerMmio=0"
 
 RPROVIDES:${PN} += " \
+    kernel-module-nvidia \
+    kernel-module-nvidia-drm \
+    kernel-module-nvidia-modeset \
+    kernel-module-nvidia-peermem \
+    kernel-module-nvidia-uvm \
+"
+
+# This package conflicts with the Tegra kernel modules provided by nvidia-kernel-oot
+# (which are typically installed with the nvidia-kernel-oot-display meta package, but
+# may also be installed by accident by installing all of nvidia-kernel-oot).
+RCONFLICTS:${PN} += " \
     nv-kernel-module-nvidia \
     nv-kernel-module-nvidia-drm \
     nv-kernel-module-nvidia-modeset \

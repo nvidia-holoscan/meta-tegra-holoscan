@@ -56,7 +56,7 @@ RDEPENDS:${PN} += " \
     rivermax-license \
 "
 
-RDEPENDS:${PN}:append:dgpu = " nv-kernel-module-nvidia-peermem"
+RDEPENDS:${PN}:append:dgpu = " kernel-module-nvidia-peermem"
 
 SOLIBS = "*.so*"
 FILES_SOLIBSDEV = ""
