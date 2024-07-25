@@ -21,7 +21,8 @@
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=0ce9f69a0af4b70f1ae5d12b9f986694"
 
-SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=release"
+BRANCH="ntv2_${@d.getVar('PV').split('.')[0]}_${@d.getVar('PV').split('.')[1]}"
+SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=${BRANCH}"
 # tag: ntv2_17_0_1
 SRCREV = "b6acce6b135c3d9ae7a2bce966180b159ced619f"
 
