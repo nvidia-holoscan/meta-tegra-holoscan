@@ -1,3 +1,24 @@
+## [2.3.0] - 2024-08-05
+### Added
+- Support for Kata Containers (3.7.0)
+
+### Changed
+- Updated L4T to 36.3.0
+- Updated Yocto and all layer dependencies to Scarthgap (5.0.2)
+- Updated dGPU drivers to 555.42.02
+- Updated CuPy to 13.2.0
+- Updated FastRLock to 0.8.2
+- Updated Holoscan SDK and Holohub apps to 2.3.0
+- Restored IGX Orin Devkit machine configuration, which used to be provided
+  by meta-tegra layer.
+- Removed use of `PREFERRED_RPROVIDER` to install dGPU drivers, instead fixing
+  `MACHINE_EXTRA_RDEPENDS` to remove the Tegra iGPU display drivers then install
+  the dGPU drivers instead.
+
+### Fixed
+- Fixed the branch name used by the ajantv2 recipe.
+
+
 ## [2.2.0] - 2024-07-02
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 2.2.0
@@ -299,6 +320,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v1.0.0...v2.0.0
