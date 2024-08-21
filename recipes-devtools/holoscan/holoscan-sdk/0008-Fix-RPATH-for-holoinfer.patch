@@ -5,10 +5,10 @@ Subject: Fix RPATH for holoinfer
 
 
 diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
-index f95c408..4e632db 100644
+index 4dd564ef8..c05ed4dcf 100644
 --- a/modules/holoinfer/src/CMakeLists.txt
 +++ b/modules/holoinfer/src/CMakeLists.txt
-@@ -29,7 +29,7 @@ if(HOLOSCAN_BUILD_LIBTORCH)
+@@ -31,7 +31,7 @@ if(HOLOSCAN_BUILD_LIBTORCH)
          EXPORT_NAME infer::torch
          SOVERSION ${PROJECT_VERSION_MAJOR}
          VERSION ${PROJECT_VERSION}
@@ -17,7 +17,7 @@ index f95c408..4e632db 100644
      )
      target_link_libraries(holoinfer_torch
          PRIVATE
-@@ -60,7 +60,7 @@ if(HOLOSCAN_BUILD_ORT)
+@@ -62,7 +62,7 @@ if(HOLOSCAN_BUILD_ORT)
          EXPORT_NAME infer::onnx_runtime
          SOVERSION ${PROJECT_VERSION_MAJOR}
          VERSION ${PROJECT_VERSION}

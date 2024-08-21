@@ -27,7 +27,7 @@ index 5646914ef..50cfab9b0 100644
      gxf_uid_t cid;
      HOLOSCAN_GXF_CALL_FATAL(GxfComponentAdd(context(), eid(), tid, name, &cid));
 diff --git a/include/holoscan/core/gxf/gxf_utils.hpp b/include/holoscan/core/gxf/gxf_utils.hpp
-index 5076f046a..999ce4e6e 100644
+index 977dc663d..069e7c227 100644
 --- a/include/holoscan/core/gxf/gxf_utils.hpp
 +++ b/include/holoscan/core/gxf/gxf_utils.hpp
 @@ -198,7 +198,7 @@ inline gxf_uid_t find_component_handle(gxf_context_t context, gxf_uid_t componen
@@ -39,37 +39,6 @@ index 5076f046a..999ce4e6e 100644
    if (result_2 != GXF_SUCCESS) { return 0; }
  
    // Find the component in the indicated entity
-diff --git a/include/holoscan/core/io_context.hpp b/include/holoscan/core/io_context.hpp
-index 1015645b2..4f1997e53 100644
---- a/include/holoscan/core/io_context.hpp
-+++ b/include/holoscan/core/io_context.hpp
-@@ -253,7 +253,7 @@ class InputContext {
-           auto error_message = fmt::format(
-               "Unable to cast the received data to the specified type ({}) for input '{}' of type "
-               "{}: {}",
--              nvidia::TypenameAsString<DataT>(),
-+              TypenameAsString<DataT>(),
-               name,
-               value.type().name(),
-               e.what());
-@@ -302,7 +302,7 @@ class InputContext {
-           auto error_message = fmt::format(
-               "Unable to cast the received data to the specified type ({}) for input '{}:{}' of "
-               "type {}: {}",
--              nvidia::TypenameAsString<DataT>(),
-+              TypenameAsString<DataT>(),
-               name,
-               index,
-               value.type().name(),
-@@ -425,7 +425,7 @@ class InputContext {
-       auto error_message = fmt::format(
-           "Unable to cast the received data to the specified type ({}) for input {} of type {}: "
-           "{}",
--          nvidia::TypenameAsString<DataT>(),
-+          TypenameAsString<DataT>(),
-           name,
-           value_type.name(),
-           exception_message);
 diff --git a/src/core/gxf/entity.cpp b/src/core/gxf/entity.cpp
 index dcb220946..d2b23e96e 100644
 --- a/src/core/gxf/entity.cpp

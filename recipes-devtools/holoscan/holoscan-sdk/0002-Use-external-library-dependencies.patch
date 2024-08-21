@@ -12,10 +12,10 @@ fetched, built, and installed by CMake:
  - yaml-cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f2bca9efc..d735dd946 100644
+index 6bafc5165..ebf4ea121 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -207,17 +207,9 @@ if(HOLOSCAN_BUILD_ORT)
+@@ -209,17 +209,9 @@ if(HOLOSCAN_BUILD_ORT)
      list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_ort)
  endif()
  if(HOLOSCAN_BUILD_AJA)
@@ -35,15 +35,22 @@ index f2bca9efc..d735dd946 100644
  install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
      DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
 diff --git a/cmake/deps/ajantv2_rapids.cmake b/cmake/deps/ajantv2_rapids.cmake
-index 22ded6547..34fc5e6f7 100644
+index 721877b69..34fc5e6f7 100644
 --- a/cmake/deps/ajantv2_rapids.cmake
 +++ b/cmake/deps/ajantv2_rapids.cmake
-@@ -16,38 +16,4 @@
+@@ -16,45 +16,4 @@
  # https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
  include(${rapids-cmake-dir}/cpm/find.cmake)
  
 -# Setting NTV2_VERSION_BUILD environment variable to avoid CMake warning
 -set(ENV{NTV2_VERSION_BUILD} 1)
+-
+-# Do not include debug information for RelWithDebInfo builds to avoid large binaries
+-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+-    set(AJA_BUILD_TYPE "Debug")
+-else()
+-    set(AJA_BUILD_TYPE "Release")
+-endif()
 -
 -rapids_cpm_find(ajantv2 17.0.1
 -    GLOBAL_TARGETS AJA::ajantv2
@@ -60,7 +67,7 @@ index 22ded6547..34fc5e6f7 100644
 -    "AJANTV2_DISABLE_TOOLS ON"
 -    "AJA_INSTALL_HEADERS OFF"
 -    "AJA_INSTALL_SOURCES OFF"
--    "CMAKE_BUILD_TYPE Release"
+-    "CMAKE_BUILD_TYPE ${AJA_BUILD_TYPE}"
 -    EXCLUDE_FROM_ALL
 -)
 -
