@@ -5,12 +5,12 @@ Subject: Remove relative gxf_extension paths
 
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 5cb52f4..76db2f0 100644
+index 4fbdf366..c05cce34 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-@@ -15,7 +15,7 @@
- # limitations under the License.
- ---
+@@ -29,7 +29,7 @@ resources:
+   gpuMemory: 1Gi
+ 
  extensions:
 -  - gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
@@ -18,12 +18,12 @@ index 5cb52f4..76db2f0 100644
  #  - gxf_extensions/deltacast_videomaster/libgxf_videomaster.so
  # Uncomment the following extension when using yuan as source
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index 4247280..bf3e2cb 100644
+index af29308b..2b0e8f60 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-@@ -15,8 +15,8 @@
- # limitations under the License.
- ---
+@@ -29,8 +29,8 @@ resources:
+   gpuMemory: 1Gi
+ 
  extensions:
 -- gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
 -- gxf_extensions/yuan_qcap/libgxf_qcap_source.so
@@ -33,7 +33,7 @@ index 4247280..bf3e2cb 100644
  visualizer: "holoviz" # "holoviz" or "vtk"
  
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
-index 57254ef..6b72dbe 100644
+index 57254ef5..6b72dbe4 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 @@ -19,7 +19,7 @@ extensions:
@@ -46,7 +46,7 @@ index 57254ef..6b72dbe 100644
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index 8e80b1b..1535f33 100644
+index 8e80b1bd..1535f335 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -59,7 +59,7 @@ index 8e80b1b..1535f33 100644
  # Modify the width/height and framerate for the camera used
  # Current is for Emergent HB-5000-SB
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
-index d67444f..35c4e4d 100644
+index d67444f5..35c4e4d5 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
