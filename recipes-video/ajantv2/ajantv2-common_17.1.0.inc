@@ -18,35 +18,17 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-SUMMARY = "AJA NTV2 Driver"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${LIC_FILE};md5=0ce9f69a0af4b70f1ae5d12b9f986694"
 
-require ajantv2-common_${PV}.inc
+BRANCH="ntv2_${@d.getVar('PV').split('.')[0]}_${@d.getVar('PV').split('.')[1]}"
+SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=${BRANCH}"
+# tag: ntv2_17_1_0
+SRCREV = "7a53c590243868b76e5401fdcb23ec743bc07f7a"
 
-S = "${WORKDIR}/git/driver/linux"
-
-inherit module
-
-EXTRA_OEMAKE:append = " \
-    KDIR=${STAGING_KERNEL_DIR} \
-    AJA_CREATE_DEVICE_NODES=1 \
-    AJA_RDMA=1 \
-    ${GPU_FLAGS} \
+SRC_URI += " \
+    file://0001-Fix-RDMA-builds-for-iGPU.patch;patchdir=${WORKDIR}/git \
+    file://0002-Fix-nvidia_p2p_get_pages-length-alignment.patch;patchdir=${WORKDIR}/git \
+    file://0003-Fix-rdmaFreeCallback-NULL-dereference.patch;patchdir=${WORKDIR}/git \
+    file://0004-Update-driver-makefile-for-OE-build.patch;patchdir=${WORKDIR}/git \
 "
-
-# The RDMA (nvidia-p2p) API differs between iGPU and dGPU:
-#   For dGPU, RDMA is supported by nvidia.ko provided by nvidia-open-gpu-kernel-modules.
-#   For iGPU, RDMA is supported by nvidia-p2p.ko provided by nvidia-kernel-oot.
-GPU_FLAGS = " \
-    AJA_IGPU=1 \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/linux \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-kernel-oot/Module.symvers \
-"
-GPU_FLAGS:dgpu = " \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
-    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-open-gpu-kernel-modules/Module.symvers \
-"
-
-DEPENDS = " nvidia-kernel-oot"
-DEPENDS:dgpu = " nvidia-open-gpu-kernel-modules"
-
-RPROVIDES:${PN} += "kernel-module-ajantv2"

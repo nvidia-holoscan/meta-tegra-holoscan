@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Thu, 5 Sep 2024 13:52:30 -0600
+Subject: Fix nvidia_p2p_get_pages length alignment
+
+The length of RDMA buffers needs to be aligned to 64Kb pages.
+This has always been the case but the NVIDIA driver did not
+previously check for this alignment. The 560 NVIDIA drivers
+added this alignment check, so the caller now need to
+make sure the length is aligned to avoid errors.
+
+diff --git a/driver/linux/ntv2rdma.c b/driver/linux/ntv2rdma.c
+index 6c88a660..c097db79 100644
+--- a/driver/linux/ntv2rdma.c
++++ b/driver/linux/ntv2rdma.c
+@@ -71,11 +71,7 @@ int ntv2_rdma_get_pages(PDMA_PAGE_BUFFER pBuffer,
+ 	ULWord64 rdmaAddress = address & GPU_PAGE_MASK;
+ 	ULWord64 rdmaOffset = address & GPU_PAGE_OFFSET;
+ 	ULWord64 rdmaLen = size;
+-#ifdef AJA_IGPU		
+ 	ULWord64 rdmaAlignedLen = (rdmaOffset + rdmaLen + GPU_PAGE_SIZE - 1) & GPU_PAGE_MASK;
+-#else
+-	ULWord64 rdmaAlignedLen = address + size - rdmaAddress;
+-#endif		
+ 	struct nvidia_p2p_page_table* rdmaPage = NULL;
+ 	int ret = -1;
+ 
+-- 
+2.34.1
+

@@ -160,11 +160,11 @@ require conf/holoscan-dgpu.conf
 
 Additional components from this layer can then be added to the BSP by appending
 them to `CORE_IMAGE_EXTRA_INSTALL`. For example, to install the AJA NTV2 kernel
-module and SDK, add the following:
+modules and SDK, add the following:
 
 ```
 CORE_IMAGE_EXTRA_INSTALL:append = " \
-    kernel-module-ajantv2 \
+    ajantv2-driver \
     ajantv2-sdk \
 "
 ```
@@ -225,12 +225,12 @@ replacing `/opt/mellanox/rivermax/rivermax.lic`.
 
 ##### Enabling AJA Video Devices
 
-To enable support for AJA Video I/O devices, the AJA NTV2 kernel module can be
-built into the image by adding the `kernel-module-ajantv2` component to
+To enable support for AJA Video I/O devices, the AJA NTV2 kernel modules can be
+built into the image by adding the `ajantv2-driver` component to
 `CORE_IMAGE_EXTRA_INSTALL` as described above:
 
 ```
-CORE_IMAGE_EXTRA_INSTALL:append = " kernel-module-ajantv2"
+CORE_IMAGE_EXTRA_INSTALL:append = " ajantv2-driver"
 ```
 
 ##### Enabling Kata Container Support

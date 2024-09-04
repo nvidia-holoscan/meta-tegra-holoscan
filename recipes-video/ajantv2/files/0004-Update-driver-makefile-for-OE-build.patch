@@ -1,0 +1,79 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 6 Sep 2024 14:40:17 -0600
+Subject: Update driver makefile for OE build
+
+
+diff --git a/driver/linux/Makefile b/driver/linux/Makefile
+index 5ddfb5bd..d28c97fe 100644
+--- a/driver/linux/Makefile
++++ b/driver/linux/Makefile
+@@ -31,56 +31,17 @@ ifdef AJA_HEVC
+ 	EXTRA_CFLAGS += -DAJA_HEVC=$(AJA_HEVC)
+ endif
+ 
+-# Enable NVIDIA RDMA if AJA_RDMA variable is set or /etc/ajantv2/rdma file exists.
++# Enable NVIDIA RDMA if AJA_RDMA variable is set.
+ ifdef AJA_RDMA
+ 	NVIDIA_RDMA = 1
+-else
+-ifneq (,$(wildcard /etc/ajantv2/rdma))
+-	NVIDIA_RDMA = 1
+-endif
+ endif
+ 
+ # If doing RDMA build...
+ ifdef NVIDIA_RDMA
+-
+-# Find the nv-p2p.h include file path.
+-ifeq ($(NVIDIA_SRC_DIR),)
+-	NVIDIA_SRC_DIR := $(shell find /usr/src/nvidia-* -name nv-p2p.h 2>/dev/null|head -1|xargs dirname 2>/dev/null)
+-endif
+-ifeq ($(NVIDIA_SRC_DIR),)
+-	NVIDIA_SRC_DIR := $(shell find /usr/src/linux-* -name nv-p2p.h 2>/dev/null|head -1|xargs dirname 2>/dev/null)
+-endif
+-
+-	# Add the common RDMA build flags.
+ 	EXTRA_CFLAGS += -I$(NVIDIA_SRC_DIR) -DAJA_RDMA=1
+-
+ ifdef AJA_IGPU
+-	# The iGPU RDMA support is provided by nvidia-p2p.ko and requires the AJA_IGPU build flag.
+ 	EXTRA_CFLAGS += -DAJA_IGPU=1
+-	NVIDIA_P2P_MODULE = nvidia-p2p.ko
+-else
+-	NVIDIA_P2P_MODULE = nvidia.ko
+ endif
+-
+-# Find the nvidia[-p2p].ko module.
+-ifeq ($(NVIDIA_KO),)
+-	NVIDIA_KO = $(shell find /lib/modules/$(KVERSION)/ -name $(NVIDIA_P2P_MODULE) | head -1)
+-endif
+-ifeq ($(NVIDIA_KO),)
+-	NVIDIA_KO = $(shell find /lib/modules/$(KVERSION)/ -name $(NVIDIA_P2P_MODULE).xz | head -1)
+-endif
+-
+-# If using the proprietary (non-GPL) NVIDIA drivers, add the NVIDIA_PROPRIETARY build flag.
+-ifeq ($(shell modinfo $(NVIDIA_KO) | grep license: | grep GPL),)
+-	EXTRA_CFLAGS += -DNVIDIA_PROPRIETARY=1
+-endif
+-
+-# Generate the nvidia.symvers file
+-ifeq ($(NVIDIA_SYMVERS),)
+-	NVIDIA_GEN_SYMVERS := ./nvidia-ko-to-module-symvers $(NVIDIA_KO) $(A_LINUX_DRIVER_PATH)/nvidia.symvers
+-	NVIDIA_SYMVERS := $(A_LINUX_DRIVER_PATH)/nvidia.symvers
+-endif
+-
+ endif # NVIDIA_RDMA
+ 
+ ifdef AJA_CREATE_DEVICE_NODES
+@@ -245,7 +206,6 @@ default: all
+ 	@echo linux distro flags: '$(DISTRO_INFO)'
+ 	@echo lib: $(LIB)
+ ifdef NVIDIA_RDMA
+-	${NVIDIA_GEN_SYMVERS}
+ 	$(MAKE) -C $(KDIR) M=$(A_LINUX_DRIVER_PATH) DRIVERDIR=$(A_LINUX_DRIVER_PATH) modules KBUILD_EXTRA_SYMBOLS='$(NVIDIA_SYMVERS)'
+ else
+ 	$(MAKE) -C $(KDIR) M=$(A_LINUX_DRIVER_PATH) DRIVERDIR=$(A_LINUX_DRIVER_PATH) modules
+-- 
+2.34.1
+

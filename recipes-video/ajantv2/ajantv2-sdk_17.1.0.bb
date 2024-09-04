@@ -23,6 +23,7 @@ SUMMARY = "AJA NTV2 SDK"
 require ajantv2-common_${PV}.inc
 
 S = "${WORKDIR}/git"
+LIC_FILE = "${S}/LICENSE"
 
 inherit pkgconfig cmake cuda
 
@@ -33,11 +34,13 @@ EXTRA_OECMAKE:append = " \
   -DAJANTV2_DISABLE_TESTS=ON \
   -DAJANTV2_DISABLE_TOOLS=OFF \
   -DAJANTV2_DISABLE_PLUGINS=ON \
+  -DAJANTV2_DISABLE_PLUGIN_LOAD=ON \
 "
 
 DEPENDS:append = " \
     glew \
     freeglut \
+    systemd \
 "
 
 FILES:${PN}-dev += " \

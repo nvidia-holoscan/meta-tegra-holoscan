@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 6 Sep 2024 14:49:11 -0600
+Subject: Fix rdmaFreeCallback NULL dereference
+
+The rdmaFreeCallback function may be called by multiple
+threads; this change prevents dereferencing
+pBuffer->rdmaContext in the case where another thread
+has already freed it.
+
+diff --git a/driver/linux/ntv2rdma.c b/driver/linux/ntv2rdma.c
+index c097db79..7c94ac25 100644
+--- a/driver/linux/ntv2rdma.c
++++ b/driver/linux/ntv2rdma.c
+@@ -228,21 +228,19 @@ void ntv2_rdma_unmap_pages(struct pci_dev* pci_dev, PDMA_PAGE_BUFFER pBuffer)
+ 
+ static void rdmaFreeCallback(void* data)
+ {
+-	PDMA_PAGE_BUFFER pBuffer = (PDMA_PAGE_BUFFER)data;
+-    PRDMA_PAGE_BUFFER pRdmaBuffer = (PRDMA_PAGE_BUFFER)pBuffer->rdmaContext;
+-	struct nvidia_p2p_page_table* rdmaPage;
++    PDMA_PAGE_BUFFER pBuffer = (PDMA_PAGE_BUFFER)data;
++    PRDMA_PAGE_BUFFER pRdmaBuffer = (PRDMA_PAGE_BUFFER)xchg(&pBuffer->rdmaContext, NULL);
++
++    if (pRdmaBuffer == NULL) return;
+ 
+-	rdmaPage = xchg(&pRdmaBuffer->page, NULL);
+-	if (rdmaPage != NULL)
++    if (pRdmaBuffer->page != NULL)
+     {
+-        nvidia_p2p_free_page_table(rdmaPage);
++        nvidia_p2p_free_page_table(pRdmaBuffer->page);
+     }
+ 
+-    if (pBuffer->rdmaContext != NULL)
+-        vfree(pBuffer->rdmaContext);
+-    pBuffer->rdmaContext = NULL;    
++    vfree(pRdmaBuffer);
+ 
+-	pBuffer->pageLock = false;
++    pBuffer->pageLock = false;
+ }
+ 
+ static void dmaSgSetRdmaPage(struct scatterlist* pSg, struct nvidia_p2p_dma_mapping	*rdmaMap,
+-- 
+2.34.1
+

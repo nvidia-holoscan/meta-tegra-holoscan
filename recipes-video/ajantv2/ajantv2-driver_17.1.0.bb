@@ -18,19 +18,34 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/git/LICENSE;md5=0ce9f69a0af4b70f1ae5d12b9f986694"
+SUMMARY = "AJA NTV2 Driver"
 
-BRANCH="ntv2_${@d.getVar('PV').split('.')[0]}_${@d.getVar('PV').split('.')[1]}"
-SRC_URI = "git://github.com/aja-video/libajantv2.git;protocol=https;branch=${BRANCH}"
-# tag: ntv2_17_0_1
-SRCREV = "b6acce6b135c3d9ae7a2bce966180b159ced619f"
+require ajantv2-common_${PV}.inc
 
-SRC_URI += " \
-    file://0001-Fix-nvidia-ko-to-module-symvers-pattern-matching.patch;patchdir=${WORKDIR}/git \
-    file://0002-Update-nvidia-ko-to-module-symvers-to-support-CRC-ta.patch;patchdir=${WORKDIR}/git \
-    file://0003-rdmawhacker-Restore-AJA_RDMA-build-option.patch;patchdir=${WORKDIR}/git \
-    file://0004-Add-ajantv2-CMake-package-config.patch;patchdir=${WORKDIR}/git \
-    file://0005-Disable-dvplowlatencydemo-for-OE-build.patch;patchdir=${WORKDIR}/git \
-    file://0006-Fix-nv-p2p-symbols-for-iGPU.patch;patchdir=${WORKDIR}/git \
+S = "${WORKDIR}/git/driver/linux"
+LIC_FILE = "${S}/../../LICENSE"
+
+inherit module
+
+EXTRA_OEMAKE:append = " \
+    KDIR=${STAGING_KERNEL_DIR} \
+    AJA_CREATE_DEVICE_NODES=1 \
+    AJA_RDMA=1 \
+    ${GPU_FLAGS} \
 "
+
+# The RDMA (nvidia-p2p) API differs between iGPU and dGPU:
+#   For dGPU, RDMA is supported by nvidia.ko provided by nvidia-open-gpu-kernel-modules.
+#   For iGPU, RDMA is supported by nvidia-p2p.ko provided by nvidia-kernel-oot.
+GPU_FLAGS = " \
+    AJA_IGPU=1 \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/linux \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-kernel-oot/Module.symvers \
+"
+GPU_FLAGS:dgpu = " \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia \
+    NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-open-gpu-kernel-modules/Module.symvers \
+"
+
+DEPENDS = " nvidia-kernel-oot"
+DEPENDS:dgpu = " nvidia-open-gpu-kernel-modules"
