@@ -1,3 +1,8 @@
+## [2.4.0] - 2024-09-06
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.4.0
+
+
 ## [2.3.0] - 2024-08-05
 ### Added
 - Support for Kata Containers (3.7.0)
@@ -320,6 +325,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.0.0...v2.1.0
