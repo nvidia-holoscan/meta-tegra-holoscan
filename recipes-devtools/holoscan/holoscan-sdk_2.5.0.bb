@@ -38,6 +38,7 @@ SRC_URI += " \
     file://0008-Fix-RPATH-for-holoinfer.patch \
     file://0009-Fix-ONNXRuntime-include-paths.patch \
     file://0010-Remove-UCX-header-workaround.patch \
+    file://0011-Skip-multiai_ultrasound-data-download.patch \
 "
 
 S = "${WORKDIR}/git"
