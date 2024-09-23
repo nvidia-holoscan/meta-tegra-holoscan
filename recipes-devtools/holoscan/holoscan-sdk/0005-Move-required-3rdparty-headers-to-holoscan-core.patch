@@ -5,10 +5,10 @@ Subject: Move required 3rdparty headers to holoscan-core
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ebf4ea121..d07eb45bd 100644
+index 00caa7d..ae4a1ba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -228,7 +228,7 @@ install(DIRECTORY include/holoscan/
+@@ -231,7 +231,7 @@ install(DIRECTORY include/holoscan/
  # Copy bundled tl-expected headers
  install(DIRECTORY ${tl-expected_SOURCE_DIR}/include/tl/
      DESTINATION include/3rdparty/tl
@@ -18,7 +18,7 @@ index ebf4ea121..d07eb45bd 100644
  
  # Copy bundled dlpack headers
 diff --git a/cmake/deps/fmt_rapids.cmake b/cmake/deps/fmt_rapids.cmake
-index f102de453..6ce1feb29 100644
+index f102de4..6ce1feb 100644
 --- a/cmake/deps/fmt_rapids.cmake
 +++ b/cmake/deps/fmt_rapids.cmake
 @@ -34,6 +34,6 @@ if(fmt_ADDED)

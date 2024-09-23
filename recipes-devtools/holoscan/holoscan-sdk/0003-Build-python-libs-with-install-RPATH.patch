@@ -5,7 +5,7 @@ Subject: Build python libs with install RPATH
 
 
 diff --git a/python/holoscan/CMakeLists.txt b/python/holoscan/CMakeLists.txt
-index d0db690..237531c 100644
+index 3fa6bc2..4354f91 100644
 --- a/python/holoscan/CMakeLists.txt
 +++ b/python/holoscan/CMakeLists.txt
 @@ -48,9 +48,8 @@ function(holoscan_pybind11_module pybind11_module_name)
