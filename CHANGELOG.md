@@ -1,3 +1,12 @@
+## [2.5.0] - 2024-10-01
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.5.0
+- Updated AJA NTV2 to 17.1.0
+
+### Fixed
+- Skipped download of unused test data for Holoscan SDK.
+
+
 ## [2.4.0] - 2024-09-06
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 2.4.0
@@ -325,6 +334,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.1.0...v2.2.0
