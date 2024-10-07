@@ -25,7 +25,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${B}/LICENSE;md5=0f7e3b1308cb5c00b372a6e78835732d"
 
 SRC_URI = "https://github.com/microsoft/onnxruntime/releases/download/v${PV}/onnxruntime-linux-${TARGET_ARCH}-${PV}.tgz"
-SRC_URI[sha256sum] = "784dbef93b40196aa668d29d78294a81c0d21361d36530b817bb24d87e8730e8"
+SRC_URI[sha256sum] = "c1dcd8ab29e8d227d886b6ee415c08aea893956acf98f0758a42a84f27c02851"
 
 B = "${WORKDIR}/onnxruntime-linux-${TARGET_ARCH}-${PV}"
 
