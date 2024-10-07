@@ -5,7 +5,7 @@ Subject: Fix RPATH
 
 
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index 3dc5281b..3b07b43a 100644
+index 64208d97b..5d3e08bf5 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
 @@ -9,11 +9,11 @@ endif(APPLE)

@@ -21,19 +21,17 @@
 SUMMARY = "Tensors and Dynamic neural network computation with strong GPU acceleration"
 HOMEPAGE = "https://pytorch.org/"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=5c853508d63a8090fa952ff1af58217d"
+LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=931408ebbfa3b49f31a563bce9755581"
 
 SRC_URI = "https://github.com/pytorch/pytorch/releases/download/v${PV}/pytorch-v${PV}.tar.gz"
-SRC_URI[sha256sum] = "85effbcce037bffa290aea775c9a4bad5f769cb229583450c40055501ee1acd7"
+SRC_URI[sha256sum] = "91b3ba7db9cd6ac48f672a615872dcf1e4c29783d9c615336b11553915d5298a"
 
 SRC_URI += " \
     file://0001-Remove-Modules_CUDA_fix.patch \
     file://0002-Fix-CUDA-build-rules.patch \
     file://0003-Fix-RPATH.patch \
-    file://0004-Fix-nvfuser-install-path.patch \
-    file://0005-Use-C-17-for-onnx-build.patch \
-    file://0006-Use-native-protobuf-compiler.patch \
-    file://0007-Disable-various-warnings.patch \
+    file://0004-Use-native-protobuf-compiler.patch \
+    file://0005-Disable-various-warnings.patch \
 "
 
 S = "${WORKDIR}/${PN}-v${PV}"
@@ -69,6 +67,7 @@ CUDA_NVCC_EXTRA_FLAGS += " \
     -D__CUDA_NO_HALF2_OPERATORS__ \
     -D__CUDA_NO_BFLOAT16_CONVERSIONS__ \
     ${@'-DCUB_WRAPPED_NAMESPACE=at_cuda_detail' if float(d.getVar('CUDA_VERSION')) > 11.4 else ''} \
+    -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS \
 "
 
 # Suppress various CUDA warnings.
@@ -98,6 +97,7 @@ EXTRA_OECMAKE += " -DNATIVE_BUILD_DIR=${STAGING_DIR_NATIVE}/usr"
 do_compile:prepend() {
 	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkalias ${S}/third_party/sleef/src/libm/mkalias.c
 	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkrename ${S}/third_party/sleef/src/libm/mkrename.c
+	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkdisp ${S}/third_party/sleef/src/libm/mkdisp.c
 }
 
 # PyTorch builds tend to fail or crash with too many threads.
@@ -107,6 +107,7 @@ CMAKE_BUILD_PARALLEL_LEVEL:task-compile = \
 
 DEPENDS += " \
     cuda-nvml \
+    cuda-nvrtc \
     cuda-nvtx \
     cudnn \
     protobuf \

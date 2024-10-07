@@ -5,59 +5,57 @@ Subject: Fix CUDA build rules
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 263eb8dd..f821c47c 100644
+index fdcb891ed..dea7f648c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -46,7 +46,6 @@ include(cmake/public/utils.cmake)
- if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+@@ -62,18 +62,10 @@ if(CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9.3)
+   )
+ endif()
+ 
+-# This define is needed to preserve behavior given anticpated changes to
+-# cccl/thrust
+-# https://nvidia.github.io/libcudacxx/standard_api/numerics_library/complex.html
+-string(APPEND CMAKE_CUDA_FLAGS
+-       " -DLIBCUDACXX_ENABLE_SIMPLIFIED_COMPLEX_OPERATIONS")
+-
+ if(LINUX)
    include(cmake/CheckAbi.cmake)
-   string(APPEND CMAKE_CXX_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=${GLIBCXX_USE_CXX11_ABI}")
--  string(APPEND CMAKE_CUDA_FLAGS " -D_GLIBCXX_USE_CXX11_ABI=${GLIBCXX_USE_CXX11_ABI}")
+   string(APPEND CMAKE_CXX_FLAGS
+          " -D_GLIBCXX_USE_CXX11_ABI=${GLIBCXX_USE_CXX11_ABI}")
+-  string(APPEND CMAKE_CUDA_FLAGS
+-         " -D_GLIBCXX_USE_CXX11_ABI=${GLIBCXX_USE_CXX11_ABI}")
    if(${GLIBCXX_USE_CXX11_ABI} EQUAL 1)
      set(CXX_STANDARD_REQUIRED ON)
    else()
-@@ -562,8 +561,6 @@ if(MSVC)
+@@ -659,8 +651,6 @@ if(MSVC)
    string(APPEND CMAKE_CUDA_FLAGS " -Xcompiler /FS")
  endif(MSVC)
  
 -string(APPEND CMAKE_CUDA_FLAGS " -Xfatbin -compress-all")
 -
  # Set INTERN_BUILD_MOBILE for all mobile builds. Components that are not
- # applicable to mobile are disabled by this variable.
- # Setting `BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN` environment variable can
-@@ -1148,14 +1145,6 @@ if(BUILD_SHARED_LIBS)
-       ${PROJECT_SOURCE_DIR}/cmake/public/LoadHIP.cmake
-       DESTINATION share/cmake/Caffe2/public
-       COMPONENT dev)
--  install(FILES
--      ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDAToolkit.cmake
--      DESTINATION share/cmake/Caffe2/
--      COMPONENT dev)
--  install(FILES
--      ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
--      DESTINATION share/cmake/Caffe2/
--      COMPONENT dev)
- 
-   install(EXPORT Caffe2Targets DESTINATION share/cmake/Caffe2
-       FILE Caffe2Targets.cmake
-diff --git a/aten/CMakeLists.txt b/aten/CMakeLists.txt
-index db8cb6aa..16488e01 100644
---- a/aten/CMakeLists.txt
-+++ b/aten/CMakeLists.txt
-@@ -45,7 +45,7 @@ set(ATEN_INSTALL_INCLUDE_SUBDIR "include" CACHE PATH "ATen install include subdi
- set(MEM_EFF_ATTENTION_CUDA_SOURCES)
- 
- if(USE_CUDA)
--  list(APPEND ATen_CUDA_INCLUDE ${CUDA_INCLUDE_DIRS})
-+  list(APPEND ATen_CUDA_INCLUDE ${CUDAToolkit_INCLUDE_DIRS})
- endif()
- 
- set(TH_LINK_STYLE STATIC)
+ # applicable to mobile are disabled by this variable. Setting
+ # `BUILD_PYTORCH_MOBILE_WITH_HOST_TOOLCHAIN` environment variable can force it
+@@ -1291,14 +1281,6 @@ if(BUILD_SHARED_LIBS)
+           ${PROJECT_SOURCE_DIR}/cmake/public/LoadHIP.cmake
+     DESTINATION share/cmake/Caffe2/public
+     COMPONENT dev)
+-  install(
+-    FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDAToolkit.cmake
+-    DESTINATION share/cmake/Caffe2/
+-    COMPONENT dev)
+-  install(
+-    FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUSPARSELT.cmake
+-    DESTINATION share/cmake/Caffe2/
+-    COMPONENT dev)
+   install(
+     FILES ${PROJECT_SOURCE_DIR}/cmake/Modules/FindCUDSS.cmake
+     DESTINATION share/cmake/Caffe2/
 diff --git a/aten/src/ATen/CMakeLists.txt b/aten/src/ATen/CMakeLists.txt
-index f3281d3c..a9ce6233 100644
+index 6d9152a4d..e7ec0e541 100644
 --- a/aten/src/ATen/CMakeLists.txt
 +++ b/aten/src/ATen/CMakeLists.txt
-@@ -235,7 +235,9 @@ if(USE_CUDA AND USE_ROCM)
+@@ -265,7 +265,9 @@ if(USE_CUDA AND USE_ROCM)
  endif()
  
  if(USE_CUDA)
@@ -69,45 +67,98 @@ index f3281d3c..a9ce6233 100644
      ${cuda_cu}
      ${native_cuda_cu}
 diff --git a/c10/cuda/CMakeLists.txt b/c10/cuda/CMakeLists.txt
-index c0628d0c..cb8df231 100644
+index 3327dab47..cd81d80e7 100644
 --- a/c10/cuda/CMakeLists.txt
 +++ b/c10/cuda/CMakeLists.txt
-@@ -62,6 +62,8 @@ target_link_libraries(c10_cuda PRIVATE dl)
- target_compile_options(c10_cuda PRIVATE "-DPYTORCH_C10_DRIVER_API_SUPPORTED")
- endif()
+@@ -72,6 +72,8 @@ if(NOT BUILD_LIBTORCHLESS)
+   target_compile_options(c10_cuda PRIVATE "-DPYTORCH_C10_DRIVER_API_SUPPORTED")
+   endif()
  
 +target_include_directories(
 +    c10_cuda PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
- target_include_directories(
-     c10_cuda PUBLIC
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
+   target_include_directories(
+       c10_cuda PUBLIC
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
 diff --git a/caffe2/CMakeLists.txt b/caffe2/CMakeLists.txt
-index 74d0d557..d35dbb1b 100644
+index 9be7f3732..6363ff444 100644
 --- a/caffe2/CMakeLists.txt
 +++ b/caffe2/CMakeLists.txt
-@@ -1516,7 +1516,7 @@ if(USE_CUDA)
-     target_link_libraries(torch_cpu PRIVATE torch::cudart)
+@@ -549,6 +549,7 @@ if(USE_CUDA)
    endif()
-   target_link_libraries(torch_cuda INTERFACE torch::cudart)
--  target_link_libraries(torch_cuda PUBLIC c10_cuda torch::nvtoolsext)
-+  target_link_libraries(torch_cuda PUBLIC c10_cuda)
+ 
+   target_link_libraries(caffe2_nvrtc PRIVATE caffe2::nvrtc ${DELAY_LOAD_FLAGS})
++  target_include_directories(caffe2_nvrtc PRIVATE ${CUDA_INCLUDE_DIRS})
+   install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+   if(USE_NCCL)
+     list(APPEND Caffe2_GPU_SRCS
+@@ -591,27 +592,6 @@ if(BUILD_ONEDNN_GRAPH)
+   )
+ endif()
+ 
+-if(USE_ROCM)
+-  list(APPEND Caffe2_HIP_SRCS ${Caffe2_GPU_HIP_JIT_FUSERS_SRCS})
+-  if(USE_NCCL)
+-    list(APPEND Caffe2_HIP_SRCS
+-      ${TORCH_SRC_DIR}/csrc/cuda/nccl.cpp)
+-  endif()
+-  if(USE_DISTRIBUTED)
+-    append_filelist("libtorch_cuda_distributed_base_sources" Caffe2_HIP_SRCS)
+-    if(NOT WIN32)
+-      append_filelist("libtorch_cuda_distributed_extra_sources" Caffe2_HIP_SRCS)
+-    endif()
+-  endif()
+-  # caffe2_nvrtc's stubs to driver APIs are useful for HIP.
+-  # See NOTE [ ATen NVRTC Stub and HIP ]
+-  add_library(caffe2_nvrtc SHARED ${ATen_NVRTC_STUB_SRCS})
+-  target_link_libraries(caffe2_nvrtc ${PYTORCH_HIP_LIBRARIES} ${ROCM_HIPRTC_LIB})
+-  target_include_directories(caffe2_nvrtc PRIVATE ${CMAKE_BINARY_DIR})
+-  target_compile_definitions(caffe2_nvrtc PRIVATE USE_ROCM __HIP_PLATFORM_AMD__)
+-  install(TARGETS caffe2_nvrtc DESTINATION "${TORCH_INSTALL_LIB_DIR}")
+-endif()
+-
+ if(NOT NO_API AND NOT BUILD_LITE_INTERPRETER)
+   list(APPEND TORCH_SRCS
+     ${TORCH_SRC_DIR}/csrc/api/src/cuda.cpp
+@@ -1518,8 +1498,6 @@ if(USE_CUDA)
+   target_link_libraries(torch_cuda PUBLIC c10_cuda)
+   if(TARGET torch::nvtx3)
+     target_link_libraries(torch_cuda PRIVATE torch::nvtx3)
+-  else()
+-    target_link_libraries(torch_cuda PUBLIC torch::nvtoolsext)
+   endif()
  
    target_include_directories(
-       torch_cuda INTERFACE $<INSTALL_INTERFACE:include>)
-@@ -1571,7 +1571,7 @@ if(BUILD_SHARED_LIBS)
-   # not find them, because they're usually in non-standard locations)
-   if(USE_CUDA)
-     target_link_libraries(torch_global_deps ${Caffe2_PUBLIC_CUDA_DEPENDENCY_LIBS})
--    target_link_libraries(torch_global_deps torch::cudart torch::nvtoolsext)
-+    target_link_libraries(torch_global_deps torch::cudart)
-   endif()
-   if(USE_TBB)
-     target_link_libraries(torch_global_deps TBB::tbb)
+diff --git a/cmake/Codegen.cmake b/cmake/Codegen.cmake
+index d221f5844..7974dfcd3 100644
+--- a/cmake/Codegen.cmake
++++ b/cmake/Codegen.cmake
+@@ -69,21 +69,6 @@ if(INTERN_BUILD_ATEN_OPS)
+ 
+   file(GLOB_RECURSE all_python "${CMAKE_CURRENT_LIST_DIR}/../torchgen/*.py")
+ 
+-  # RowwiseScaled.cu requires sm90a flags
+-  if(USE_CUDA)
+-    set(ROWWISE_SCALED_MM_FILE "${CMAKE_CURRENT_LIST_DIR}/../aten/src/ATen/native/cuda/RowwiseScaledMM.cu")
+-
+-    # Get existing arch flags
+-    torch_cuda_get_nvcc_gencode_flag(EXISTING_ARCH_FLAGS)
+-
+-    # Check NVCC version and existing arch flags
+-    if(CMAKE_CUDA_COMPILER_VERSION VERSION_GREATER_EQUAL 12.0 AND
+-      EXISTING_ARCH_FLAGS MATCHES ".*compute_90.*")
+-      set_source_files_properties(${ROWWISE_SCALED_MM_FILE}
+-        PROPERTIES COMPILE_FLAGS "-gencode arch=compute_90a,code=sm_90a")
+-    endif()
+-  endif()
+-
+   set(GEN_ROCM_FLAG)
+   if(USE_ROCM)
+     set(GEN_ROCM_FLAG --rocm)
 diff --git a/cmake/Dependencies.cmake b/cmake/Dependencies.cmake
-index c3abce52..3dc5281b 100644
+index e78305e0a..64208d97b 100644
 --- a/cmake/Dependencies.cmake
 +++ b/cmake/Dependencies.cmake
-@@ -1387,7 +1387,6 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
+@@ -1160,7 +1160,6 @@ if(USE_DISTRIBUTED AND USE_TENSORPIPE)
      set(TP_STATIC_OR_SHARED STATIC CACHE STRING "" FORCE)
  
      # Tensorpipe uses cuda_add_library
@@ -115,7 +166,7 @@ index c3abce52..3dc5281b 100644
      add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/tensorpipe)
  
      list(APPEND Caffe2_DEPENDENCY_LIBS tensorpipe)
-@@ -1625,7 +1624,6 @@ endif()
+@@ -1333,7 +1332,6 @@ endif()
  
  if(NOT INTERN_BUILD_MOBILE)
    set(TORCH_CUDA_ARCH_LIST $ENV{TORCH_CUDA_ARCH_LIST})
@@ -123,7 +174,7 @@ index c3abce52..3dc5281b 100644
    set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
  
    # Top-level build config
-@@ -1647,21 +1645,6 @@ if(NOT INTERN_BUILD_MOBILE)
+@@ -1355,19 +1353,6 @@ if(NOT INTERN_BUILD_MOBILE)
      string(APPEND CMAKE_CUDA_FLAGS " -Xcompiler=/wd4819,/wd4503,/wd4190,/wd4244,/wd4251,/wd4275,/wd4522")
    endif()
  
@@ -131,9 +182,7 @@ index c3abce52..3dc5281b 100644
 -
 -  # use cub in a safe manner, see:
 -  # https://github.com/pytorch/pytorch/pull/55292
--  if(NOT ${CUDA_VERSION} LESS 11.5)
--    string(APPEND CMAKE_CUDA_FLAGS " -DCUB_WRAPPED_NAMESPACE=at_cuda_detail")
--  endif()
+-  string(APPEND CMAKE_CUDA_FLAGS " -DCUB_WRAPPED_NAMESPACE=at_cuda_detail")
 -
 -  message(STATUS "Found CUDA with FP16 support, compiling with torch.cuda.HalfTensor")
 -  string(APPEND CMAKE_CUDA_FLAGS " -DCUDA_HAS_FP16=1"
@@ -147,7 +196,7 @@ index c3abce52..3dc5281b 100644
    if(NOT GENERATOR_IS_MULTI_CONFIG)
 diff --git a/cmake/Modules/FindCUDNN.cmake b/cmake/Modules/FindCUDNN.cmake
 new file mode 100644
-index 00000000..82134328
+index 000000000..82134328c
 --- /dev/null
 +++ b/cmake/Modules/FindCUDNN.cmake
 @@ -0,0 +1,78 @@
@@ -229,24 +278,8 @@ index 00000000..82134328
 +endif()
 +
 +mark_as_advanced(CUDNN_ROOT CUDNN_INCLUDE_DIR CUDNN_LIBRARY CUDNN_VERSION)
-diff --git a/cmake/TorchConfig.cmake.in b/cmake/TorchConfig.cmake.in
-index 6d518a14..1ce2d392 100644
---- a/cmake/TorchConfig.cmake.in
-+++ b/cmake/TorchConfig.cmake.in
-@@ -148,11 +148,9 @@ if(@USE_CUDA@)
-       ${CUDA_TOOLKIT_ROOT_DIR}/lib/libnvToolsExt.dylib
-       ${CUDA_LIBRARIES})
-   else()
--    find_library(LIBNVTOOLSEXT libnvToolsExt.so PATHS ${CUDA_TOOLKIT_ROOT_DIR}/lib64/)
-     set(TORCH_CUDA_LIBRARIES
-       ${CUDA_CUDA_LIB}
-       ${CUDA_NVRTC_LIB}
--      ${LIBNVTOOLSEXT}
-       ${CUDA_LIBRARIES})
-   endif()
-   if(@BUILD_SHARED_LIBS@)
 diff --git a/cmake/public/cuda.cmake b/cmake/public/cuda.cmake
-index 32f3ba37..72e8cfcb 100644
+index afc1bc12a..a3904febb 100644
 --- a/cmake/public/cuda.cmake
 +++ b/cmake/public/cuda.cmake
 @@ -9,45 +9,11 @@ endif()
@@ -297,7 +330,7 @@ index 32f3ba37..72e8cfcb 100644
  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
  
  # CMP0074 - find_package will respect <PackageName>_ROOT variables
-@@ -57,79 +23,10 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
+@@ -57,148 +23,10 @@ if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
  endif()
  
  find_package(CUDAToolkit REQUIRED)
@@ -305,15 +338,10 @@ index 32f3ba37..72e8cfcb 100644
  
  cmake_policy(POP)
  
--if(NOT CMAKE_CUDA_COMPILER_VERSION STREQUAL CUDAToolkit_VERSION OR
--    NOT CUDA_INCLUDE_DIRS STREQUAL CUDAToolkit_INCLUDE_DIR)
--  message(FATAL_ERROR "Found two conflicting CUDA installs:\n"
+-if(NOT CMAKE_CUDA_COMPILER_VERSION VERSION_EQUAL CUDAToolkit_VERSION)
+-  message(FATAL_ERROR "Found two conflicting CUDA versions:\n"
 -                      "V${CMAKE_CUDA_COMPILER_VERSION} in '${CUDA_INCLUDE_DIRS}' and\n"
--                      "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIR}'")
--endif()
--
--if(NOT TARGET CUDA::nvToolsExt)
--  message(FATAL_ERROR "Failed to find nvToolsExt")
+-                      "V${CUDAToolkit_VERSION} in '${CUDAToolkit_INCLUDE_DIRS}'")
 -endif()
 -
 -message(STATUS "Caffe2: CUDA detected: " ${CUDA_VERSION})
@@ -375,30 +403,14 @@ index 32f3ba37..72e8cfcb 100644
 -  endif()
 -endif()
 -
- # Optionally, find TensorRT
- if(CAFFE2_USE_TENSORRT)
-   find_path(TENSORRT_INCLUDE_DIR NvInfer.h
-@@ -161,81 +58,6 @@ if(CAFFE2_USE_TENSORRT)
-   endif()
- endif()
- 
 -# ---[ CUDA libraries wrapper
 -
--# find libcuda.so and lbnvrtc.so
--# For libcuda.so, we will find it under lib, lib64, and then the
--# stubs folder, in case we are building on a system that does not
--# have cuda driver installed. On windows, we also search under the
--# folder lib/x64.
--set(CUDA_CUDA_LIB "${CUDA_cuda_driver_LIBRARY}" CACHE FILEPATH "")
+-# find lbnvrtc.so
 -set(CUDA_NVRTC_LIB "${CUDA_nvrtc_LIBRARY}" CACHE FILEPATH "")
 -if(CUDA_NVRTC_LIB AND NOT CUDA_NVRTC_SHORTHASH)
--  if("${PYTHON_EXECUTABLE}" STREQUAL "")
--    set(_python_exe "python")
--  else()
--    set(_python_exe "${PYTHON_EXECUTABLE}")
--  endif()
+-  find_package(Python COMPONENTS Interpreter)
 -  execute_process(
--    COMMAND "${_python_exe}" -c
+-    COMMAND Python::Interpreter -c
 -    "import hashlib;hash=hashlib.sha256();hash.update(open('${CUDA_NVRTC_LIB}','rb').read());print(hash.hexdigest()[:8])"
 -    RESULT_VARIABLE _retval
 -    OUTPUT_VARIABLE CUDA_NVRTC_SHORTHASH)
@@ -436,10 +448,18 @@ index 32f3ba37..72e8cfcb 100644
 -endif()
 -
 -# nvToolsExt
--add_library(torch::nvtoolsext INTERFACE IMPORTED)
--set_property(
--    TARGET torch::nvtoolsext PROPERTY INTERFACE_LINK_LIBRARIES
--    CUDA::nvToolsExt)
+-find_path(nvtx3_dir NAMES nvtx3 PATHS "${PROJECT_SOURCE_DIR}/third_party/NVTX/c/include" NO_DEFAULT_PATH)
+-find_package_handle_standard_args(nvtx3 DEFAULT_MSG nvtx3_dir)
+-if(nvtx3_FOUND)
+-  add_library(torch::nvtx3 INTERFACE IMPORTED)
+-  target_include_directories(torch::nvtx3 INTERFACE "${nvtx3_dir}")
+-  target_compile_definitions(torch::nvtx3 INTERFACE TORCH_CUDA_USE_NVTX3)
+-else()
+-  message(WARNING "Cannot find NVTX3, find old NVTX instead")
+-  add_library(torch::nvtoolsext INTERFACE IMPORTED)
+-  set_property(TARGET torch::nvtoolsext PROPERTY INTERFACE_LINK_LIBRARIES CUDA::nvToolsExt)
+-endif()
+-
 -
 -# cublas
 -add_library(caffe2::cublas INTERFACE IMPORTED)
@@ -460,7 +480,7 @@ index 32f3ba37..72e8cfcb 100644
  # cudnn interface
  # static linking is handled by USE_STATIC_CUDNN environment variable
  if(CAFFE2_USE_CUDNN)
-@@ -269,46 +91,6 @@ else()
+@@ -232,22 +60,6 @@ else()
    message(STATUS "USE_CUDNN is set to 0. Compiling without cuDNN support")
  endif()
  
@@ -480,6 +500,13 @@ index 32f3ba37..72e8cfcb 100644
 -  message(STATUS "USE_CUSPARSELT is set to 0. Compiling without cuSPARSELt support")
 -endif()
 -
+ if(USE_CUDSS)
+   find_package(CUDSS)
+ 
+@@ -280,36 +92,6 @@ else()
+   message(STATUS "USE_CUFILE is set to 0. Compiling without cuFile support")
+ endif()
+ 
 -# curand
 -add_library(caffe2::curand INTERFACE IMPORTED)
 -if(CAFFE2_STATIC_LINK_CUDA AND NOT WIN32)
@@ -504,23 +531,16 @@ index 32f3ba37..72e8cfcb 100644
 -        CUDA::cufft)
 -endif()
 -
- # TensorRT
- if(CAFFE2_USE_TENSORRT)
-   add_library(caffe2::tensorrt UNKNOWN IMPORTED)
-@@ -320,12 +102,6 @@ if(CAFFE2_USE_TENSORRT)
-       ${TENSORRT_INCLUDE_DIR})
- endif()
- 
 -# nvrtc
 -add_library(caffe2::nvrtc INTERFACE IMPORTED)
 -set_property(
 -    TARGET caffe2::nvrtc PROPERTY INTERFACE_LINK_LIBRARIES
--    CUDA::nvrtc)
+-    CUDA::nvrtc caffe2::cuda)
 -
  # Add onnx namepsace definition to nvcc
  if(ONNX_NAMESPACE)
    list(APPEND CUDA_NVCC_FLAGS "-DONNX_NAMESPACE=${ONNX_NAMESPACE}")
-@@ -333,67 +109,8 @@ else()
+@@ -317,67 +99,9 @@ else()
    list(APPEND CUDA_NVCC_FLAGS "-DONNX_NAMESPACE=onnx_c2")
  endif()
  
@@ -539,7 +559,7 @@ index 32f3ba37..72e8cfcb 100644
 -
 -# disable some nvcc diagnostic that appears in boost, glog, glags, opencv, etc.
 -foreach(diag cc_clobber_ignored
--             set_but_not_used field_without_dll_interface
+-             field_without_dll_interface
 -             base_class_has_different_dll_interface
 -             dll_interface_conflict_none_assumed
 -             dll_interface_conflict_dllexport_assumed
@@ -591,13 +611,14 @@ index 32f3ba37..72e8cfcb 100644
 +# Create aliases for torch/caffe2 CUDA targets
 +add_library(torch::cudart ALIAS CUDA::cudart)
 +add_library(caffe2::cufft ALIAS CUDA::cufft)
++add_library(caffe2::nvrtc ALIAS CUDA::nvrtc)
 +add_library(caffe2::curand ALIAS CUDA::curand)
 +add_library(caffe2::cublas ALIAS CUDA::cublas)
 diff --git a/cmake/public/utils.cmake b/cmake/public/utils.cmake
-index 4d48c0f0..99b49721 100644
+index c6647eb45..03fce0a2b 100644
 --- a/cmake/public/utils.cmake
 +++ b/cmake/public/utils.cmake
-@@ -374,33 +374,6 @@ macro(torch_hip_get_arch_list store_var)
+@@ -306,33 +306,6 @@ macro(torch_hip_get_arch_list store_var)
    string(REPLACE " " ";" ${store_var} "${_TMP}")
  endmacro()
  
@@ -631,7 +652,7 @@ index 4d48c0f0..99b49721 100644
  
  ##############################################################################
  # Add standard compile options.
-@@ -497,42 +470,6 @@ function(torch_compile_options libname)
+@@ -427,42 +400,6 @@ function(torch_compile_options libname)
  
  endfunction()
  
@@ -671,11 +692,11 @@ index 4d48c0f0..99b49721 100644
 -  endif()
 -endfunction()
 -
+ include(CheckCXXCompilerFlag)
+ 
  ##############################################################################
- # CHeck if given flag is supported and append it to provided outputvar
- # Also define HAS_UPPER_CASE_FLAG_NAME variable
 diff --git a/third_party/gloo/cmake/Cuda.cmake b/third_party/gloo/cmake/Cuda.cmake
-index d2ca2122..f02db820 100644
+index d2ca2122b..f02db8208 100644
 --- a/third_party/gloo/cmake/Cuda.cmake
 +++ b/third_party/gloo/cmake/Cuda.cmake
 @@ -1,189 +1,9 @@
@@ -873,7 +894,7 @@ index d2ca2122..f02db820 100644
 -  set(CUDA_NVCC_FLAGS "${GLOO_NVCC_FLAGS}")
 -endif()
 diff --git a/third_party/gloo/cmake/Dependencies.cmake b/third_party/gloo/cmake/Dependencies.cmake
-index 14cbcb1b..8585f286 100644
+index 14cbcb1b0..8585f2862 100644
 --- a/third_party/gloo/cmake/Dependencies.cmake
 +++ b/third_party/gloo/cmake/Dependencies.cmake
 @@ -113,10 +113,6 @@ endif()
@@ -888,7 +909,7 @@ index 14cbcb1b..8585f286 100644
  
  if(USE_CUDA AND USE_NCCL)
 diff --git a/third_party/gloo/gloo/CMakeLists.txt b/third_party/gloo/gloo/CMakeLists.txt
-index d5e6a1a5..f4c7e929 100644
+index d5e6a1a55..f4c7e9292 100644
 --- a/third_party/gloo/gloo/CMakeLists.txt
 +++ b/third_party/gloo/gloo/CMakeLists.txt
 @@ -140,12 +140,8 @@ configure_file(config.h.in config.h)
@@ -906,65 +927,6 @@ index d5e6a1a5..f4c7e929 100644
    target_link_libraries(gloo_cuda gloo ${gloo_cuda_DEPENDENCY_LIBS})
  endif()
  if(USE_ROCM)
-diff --git a/third_party/nvfuser/CMakeLists.txt b/third_party/nvfuser/CMakeLists.txt
-index b148418a..c355e185 100644
---- a/third_party/nvfuser/CMakeLists.txt
-+++ b/third_party/nvfuser/CMakeLists.txt
-@@ -146,7 +146,7 @@ endif()
- 
- target_link_libraries(${NVFUSER_CODEGEN} PRIVATE torch ${TORCHLIB_FLAVOR})
- if(NOT USE_ROCM)
--  target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${CUDA_NVRTC_LIB} torch::nvtoolsext)
-+  target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${CUDA_NVRTC_LIB})
-   target_include_directories(${NVFUSER_CODEGEN} PRIVATE ${CUDA_INCLUDE_DIRS})
- else()
-   target_link_libraries(${NVFUSER_CODEGEN} PRIVATE ${ROCM_HIPRTC_LIB})
-@@ -183,7 +183,6 @@ if(BUILD_PYTHON)
-     # NB: This must be target_compile_definitions, not target_compile_options,
-     # as the latter is not respected by nvcc
-     target_compile_definitions(${NVFUSER} PRIVATE "-DTORCH_CUDA_BUILD_MAIN_LIB")
--    target_link_libraries(${NVFUSER} PRIVATE torch::nvtoolsext)
-   else()
-     target_compile_options(${NVFUSER} PRIVATE "-DTORCH_HIP_BUILD_MAIN_LIB")
-     target_compile_definitions(${NVFUSER} PRIVATE "-DTORCH_HIP_BUILD_MAIN_LIB")
-diff --git a/third_party/nvfuser/csrc/instrumentation.h b/third_party/nvfuser/csrc/instrumentation.h
-index cd57825a..75e81e9f 100644
---- a/third_party/nvfuser/csrc/instrumentation.h
-+++ b/third_party/nvfuser/csrc/instrumentation.h
-@@ -2,7 +2,7 @@
- 
- #include <utils.h>
- 
--#include <nvToolsExt.h>
-+#include <nvtx3/nvToolsExt.h>
- 
- // NOLINTNEXTLINE(modernize-deprecated-headers)
- #include <stdio.h>
-diff --git a/torch/csrc/cuda/shared/nvtx.cpp b/torch/csrc/cuda/shared/nvtx.cpp
-index 4fb72c5f..1abe1b76 100644
---- a/torch/csrc/cuda/shared/nvtx.cpp
-+++ b/torch/csrc/cuda/shared/nvtx.cpp
-@@ -1,7 +1,7 @@
- #ifdef _WIN32
- #include <wchar.h> // _wgetenv for nvtx
- #endif
--#include <nvToolsExt.h>
-+#include <nvtx3/nvToolsExt.h>
- #include <torch/csrc/utils/pybind.h>
- 
- namespace torch::cuda::shared {
-diff --git a/torch/csrc/profiler/stubs/cuda.cpp b/torch/csrc/profiler/stubs/cuda.cpp
-index dec87576..3bb368a4 100644
---- a/torch/csrc/profiler/stubs/cuda.cpp
-+++ b/torch/csrc/profiler/stubs/cuda.cpp
-@@ -1,6 +1,6 @@
- #include <sstream>
- 
--#include <nvToolsExt.h>
-+#include <nvtx3/nvToolsExt.h>
- 
- #include <c10/cuda/CUDAGuard.h>
- #include <c10/util/irange.h>
 -- 
 2.34.1
 

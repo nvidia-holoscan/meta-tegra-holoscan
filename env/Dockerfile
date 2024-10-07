@@ -42,7 +42,6 @@ RUN apt-get update -y \
     python \
     python3 \
     python3-pip \
-    python3-typing-extensions \
     python3-yaml \
     python-pexpect \
     xz-utils \
@@ -54,7 +53,8 @@ RUN apt-get update -y \
     zstd \
     liblz4-tool \
  && rm -rf /var/lib/apt/lists/* \
- && rm -rf /var/cache/apt/archives/partial/*
+ && rm -rf /var/cache/apt/archives/partial/* \
+ && pip install typing-extensions
 
 RUN locale-gen en_US.UTF-8
 

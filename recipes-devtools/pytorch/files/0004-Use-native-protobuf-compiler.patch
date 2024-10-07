@@ -5,7 +5,7 @@ Subject: Use native protobuf compiler
 
 
 diff --git a/cmake/public/protobuf.cmake b/cmake/public/protobuf.cmake
-index 77ec3622..e64f92bc 100644
+index 77ec3622b..e64f92bca 100644
 --- a/cmake/public/protobuf.cmake
 +++ b/cmake/public/protobuf.cmake
 @@ -6,12 +6,19 @@ if(NOT Protobuf_FOUND)
