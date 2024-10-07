@@ -23,8 +23,8 @@ HOMEPAGE = "https://github.com/pytorch/vision"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=bd7749a3307486a4d4bfefbc81c8b796"
 
-SRC_URI = "git://github.com/pytorch/vision.git;branch=release/0.16;protocol=https"
-SRCREV = "c6f39778e636ec40a69bdbc74386818c57a65af3"
+SRC_URI = "git://github.com/pytorch/vision.git;branch=release/0.20;protocol=https"
+SRCREV = "3ac97aa9120137381ed1060f37237e44485ac2aa"
 
 S = "${WORKDIR}/git"
 
