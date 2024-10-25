@@ -22,16 +22,15 @@ SUMMARY = "Unified Communication X"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
 
-SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.15.x"
-SRCREV = "348d14f111de710f12247b6a3ae12aefd0fe7b99"
+SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.17.x"
+SRCREV = "4ef9a097c12ee6f7a8d3e41c317ea2d47e424b32"
+
+S = "${WORKDIR}/git"
 
 SRC_URI += " \
     file://0001-Fix-CMAKE-library-import-paths.patch \
     file://0002-Add-option-to-enable-NVML.patch \
-    file://0003-Fix-ucs_topo_get_distance-error-handling.patch \
 "
-
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig cuda
 
