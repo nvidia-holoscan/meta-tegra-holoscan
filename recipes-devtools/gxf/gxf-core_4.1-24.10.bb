@@ -29,15 +29,15 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_4.0_20240409_bc03d9d_holoscan-sdk_${GXF_ARCH}"
+GXF_PACKAGE = "gxf_447_20241004_bf72709_holoscan-sdk_${GXF_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz"
-SRC_URI[sha256sum] = "29679672a603c570d23290a0ea8455f7c1331c9d6952530d4affa6a534cd50db"
+SRC_URI[sha256sum] = "724676b196548546b046adbea2607c8afb910099b816abb7122788d802037fa0"
 
 SRC_URI += " \
     file://0001-Remove-TypenameAsString-from-nvidia-namespace.patch \
 "
 
-S = "${WORKDIR}/gxf_236_20240409_bc03d9d_holoscan-sdk_${GXF_ARCH}"
+S = "${WORKDIR}/gxf_447_20241004_bf72709_holoscan-sdk_${GXF_ARCH}"
 
 do_install () {
     install -d ${D}/opt/nvidia/gxf
