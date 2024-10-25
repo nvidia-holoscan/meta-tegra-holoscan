@@ -5,19 +5,18 @@ Subject: Fix ONNXRuntime include paths
 
 
 diff --git a/cmake/modules/FindONNXRuntime.cmake b/cmake/modules/FindONNXRuntime.cmake
-index 1e0aee1..d70582a 100644
+index 9f8c10a..e9b41fa 100644
 --- a/cmake/modules/FindONNXRuntime.cmake
 +++ b/cmake/modules/FindONNXRuntime.cmake
-@@ -28,11 +28,8 @@
- # [2] https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html#find-module-packages
+@@ -29,10 +29,9 @@
  
  # Find headers
--find_path(ONNXRuntime_INCLUDE_DIR
--  NAMES onnxruntime/core/session/onnxruntime_c_api.h
--)
-+find_path(ONNXRuntime_INCLUDE_DIR NAMES onnxruntime_c_api.h)
+ find_path(ONNXRuntime_INCLUDE_DIR
+-  NAMES onnxruntime/onnxruntime_c_api.h
++  NAMES onnxruntime_c_api.h
+ )
  list(APPEND ONNXRuntime_INCLUDE_DIRS "${ONNXRuntime_INCLUDE_DIR}")
--list(APPEND ONNXRuntime_INCLUDE_DIRS "${ONNXRuntime_INCLUDE_DIR}/onnxruntime/core/session")
+-list(APPEND ONNXRuntime_INCLUDE_DIRS "${ONNXRuntime_INCLUDE_DIR}/onnxruntime")
  mark_as_advanced(ONNXRuntime_INCLUDE_DIR)
  mark_as_advanced(ONNXRuntime_INCLUDE_DIRS)
  

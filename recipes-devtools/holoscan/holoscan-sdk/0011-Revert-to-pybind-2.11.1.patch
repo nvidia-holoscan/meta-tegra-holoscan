@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 25 Oct 2024 16:44:03 -0600
+Subject: Revert to pybind 2.11.1
+
+
+diff --git a/cmake/deps/pybind11.cmake b/cmake/deps/pybind11.cmake
+index 3aa140e..d674ec9 100644
+--- a/cmake/deps/pybind11.cmake
++++ b/cmake/deps/pybind11.cmake
+@@ -17,13 +17,13 @@
+ # https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
+ include(${rapids-cmake-dir}/cpm/find.cmake)
+ 
+-rapids_cpm_find(pybind11 2.13.6
++rapids_cpm_find(pybind11 2.11.1
+     GLOBAL_TARGETS pybind11
+ 
+     CPM_ARGS
+ 
+     GITHUB_REPOSITORY pybind/pybind11
+-    GIT_TAG v2.13.6
++    GIT_TAG v2.11.1
+     GIT_SHALLOW TRUE
+     EXCLUDE_FROM_ALL
+ )
+-- 
+2.34.1
+

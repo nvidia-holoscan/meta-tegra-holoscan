@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 25 Oct 2024 21:49:43 -0600
+Subject: Fix redefinition errors in rmm patch
+
+
+diff --git a/cmake/deps/patches/rmm.patch b/cmake/deps/patches/rmm.patch
+index e51b3e1..7c27372 100644
+--- a/cmake/deps/patches/rmm.patch
++++ b/cmake/deps/patches/rmm.patch
+@@ -46,11 +46,13 @@ diff --git include/rmm/cuda_stream_view.hpp include/rmm/cuda_stream_view.hpp
+ index a34897d..231aae9 100644
+ --- include/rmm/cuda_stream_view.hpp
+ +++ include/rmm/cuda_stream_view.hpp
+-@@ -18,6 +18,7 @@
++@@ -18,6 +18,9 @@
+ 
+  #include <rmm/detail/error.hpp>
+ 
+++#ifndef LIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE
+ +#define LIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE
+++#endif
+  #include <cuda/stream_ref>
+  #include <cuda_runtime_api.h>
+ 
+@@ -58,11 +60,13 @@ diff --git include/rmm/logger.hpp include/rmm/logger.hpp
+ index 6213221..edaf605 100644
+ --- include/rmm/logger.hpp
+ +++ include/rmm/logger.hpp
+-@@ -16,6 +16,7 @@
++@@ -16,6 +16,9 @@
+ 
+  #pragma once
+ 
+++#ifndef FMT_HEADER_ONLY
+ +#define FMT_HEADER_ONLY
+++#endif
+  #include <fmt/format.h>
+  #include <fmt/ostream.h>
+  #include <spdlog/sinks/basic_file_sink.h>
+-- 
+2.34.1
+

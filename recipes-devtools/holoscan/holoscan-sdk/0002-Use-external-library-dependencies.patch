@@ -12,10 +12,10 @@ fetched, built, and installed by CMake:
  - yaml-cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 49f489b..00caa7d 100644
+index ad320d7..acd237c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -212,17 +212,9 @@ if(HOLOSCAN_BUILD_ORT)
+@@ -213,17 +213,9 @@ if(HOLOSCAN_BUILD_ORT)
      list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_ort)
  endif()
  if(HOLOSCAN_BUILD_AJA)

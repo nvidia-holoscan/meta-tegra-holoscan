@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "f3d80c69bf794f481dd7fd7fce4837a80db2ae69"
+SRCREV = "2eb38609ed8f2f45f6602cb01c089b8b00e7fba2"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -35,10 +35,11 @@ SRC_URI += " \
     file://0005-Move-required-3rdparty-headers-to-holoscan-core.patch \
     file://0006-Disable-various-warnings-as-errors.patch \
     file://0007-Remove-CONFIG-from-Protobuf-find_package.patch \
-    file://0008-Fix-RPATH-for-holoinfer.patch \
-    file://0009-Fix-ONNXRuntime-include-paths.patch \
-    file://0010-Remove-UCX-header-workaround.patch \
-    file://0011-Skip-multiai_ultrasound-data-download.patch \
+    file://0008-Fix-ONNXRuntime-include-paths.patch \
+    file://0009-Remove-UCX-header-workaround.patch \
+    file://0010-Skip-multiai_ultrasound-data-download.patch \
+    file://0011-Revert-to-pybind-2.11.1.patch \
+    file://0012-Fix-redefinition-errors-in-rmm-patch.patch \
 "
 
 S = "${WORKDIR}/git"
