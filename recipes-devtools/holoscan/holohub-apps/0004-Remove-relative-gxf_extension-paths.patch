@@ -5,68 +5,74 @@ Subject: Remove relative gxf_extension paths
 
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 4fbdf366..c05cce34 100644
+index b7cbec5..7b8a980 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-@@ -29,7 +29,7 @@ resources:
+@@ -29,11 +29,11 @@ resources:
    gpuMemory: 1Gi
  
  extensions:
--  - gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
+-  - lib/gxf_extensions/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
  # Uncomment the following extension when using deltacast as a source
- #  - gxf_extensions/deltacast_videomaster/libgxf_videomaster.so
+-#  - lib/gxf_extensions/libgxf_videomaster.so
++#  - libgxf_videomaster.so
  # Uncomment the following extension when using yuan as source
+-#  - lib/gxf_extensions/libgxf_qcap_source.so
++#  - libgxf_qcap_source.so
+ 
+ source: "replayer"    # "replayer" or "aja" or "deltacast" or "yuan"
+ visualizer: "holoviz"  # "holoviz" or "vtk"
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index af29308b..2b0e8f60 100644
+index 542eb0a..2b0e8f6 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 @@ -29,8 +29,8 @@ resources:
    gpuMemory: 1Gi
  
  extensions:
--- gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
--- gxf_extensions/yuan_qcap/libgxf_qcap_source.so
+-- lib/gxf_extensions/libgxf_lstm_tensor_rt_inference.so
+-- lib/gxf_extensions/libgxf_qcap_source.so
 +- libgxf_lstm_tensor_rt_inference.so
 +- libgxf_qcap_source.so
  
  visualizer: "holoviz" # "holoviz" or "vtk"
  
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
-index 57254ef5..6b72dbe4 100644
+index b6bcae5..6b72dbe 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 @@ -19,7 +19,7 @@ extensions:
    - libgxf_videodecoderio.so
    - libgxf_videoencoder.so
    - libgxf_videoencoderio.so
--  - ../../../../gxf_extensions/lstm_tensor_rt_inference/libgxf_lstm_tensor_rt_inference.so
+-  - ../../../../lib/gxf_extensions/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
  
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index 8e80b1bd..1535f335 100644
+index a6beca2..1535f33 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
  # limitations under the License.
  ---
  extensions:
--  - gxf_extensions/emergent_source/libgxf_emergent_source.so
+-  - lib/gxf_extensions/libgxf_emergent_source.so
 +  - libgxf_emergent_source.so
  
  # Modify the width/height and framerate for the camera used
  # Current is for Emergent HB-5000-SB
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
-index d67444f5..35c4e4d5 100644
+index cac6c52..35c4e4d 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
  # limitations under the License.
  ---
  extensions:
--  - gxf_extensions/emergent_source/libgxf_emergent_source.so
+-  - lib/gxf_extensions/libgxf_emergent_source.so
 +  - libgxf_emergent_source.so
  
  emergent:

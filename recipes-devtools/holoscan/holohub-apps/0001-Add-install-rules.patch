@@ -5,7 +5,7 @@ Subject: Add install rules
 
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
-index 4ccd1b57..6ae04537 100644
+index 4ccd1b5..6ae0453 100644
 --- a/applications/colonoscopy_segmentation/CMakeLists.txt
 +++ b/applications/colonoscopy_segmentation/CMakeLists.txt
 @@ -33,6 +33,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -24,7 +24,7 @@ index 4ccd1b57..6ae04537 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index 8ad93dde..e8e4fd03 100644
+index 8ad93dd..e8e4fd0 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -60,6 +60,15 @@ add_custom_target(endoscopy_out_of_body_detection_yaml
@@ -44,7 +44,7 @@ index 8ad93dde..e8e4fd03 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 554f03b1..1b4f530c 100644
+index 0e53ac0..746449b 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -53,6 +53,15 @@ add_custom_target(endoscopy_tool_tracking_deps
@@ -63,43 +63,8 @@ index 554f03b1..1b4f530c 100644
  # Add testing
  if(BUILD_TESTING)
  
-@@ -151,33 +160,3 @@ if(FLOW_BENCHMARKING)
-   # Set test timeout to 25 minutes
-   set_tests_properties(endoscopy_tool_tracking_cpp_benchmark_test PROPERTIES TIMEOUT 1500)
- endif()
--
--# Install application and dependencies into the install/ directory for packaging
--install(
--  TARGETS endoscopy_tool_tracking
--  DESTINATION endoscopy_tool_tracking_cpp
--  COMPONENT "holohub-apps"
--)
--
--file(READ "${CMAKE_CURRENT_SOURCE_DIR}/endoscopy_tool_tracking.yaml" APP_YAML_FILE)
--string(REPLACE "gxf_extensions/lstm_tensor_rt_inference/" "" APP_YAML_FILE "${APP_YAML_FILE}")
--file(WRITE "${CMAKE_BINARY_DIR}/packaging/cpp/endoscopy_tool_tracking.yaml" "${APP_YAML_FILE}")
--
--install(
--  FILES ${CMAKE_BINARY_DIR}/packaging/cpp/endoscopy_tool_tracking.yaml
--  DESTINATION endoscopy_tool_tracking_cpp
--  COMPONENT "holohub-apps"
--)
--
--install(
--  DIRECTORY ${CMAKE_BINARY_DIR}/gxf_extensions/lstm_tensor_rt_inference/
--  DESTINATION endoscopy_tool_tracking_cpp
--  FILES_MATCHING PATTERN "*.so"
--  PATTERN "CMakeFiles" EXCLUDE)
--
--install(
--  FILES
--  ${CMAKE_BINARY_DIR}/operators/lstm_tensor_rt_inference/liblstm_tensor_rt_inference.so
--  ${CMAKE_BINARY_DIR}/operators/tool_tracking_postprocessor/libtool_tracking_postprocessor.so
--  DESTINATION endoscopy_tool_tracking_cpp
--  COMPONENT "holohub-apps")
-\ No newline at end of file
 diff --git a/applications/endoscopy_tool_tracking/python/CMakeLists.txt b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-index 563ddd23..8da0b0a1 100644
+index 542d19e..42fa7ed 100644
 --- a/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -117,48 +82,8 @@ index 563ddd23..8da0b0a1 100644
  # Add testing
  if(BUILD_TESTING)
    # To get the environment path
-@@ -63,39 +71,3 @@ if(BUILD_TESTING)
-   )
- 
- endif()
--
--# Install application and dependencies into the install/ directory for packaging
--install(
--  FILES endoscopy_tool_tracking.py
--  DESTINATION endoscopy_tool_tracking_python
--  COMPONENT "holohub-apps"
--)
--
--file(READ "${CMAKE_CURRENT_SOURCE_DIR}/endoscopy_tool_tracking.yaml" APP_YAML_FILE)
--string(REPLACE "gxf_extensions/lstm_tensor_rt_inference/" "" APP_YAML_FILE "${APP_YAML_FILE}")
--file(WRITE "${CMAKE_BINARY_DIR}/packaging/python/endoscopy_tool_tracking.yaml" "${APP_YAML_FILE}")
--
--install(
--  FILES ${CMAKE_BINARY_DIR}/packaging/python/endoscopy_tool_tracking.yaml
--  DESTINATION endoscopy_tool_tracking_python
--  COMPONENT "holohub-apps"
--)
--
--install(
--  DIRECTORY ${CMAKE_BINARY_DIR}/gxf_extensions/lstm_tensor_rt_inference/
--  DESTINATION endoscopy_tool_tracking_python
--  FILES_MATCHING PATTERN "*.so"
--  PATTERN "CMakeFiles" EXCLUDE
--)
--
--install(
--  FILES
--    ${CMAKE_BINARY_DIR}/operators/lstm_tensor_rt_inference/liblstm_tensor_rt_inference.so
--    ${CMAKE_BINARY_DIR}/operators/tool_tracking_postprocessor/libtool_tracking_postprocessor.so
--  DESTINATION endoscopy_tool_tracking_python
--  COMPONENT "holohub-apps"
--)
--
--install(
--  DIRECTORY ${CMAKE_BINARY_DIR}/python/lib/holohub
--  DESTINATION endoscopy_tool_tracking_python)
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/h264/h264_endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 36b52125..61b3d6c5 100644
+index 36b5212..61b3d6c 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -58,6 +58,15 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -178,12 +103,12 @@ index 36b52125..61b3d6c5 100644
  if(BUILD_TESTING)
    add_test(NAME h264_endoscopy_tool_tracking_cpp_test
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt b/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
-index aa3c7878..ca0ee298 100644
+index bb229b3..69dab17 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/h264/h264_endoscopy_tool_tracking/python/CMakeLists.txt
-@@ -21,6 +21,14 @@ find_package(holoscan 2.1.0 REQUIRED CONFIG
- add_library(nvidia_nim_imaging INTERFACE)
- target_link_libraries(nvidia_nim_imaging INTERFACE holoscan::core holoscan::ops::holoviz holoscan::ops::lstm_tensor_rt_inference holoscan::ops::tensor_to_video_buffer holoscan::ops::tool_tracking_postprocessor)
+@@ -27,6 +27,14 @@ target_link_libraries(h264_endoscopy_tool_tracking_python
+   holoscan::ops::tensor_to_video_buffer
+   holoscan::ops::tool_tracking_postprocessor)
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -197,7 +122,7 @@ index aa3c7878..ca0ee298 100644
  if(BUILD_TESTING)
    add_test(NAME h264_endoscopy_tool_tracking_python_test
 diff --git a/applications/h264/h264_video_decode/cpp/CMakeLists.txt b/applications/h264/h264_video_decode/cpp/CMakeLists.txt
-index 9e5be1e2..bbc024d7 100644
+index 9e5be1e..bbc024d 100644
 --- a/applications/h264/h264_video_decode/cpp/CMakeLists.txt
 +++ b/applications/h264/h264_video_decode/cpp/CMakeLists.txt
 @@ -51,6 +51,15 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -217,7 +142,7 @@ index 9e5be1e2..bbc024d7 100644
  if(BUILD_TESTING)
    add_test(NAME h264_video_decode_cpp_test
 diff --git a/applications/h264/h264_video_decode/python/CMakeLists.txt b/applications/h264/h264_video_decode/python/CMakeLists.txt
-index b024ff3c..8a6fdb02 100644
+index f83ef3b..f9804d9 100644
 --- a/applications/h264/h264_video_decode/python/CMakeLists.txt
 +++ b/applications/h264/h264_video_decode/python/CMakeLists.txt
 @@ -17,6 +17,14 @@ cmake_minimum_required(VERSION 3.20)
@@ -236,7 +161,7 @@ index b024ff3c..8a6fdb02 100644
  if(BUILD_TESTING)
    add_test(NAME h264_video_decode_python_test
 diff --git a/applications/high_speed_endoscopy/cpp/CMakeLists.txt b/applications/high_speed_endoscopy/cpp/CMakeLists.txt
-index ea261e00..311a4413 100644
+index ea261e0..311a441 100644
 --- a/applications/high_speed_endoscopy/cpp/CMakeLists.txt
 +++ b/applications/high_speed_endoscopy/cpp/CMakeLists.txt
 @@ -47,6 +47,15 @@ add_custom_target(high_speed_endoscopy_yaml
@@ -256,7 +181,7 @@ index ea261e00..311a4413 100644
  if(BUILD_TESTING)
    # Warning: this test just check that the application starts if there is no camera
 diff --git a/applications/high_speed_endoscopy/python/CMakeLists.txt b/applications/high_speed_endoscopy/python/CMakeLists.txt
-index bc802e7b..2fe1db83 100644
+index bc802e7..2fe1db8 100644
 --- a/applications/high_speed_endoscopy/python/CMakeLists.txt
 +++ b/applications/high_speed_endoscopy/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -275,7 +200,7 @@ index bc802e7b..2fe1db83 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index a06560a7..f0c93eaa 100644
+index a06560a..f0c93ea 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -49,6 +49,16 @@ add_custom_target(app_config_yaml
@@ -296,7 +221,7 @@ index a06560a7..f0c93eaa 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/multiai_endoscopy/python/CMakeLists.txt b/applications/multiai_endoscopy/python/CMakeLists.txt
-index 38e39d0b..d0fac8e6 100644
+index 38e39d0..d0fac8e 100644
 --- a/applications/multiai_endoscopy/python/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/python/CMakeLists.txt
 @@ -13,6 +13,15 @@
@@ -316,10 +241,10 @@ index 38e39d0b..d0fac8e6 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index d4c9196e..8d845eed 100644
+index 8cca9af..910607e 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-@@ -55,6 +55,17 @@ add_custom_target(mgpu_multiai_ultrasound_yaml
+@@ -56,6 +56,17 @@ add_custom_target(mgpu_multiai_ultrasound_yaml
  )
  add_dependencies(multiai_ultrasound mgpu_multiai_ultrasound_yaml)
  
@@ -336,9 +261,9 @@ index d4c9196e..8d845eed 100644
 +
  # Add testing
  if(BUILD_TESTING)
-   # Configure the yaml file to only play 10 frames
+   set(RECORDING_DIR ${CMAKE_CURRENT_BINARY_DIR}/recording_output)
 diff --git a/applications/multiai_ultrasound/python/CMakeLists.txt b/applications/multiai_ultrasound/python/CMakeLists.txt
-index d18eb315..15a0a27d 100644
+index 8af6d5e..acab477 100644
 --- a/applications/multiai_ultrasound/python/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -357,7 +282,7 @@ index d18eb315..15a0a27d 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index cced22d9..b5158643 100644
+index 08089e7..0db0c00 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -75,6 +75,15 @@ add_custom_target(object_detection_torch_yaml
@@ -377,7 +302,7 @@ index cced22d9..b5158643 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 44c3646f..6429a6c5 100644
+index 44c3646..6429a6c 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -47,6 +47,15 @@ add_custom_target(ultrasound_segmentation_yaml
@@ -397,7 +322,7 @@ index 44c3646f..6429a6c5 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/ultrasound_segmentation/python/CMakeLists.txt b/applications/ultrasound_segmentation/python/CMakeLists.txt
-index 240fbb56..848bb1a9 100644
+index 240fbb5..848bb1a 100644
 --- a/applications/ultrasound_segmentation/python/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/python/CMakeLists.txt
 @@ -13,6 +13,14 @@
@@ -415,17 +340,8 @@ index 240fbb56..848bb1a9 100644
  # Add testing
  if(BUILD_TESTING)
    # To get the environment path
-diff --git a/applications/volume_rendering/CMakeLists.txt b/applications/volume_rendering/CMakeLists.txt
-index bdcb8c90..bad9c163 100644
---- a/applications/volume_rendering/CMakeLists.txt
-+++ b/applications/volume_rendering/CMakeLists.txt
-@@ -15,4 +15,3 @@
- 
- add_subdirectory(cpp)
- add_subdirectory(python)
--
 diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
-index c9c5e518..d7a30884 100644
+index c9c5e51..d7a3088 100644
 --- a/applications/volume_rendering/cpp/CMakeLists.txt
 +++ b/applications/volume_rendering/cpp/CMakeLists.txt
 @@ -54,3 +54,9 @@ if(BUILD_TESTING)
@@ -439,7 +355,7 @@ index c9c5e518..d7a30884 100644
 +  DESTINATION ${install_path}
 +)
 diff --git a/applications/volume_rendering/python/CMakeLists.txt b/applications/volume_rendering/python/CMakeLists.txt
-index 4e29a8d0..5506f13e 100644
+index 4e29a8d..5506f13 100644
 --- a/applications/volume_rendering/python/CMakeLists.txt
 +++ b/applications/volume_rendering/python/CMakeLists.txt
 @@ -35,4 +35,12 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -458,7 +374,7 @@ index 4e29a8d0..5506f13e 100644
 +)
 +
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index cb9bd6ba..3f305104 100644
+index cb9bd6b..3f30510 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -80,4 +80,9 @@ function(pybind11_add_holohub_module)
@@ -474,7 +390,7 @@ index cb9bd6ba..3f305104 100644
 +
 +endfunction()
 diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
-index 4e68bb50..be77b478 100644
+index 4e68bb5..be77b47 100644
 --- a/gxf_extensions/emergent_source/CMakeLists.txt
 +++ b/gxf_extensions/emergent_source/CMakeLists.txt
 @@ -50,3 +50,5 @@ add_library(gxf_emergent_source SHARED
@@ -483,18 +399,8 @@ index 4e68bb50..be77b478 100644
  )
 +
 +install(TARGETS gxf_emergent_source_lib gxf_emergent_source)
-diff --git a/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt b/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
-index 82970919..d1cf650c 100644
---- a/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
-+++ b/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
-@@ -43,3 +43,5 @@ add_library(gxf_lstm_tensor_rt_inference SHARED
- target_link_libraries(gxf_lstm_tensor_rt_inference
-   PUBLIC gxf_lstm_tensor_rt_inference_lib
- )
-+
-+install(TARGETS gxf_lstm_tensor_rt_inference_lib gxf_lstm_tensor_rt_inference)
 diff --git a/operators/basic_network/CMakeLists.txt b/operators/basic_network/CMakeLists.txt
-index 075133f5..0e6fe807 100644
+index 075133f..0e6fe80 100644
 --- a/operators/basic_network/CMakeLists.txt
 +++ b/operators/basic_network/CMakeLists.txt
 @@ -28,6 +28,8 @@ target_include_directories(basic_network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -507,7 +413,7 @@ index 075133f5..0e6fe807 100644
  if(HOLOHUB_BUILD_PYTHON)
    add_subdirectory(python)
 diff --git a/operators/emergent_source/CMakeLists.txt b/operators/emergent_source/CMakeLists.txt
-index b64a454f..a8db6407 100644
+index b64a454..a8db640 100644
 --- a/operators/emergent_source/CMakeLists.txt
 +++ b/operators/emergent_source/CMakeLists.txt
 @@ -27,6 +27,8 @@ target_include_directories(emergent_source INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
@@ -520,7 +426,7 @@ index b64a454f..a8db6407 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/lstm_tensor_rt_inference/CMakeLists.txt b/operators/lstm_tensor_rt_inference/CMakeLists.txt
-index 7bcbf418..995d9293 100644
+index 3e6720c..cd7027e 100644
 --- a/operators/lstm_tensor_rt_inference/CMakeLists.txt
 +++ b/operators/lstm_tensor_rt_inference/CMakeLists.txt
 @@ -26,6 +26,8 @@ add_library(lstm_tensor_rt_inference SHARED
@@ -533,7 +439,7 @@ index 7bcbf418..995d9293 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/orsi/orsi_format_converter/CMakeLists.txt b/operators/orsi/orsi_format_converter/CMakeLists.txt
-index 2a015163..7f9f194d 100644
+index 2a01516..7f9f194 100644
 --- a/operators/orsi/orsi_format_converter/CMakeLists.txt
 +++ b/operators/orsi/orsi_format_converter/CMakeLists.txt
 @@ -36,6 +36,8 @@ PRIVATE
@@ -546,7 +452,7 @@ index 2a015163..7f9f194d 100644
    add_subdirectory(python)
  endif()
 diff --git a/operators/tensor_to_video_buffer/CMakeLists.txt b/operators/tensor_to_video_buffer/CMakeLists.txt
-index 05567503..0c6de596 100644
+index 0556750..0c6de59 100644
 --- a/operators/tensor_to_video_buffer/CMakeLists.txt
 +++ b/operators/tensor_to_video_buffer/CMakeLists.txt
 @@ -31,6 +31,8 @@ target_link_libraries(
@@ -559,7 +465,7 @@ index 05567503..0c6de596 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index 19e1767b..8b471a14 100644
+index cc90a3e..1b8ebd2 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt
 +++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
 @@ -30,6 +30,8 @@ set_target_properties(tool_tracking_postprocessor PROPERTIES CUDA_ARCHITECTURES
@@ -572,7 +478,7 @@ index 19e1767b..8b471a14 100644
      add_subdirectory(python)
  endif()
 diff --git a/operators/video_encoder/CMakeLists.txt b/operators/video_encoder/CMakeLists.txt
-index 1c9a5097..bc3d11d3 100644
+index 1c9a509..bc3d11d 100644
 --- a/operators/video_encoder/CMakeLists.txt
 +++ b/operators/video_encoder/CMakeLists.txt
 @@ -32,3 +32,5 @@ target_link_libraries(video_encoder INTERFACE video_encoder_request
@@ -582,10 +488,10 @@ index 1c9a5097..bc3d11d3 100644
 +
 +install(TARGETS video_encoder)
 diff --git a/operators/visualizer_icardio/CMakeLists.txt b/operators/visualizer_icardio/CMakeLists.txt
-index 65367eca..91e5730a 100644
+index 88dc6b4..01817d2 100644
 --- a/operators/visualizer_icardio/CMakeLists.txt
 +++ b/operators/visualizer_icardio/CMakeLists.txt
-@@ -32,6 +32,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
+@@ -35,6 +35,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
  target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
  target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
  

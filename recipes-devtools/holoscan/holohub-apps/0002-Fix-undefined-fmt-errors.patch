@@ -18,7 +18,7 @@ index 0c6de59..d9fca7a 100644
  
  if(HOLOHUB_BUILD_PYTHON)
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index 8b471a1..9467998 100644
+index 1b8ebd2..23da9b1 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt
 +++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
 @@ -30,6 +30,8 @@ set_target_properties(tool_tracking_postprocessor PROPERTIES CUDA_ARCHITECTURES
@@ -31,10 +31,10 @@ index 8b471a1..9467998 100644
  
  if(HOLOHUB_BUILD_PYTHON)
 diff --git a/operators/visualizer_icardio/CMakeLists.txt b/operators/visualizer_icardio/CMakeLists.txt
-index 91e5730..73c508a 100644
+index 01817d2..079fba5 100644
 --- a/operators/visualizer_icardio/CMakeLists.txt
 +++ b/operators/visualizer_icardio/CMakeLists.txt
-@@ -32,6 +32,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
+@@ -35,6 +35,8 @@ target_include_directories(visualizer_icardio INTERFACE ${CMAKE_CURRENT_SOURCE_D
  target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MAJOR_VERSION=${holoscan_VERSION_MAJOR})
  target_compile_definitions(visualizer_icardio PRIVATE HOLOSCAN_MINOR_VERSION=${holoscan_VERSION_MINOR})
  

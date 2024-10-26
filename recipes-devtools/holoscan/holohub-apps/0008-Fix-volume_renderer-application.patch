@@ -5,10 +5,10 @@ Subject: Fix volume_renderer application
 
 
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index a15d632..9ecd949 100644
+index e9df8b9..c79f5f9 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
-@@ -18,55 +18,9 @@ project(volume_renderer)
+@@ -18,61 +18,9 @@ project(volume_renderer)
  find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
@@ -46,6 +46,12 @@ index a15d632..9ecd949 100644
 -# enable CMP0077 to allow overwriting option() statements in FetchContent sub-projects
 -cmake_policy(SET CMP0077 NEW)
 -
+-# Allowing FetchContent_Populate() for now
+-# This should be updated when ClaraViz supports new version of CMake
+-if(POLICY CMP0169)
+-  cmake_policy(SET CMP0169 OLD)
+-endif()
+-
 -FetchContent_GetProperties(ClaraViz)
 -if(NOT claraviz_POPULATED)
 -    FetchContent_Populate(ClaraViz)
@@ -53,9 +59,9 @@ index a15d632..9ecd949 100644
 -    add_subdirectory(${claraviz_SOURCE_DIR}/thirdparty ${claraviz_BINARY_DIR}/thirdparty)
 -    add_subdirectory(${claraviz_SOURCE_DIR}/src ${claraviz_BINARY_DIR}/src)
 -endif()
--set(FETCHCONTENT_QUIET ON)
 -
 -set(CLARA_VIZ_PUBLIC_CMAKE_TOOLS_DIR "${claraviz_SOURCE_DIR}/cmake")
+-set(FETCHCONTENT_QUIET ON)
 -
 -find_package(clara_viz_renderer REQUIRED HINTS ${claraviz_SOURCE_DIR}/cmake)
 -install(IMPORTED_RUNTIME_ARTIFACTS clara::viz::renderer
