@@ -24,6 +24,7 @@ L4T_DEB_FEED_SKIP_POOL_APPEND:dgpu = "1"
 # We patch the download name of SBSA packages to append 'sbsa' so that the iGPU and
 # dGPU downloads do not conflict if the tree is ever used to build both configurations.
 SRC_COMMON_DEBS:dgpu = "\
-    libcudnn8_${PV}+cuda12.2_arm64.deb;subdir=cudnn;downloadfilename=libcudnn8_${PV}+cuda12.2_arm64_sbsa.deb;sha256sum=0de94609f6936e44b3ece98626ad4d4590376e163d0cbc12d721ba4f7ac566a4 \
-    libcudnn8-dev_${PV}+cuda12.2_arm64.deb;subdir=cudnn;downloadfilename=libcudnn8-dev_${PV}+cuda12.2_arm64_sbsa.deb;sha256sum=5c3dca83efe325cad7cc74f3a11e48c6111f779e4e1098adc6e1b7a548956033 \
+    libcudnn9-cuda-12_${PV}_arm64.deb;subdir=cudnn;downloadfilename=libcudnn9-cuda-12_${PV}_arm64_sbsa.deb;sha256sum=4a46c79a25308d03d6faad9aa15da24baf14de7d77336b59a5d4a901338b2656 \
+    libcudnn9-static-cuda-12_${PV}_arm64.deb;subdir=cudnn;downloadfilename=libcudnn9-static-cuda-12_${PV}_arm64_sbsa.deb;sha256sum=851380d937b3bebd8a926f7cf1702b58db1e742a10fbf586afb035f7433ba1a1 \
+    libcudnn9-dev-cuda-12_${PV}_arm64.deb;subdir=cudnn;downloadfilename=libcudnn9-dev-cuda-12_${PV}_arm64_sbsa.deb;sha256sum=1dec157ce27f2718fde6215d15dc4e041cf5933e08e0bc967d2f207385cd5b9a \
 "
