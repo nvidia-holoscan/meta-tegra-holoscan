@@ -20,7 +20,5 @@
 
 require cuda-sbsa.inc
 
-DEPENDS:dgpu:class-target = "libnvidia-compute"
-
-DEVSUM:dgpu:aarch64 = "30ef861e0c4653e0ab43d8cf63f0d7a19889403684714c148d9ee5b7799f0a7f"
-DEVSUM:dgpu:x86-64 = "e5e88840e652e764ad1bd4775ff61ba3d37caf3079be4b448c674ae797b37efc"
+MAINSUM:dgpu:aarch64 = "f1974064a272f131fcb8d0a27000d53a8f195a8de0433e1dc96254a038722149"
+MAINSUM:dgpu:x86-64 = "e22aaf6239efd555435c3972c5a7e373037a1a4886bc77ed2ceeb6dad4ae4931"

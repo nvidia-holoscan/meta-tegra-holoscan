@@ -20,5 +20,5 @@
 
 require cuda-sbsa.inc
 
-MAINSUM:dgpu:aarch64 = "c2a1c4e15d94c23e7971d16c7b850f55619de51fde959137892ca36af11cd33d"
-MAINSUM:dgpu:x86-64 = "23afa3c12d87dcc7423b0ad0489d0f2df68d95a021b27c6ab3ee431ec50cd2b7"
+MAINSUM:dgpu:aarch64 = "2fdf3b3204b465d992d7441afe6dfa0c46f4887073204fd6d46b2aa5ad304308"
+MAINSUM:dgpu:x86-64 = "dcee2e42c7c34dccf586170793ef8623237ec88deb92e2200d672c9db23bf9af"

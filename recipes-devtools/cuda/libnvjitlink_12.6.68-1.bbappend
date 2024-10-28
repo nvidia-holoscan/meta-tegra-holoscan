@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,5 +20,8 @@
 
 require cuda-sbsa.inc
 
-MAINSUM:dgpu:aarch64 = "5996af5d6316ccd18c6ef51955443c599e040edc6bedecc671ed133948f91e63"
-MAINSUM:dgpu:x86-64 = "56add8d4922d8f08726eb698ee2c408a3537fb95eefc3a6996282212652bd2f1"
+MAINSUM:dgpu:aarch64 = "4f5e378de13b52cffd8f79bbbf526c616f8c3cdf38e0fb0c6fe0268787235a90"
+MAINSUM:dgpu:x86-64 = "358f326fd8023c24ce454adb5b822efd70ec37ad509111c72c0b91db243a22ff"
+
+DEVSUM:dgpu:aarch64 = "92a851e5565790cf4e1468a43bc42a27b463ed827f71443c4d4fe2ff0d40f0fc"
+DEVSUM:dgpu:x86-64 = "bae5f5f8c3a2e5b1b20225605e38b6d345909552a673a43a38dcda385de8f230"
