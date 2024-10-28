@@ -21,12 +21,12 @@
 inherit nvidia_deb_pkgfeed
 
 # This recipe builds on top of the meta-tegra version.
-require recipes-devtools/gie/tensorrt-samples_8.6.2.3-1.bb
+require recipes-devtools/gie/tensorrt-samples_10.3.0.30-1.bb
 
 LIC_FILES_CHKSUM = "file://../../../share/doc/libnvinfer-samples/copyright;md5=32ccc6a9bbc79616807b9bc252844b2f"
 
 SRC_COMMON_DEBS = "\
-    libnvinfer-samples_${PV}+cuda12.0_all.deb;downloadfilename=libnvinfer-samples_${PV}+cuda12.0_all.deb;name=samples;subdir=tensorrt \
+    libnvinfer-samples_${PV}+cuda12.5_all.deb;downloadfilename=libnvinfer-samples_${PV}+cuda12.5_all.deb;name=samples;subdir=tensorrt \
 "
 
-SRC_URI[samples.sha256sum] = "23bc16a5cb11be647b21ad44fd2a4b6f51eb4b117c7ab79335a9921ec9571ad6"
+SRC_URI[samples.sha256sum] = "e541c835d2d5f459e586d899dbb014664d594f5c937877a686ac51bb5daad1b5"
