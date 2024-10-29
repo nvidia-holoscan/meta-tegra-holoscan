@@ -1,3 +1,23 @@
+## [2.6.0] - 2024-10-29
+### Changed
+- Updated L4T to 36.4.0
+- Updated all layer dependencies (Scarthgap 5.0.4)
+- Updated Holoscan SDK and Holohub apps to 2.6.0
+- Updated various component versions
+  - CUDA 12.6.68-1
+  - cuDNN 9.3.0.75-1
+  - TensorRT 10.3.0.26-1
+  - PyTorch 2.5.0
+  - Torchvision 0.20.1
+  - ONNX Runtime 1.18.1
+  - UCX 1.17.0
+  - GXF 4.1-24.10
+
+### Fixed
+- Fixed build issue with native build of python3-numpy 1.26.4
+- Updated iGPU include path for ajantv2-driver RDMA support
+
+
 ## [2.5.0] - 2024-10-01
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 2.5.0
@@ -334,6 +354,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.2.0...v2.3.0
