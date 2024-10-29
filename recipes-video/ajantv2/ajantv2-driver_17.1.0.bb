@@ -39,7 +39,7 @@ EXTRA_OEMAKE:append = " \
 #   For iGPU, RDMA is supported by nvidia-p2p.ko provided by nvidia-kernel-oot.
 GPU_FLAGS = " \
     AJA_IGPU=1 \
-    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/linux \
+    NVIDIA_SRC_DIR=${RECIPE_SYSROOT}${includedir}/nvidia-kernel-oot/linux \
     NVIDIA_SYMVERS=${RECIPE_SYSROOT}${includedir}/nvidia-kernel-oot/Module.symvers \
 "
 GPU_FLAGS:dgpu = " \
