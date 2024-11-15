@@ -29,21 +29,24 @@ def gxf_pkg_arch(d):
     return 'arm64' if arch == 'aarch64' else arch
 
 GXF_ARCH = "${@gxf_pkg_arch(d)}"
-GXF_PACKAGE = "gxf_447_20241004_bf72709_holoscan-sdk_${GXF_ARCH}"
+GXF_PACKAGE = "gxf_447_20241029_bf72709_holoscan-sdk_${GXF_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz"
-SRC_URI[sha256sum] = "724676b196548546b046adbea2607c8afb910099b816abb7122788d802037fa0"
+SRC_URI[sha256sum] = "fca04194e5648ed62e49b2ba8ec64e96cde5814b4cec3d15b9e9bf88fa1948df"
 
 SRC_URI += " \
     file://0001-Remove-TypenameAsString-from-nvidia-namespace.patch \
 "
 
-S = "${WORKDIR}/gxf_447_20241004_bf72709_holoscan-sdk_${GXF_ARCH}"
+S = "${WORKDIR}/${GXF_PACKAGE}"
+
+INSTALL_PATH = "${base_prefix}/opt/nvidia/gxf"
 
 do_install () {
-    install -d ${D}/opt/nvidia/gxf
-    cp -rd --no-preserve=ownership ${S}/common ${D}/opt/nvidia/gxf
-    cp -rd --no-preserve=ownership ${S}/gxf ${D}/opt/nvidia/gxf
-    cp -rd --no-preserve=ownership ${S}/lib ${D}/opt/nvidia/gxf
+    install -d ${D}${INSTALL_PATH}
+    cp -rd --no-preserve=ownership ${S}/common ${D}${INSTALL_PATH}
+    cp -rd --no-preserve=ownership ${S}/gxf ${D}${INSTALL_PATH}
+    cp -rd --no-preserve=ownership ${S}/lib ${D}${INSTALL_PATH}
+    cp -rd --no-preserve=ownership ${S}/python ${D}${INSTALL_PATH}
 }
 
 # The GXF library is built for and used exclusively by the Holoscan SDK, and it
@@ -54,11 +57,11 @@ do_install () {
 # bitbake dependency checking is performed).
 
 FILES:${PN}-dev += " \
-    /opt/nvidia/gxf \
+    ${INSTALL_PATH} \
 "
 
 SYSROOT_DIRS = " \
-    /opt/nvidia/gxf \
+    ${INSTALL_PATH} \
 "
 
 EXCLUDE_FROM_SHLIBS = "1"
