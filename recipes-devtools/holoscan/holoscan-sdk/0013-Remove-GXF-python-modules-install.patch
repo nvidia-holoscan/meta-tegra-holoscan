@@ -1,0 +1,55 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Ian Stewart <istewart@nvidia.com>
+Date: Fri, 15 Nov 2024 10:57:14 -0700
+Subject: Remove GXF python modules install
+
+These are not yet compatible with Python 3.12
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 878b4b6..9bf537a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -320,12 +320,6 @@ foreach(_component ${HOLOSCAN_GXF_COMPONENTS})
+     endif()
+ endforeach()
+ 
+-install(
+-  DIRECTORY ${GXF_PYTHON_MODULE_PATH}
+-  DESTINATION python/${HOLOSCAN_INSTALL_LIB_DIR}
+-  COMPONENT "holoscan-gxf_libs"
+-)
+-
+ # Install CMake script to build GXE applications
+ install(FILES "${CMAKE_SOURCE_DIR}/cmake/modules/GenerateGXEAppInstall.cmake"
+ RENAME GenerateGXEApp.cmake
+diff --git a/cmake/deps/gxf.cmake b/cmake/deps/gxf.cmake
+index e3c242c..6c8f4ee 100644
+--- a/cmake/deps/gxf.cmake
++++ b/cmake/deps/gxf.cmake
+@@ -122,23 +122,6 @@ find_path(GXF_PYTHON_MODULE_PATH
+     REQUIRED
+ )
+ 
+-# Test that the GXF Python module is in PYTHONPATH
+-find_package(Python3 COMPONENTS Interpreter REQUIRED)
+-execute_process(
+-    COMMAND "${Python3_EXECUTABLE}" -c "import os; import gxf; print(os.pathsep.join(gxf.__path__).strip())"
+-    RESULT_VARIABLE GXF_MODULE_FOUND
+-    OUTPUT_VARIABLE GXF_MODULE_DIR
+-    OUTPUT_STRIP_TRAILING_WHITESPACE
+-)
+-if(NOT GXF_MODULE_FOUND EQUAL 0)
+-    message(FATAL_ERROR "GXF Python module not found in PYTHONPATH")
+-endif()
+-if(NOT GXF_MODULE_DIR STREQUAL "${GXF_PYTHON_MODULE_PATH}")
+-    message(WARNING
+-        "Expected GXF Python module at ${GXF_PYTHON_MODULE_PATH} but found at ${GXF_MODULE_DIR}."
+-        " Do you need to update your PYTHONPATH?")
+-endif()
+-
+ # Set variables in parent scope for use throughout the Holoscan project
+ set(GXF_INCLUDE_DIR ${GXF_INCLUDE_DIR} PARENT_SCOPE)
+ set(GXF_PYTHON_MODULE_PATH ${GXF_PYTHON_MODULE_PATH} PARENT_SCOPE)
+-- 
+2.34.1
+

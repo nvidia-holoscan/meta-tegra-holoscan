@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "2eb38609ed8f2f45f6602cb01c089b8b00e7fba2"
+SRCREV = "68c7b5e361393734104ad9bc6d9d991aa102f5d4"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -40,6 +40,7 @@ SRC_URI += " \
     file://0010-Skip-multiai_ultrasound-data-download.patch \
     file://0011-Revert-to-pybind-2.11.1.patch \
     file://0012-Fix-redefinition-errors-in-rmm-patch.patch \
+    file://0013-Remove-GXF-python-modules-install.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -60,7 +61,7 @@ EXTRA_OECMAKE:append = " \
 # Add extra build paths.
 EXTRA_OECMAKE:append = " \
     -DCMAKE_INSTALL_PREFIX=${HOLOSCAN_INSTALL_PATH} \
-    -DGXF_ROOT=${RECIPE_SYSROOT}/opt/nvidia/gxf \
+    -DGXF_DIR=${RECIPE_SYSROOT}/opt/nvidia/gxf/lib/cmake/GXF \
     -Dyaml-cpp_DIR=${RECIPE_SYSROOT}${datadir}/cmake/yaml-cpp \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
     -Dglfw3_DIR=${RECIPE_SYSROOT}${libdir}/cmake/glfw3 \
