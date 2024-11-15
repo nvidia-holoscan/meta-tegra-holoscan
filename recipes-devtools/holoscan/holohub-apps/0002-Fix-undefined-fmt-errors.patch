@@ -18,18 +18,18 @@ index 0c6de59..d9fca7a 100644
  
  if(HOLOHUB_BUILD_PYTHON)
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index 1b8ebd2..23da9b1 100644
+index a288d51..1e0ad0e 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt
 +++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
-@@ -30,6 +30,8 @@ set_target_properties(tool_tracking_postprocessor PROPERTIES CUDA_ARCHITECTURES
- target_link_libraries(tool_tracking_postprocessor holoscan::core)
- target_include_directories(tool_tracking_postprocessor INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+@@ -44,6 +44,8 @@ target_include_directories(tool_tracking_postprocessor
+     ${CMAKE_CURRENT_SOURCE_DIR}
+   )
  
 +target_compile_definitions(tool_tracking_postprocessor PUBLIC FMT_HEADER_ONLY)
 +
- install(TARGETS tool_tracking_postprocessor)
- 
  if(HOLOHUB_BUILD_PYTHON)
+     add_subdirectory(python)
+ endif()
 diff --git a/operators/visualizer_icardio/CMakeLists.txt b/operators/visualizer_icardio/CMakeLists.txt
 index 01817d2..079fba5 100644
 --- a/operators/visualizer_icardio/CMakeLists.txt

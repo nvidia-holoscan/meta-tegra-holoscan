@@ -200,7 +200,7 @@ index bc802e7..2fe1db8 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index a06560a..f0c93ea 100644
+index 1a71dad..7b3b0d4 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -49,6 +49,16 @@ add_custom_target(app_config_yaml
@@ -221,7 +221,7 @@ index a06560a..f0c93ea 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/multiai_endoscopy/python/CMakeLists.txt b/applications/multiai_endoscopy/python/CMakeLists.txt
-index 38e39d0..d0fac8e 100644
+index d4ac1fd..e8f4aff 100644
 --- a/applications/multiai_endoscopy/python/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/python/CMakeLists.txt
 @@ -13,6 +13,15 @@
@@ -425,19 +425,6 @@ index b64a454..a8db640 100644
  if(HOLOHUB_BUILD_PYTHON)
      add_subdirectory(python)
  endif()
-diff --git a/operators/lstm_tensor_rt_inference/CMakeLists.txt b/operators/lstm_tensor_rt_inference/CMakeLists.txt
-index 3e6720c..cd7027e 100644
---- a/operators/lstm_tensor_rt_inference/CMakeLists.txt
-+++ b/operators/lstm_tensor_rt_inference/CMakeLists.txt
-@@ -26,6 +26,8 @@ add_library(lstm_tensor_rt_inference SHARED
- target_link_libraries(lstm_tensor_rt_inference holoscan::core)
- target_include_directories(lstm_tensor_rt_inference INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
- 
-+install(TARGETS lstm_tensor_rt_inference)
-+
- if(HOLOHUB_BUILD_PYTHON)
-     add_subdirectory(python)
- endif()
 diff --git a/operators/orsi/orsi_format_converter/CMakeLists.txt b/operators/orsi/orsi_format_converter/CMakeLists.txt
 index 2a01516..7f9f194 100644
 --- a/operators/orsi/orsi_format_converter/CMakeLists.txt
@@ -460,19 +447,6 @@ index 0556750..0c6de59 100644
  )
  
 +install(TARGETS tensor_to_video_buffer)
-+
- if(HOLOHUB_BUILD_PYTHON)
-     add_subdirectory(python)
- endif()
-diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index cc90a3e..1b8ebd2 100644
---- a/operators/tool_tracking_postprocessor/CMakeLists.txt
-+++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
-@@ -30,6 +30,8 @@ set_target_properties(tool_tracking_postprocessor PROPERTIES CUDA_ARCHITECTURES
- target_link_libraries(tool_tracking_postprocessor holoscan::core)
- target_include_directories(tool_tracking_postprocessor INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
- 
-+install(TARGETS tool_tracking_postprocessor)
 +
  if(HOLOHUB_BUILD_PYTHON)
      add_subdirectory(python)

@@ -18,10 +18,10 @@ index ff9a438..425190e 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index 2a724ad..e91aa6e 100644
+index d4bc98f..5e059e9 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-@@ -68,7 +68,7 @@ class EndoscopyApp(Application):
+@@ -63,7 +63,7 @@ class EndoscopyApp(Application):
          self.source = source
  
          if data == "none":
@@ -31,7 +31,7 @@ index 2a724ad..e91aa6e 100644
          self.sample_data_path = data
  
 diff --git a/applications/multiai_ultrasound/python/multiai_ultrasound.py b/applications/multiai_ultrasound/python/multiai_ultrasound.py
-index cbc1830..a196245 100644
+index 5550e90..79fec6d 100644
 --- a/applications/multiai_ultrasound/python/multiai_ultrasound.py
 +++ b/applications/multiai_ultrasound/python/multiai_ultrasound.py
 @@ -38,7 +38,7 @@ class MultiAIICardio(Application):

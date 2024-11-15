@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "d890213974402ef6c4c6c827abaafb0c9263fe98"
-PV = "2.6.0+git${SRCPV}"
+SRCREV = "b1ebb59d185b5a5313e3cd87891744273a581927"
+PV = "2.7.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -38,6 +38,7 @@ SRC_URI += " \
     file://0007-Fix-default-data-paths-in-python-apps.patch \
     file://0008-Fix-volume_renderer-application.patch \
     file://0009-Skip-model-download-for-object_detection_torch.patch \
+    file://0010-Remove-native-CUDA_ARCHITECTURE.patch \
 "
 
 S = "${WORKDIR}/git"
