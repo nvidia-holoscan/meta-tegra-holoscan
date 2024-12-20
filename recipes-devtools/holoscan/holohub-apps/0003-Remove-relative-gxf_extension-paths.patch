@@ -52,7 +52,7 @@ index b6bcae5..6b72dbe 100644
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index a6beca2..1535f33 100644
+index 735f227..bb7f283 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -62,8 +62,8 @@ index a6beca2..1535f33 100644
 -  - lib/gxf_extensions/libgxf_emergent_source.so
 +  - libgxf_emergent_source.so
  
- # Modify the width/height and framerate for the camera used
- # Current is for Emergent HB-5000-SB
+ emergent:
+   width: 4200
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 index cac6c52..35c4e4d 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml

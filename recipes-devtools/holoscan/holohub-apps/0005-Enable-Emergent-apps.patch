@@ -5,7 +5,7 @@ Subject: Enable Emergent apps
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2b5fe24..db0c633 100644
+index ba9dfcc..88ded6d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -35,6 +35,7 @@ include(CTest)
@@ -17,7 +17,7 @@ index 2b5fe24..db0c633 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index 6bc04a8..0ec3680 100644
+index 01730be..8b20fac 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
 @@ -49,8 +49,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
@@ -32,7 +32,7 @@ index 6bc04a8..0ec3680 100644
  add_subdirectory(holoviz)
  
 diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
-index be77b47..6317dec 100644
+index fc3fa6b..11f8103 100644
 --- a/gxf_extensions/emergent_source/CMakeLists.txt
 +++ b/gxf_extensions/emergent_source/CMakeLists.txt
 @@ -17,6 +17,10 @@ project(gxf_emergent_source)
@@ -46,7 +46,7 @@ index be77b47..6317dec 100644
  # Create library
  add_library(gxf_emergent_source_lib SHARED
    emergent_source.cpp
-@@ -35,12 +39,12 @@ target_include_directories(gxf_emergent_source_lib
+@@ -36,12 +40,12 @@ target_include_directories(gxf_emergent_source_lib
    SYSTEM
    BEFORE
    PUBLIC
