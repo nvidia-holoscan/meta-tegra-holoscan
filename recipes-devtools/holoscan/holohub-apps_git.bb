@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "65c855a0c72a865fa1a0d9caa5447a5d68d981bd"
-PV = "2.8.0+git${SRCPV}"
+SRCREV = "841b9d3bddd0666369b10d6975aff716a100cc18"
+PV = "2.9.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -115,6 +115,7 @@ DEPENDS += " \
     holoscan-sdk \
     libcublas-native \
     libnpp-native \
+    ngc-cli-native \
     python3-numpy-native \
     tensorrt-core \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
