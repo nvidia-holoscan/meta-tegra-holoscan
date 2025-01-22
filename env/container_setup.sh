@@ -62,7 +62,7 @@ META_VIRTUALIZATION_REV="6f3c1d8f90947408a6587be222fec575a1ca5195"
 git_clone "https://git.yoctoproject.org/meta-virtualization.git" ${META_VIRTUALIZATION_REV}
 
 # meta-tegra layer
-META_TEGRA_REV="7ed5b8b8a0dc26308303234db147b786ed1c6795"
+META_TEGRA_REV="b746612d06b19c80abb4d2f6a5033333e9a9782d"
 git_clone "https://github.com/nvidia-holoscan/meta-tegra.git" ${META_TEGRA_REV}
 
 # meta-tegra-holoscan layer (copied from build container)
