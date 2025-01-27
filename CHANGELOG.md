@@ -1,3 +1,11 @@
+## [2.9.0] - 2025-01-27
+### Changed
+- Updated Holoscan SDK and Holohub apps to 2.9.0
+- Added ngc-cli 3.57.2 recipe, which is used by the Holohub apps to
+  fetch sample datasets.
+- Updated meta-tegra dependency
+
+
 ## [2.8.0] - 2025-01-02
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 2.8.0
@@ -365,6 +373,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[2.9.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.8.0...v2.9.0
 [2.8.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.6.0...v2.7.0
 [2.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.5.0...v2.6.0
