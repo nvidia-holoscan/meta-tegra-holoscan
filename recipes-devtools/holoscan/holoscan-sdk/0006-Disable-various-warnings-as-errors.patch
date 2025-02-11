@@ -5,10 +5,10 @@ Subject: Disable various warnings as errors
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a73e9cb..c326126 100644
+index 2f94506..1171d3e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -93,6 +93,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
+@@ -106,6 +106,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
  # Don't append suffix to shared libraries for debug build
  set(CMAKE_DEBUG_POSTFIX "")
  

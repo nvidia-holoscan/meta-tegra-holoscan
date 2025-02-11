@@ -5,10 +5,10 @@ Subject: Remove UCX header workaround
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c326126..c8654de 100644
+index 1171d3e..f0d6f9d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -358,17 +358,6 @@ foreach(gxf_component IN LISTS _GXF_components)
+@@ -397,17 +397,6 @@ foreach(gxf_component IN LISTS _GXF_components)
    endif()
  endforeach()
  

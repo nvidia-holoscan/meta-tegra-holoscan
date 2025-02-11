@@ -5,7 +5,7 @@ Subject: Fix GXF TypenameAsString error
 
 
 diff --git a/include/holoscan/core/gxf/entity.hpp b/include/holoscan/core/gxf/entity.hpp
-index 57399c8..3e7e88e 100644
+index 657f442..c98976c 100644
 --- a/include/holoscan/core/gxf/entity.hpp
 +++ b/include/holoscan/core/gxf/entity.hpp
 @@ -74,7 +74,7 @@ class Entity : public nvidia::gxf::Entity {
@@ -18,7 +18,7 @@ index 57399c8..3e7e88e 100644
        if (log_errors) {
          HOLOSCAN_LOG_ERROR("Unable to get component type id from 'nvidia::gxf::Tensor' (error: {})",
 @@ -114,7 +114,7 @@ class Entity : public nvidia::gxf::Entity {
-   void add(std::shared_ptr<DataT>& data, const char* name = nullptr) {
+   void add(const std::shared_ptr<DataT>& data, const char* name = nullptr) {
      gxf_tid_t tid;
      HOLOSCAN_GXF_CALL_FATAL(
 -        GxfComponentTypeId(context(), nvidia::TypenameAsString<nvidia::gxf::Tensor>(), &tid));
@@ -27,10 +27,10 @@ index 57399c8..3e7e88e 100644
      gxf_uid_t cid;
      HOLOSCAN_GXF_CALL_FATAL(GxfComponentAdd(context(), eid(), tid, name, &cid));
 diff --git a/include/holoscan/core/gxf/gxf_utils.hpp b/include/holoscan/core/gxf/gxf_utils.hpp
-index 5d81e3a..e19a4c9 100644
+index b2cd29e..0676246 100644
 --- a/include/holoscan/core/gxf/gxf_utils.hpp
 +++ b/include/holoscan/core/gxf/gxf_utils.hpp
-@@ -198,7 +198,7 @@ inline gxf_uid_t find_component_handle(gxf_context_t context, gxf_uid_t componen
+@@ -228,7 +228,7 @@ inline gxf_uid_t find_component_handle(gxf_context_t context, gxf_uid_t componen
  
    // Get the type id of the component we are are looking for.
    gxf_tid_t tid;
