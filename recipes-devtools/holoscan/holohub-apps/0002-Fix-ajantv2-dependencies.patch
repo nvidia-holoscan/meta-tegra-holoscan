@@ -5,7 +5,7 @@ Subject: Fix ajantv2 dependencies
 
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index e8e4fd0..f92e12b 100644
+index ea13e7d..5e95608 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_out_of_body_detection CXX)
@@ -18,7 +18,7 @@ index e8e4fd0..f92e12b 100644
  
  add_executable(endoscopy_out_of_body_detection
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 1b4f530..152b9e6 100644
+index 2d16262..49e5087 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
@@ -31,7 +31,7 @@ index 1b4f530..152b9e6 100644
    main.cpp
  )
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index f0c93ea..7abf8a5 100644
+index 55b6933..b14c558 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multiai_endoscopy CXX)
@@ -44,7 +44,7 @@ index f0c93ea..7abf8a5 100644
    multi_ai.cpp
  )
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
-index 87bcf3a..afeadd8 100644
+index debe801..ce38d73 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multi_ai CXX)
@@ -57,7 +57,7 @@ index 87bcf3a..afeadd8 100644
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
  enable_language(CUDA)
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
-index 89a0f9f..9762a7b 100644
+index 84c413f..3dc21d1 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multi_ai CXX)
@@ -70,7 +70,7 @@ index 89a0f9f..9762a7b 100644
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
  enable_language(CUDA)
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index 8d845ee..95e479b 100644
+index 01e67ea..2166fef 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(multiai_ultrasound CXX)
@@ -83,7 +83,7 @@ index 8d845ee..95e479b 100644
      main.cpp
  )
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 8336cc8..6da18b0 100644
+index a392485..2452929 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(object_detection_torch CXX)
@@ -96,7 +96,7 @@ index 8336cc8..6da18b0 100644
      main.cpp
  )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 6429a6c..21b546e 100644
+index 83d41ca..ee28a97 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
@@ -108,6 +108,39 @@ index 6429a6c..21b546e 100644
  add_executable(ultrasound_segmentation
      main.cpp
  )
+diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
+index 5da39dd..9b7d9a0 100644
+--- a/operators/aja_source/CMakeLists.txt
++++ b/operators/aja_source/CMakeLists.txt
+@@ -18,27 +18,7 @@ project(aja_source)
+ find_package(holoscan 1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+-# Fetch AJA nvt2 repository
+-include(FetchContent)
+-FetchContent_Declare(
+-    ajantv2
+-    GIT_REPOSITORY https://github.com/nvidia-holoscan/libajantv2.git
+-    GIT_TAG d4250c556bcf1ebade627a3ef7a2027de7dc85ee
+-)
+-
+-set(ENV{NTV2_VERSION_BUILD} 1)
+-set(AJANTV2_DISABLE_DEMOS ON)
+-set(AJANTV2_DISABLE_DRIVER ON)
+-set(AJANTV2_DISABLE_PLUGINS ON)
+-set(AJANTV2_DISABLE_TESTS ON)
+-set(AJANTV2_DISABLE_TOOLS ON)
+-set(AJA_INSTALL_HEADERS OFF)
+-set(AJA_INSTALL_SOURCES OFF)
+-FetchContent_MakeAvailable(ajantv2)
+-# Disable all the warnings for AJA
+-target_compile_options(ajantv2 PRIVATE -w)
+-
+-add_library(AJA::ajantv2 ALIAS ajantv2)
++find_package(ajantv2 17.0 REQUIRED CONFIG)
+ 
+ add_library(aja_source SHARED
+   aja_source.hpp
 -- 
 2.34.1
 

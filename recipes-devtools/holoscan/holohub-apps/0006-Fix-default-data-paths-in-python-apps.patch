@@ -5,10 +5,10 @@ Subject: Fix default data paths in python apps
 
 
 diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-index ff9a438..425190e 100644
+index 9e9db2f..658629c 100644
 --- a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 +++ b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-@@ -49,7 +49,7 @@ class ColonoscopyApp(Application):
+@@ -50,7 +50,7 @@ class ColonoscopyApp(Application):
          self.source = source
  
          if data == "none":
@@ -18,7 +18,7 @@ index ff9a438..425190e 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index d4bc98f..5e059e9 100644
+index bb55c50..0bfae38 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 @@ -63,7 +63,7 @@ class EndoscopyApp(Application):
@@ -31,7 +31,7 @@ index d4bc98f..5e059e9 100644
          self.sample_data_path = data
  
 diff --git a/applications/multiai_ultrasound/python/multiai_ultrasound.py b/applications/multiai_ultrasound/python/multiai_ultrasound.py
-index 5550e90..79fec6d 100644
+index 4e96044..1ae96ab 100644
 --- a/applications/multiai_ultrasound/python/multiai_ultrasound.py
 +++ b/applications/multiai_ultrasound/python/multiai_ultrasound.py
 @@ -38,7 +38,7 @@ class MultiAIICardio(Application):
@@ -44,10 +44,10 @@ index 5550e90..79fec6d 100644
          # set name
          self.name = "Ultrasound App"
 diff --git a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
-index f7a8f67..330882d 100644
+index db35938..e8af923 100644
 --- a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
 +++ b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
-@@ -49,7 +49,7 @@ class UltrasoundApp(Application):
+@@ -50,7 +50,7 @@ class UltrasoundApp(Application):
          self.source = source
  
          if data == "none":
