@@ -4,8 +4,21 @@ Date: Thu, 20 Jul 2023 21:35:22 -0600
 Subject: Fix volume_renderer application
 
 
+diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
+index 9858353e..76301978 100644
+--- a/applications/volume_rendering/cpp/CMakeLists.txt
++++ b/applications/volume_rendering/cpp/CMakeLists.txt
+@@ -18,6 +18,8 @@ project(volume_rendering)
+ find_package(holoscan 1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
++find_package(nlohmann_json REQUIRED)
++
+ add_executable(volume_rendering
+   json_loader.cpp
+   volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index e9df8b9..c79f5f9 100644
+index e9df8b9c..c79f5f99 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -18,61 +18,9 @@ project(volume_renderer)

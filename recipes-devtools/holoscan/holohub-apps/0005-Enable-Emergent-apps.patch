@@ -5,10 +5,10 @@ Subject: Enable Emergent apps
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5f5fc51..c7105b8 100644
+index 7d0ffa6c..c9f8c1f6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -35,6 +35,7 @@ include(CTest)
+@@ -41,6 +41,7 @@ include(CTest)
  # Options
  option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
  option(HOLOHUB_BUILD_PYTHON "Build support for Python" ON)
@@ -17,10 +17,10 @@ index 5f5fc51..c7105b8 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index 1f36a39..1cf1877 100644
+index e84ede1c..e1c01495 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -55,8 +55,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
+@@ -52,8 +52,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
  
  add_subdirectory(h264)
  
@@ -32,7 +32,7 @@ index 1f36a39..1cf1877 100644
  add_subdirectory(holoviz)
  
 diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
-index fc3fa6b..11f8103 100644
+index fc3fa6b4..11f8103e 100644
 --- a/gxf_extensions/emergent_source/CMakeLists.txt
 +++ b/gxf_extensions/emergent_source/CMakeLists.txt
 @@ -17,6 +17,10 @@ project(gxf_emergent_source)

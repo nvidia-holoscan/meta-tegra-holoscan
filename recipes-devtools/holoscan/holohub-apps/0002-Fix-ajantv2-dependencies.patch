@@ -5,20 +5,20 @@ Subject: Fix ajantv2 dependencies
 
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index ea13e7d..5e95608 100644
+index ffaa4f5a..ca6fe315 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-@@ -19,6 +19,8 @@ project(endoscopy_out_of_body_detection CXX)
- find_package(holoscan 0.6 REQUIRED CONFIG
+@@ -20,6 +20,8 @@ project(endoscopy_out_of_body_detection CXX)
+ find_package(holoscan 1.0 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 +find_package(ajantv2 17.0 REQUIRED CONFIG)
 +
- option(HOLOHUB_DOWNLOAD_DATASETS "Download datasets" ON)
- 
- add_executable(endoscopy_out_of_body_detection
+ # Download the associated dataset if needed
+ if(HOLOHUB_DOWNLOAD_DATASETS)
+   include(holoscan_download_data)
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 2d16262..49e5087 100644
+index 2d16262f..49e5087f 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
@@ -31,7 +31,7 @@ index 2d16262..49e5087 100644
    main.cpp
  )
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
-index 55b6933..b14c558 100644
+index 55b69339..b14c558d 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multiai_endoscopy CXX)
@@ -44,7 +44,7 @@ index 55b6933..b14c558 100644
    multi_ai.cpp
  )
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
-index debe801..ce38d73 100644
+index debe8016..ce38d731 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multi_ai CXX)
@@ -57,7 +57,7 @@ index debe801..ce38d73 100644
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
  enable_language(CUDA)
 diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
-index 84c413f..3dc21d1 100644
+index 84c413fc..3dc21d15 100644
 --- a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 +++ b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(multi_ai CXX)
@@ -70,7 +70,7 @@ index 84c413f..3dc21d1 100644
  set(CMAKE_CUDA_ARCHITECTURES "70;80")
  enable_language(CUDA)
 diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
-index 01e67ea..2166fef 100644
+index 01e67ea3..2166fef0 100644
 --- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(multiai_ultrasound CXX)
@@ -83,7 +83,7 @@ index 01e67ea..2166fef 100644
      main.cpp
  )
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index a392485..2452929 100644
+index a392485b..24529297 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(object_detection_torch CXX)
@@ -96,7 +96,7 @@ index a392485..2452929 100644
      main.cpp
  )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 83d41ca..ee28a97 100644
+index 83d41ca4..ee28a979 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
@@ -109,10 +109,10 @@ index 83d41ca..ee28a97 100644
      main.cpp
  )
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 5da39dd..9b7d9a0 100644
+index 1e5bda5a..9b7d9a03 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
-@@ -18,27 +18,7 @@ project(aja_source)
+@@ -18,28 +18,7 @@ project(aja_source)
  find_package(holoscan 1.0 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
@@ -132,6 +132,7 @@ index 5da39dd..9b7d9a0 100644
 -set(AJANTV2_DISABLE_TOOLS ON)
 -set(AJA_INSTALL_HEADERS OFF)
 -set(AJA_INSTALL_SOURCES OFF)
+-message(STATUS "Fetching AJA sources")
 -FetchContent_MakeAvailable(ajantv2)
 -# Disable all the warnings for AJA
 -target_compile_options(ajantv2 PRIVATE -w)

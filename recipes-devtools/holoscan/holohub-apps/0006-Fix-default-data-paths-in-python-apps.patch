@@ -5,10 +5,10 @@ Subject: Fix default data paths in python apps
 
 
 diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-index 9e9db2f..658629c 100644
+index 9b4cf38d..cd7a8c88 100644
 --- a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 +++ b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-@@ -50,7 +50,7 @@ class ColonoscopyApp(Application):
+@@ -96,7 +96,7 @@ class ColonoscopyApp(Application):
          self.source = source
  
          if data == "none":
@@ -18,7 +18,7 @@ index 9e9db2f..658629c 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index bb55c50..0bfae38 100644
+index bb55c507..0bfae387 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 @@ -63,7 +63,7 @@ class EndoscopyApp(Application):
@@ -31,7 +31,7 @@ index bb55c50..0bfae38 100644
          self.sample_data_path = data
  
 diff --git a/applications/multiai_ultrasound/python/multiai_ultrasound.py b/applications/multiai_ultrasound/python/multiai_ultrasound.py
-index 4e96044..1ae96ab 100644
+index 4e96044c..1ae96abe 100644
 --- a/applications/multiai_ultrasound/python/multiai_ultrasound.py
 +++ b/applications/multiai_ultrasound/python/multiai_ultrasound.py
 @@ -38,7 +38,7 @@ class MultiAIICardio(Application):
@@ -44,7 +44,7 @@ index 4e96044..1ae96ab 100644
          # set name
          self.name = "Ultrasound App"
 diff --git a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
-index db35938..e8af923 100644
+index db35938f..e8af9235 100644
 --- a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
 +++ b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
 @@ -50,7 +50,7 @@ class UltrasoundApp(Application):
