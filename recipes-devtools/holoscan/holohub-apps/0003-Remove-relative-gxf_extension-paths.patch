@@ -5,7 +5,7 @@ Subject: Remove relative gxf_extension paths
 
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index b7cbec5..7b8a980 100644
+index b7cbec54..7b8a9801 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 @@ -29,11 +29,11 @@ resources:
@@ -24,22 +24,24 @@ index b7cbec5..7b8a980 100644
  source: "replayer"    # "replayer" or "aja" or "deltacast" or "yuan"
  visualizer: "holoviz"  # "holoviz" or "vtk"
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index 542eb0a..2b0e8f6 100644
+index b8fbd969..cec09f01 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-@@ -29,8 +29,8 @@ resources:
+@@ -29,9 +29,9 @@ resources:
    gpuMemory: 1Gi
  
  extensions:
 -- lib/gxf_extensions/libgxf_lstm_tensor_rt_inference.so
--- lib/gxf_extensions/libgxf_qcap_source.so
+-# - lib/gxf_extensions/libgxf_videomaster.so
+-# - lib/gxf_extensions/libgxf_qcap_source.so
 +- libgxf_lstm_tensor_rt_inference.so
-+- libgxf_qcap_source.so
++# - libgxf_videomaster.so
++# - libgxf_qcap_source.so
  
  visualizer: "holoviz" # "holoviz" or "vtk"
  
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
-index b6bcae5..6b72dbe 100644
+index b6bcae5a..6b72dbe4 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 @@ -19,7 +19,7 @@ extensions:
@@ -52,7 +54,7 @@ index b6bcae5..6b72dbe 100644
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index 735f227..bb7f283 100644
+index 735f227e..bb7f2834 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -65,7 +67,7 @@ index 735f227..bb7f283 100644
  emergent:
    width: 4200
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
-index cac6c52..35c4e4d 100644
+index cac6c527..35c4e4d5 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
