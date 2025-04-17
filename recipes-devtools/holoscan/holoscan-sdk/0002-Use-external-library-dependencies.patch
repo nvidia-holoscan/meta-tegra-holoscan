@@ -12,7 +12,7 @@ fetched, built, and installed by CMake:
  - yaml-cpp
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7497437..f84d32f 100644
+index 661caf5..62eef86 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -239,14 +239,6 @@ if(HOLOSCAN_BUILD_ORT)
@@ -62,10 +62,10 @@ index 14a0707..5c61fd1 100644
 +# We will continue to use 3.3 until Wayland support is available.
 +rapids_find_package(glfw3 3.3 REQUIRED)
 diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
-index 965760a..6f4dd93 100644
+index fd18358..43028b0 100644
 --- a/cmake/deps/yaml-cpp_rapids.cmake
 +++ b/cmake/deps/yaml-cpp_rapids.cmake
-@@ -16,56 +16,4 @@
+@@ -16,57 +16,4 @@
  # https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_find_package.html#
  include(${rapids-cmake-dir}/cpm/find.cmake)
  
@@ -98,7 +98,7 @@ index 965760a..6f4dd93 100644
 -    "YAML_CPP_BUILD_TESTS Off"
 -    "YAML_CPP_BUILD_CONTRIB Off"
 -    "YAML_CPP_BUILD_TOOLS Off"
--    "YAML_BUILD_SHARED_LIBS On"  # Build the shared library instead of the default static library
+-    "YAML_BUILD_SHARED_LIBS Off"
 -)
 -rapids_cpm_find(yaml-cpp 0.7.0
 -    GLOBAL_TARGETS yaml-cpp
@@ -109,6 +109,7 @@ index 965760a..6f4dd93 100644
 -)
 -
 -if(yaml-cpp_ADDED)
+-    set_target_properties(yaml-cpp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 -
 -    # Install the headers needed for development with the SDK
 -    install(DIRECTORY ${yaml-cpp_SOURCE_DIR}/include/yaml-cpp
