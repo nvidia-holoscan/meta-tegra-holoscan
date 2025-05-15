@@ -1,14 +1,19 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Tue, 13 Jun 2023 12:25:22 -0600
-Subject: Build python libs with install RPATH
+From 27920c88e62e1c3a574181d266695cb6dd5471b3 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Tue, 27 May 2025 16:20:14 +0100
+Subject: [PATCH 3/6] Build python libs with install RPATH
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ python/holoscan/CMakeLists.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/python/holoscan/CMakeLists.txt b/python/holoscan/CMakeLists.txt
-index 3fa6bc2..4354f91 100644
+index f70f903..390c54f 100644
 --- a/python/holoscan/CMakeLists.txt
 +++ b/python/holoscan/CMakeLists.txt
-@@ -48,9 +48,8 @@ function(holoscan_pybind11_module pybind11_module_name)
+@@ -73,9 +73,8 @@ function(holoscan_pybind11_module pybind11_module_name)
          "\$ORIGIN/${wheel_lib_relative_path}"   # in our python wheel
      )
      list(JOIN _rpath ":" _rpath)

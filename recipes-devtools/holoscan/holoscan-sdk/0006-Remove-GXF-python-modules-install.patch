@@ -1,19 +1,26 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Fri, 15 Nov 2024 10:57:14 -0700
-Subject: Remove GXF python modules install
+From a813528e627dbbb1104899361e2cb17e2beb8a66 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Tue, 27 May 2025 16:25:51 +0100
+Subject: [PATCH 6/6] Remove GXF python modules install
 
 These are not yet compatible with Python 3.12
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ CMakeLists.txt       |  8 --------
+ cmake/deps/gxf.cmake | 20 --------------------
+ 2 files changed, 28 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f0d6f9d..995b78b 100644
+index 1cee9b1..d923278 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -329,14 +329,6 @@ foreach(_component ${HOLOSCAN_GXF_COMPONENTS})
+@@ -343,14 +343,6 @@ foreach(_component ${HOLOSCAN_GXF_COMPONENTS})
      endif()
  endforeach()
  
--if(HOLOSCAN_BUILD_PYTHON)
+-if(HOLOSCAN_BUILD_PYTHON AND GXF_PYTHON_MODULE_PATH)
 -  install(
 -    DIRECTORY ${GXF_PYTHON_MODULE_PATH}
 -    DESTINATION python/${HOLOSCAN_INSTALL_LIB_DIR}
@@ -25,11 +32,11 @@ index f0d6f9d..995b78b 100644
  install(FILES "${CMAKE_SOURCE_DIR}/cmake/modules/GenerateGXEAppInstall.cmake"
  RENAME GenerateGXEApp.cmake
 diff --git a/cmake/deps/gxf.cmake b/cmake/deps/gxf.cmake
-index 7de9902..b9cd5e5 100644
+index 23abb54..8bdb1b5 100644
 --- a/cmake/deps/gxf.cmake
 +++ b/cmake/deps/gxf.cmake
-@@ -122,26 +122,6 @@ find_path(GXF_PYTHON_MODULE_PATH
-     REQUIRED
+@@ -130,26 +130,6 @@ find_path(GXF_PYTHON_MODULE_PATH
+     PATHS ${GXF_ROOT}/python/gxf
  )
  
 -# Test that the GXF Python module is in PYTHONPATH
