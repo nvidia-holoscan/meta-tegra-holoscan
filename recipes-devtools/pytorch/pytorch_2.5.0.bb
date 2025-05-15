@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -47,6 +47,7 @@ EXTRA_OECMAKE += " \
     -DUSE_NCCL=OFF \
     -DUSE_CUSPARSELT=OFF \
     -DPROTOBUF_PROTOC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/protoc \
+    -DUSE_SYSTEM_PYBIND11=ON \
 "
 
 # Disable installing the fmt third-party library, which may cause conflicts
@@ -95,9 +96,9 @@ EXTRA_OECMAKE += " \
 # Generate the sleef binaries used at build time.
 EXTRA_OECMAKE += " -DNATIVE_BUILD_DIR=${STAGING_DIR_NATIVE}/usr"
 do_compile:prepend() {
-	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkalias ${S}/third_party/sleef/src/libm/mkalias.c
-	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkrename ${S}/third_party/sleef/src/libm/mkrename.c
-	${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkdisp ${S}/third_party/sleef/src/libm/mkdisp.c
+    ${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkalias ${S}/third_party/sleef/src/libm/mkalias.c
+    ${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkrename ${S}/third_party/sleef/src/libm/mkrename.c
+    ${BUILD_CC} -o ${STAGING_BINDIR_NATIVE}/mkdisp ${S}/third_party/sleef/src/libm/mkdisp.c
 }
 
 # PyTorch builds tend to fail or crash with too many threads.
