@@ -69,7 +69,7 @@ layer and thus should be used to ensure the build completes. To use these
 commit IDs, change into the directory that a dependency has been cloned
 into and then run `git checkout {commit id}`.
 
-* #### Poky: https://git.yoctoproject.org/poky/ (commit: `2034fc38`, tag: `scarthgap-5.0.4`)
+* #### Poky: https://git.yoctoproject.org/poky/ (commit: `9c63e0c9`, tag: `scarthgap-5.0.4`)
 
     The Poky Build Tool and Metadata for the Yocto Project.
 
@@ -105,9 +105,9 @@ into and then run `git checkout {commit id}`.
 
     | Layer | Repo | Commit |
     | -------------- | ---- | ------ |
-    | meta-openembedded/meta-oe <br/> meta-openemdedded/meta-filesystems <br/> meta-openembedded/meta-networking <br/> meta-openembedded/meta-python | https://github.com/openembedded/meta-openembedded | `2e3126c9` |
-    | meta-virtualization | https://git.yoctoproject.org/meta-virtualization | `6f3c1d8f` |
-    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `57437dd8` |
+    | meta-openembedded/meta-oe <br/> meta-openemdedded/meta-filesystems <br/> meta-openembedded/meta-networking <br/> meta-openembedded/meta-python | https://github.com/openembedded/meta-openembedded | `e92d0173` |
+    | meta-virtualization | https://git.yoctoproject.org/meta-virtualization | `9e040ee8` |
+    | meta-tegra | https://github.com/nvidia-holoscan/meta-tegra | `fc0328c0` |
 
 * #### Proprietary NVIDIA Binary Packages
 
