@@ -1,11 +1,16 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Fri, 25 Oct 2024 16:55:11 -0600
-Subject: Fix CMAKE library import paths
+From 0d6d782ded96db833868e2d398722385a92f7245 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Fri, 25 Apr 2025 20:37:44 +0100
+Subject: [PATCH 1/2] Fix CMAKE library import paths
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ cmake/ucx-targets.cmake.in | 57 ++++++++++++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 21 deletions(-)
 
 diff --git a/cmake/ucx-targets.cmake.in b/cmake/ucx-targets.cmake.in
-index a38daba..e909a70 100644
+index a38daba0c..e909a70ef 100644
 --- a/cmake/ucx-targets.cmake.in
 +++ b/cmake/ucx-targets.cmake.in
 @@ -7,29 +7,44 @@

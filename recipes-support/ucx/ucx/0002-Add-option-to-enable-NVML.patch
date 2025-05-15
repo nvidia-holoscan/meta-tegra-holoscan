@@ -1,11 +1,18 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Fri, 25 Oct 2024 22:44:55 -0600
-Subject: Add option to enable NVML
+From f1036c119c7af9052a18cd0d0466e240a9287307 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Fri, 25 Apr 2025 20:39:04 +0100
+Subject: [PATCH 2/2] Add option to enable NVML
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ config/m4/cuda.m4                      | 34 ++++++++++++++++----------
+ src/uct/cuda/base/cuda_iface.h         |  4 +++
+ src/uct/cuda/cuda_ipc/cuda_ipc_iface.c |  9 +++++++
+ 3 files changed, 34 insertions(+), 13 deletions(-)
 
 diff --git a/config/m4/cuda.m4 b/config/m4/cuda.m4
-index 6065890..8656a03 100644
+index 6065890f9..8656a03d3 100644
 --- a/config/m4/cuda.m4
 +++ b/config/m4/cuda.m4
 @@ -11,6 +11,11 @@ AS_IF([test "x$cuda_checked" != "xyes"],
@@ -59,7 +66,7 @@ index 6065890..8656a03 100644
           # Check for cuda static library
           have_cuda_static="no"
 diff --git a/src/uct/cuda/base/cuda_iface.h b/src/uct/cuda/base/cuda_iface.h
-index 2cf8b84..01d8c58 100644
+index 2cf8b84da..01d8c5856 100644
 --- a/src/uct/cuda/base/cuda_iface.h
 +++ b/src/uct/cuda/base/cuda_iface.h
 @@ -11,12 +11,15 @@
@@ -87,7 +94,7 @@ index 2cf8b84..01d8c58 100644
  #define UCT_CUDADRV_FUNC(_func, _log_level) \
      ({ \
 diff --git a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
-index 893cefe..421ccee 100644
+index 893cefe48..421cceec4 100644
 --- a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
 +++ b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
 @@ -18,7 +18,9 @@

@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -19,26 +19,31 @@
 # DEALINGS IN THE SOFTWARE.
 
 SUMMARY = "Unified Communication X"
+HOMEPAGE = "https://github.com/openucx/ucx"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
 
-SRC_URI = "git://github.com/openucx/ucx.git;protocol=https;branch=v1.17.x"
+SRC_URI = " \
+    git://github.com/openucx/ucx.git;protocol=https;branch=v1.17.x \
+    file://0001-Fix-CMAKE-library-import-paths.patch \
+    file://0002-Add-option-to-enable-NVML.patch \
+"
+# tag: v1.17.0
 SRCREV = "4ef9a097c12ee6f7a8d3e41c317ea2d47e424b32"
 
 S = "${WORKDIR}/git"
 
-SRC_URI += " \
-    file://0001-Fix-CMAKE-library-import-paths.patch \
-    file://0002-Add-option-to-enable-NVML.patch \
-"
-
 inherit autotools pkgconfig cuda
 
+PACKAGECONFIG ??= "cuda nvml verbs rdmacm mlx5"
+
+PACKAGECONFIG[cuda] = "--with-cuda=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION},--without-cuda"
+PACKAGECONFIG[nvml] = "--enable-nvml,,cuda-nvml"
+PACKAGECONFIG[verbs] = "--with-verbs=${RECIPE_SYSROOT}${prefix},--without-verbs, librdmacm1 libnl libibverbs1"
+PACKAGECONFIG[rdmacm] = "--with-rdmacm=${RECIPE_SYSROOT}${prefix},--without-rdmacm, librdmacm1 libnl libibverbs1"
+PACKAGECONFIG[mlx5] = "--with-mlx5-dv,--without-mlx5-dv"
+
 EXTRA_OECONF:append = " \
-    --with-cuda=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION} \
-    --with-rdmacm=${RECIPE_SYSROOT}${prefix} \
-    --with-verbs=${RECIPE_SYSROOT}${prefix} \
-    --with-mlx5-dv \
     --disable-logging \
     --disable-debug \
     --disable-assertions \
@@ -46,14 +51,4 @@ EXTRA_OECONF:append = " \
     --enable-mt \
 "
 
-EXTRA_OECONF:append:dgpu = " --enable-nvml"
-
-DEPENDS += " \
-    libibverbs1 \
-    libnl \
-    librdmacm1 \
-"
-
-DEPENDS:append:dgpu = " cuda-nvml"
-
-INSANE_SKIP:${PN} += "dev-so"
+INSANE_SKIP:${PN} += "dev-so buildpaths"
