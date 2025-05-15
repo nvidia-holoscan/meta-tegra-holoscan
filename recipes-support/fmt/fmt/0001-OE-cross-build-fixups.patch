@@ -1,0 +1,64 @@
+From 003fc2cda69cd0a079139a10e07a386e4b7f6450 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Tue, 29 Apr 2025 11:22:12 +0100
+Subject: [PATCH] OE cross build fixups
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
+---
+ include/fmt/core.h  | 2 +-
+ test/CMakeLists.txt | 8 +++-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/include/fmt/core.h b/include/fmt/core.h
+index 1fe13888..f9e3b7d6 100644
+--- a/include/fmt/core.h
++++ b/include/fmt/core.h
+@@ -18,7 +18,7 @@
+ #include <type_traits>
+ 
+ // The fmt library version in the form major * 10000 + minor * 100 + patch.
+-#define FMT_VERSION 100100
++#define FMT_VERSION 100101
+ 
+ #if defined(__clang__) && !defined(__ibmxl__)
+ #  define FMT_CLANG_VERSION (__clang_major__ * 100 + __clang_minor__)
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 6f614d13..1b9354b4 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -1,12 +1,10 @@
+-add_subdirectory(gtest)
+-
+ include(CheckSymbolExists)
+ 
+ set(TEST_MAIN_SRC test-main.cc gtest-extra.cc gtest-extra.h util.cc)
+ add_library(test-main STATIC ${TEST_MAIN_SRC})
+ target_include_directories(test-main PUBLIC
+   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+-target_link_libraries(test-main gtest fmt)
++target_link_libraries(test-main gtest gmock fmt)
+ 
+ function(add_fmt_executable name)
+   add_executable(${name} ${ARGN})
+@@ -32,7 +30,7 @@ function(add_fmt_test name)
+   set(sources ${name}.cc ${ADD_FMT_TEST_UNPARSED_ARGUMENTS})
+   if (ADD_FMT_TEST_HEADER_ONLY)
+     set(sources ${sources} ${TEST_MAIN_SRC} ../src/os.cc)
+-    set(libs gtest fmt-header-only)
++    set(libs gtest gmock fmt-header-only)
+     if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+       set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS} -Wno-weak-vtables)
+     endif ()
+@@ -142,7 +140,7 @@ if (NOT MSVC_STATIC_RUNTIME)
+     posix-mock-test.cc ../src/format.cc ${TEST_MAIN_SRC})
+   target_include_directories(
+     posix-mock-test PRIVATE ${PROJECT_SOURCE_DIR}/include)
+-  target_link_libraries(posix-mock-test gtest)
++  target_link_libraries(posix-mock-test gtest gmock)
+   if (FMT_PEDANTIC)
+     target_compile_options(posix-mock-test PRIVATE ${PEDANTIC_COMPILE_FLAGS})
+   endif ()
+-- 
+2.34.1
+
