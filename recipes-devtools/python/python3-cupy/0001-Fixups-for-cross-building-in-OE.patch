@@ -1,0 +1,470 @@
+From 9166fc23e125a2c49cf354c00df01088d6d5b4a6 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Wed, 7 May 2025 10:50:09 +0100
+Subject: [PATCH] Fixups for cross building in OE
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
+---
+ cupy/_core/dlpack.pxd                    |   2 +-
+ cupy/cuda/cupy_jitify.h                  |   2 +-
+ install/cupy_builder/_features.py        |  61 ++---------
+ install/cupy_builder/_preflight.py       |  43 --------
+ install/cupy_builder/cupy_setup_build.py |  36 +------
+ install/cupy_builder/install_build.py    | 128 +----------------------
+ 6 files changed, 17 insertions(+), 255 deletions(-)
+
+diff --git a/cupy/_core/dlpack.pxd b/cupy/_core/dlpack.pxd
+index a28b842e2..6346ae8c2 100644
+--- a/cupy/_core/dlpack.pxd
++++ b/cupy/_core/dlpack.pxd
+@@ -5,7 +5,7 @@ from libc.stdint cimport (
+ )
+ 
+ 
+-cdef extern from './include/cupy/_dlpack/dlpack.h' nogil:
++cdef extern from 'dlpack/dlpack.h' nogil:
+     int DLPACK_MAJOR_VERSION
+     int DLPACK_MINOR_VERSION
+     int DLPACK_FLAG_BITMASK_READ_ONLY
+diff --git a/cupy/cuda/cupy_jitify.h b/cupy/cuda/cupy_jitify.h
+index d734e9fca..e444667c0 100644
+--- a/cupy/cuda/cupy_jitify.h
++++ b/cupy/cuda/cupy_jitify.h
+@@ -6,7 +6,7 @@
+ 
+ #if !defined(CUPY_NO_CUDA) && !defined(CUPY_USE_HIP)
+ 
+-#include <cupy/_jitify/jitify.hpp>
++#include <jitify.hpp>
+ namespace jitify {
+ namespace detail {
+ const char* jitify_ver = _xstr_(CUPY_JITIFY_VERSION_CODE);
+diff --git a/install/cupy_builder/_features.py b/install/cupy_builder/_features.py
+index 4d732fdf8..6263dbead 100644
+--- a/install/cupy_builder/_features.py
++++ b/install/cupy_builder/_features.py
+@@ -1,4 +1,5 @@
+ import sys
++import os, re
+ from typing import Any, Dict, List
+ 
+ import cupy_builder.install_build as build
+@@ -216,8 +217,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         'libraries': [
+             'cudnn',
+         ],
+-        'check_method': build.check_cudnn_version,
+-        'version_method': build.get_cudnn_version,
+     }
+     CUDA_nccl = {
+         'name': 'nccl',
+@@ -230,8 +229,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         'libraries': [
+             'nccl',
+         ],
+-        'check_method': build.check_nccl_version,
+-        'version_method': build.get_nccl_version,
+     }
+     CUDA_nvtx = {
+         'name': 'nvtx',
+@@ -245,22 +242,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         ],
+         'check_method': build.check_nvtx,
+     }
+-    CUDA_cutensor = {
+-        'name': 'cutensor',
+-        'file': [
+-            'cupy_backends.cuda.libs.cutensor',
+-            'cupyx.cutensor',
+-        ],
+-        'include': [
+-            'cutensor.h',
+-        ],
+-        'libraries': [
+-            'cutensor',
+-            'cublas',
+-        ],
+-        'check_method': build.check_cutensor_version,
+-        'version_method': build.get_cutensor_version,
+-    }
+     CUDA_cub = {
+         'name': 'cub',
+         'required': True,
+@@ -329,20 +310,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         'check_method': build.check_hip_version,
+         'version_method': build.get_hip_version,
+     }
+-    CUDA_cusparselt = {
+-        'name': 'cusparselt',
+-        'file': [
+-            'cupy_backends.cuda.libs.cusparselt',
+-        ],
+-        'include': [
+-            'cusparseLt.h',
+-        ],
+-        'libraries': [
+-            'cusparseLt',
+-        ],
+-        'check_method': build.check_cusparselt_version,
+-        'version_method': build.get_cusparselt_version,
+-    }
+     HIP_cub = {
+         'name': 'cub',
+         'required': True,
+@@ -369,8 +336,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         'libraries': [
+             'rccl',
+         ],
+-        'check_method': build.check_nccl_version,
+-        'version_method': build.get_nccl_version,
+     }
+     HIP_thrust = {
+         'name': 'thrust',
+@@ -396,8 +361,6 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         ],
+         'libraries': list(_cudart_static_libs),
+         'static_libraries': ['cudart_static'],
+-        'check_method': build.check_thrust_version,
+-        'version_method': build.get_thrust_version,
+     }
+     COMMON_dlpack = {
+         'name': 'dlpack',
+@@ -406,7 +369,7 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+             'cupy._core.dlpack',
+         ],
+         'include': [
+-            'cupy/_dlpack/dlpack.h',
++            'dlpack/dlpack.h',
+         ],
+         'libraries': [],
+     }
+@@ -424,15 +387,12 @@ def get_features(ctx: Context) -> Dict[str, Feature]:
+         features = [
+             CUDA_cuda(ctx),
+             _from_dict(CUDA_cusolver, ctx),
+-            _from_dict(CUDA_cudnn, ctx),
+             _from_dict(CUDA_nccl, ctx),
+             _from_dict(CUDA_nvtx, ctx),
+-            _from_dict(CUDA_cutensor, ctx),
+             _from_dict(CUDA_cub, ctx),
+             _from_dict(CUDA_jitify, ctx),
+             _from_dict(CUDA_random, ctx),
+             _from_dict(CUDA_thrust, ctx),
+-            _from_dict(CUDA_cusparselt, ctx),
+             _from_dict(COMMON_dlpack, ctx),
+         ]
+     return {f.name: f for f in features}
+@@ -467,19 +427,18 @@ class CUDA_cuda(Feature):
+ 
+     def configure(self, compiler: Any, settings: Any) -> bool:
+         try:
+-            out = build.build_and_run(compiler, '''
+-            #include <cuda.h>
+-            #include <stdio.h>
+-            int main() {
+-              printf("%d", CUDA_VERSION);
+-              return 0;
+-            }
+-            ''', include_dirs=settings['include_dirs'])  # type: ignore[no-untyped-call] # NOQA
++            cuda_version_str = os.getenv('CUDA_VERSION')
++            match = re.match(r'^(\d+)\.(\d+)', cuda_version_str)
++            if match:
++                major, minor = match.groups()
++                out = 1000*int(major) + 10*int(minor)
++            else:
++                return False
+         except Exception as e:
+             utils.print_warning('Cannot check CUDA version', str(e))
+             return False
+ 
+-        self._version = int(out)
++        self._version = out
+ 
+         if self._version < self.minimum_cuda_version:
+             utils.print_warning(
+diff --git a/install/cupy_builder/_preflight.py b/install/cupy_builder/_preflight.py
+index ad5273bf0..6ef35a95c 100644
+--- a/install/cupy_builder/_preflight.py
++++ b/install/cupy_builder/_preflight.py
+@@ -5,47 +5,4 @@ from cupy_builder import Context
+ 
+ 
+ def preflight_check(ctx: Context) -> bool:
+-    if sys.platform not in ('linux', 'win32'):
+-        print('Error: macOS is no longer supported', file=sys.stderr)
+-        return False
+-
+-    source_root = ctx.source_root
+-    is_git = os.path.isdir(os.path.join(source_root, '.git'))
+-    for submodule in ('third_party/cccl',
+-                      'third_party/jitify',
+-                      'third_party/dlpack'):
+-        dirpath = os.path.join(source_root, submodule)
+-        if os.path.isdir(dirpath):
+-            if 0 < len(os.listdir(dirpath)):
+-                continue
+-        else:
+-            if not is_git:
+-                # sdist does not contain third_party directory
+-                continue
+-
+-        if is_git:
+-            msg = f'''
+-===========================================================================
+-The directory {submodule} is a git submodule but is currently empty.
+-Please use the command:
+-
+-    $ git submodule update --init
+-
+-to populate the directory before building from source.
+-===========================================================================
+-        '''
+-        else:
+-            msg = f'''
+-===========================================================================
+-The directory {submodule} is a git submodule but is currently empty.
+-Instead of using ZIP/TAR archive downloaded from GitHub, use
+-
+-    $ git clone --recursive https://github.com/cupy/cupy.git
+-
+-to get a buildable CuPy source tree.
+-===========================================================================
+-        '''
+-
+-        print(msg, file=sys.stderr)
+-        return False
+     return True
+diff --git a/install/cupy_builder/cupy_setup_build.py b/install/cupy_builder/cupy_setup_build.py
+index 54c77792f..9ff8463e2 100644
+--- a/install/cupy_builder/cupy_setup_build.py
++++ b/install/cupy_builder/cupy_setup_build.py
+@@ -214,10 +214,6 @@ def preconfigure_modules(ctx: Context, MODULES, compiler, settings):
+             if module['name'] == 'cuda':
+                 break
+ 
+-    # Get a list of the CC of the devices connected to this node
+-    if not ctx.use_hip:
+-        build.check_compute_capabilities(compiler, settings)
+-
+     if len(ret) != len(MODULES):
+         if 'cuda' in ret:
+             lines = [
+@@ -305,10 +301,6 @@ def make_extensions(ctx: Context, compiler, use_cython):
+     settings['library_dirs'] = [
+         x for x in settings['library_dirs'] if os.path.exists(x)]
+ 
+-    # Adjust rpath to use CUDA libraries in `cupy/.data/lib/*.so`) from CuPy.
+-    use_wheel_libs_rpath = (
+-        0 < len(ctx.wheel_libs) and not PLATFORM_WIN32)
+-
+     # In the environment with CUDA 7.5 on Ubuntu 16.04, gcc5.3 does not
+     # automatically deal with memcpy because string.h header file has
+     # been changed. This is a workaround for that environment.
+@@ -415,20 +407,9 @@ def make_extensions(ctx: Context, compiler, use_cython):
+             if compiler.compiler_type == 'msvc':
+                 compile_args.append('-D_USE_MATH_DEFINES')
+ 
+-        if module['name'] == 'jitify':
+-            # this fixes RTD (no_cuda) builds...
+-            compile_args.append('--std=c++11')
+-            # suppress printing Jitify logging to stdout
+-            compile_args.append('-DJITIFY_PRINT_LOG=0')
+-            # Uncomment to diagnose Jitify issues.
+-            # compile_args.append('-DJITIFY_PRINT_ALL')
+-
+-            # if any change is made to the Jitify header, we force recompiling
+-            s['depends'] = ['./cupy/_core/include/cupy/_jitify/jitify.hpp']
+-
+         if module['name'] == 'dlpack':
+             # if any change is made to the DLPack header, we force recompiling
+-            s['depends'] = ['./cupy/_core/include/cupy/_dlpack/dlpack.h']
++            s['depends'] = ['dlpack/dlpack.h']
+ 
+         for f in module['file']:
+             s_file = copy.deepcopy(s)
+@@ -438,21 +419,6 @@ def make_extensions(ctx: Context, compiler, use_cython):
+                 continue
+ 
+             rpath = []
+-            if not ctx.no_rpath:
+-                # Add library directories (e.g., `/usr/local/cuda/lib64`) to
+-                # RPATH.
+-                rpath += s_file['library_dirs']
+-
+-            if use_wheel_libs_rpath:
+-                # Add `cupy/.data/lib` (where shared libraries included in
+-                # wheels reside) to RPATH.
+-                # The path is resolved relative to the module, e.g., use
+-                # `$ORIGIN/../cupy/.data/lib` for `cupy/cudnn.so` and
+-                # `$ORIGIN/../../../cupy/.data/lib` for
+-                # `cupy_backends/cuda/libs/cudnn.so`.
+-                depth = name.count('.')
+-                rpath.append(
+-                    '{}{}/cupy/.data/lib'.format(_rpath_base(), '/..' * depth))
+ 
+             if (PLATFORM_LINUX and len(rpath) != 0):
+                 ldflag = '-Wl,'
+diff --git a/install/cupy_builder/install_build.py b/install/cupy_builder/install_build.py
+index 40f75fd93..1ba6ea828 100644
+--- a/install/cupy_builder/install_build.py
++++ b/install/cupy_builder/install_build.py
+@@ -410,21 +410,7 @@ def get_thrust_version(formatted=False):
+ 
+ def check_cudnn_version(compiler, settings):
+     global _cudnn_version
+-    try:
+-        out = build_and_run(compiler, '''
+-        #include <cudnn.h>
+-        #include <stdio.h>
+-        int main() {
+-          printf("%d", CUDNN_VERSION);
+-          return 0;
+-        }
+-        ''', include_dirs=settings['include_dirs'])
+-
+-    except Exception as e:
+-        utils.print_warning('Cannot check cuDNN version\n{0}'.format(e))
+-        return False
+-
+-    _cudnn_version = int(out)
++    _cudnn_version = 90800
+ 
+     if not minimum_cudnn_version <= _cudnn_version:
+         min_major = str(minimum_cudnn_version)
+@@ -450,37 +436,7 @@ def get_cudnn_version(formatted=False):
+ def check_nccl_version(compiler, settings):
+     global _nccl_version
+ 
+-    # NCCL 1.x does not provide version information.
+-    try:
+-        out = build_and_run(compiler,
+-                            '''
+-                            #ifndef CUPY_USE_HIP
+-                            #include <nccl.h>
+-                            #else
+-                            #include <rccl.h>
+-                            #endif
+-                            #include <stdio.h>
+-                            #ifdef NCCL_MAJOR
+-                            #ifndef NCCL_VERSION_CODE
+-                            #  define NCCL_VERSION_CODE \
+-                            (NCCL_MAJOR * 1000 + NCCL_MINOR * 100 + NCCL_PATCH)
+-                            #endif
+-                            #else
+-                            #  define NCCL_VERSION_CODE 0
+-                            #endif
+-                            int main() {
+-                              printf("%d", NCCL_VERSION_CODE);
+-                              return 0;
+-                            }
+-                            ''',
+-                            include_dirs=settings['include_dirs'],
+-                            define_macros=settings['define_macros'])
+-
+-    except Exception as e:
+-        utils.print_warning('Cannot include NCCL\n{0}'.format(e))
+-        return False
+-
+-    _nccl_version = int(out)
++    _nccl_version = 22605
+ 
+     return True
+ 
+@@ -510,65 +466,7 @@ def check_cub_version(compiler, settings):
+     global _cub_version
+     global _cub_path
+ 
+-    # This is guaranteed to work for any CUB source because the search
+-    # precedence follows that of include paths.
+-    # - On CUDA, CUB < 1.9.9 does not provide version.cuh and would error out
+-    # - On ROCm, hipCUB has the same version as rocPRIM (as of ROCm 3.5.0)
+-    try:
+-        out = build_and_run(compiler,
+-                            '''
+-                            #ifndef CUPY_USE_HIP
+-                            #include <cub/version.cuh>
+-                            #else
+-                            #include <hipcub/hipcub_version.hpp>
+-                            #endif
+-                            #include <stdio.h>
+-
+-                            int main() {
+-                              #ifndef CUPY_USE_HIP
+-                              printf("%d", CUB_VERSION);
+-                              #else
+-                              printf("%d", HIPCUB_VERSION);
+-                              #endif
+-                              return 0;
+-                            }''',
+-                            include_dirs=settings['include_dirs'],
+-                            define_macros=settings['define_macros'])
+-    except Exception as e:
+-        # could be in a git submodule?
+-        try:
+-            # CuPy's bundle
+-            cupy_cub_include = os.path.join(
+-                cupy_builder.get_context().source_root,
+-                "third_party/cccl")
+-            a = subprocess.run(' '.join(['git', 'describe', '--tags']),
+-                               stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+-                               shell=True, cwd=cupy_cub_include)
+-            if a.returncode == 0:
+-                tag = a.stdout.decode()[:-1]
+-
+-                # CUB's tag convention changed after 1.8.0: "v1.9.0" -> "1.9.0"
+-                # In any case, we normalize it to be in line with CUB_VERSION
+-                if tag.startswith('v'):
+-                    tag = tag[1:]
+-                tag = tag.split('.')
+-                out = int(tag[0]) * 100000 + int(tag[1]) * 100
+-                try:
+-                    out += int(tag[2])
+-                except ValueError:
+-                    # there're local commits so tag is like 1.8.0-1-gdcbb288f,
+-                    # we add the number of commits to the version
+-                    local_patch = tag[2].split('-')
+-                    out += int(local_patch[0]) + int(local_patch[1])
+-            else:
+-                raise RuntimeError('Cannot determine CUB version from git tag'
+-                                   '\n{0}'.format(e))
+-        except Exception as e:
+-            utils.print_warning('Cannot determine CUB version\n{0}'.format(e))
+-            # 0: CUB is not built (makes no sense), -1: built with unknown ver
+-            out = -1
+-
+-    _cub_version = int(out)
++    _cub_version = 200200
+     settings['define_macros'].append(('CUPY_CUB_VERSION_CODE', _cub_version))
+     return True  # we always build CUB
+ 
+@@ -589,25 +487,7 @@ def get_cub_version(formatted=False):
+ def check_jitify_version(compiler, settings):
+     global _jitify_version
+ 
+-    try:
+-        cupy_jitify_include = os.path.join(
+-            cupy_builder.get_context().source_root,
+-            "third_party/jitify")
+-        # Unfortunately Jitify does not have any identifiable name (branch,
+-        # tag, etc), so we must use the commit here
+-        a = subprocess.run(' '.join(['git', 'rev-parse', '--short', 'HEAD']),
+-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+-                           shell=True, cwd=cupy_jitify_include)
+-        if a.returncode == 0:
+-            out = a.stdout.decode()[:-1]  # unlike elsewhere, out is a str here
+-        else:
+-            raise RuntimeError('Cannot determine Jitify version from git')
+-    except Exception as e:
+-        utils.print_warning('Cannot determine Jitify version\n{}'.format(e))
+-        # 0: Jitify is not built (makes no sense), -1: built with unknown ver
+-        out = -1
+-
+-    _jitify_version = out
++    _jitify_version = "1a0ca0e"
+     settings['define_macros'].append(('CUPY_JITIFY_VERSION_CODE',
+                                       _jitify_version))
+     return True  # we always build Jitify
+-- 
+2.34.1
+

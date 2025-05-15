@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,28 +21,38 @@
 SUMMARY = "NumPy/SciPy-compatible Array Library for GPU-accelerated Computing with Python"
 HOMEPAGE = "https://cupy.dev/"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file:///${S}/${WHEEL_BASE}.dist-info/license.rst;md5=54fcf80aa086f2c7bb44f2a34c28bfbc"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=6b47a0b47b880f6f283bbed9af6176e5"
 
-CUDA_BASE_VER = "${@ d.getVar('CUDA_VERSION').split('.')[0] }"
-WHEEL_BASE = "cupy_cuda${CUDA_BASE_VER}x-${PV}"
-WHEEL_PYVER = "${@ "cp" + d.getVar('PYTHON_BASEVERSION').replace('.','') }"
-WHEEL_NAME = "${WHEEL_BASE}-${WHEEL_PYVER}-${WHEEL_PYVER}-manylinux2014_${TARGET_ARCH}"
 
-SRC_URI = "https://github.com/cupy/cupy/releases/download/v${PV}/${WHEEL_NAME}.whl;downloadfilename=${WHEEL_NAME}.zip;subdir=${BP}"
-SRC_URI[sha256sum] = "b8298b3e081b6a599f263aa01e0fa02520454358634f1ba7a8adb07be3e05526"
+SRC_URI = " \
+    git://github.com/cupy/cupy.git;protocol=https;nobranch=1 \
+    file://0001-Fixups-for-cross-building-in-OE.patch \
+"
+# tag: v13.4.0
+SRCREV = "fca48bc15b00c17ac583ccd122bea4920f185b62"
 
-inherit python3-dir cuda
+S = "${WORKDIR}/git"
 
-do_install() {
-    install -d ${D}${PYTHON_SITEPACKAGES_DIR}
-    cp -rd --no-preserve=ownership ${S}/* ${D}${PYTHON_SITEPACKAGES_DIR}
-}
-
-RDEPENDS:${PN} = " \
-    bash \
-    cuda-nvtx \
-    libgomp \
-    python3-fastrlock \
+DEPENDS += " \
+    cccl jitify cuda-profiler-api cuda-cudart cuda-nvrtc cuda-nvtx \
+    cuda-cccl libcublas libcufft libcurand libcusparse nccl nvtx \
+    dlpack python3-cython-native python3-fastrlock-native python3-numpy-native \
 "
 
-FILES:${PN} = "${PYTHON_SITEPACKAGES_DIR}"
+inherit setuptools3 cuda
+
+do_compile() {
+    export NVCC="${CUDA_NVCC_EXECUTABLE} -ccbin ${CUDAHOSTCXX} ${CUDAFLAGS}"
+    export CUPY_NVCC_GENERATE_CODE=""
+    export CUDA_VERSION="${CUDA_VERSION}"
+    setuptools3_do_compile
+}
+
+RDEPENDS:${PN} += " \
+    python3-numpy \
+    python3-fastrlock \
+    bash \
+"
+
+INSANE_SKIP:${PN} = "buildpaths"
+INSANE_SKIP:${PN}-src = "buildpaths"
