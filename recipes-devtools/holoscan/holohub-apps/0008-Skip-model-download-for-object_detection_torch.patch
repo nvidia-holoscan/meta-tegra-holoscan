@@ -1,15 +1,21 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 23 May 2024 13:51:54 -0600
-Subject: Skip model download for object_detection_torch
+From 1839a2832a01ad439405d062d44432c63c58c000 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:35:44 +0100
+Subject: [PATCH 08/10] Skip model download for object_detection_torch
 
 This step requires a native installation of PyTorch, which
 is not available in the OE build. If this model is needed
 then it needs to be manually downloaded and converted
 outside of the OE build process.
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ applications/object_detection_torch/CMakeLists.txt | 8 --------
+ 1 file changed, 8 deletions(-)
+
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 2452929..6f00034 100644
+index 24529297..6f00034d 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -52,14 +52,6 @@ if(HOLOHUB_DOWNLOAD_DATASETS)

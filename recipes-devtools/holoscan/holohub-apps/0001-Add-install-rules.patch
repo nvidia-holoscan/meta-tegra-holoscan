@@ -1,8 +1,39 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Wed, 1 Mar 2023 19:09:23 -0700
-Subject: Add install rules
+From 5f78fd6e3944b3ccbf3be8e9b9830a53b5421edf Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:27:04 +0100
+Subject: [PATCH 01/10] Add install rules
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ applications/colonoscopy_segmentation/CMakeLists.txt  |  8 ++++++++
+ .../cpp/CMakeLists.txt                                |  9 +++++++++
+ .../endoscopy_tool_tracking/cpp/CMakeLists.txt        |  9 +++++++++
+ .../endoscopy_tool_tracking/python/CMakeLists.txt     |  8 ++++++++
+ .../h264_endoscopy_tool_tracking/cpp/CMakeLists.txt   |  9 +++++++++
+ .../python/CMakeLists.txt                             |  8 ++++++++
+ .../h264/h264_video_decode/cpp/CMakeLists.txt         |  9 +++++++++
+ .../h264/h264_video_decode/python/CMakeLists.txt      |  8 ++++++++
+ applications/high_speed_endoscopy/cpp/CMakeLists.txt  |  9 +++++++++
+ .../high_speed_endoscopy/python/CMakeLists.txt        |  8 ++++++++
+ .../cpp/post-proc-cpu/CMakeLists.txt                  | 10 ++++++++++
+ applications/multiai_endoscopy/python/CMakeLists.txt  |  9 +++++++++
+ applications/multiai_ultrasound/cpp/CMakeLists.txt    | 11 +++++++++++
+ .../operators/visualizer_icardio/CMakeLists.txt       |  2 ++
+ applications/multiai_ultrasound/python/CMakeLists.txt |  8 ++++++++
+ applications/object_detection_torch/CMakeLists.txt    |  9 +++++++++
+ .../ultrasound_segmentation/cpp/CMakeLists.txt        |  9 +++++++++
+ .../ultrasound_segmentation/python/CMakeLists.txt     |  8 ++++++++
+ applications/volume_rendering/cpp/CMakeLists.txt      |  6 ++++++
+ applications/volume_rendering/python/CMakeLists.txt   | 10 +++++++++-
+ cmake/pybind11_add_holohub_module.cmake               |  5 +++++
+ gxf_extensions/emergent_source/CMakeLists.txt         |  2 ++
+ operators/aja_source/CMakeLists.txt                   |  2 ++
+ operators/emergent_source/CMakeLists.txt              |  2 ++
+ operators/orsi/orsi_format_converter/CMakeLists.txt   |  2 ++
+ operators/tensor_to_video_buffer/CMakeLists.txt       |  2 ++
+ operators/video_encoder/CMakeLists.txt                |  2 ++
+ 27 files changed, 183 insertions(+), 1 deletion(-)
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
 index dad4fd08..860f7263 100644
@@ -411,7 +442,7 @@ index 68ded45c..fc3fa6b4 100644
 +
 +install(TARGETS gxf_emergent_source_lib gxf_emergent_source)
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 41beb9af..1e5bda5a 100644
+index e5c285ba..ea0d2a44 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -61,6 +61,8 @@ target_link_libraries(aja_source

@@ -1,11 +1,16 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 9 Mar 2023 16:11:37 -0700
-Subject: Build python libs with install RPATH
+From a20f66bdbe3f1528c7eb722c1a6310867d6cc2b3 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:31:05 +0100
+Subject: [PATCH 04/10] Build python libs with install RPATH
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ cmake/pybind11_add_holohub_module.cmake | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index 3f30510..d00a811 100644
+index 4c657e6d..94b59474 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -59,9 +59,8 @@ function(pybind11_add_holohub_module)

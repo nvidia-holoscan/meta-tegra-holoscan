@@ -1,11 +1,16 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Fri, 20 Dec 2024 10:11:46 -0700
-Subject: Revert to pybind 2.11.1
+From 00b66058fb52193974c35f5ca24bb9fba4b0f443 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:37:06 +0100
+Subject: [PATCH 10/10] Revert to pybind 2.11.1
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ cmake/pybind11_add_holohub_module.cmake | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index 94b5947..36637b3 100644
+index 94b59474..36637b31 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -21,7 +21,7 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter Development)

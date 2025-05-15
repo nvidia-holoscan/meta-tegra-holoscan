@@ -1,8 +1,14 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 20 Jul 2023 21:35:22 -0600
-Subject: Fix volume_renderer application
+From 88d37779367417b02c39fbddc6fcddd77f6e0281 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:35:07 +0100
+Subject: [PATCH 07/10] Fix volume_renderer application
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ .../volume_rendering/cpp/CMakeLists.txt       |  2 +
+ operators/volume_renderer/CMakeLists.txt      | 58 +------------------
+ 2 files changed, 5 insertions(+), 55 deletions(-)
 
 diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
 index 9858353e..76301978 100644
@@ -18,7 +24,7 @@ index 9858353e..76301978 100644
    json_loader.cpp
    volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index e9df8b9c..c79f5f99 100644
+index f8d7575d..05fcce4b 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -18,61 +18,9 @@ project(volume_renderer)
@@ -48,12 +54,12 @@ index e9df8b9c..c79f5f99 100644
 -  set(CMAKE_POLICY_DEFAULT_CMP0146 OLD)
 -endif()
 -
--set(_clara_viz_version "0.4.0")
+-set(_clara_viz_version "v0.4.1")
 -include(FetchContent)
 -FetchContent_Declare(
 -    ClaraViz
 -    URL https://github.com/NVIDIA/clara-viz/archive/refs/tags/${_clara_viz_version}.tar.gz
--    URL_MD5 de6fe03b13384fd3c0921db0f2aa17a4
+-    URL_MD5 cbb39f33316c6365f623bf6920126b5c
 -    )
 -
 -# enable CMP0077 to allow overwriting option() statements in FetchContent sub-projects

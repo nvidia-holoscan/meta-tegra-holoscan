@@ -1,11 +1,18 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 22 Jun 2023 10:11:38 -0600
-Subject: Enable Emergent apps
+From 3eebbd93fb7b9da78c4eed1d8427415aed78a1c1 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:31:36 +0100
+Subject: [PATCH 05/10] Enable Emergent apps
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ CMakeLists.txt                                | 1 +
+ applications/CMakeLists.txt                   | 2 ++
+ gxf_extensions/emergent_source/CMakeLists.txt | 8 ++++++--
+ 3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7d0ffa6c..c9f8c1f6 100644
+index f548aada..4719f618 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -41,6 +41,7 @@ include(CTest)
@@ -17,7 +24,7 @@ index 7d0ffa6c..c9f8c1f6 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index e84ede1c..e1c01495 100644
+index fbbc8169..58f43bb7 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
 @@ -52,8 +52,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS

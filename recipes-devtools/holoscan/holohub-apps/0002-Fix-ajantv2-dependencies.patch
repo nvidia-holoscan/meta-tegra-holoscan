@@ -1,8 +1,21 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Wed, 1 Mar 2023 15:58:05 -0700
-Subject: Fix ajantv2 dependencies
+From 25c8db6e57885f0be7b1ee20d16f485f783c1dca Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:30:01 +0100
+Subject: [PATCH 02/10] Fix ajantv2 dependencies
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ .../CMakeLists.txt                            |  2 ++
+ .../cpp/CMakeLists.txt                        |  2 ++
+ .../cpp/post-proc-cpu/CMakeLists.txt          |  2 ++
+ .../cpp/post-proc-matx-cpu/CMakeLists.txt     |  2 ++
+ .../cpp/post-proc-matx-gpu/CMakeLists.txt     |  2 ++
+ .../multiai_ultrasound/cpp/CMakeLists.txt     |  2 ++
+ .../object_detection_torch/CMakeLists.txt     |  2 ++
+ .../cpp/CMakeLists.txt                        |  2 ++
+ operators/aja_source/CMakeLists.txt           | 23 +------------------
+ 9 files changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 index ffaa4f5a..ca6fe315 100644
@@ -109,7 +122,7 @@ index 83d41ca4..ee28a979 100644
      main.cpp
  )
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 1e5bda5a..9b7d9a03 100644
+index ea0d2a44..c649af5a 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -18,28 +18,7 @@ project(aja_source)

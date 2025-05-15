@@ -1,11 +1,20 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Wed, 1 Mar 2023 23:41:05 -0700
-Subject: Remove relative gxf_extension paths
+From be33aacf753579047b2d7fa7441eb26c4c9ebdd3 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:30:28 +0100
+Subject: [PATCH 03/10] Remove relative gxf_extension paths
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ .../cpp/endoscopy_tool_tracking.yaml                        | 6 +++---
+ .../python/endoscopy_tool_tracking.yaml                     | 6 +++---
+ .../cpp/h264_endoscopy_tool_tracking.yaml                   | 2 +-
+ .../high_speed_endoscopy/cpp/high_speed_endoscopy.yaml      | 2 +-
+ .../high_speed_endoscopy/python/high_speed_endoscopy.yaml   | 2 +-
+ 5 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index b7cbec54..7b8a9801 100644
+index 34942f45..636a9853 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 @@ -29,11 +29,11 @@ resources:

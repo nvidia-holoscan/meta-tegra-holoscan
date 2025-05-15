@@ -21,11 +21,11 @@
 SUMMARY = "NVIDIA HoloHub Applications"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "f6a944112050e08c8c3789fd7efbd2103a8e76ee"
-PV = "3.2.0+git${SRCPV}"
+SRCREV = "36206bcc3d792bd90920ca6e6f89275ce6719253"
+PV = "3.3.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -76,6 +76,9 @@ EXTRA_OECMAKE:append = " \
     -DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
 "
 
+EXTRA_OECMAKE:append = " -DSPDLOG_FMT_EXTERNAL=ON"
+CXXFLAGS:append = " -DSPDLOG_FMT_EXTERNAL"
+
 EXCLUDE_ICONS = "volume-rendering"
 EXCLUDE_ICONS:dgpu = ""
 
@@ -125,6 +128,7 @@ DEPENDS += " \
 
 RDEPENDS:${PN} += " \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
+    python3-packaging \
 "
 
 FILES:${PN}-staticdev += " \
@@ -147,3 +151,6 @@ INSANE_SKIP:${PN} += "useless-rpaths"
 
 # The pybind-generated libraries are stripped by default.
 INSANE_SKIP:${PN} += "already-stripped"
+
+INSANE_SKIP:${PN} += "buildpaths"
+INSANE_SKIP:${PN}-dbg += "buildpaths"

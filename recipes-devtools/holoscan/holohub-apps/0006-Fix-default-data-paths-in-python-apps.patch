@@ -1,8 +1,16 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Thu, 23 Mar 2023 13:36:09 -0600
-Subject: Fix default data paths in python apps
+From d5309a8e5e37502480b6b7b3efa82c1c58d83c5c Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 15 May 2025 10:32:15 +0100
+Subject: [PATCH 06/10] Fix default data paths in python apps
 
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ .../colonoscopy_segmentation/colonoscopy_segmentation.py        | 2 +-
+ .../endoscopy_tool_tracking/python/endoscopy_tool_tracking.py   | 2 +-
+ applications/multiai_ultrasound/python/multiai_ultrasound.py    | 2 +-
+ .../ultrasound_segmentation/python/ultrasound_segmentation.py   | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 index 9b4cf38d..cd7a8c88 100644
@@ -18,7 +26,7 @@ index 9b4cf38d..cd7a8c88 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index 9af28f13..3a09bb34 100644
+index 35efd369..ba3bd50c 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 @@ -73,7 +73,7 @@ class EndoscopyApp(Application):
