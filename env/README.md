@@ -124,14 +124,36 @@ build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.tegr
 The `flash.sh` script can be used to flash the BSP image that is output by the
 previous step onto the Holoscan Developer Kit hardware. For example, to flash the
 `core-image-holoscan` image that was produced by the previous step, connect the
-developer kit to the host via the USB-C debug port, put it into recovery
-mode, ensure the developer kit is visible to the host using `lsusb`, then run:
+developer kit to the host via the USB-C debug port, You should
+also have these commands available on your build host:
+
+```sh
+sgdisk (from the gdisk/gptfdisk package)
+udisksctl (part of the udisks2 package)
+```
+
+You should disable automatic mounting of removable media in your desktop settings.
+On recent Ubuntu (GNOME), go to Settings -> Removable Media, and check the box next
+to "Never prompt or start programs on media insertion." You may also need to update
+the /org/gnome/desktop/media-handling/automount setting via dconf. Check the setting with:
+
+```sh
+$ dconf read /org/gnome/desktop/media-handling/automount
+```
+
+If it reports true, set it with:
+
+```sh
+$ dconf write /org/gnome/desktop/media-handling/automount false
+```
+
+Put it into recovery mode, ensure the developer kit is visible to the host using `lsusb` then run:
 
 ```sh
 $ ./flash.sh core-image-holoscan
 ```
 
-> **_Note:_** If the `doflash.sh` command fails due to a `No such file: 'dtc'`
+> **_Note:_** If the `initrd-flash` command fails due to a `No such file: 'dtc'`
 > error, install the device tree compiler (`dtc`) using the following:
 >
 > ```sh
