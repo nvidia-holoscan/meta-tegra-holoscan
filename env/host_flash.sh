@@ -66,7 +66,7 @@ echo -e "Done!\n"
 
 echo "Flashing..."
 set -e
-sudo ./doflash.sh
+sudo ./initrd-flash --erase-nvme
 echo "Done!"
 
 popd > /dev/null
