@@ -3,7 +3,7 @@ TEGRA_FAB ?= "500"
 TEGRA_BOARDSKU ?= "0008"
 TEGRA_BOARDREV ?= "P.0"
 TEGRA_CHIPREV ?= "1"
-NVPMODEL ?= "nvpmodel_p3701_0008_3740_0002"
+NVPMODEL ?= "nvpmodel_igx_orin"
 NVFANCONTROL ?= "nvfancontrol_p3740_0002_c01"
 
 MACHINEOVERRIDES =. "igx-orin:"
