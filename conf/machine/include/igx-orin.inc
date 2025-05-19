@@ -71,4 +71,7 @@ MACHINE_ESSENTIAL_EXTRA_RRECOMMENDS += " \
     kernel-module-videobuf2-dma-contig kernel-module-videobuf2-memops kernel-module-videobuf2-v4l2 \
     kernel-module-videobuf2-common kernel-module-videodev kernel-module-cec kernel-module-drm-kms-helper \
     kernel-module-crypto-engine kernel-module-pwm-fan kernel-module-ina3221 kernel-module-ipv6 \
+    nv-kernel-module-r8168 \
 "
+
+KERNEL_MODULE_AUTOLOAD += "r8168"
