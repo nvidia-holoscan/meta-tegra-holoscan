@@ -22,5 +22,7 @@ require nvidia-driver-common.inc
 
 SRC_URI[sha256sum] = "3ee98e0401ef67bb4cc486bbd8c593d280ca36854805028b35714bd9f02f1f43"
 
-RPROVIDES:${PN} += "tegra-libraries-cuda"
-RCONFLICTS:${PN} += "tegra-libraries-cuda"
+PROVIDES += "tegra-libraries-cuda tegra-libraries-nvml"
+RPROVIDES:${PN} += "tegra-libraries-cuda tegra-libraries-nvml"
+RCONFLICTS:${PN} = "tegra-libraries-cuda tegra-libraries-nvml"
+RREPLACES:${PN} = "tegra-libraries-cuda tegra-libraries-nvml"
