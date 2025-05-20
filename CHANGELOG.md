@@ -1,3 +1,53 @@
+## [3.3.0] - 2025-05-21
+### Changed
+- Updated Holoscan SDK and Holohub apps to 3.3.0.
+- Update GXF to 5.0.0-20250506-dad6e7b.
+- Updated ONNX Runtime to 1.21.0.
+- Updated python3-cupy to 13.4.0.
+- Updated UCX to use PACKAGECONFIG.
+- Updated edk2-firmware-tegra bbappend recipe to 36.4.3.
+- Updated tegra-flashtools-native bbappend recipe to 36.4.3
+- Updated meta-tegra dependency.
+- Updated meta-openembedded dependency.
+- Updated meta-virtualization dependency.
+- Updated Poky dependency.
+- Updated Flashing process. Using QSPI+NVMe instead of QSPI+eMMC.
+- Added tegra-eks-image bbappend recipe to allow uses introducing EKS image
+  when secure boot is enabled for Disk Encryption feature.
+- Added ONNX 1.17.0 recipe to satisfy dependency with Holoscan SDK and ONNX Runtime.
+- Added dlpack 1.0 recipe to satisfy dependency with Holoscan SDK and ONNX Runtime.
+- Added glfw 3.4 recipe to satisfy dependency with Holoscan SDK.
+- Added magic-enum 0.9.3 recipe to satisfy dependency with Holoscan SDK.
+- Added RMM 24.04.00 recipe to satisfy dependency with Holoscan SDK.
+- Added tl-expected 1.1.0 recipe to satisfy dependency with Holoscan SDK.
+- Added cutlass 3.5.1 recipe to satisfy dependency with ONNX Runtime.
+- Added nccl 2.26.5 recipe to satisfy dependency with CuPy.
+- Added abseil-cpp 20250127.1 recipe to satisfy dependency with ONNX Runtime.
+- Added imgui f337378 recipe to satisfy dependency with Holoscan SDK.
+- Added stb af1a5bc recipe to satisfy dependency with Holoscan SDK.
+- Added jitify 1a0ca0e recipe to satisfy dependency with CuPy.
+- Added cccl 2.2.0 recipe to satisfy dependency with CuPy, RMM, jitify and Holoscan SDK.
+- Added cpm-cmake 0.38.5 recipe to satisfy dependency with RMM and Holoscan SDK.
+- Added rapids-cmake 24.04.00 recipe to satisfy dependency with RMM and Holoscan SDK.
+- Added nvtx 3.1.0 recipe to satisfy dependency with CuPy and Holoscan SDK.
+- Added python3-fastrlock 0.8.3 recipe to satisfy dependency with CuPy.
+- Added boost-mp11 1.84.0 recipe to satisfy dependency with ONNX Runtime.
+- Added date 3.0.1 recipe to satisfy dependency with ONNX Runtime.
+- Added fmt 10.1.1 recipe to satisfy dependency with RMM and Holoscan SDK.
+- Added microsoft-gsl 4.0.0 recipe to satisfy dependency with ONNX Runtime.
+- Added nsync 1.26.0 recipe to satisfy dependency with ONNX Runtime.
+- Added safeint 3.0.28 recipe to satisfy dependency with ONNX Runtime.
+- Added yaml-cpp 0.7.0 recipe to satisfy dependency with Holoscan SDK.
+- Dropped nlohmann-json 3.9.1 recipe.
+
+### Fixed
+- Fixed PREFERRED_PROVIDER of tegra-libraries-cuda and tegra-libraries-nvml.
+- Updated PREFERRED_VERSION for xserver-xorg-video-nvidia.
+- Installed nvcudla library which was missing in tegra-libraries-cuda recipe.
+- Fixed cuda-nvrtc SHA256SUM for x86_64
+- Dropped libcudla dependency for dGPU mode.
+
+
 ## [3.2.0] - 2025-04-30
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.2.0
@@ -392,6 +442,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v2.9.0...v3.0.0
