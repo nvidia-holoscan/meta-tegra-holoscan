@@ -48,6 +48,7 @@ EXTRA_OECMAKE += " \
     -DUSE_CUSPARSELT=OFF \
     -DPROTOBUF_PROTOC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/protoc \
     -DUSE_SYSTEM_PYBIND11=ON \
+    -DCMAKE_CXX_FLAGS="-include cstdint" \
 "
 
 # Disable installing the fmt third-party library, which may cause conflicts
