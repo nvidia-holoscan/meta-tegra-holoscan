@@ -1,6 +1,6 @@
-From a813528e627dbbb1104899361e2cb17e2beb8a66 Mon Sep 17 00:00:00 2001
+From 8533e41e891b40679e6acb8ae237ebb0bd10ef92 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 27 May 2025 16:25:51 +0100
+Date: Thu, 26 Jun 2025 12:21:22 +0100
 Subject: [PATCH 6/6] Remove GXF python modules install
 
 These are not yet compatible with Python 3.12
@@ -13,10 +13,10 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  2 files changed, 28 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1cee9b1..d923278 100644
+index 28348d1..ac90ae3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -343,14 +343,6 @@ foreach(_component ${HOLOSCAN_GXF_COMPONENTS})
+@@ -348,14 +348,6 @@ foreach(_component ${HOLOSCAN_GXF_COMPONENTS})
      endif()
  endforeach()
  

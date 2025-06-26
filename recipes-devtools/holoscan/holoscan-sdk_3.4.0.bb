@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-# tag: v3.3.0
-SRCREV = "c5ef83de6188d625735b93aa8c96619b65a329d0"
+# tag: v3.4.0
+SRCREV = "9c5b3c3d4831f2e65ebda6b79ae9b1c5517c6a7c"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -110,6 +110,7 @@ DEPENDS += " \
     python3-pybind11 \
     cpm-cmake \
     rapids-cmake \
+    libeigen \
 "
 
 RDEPENDS:${PN} = " \

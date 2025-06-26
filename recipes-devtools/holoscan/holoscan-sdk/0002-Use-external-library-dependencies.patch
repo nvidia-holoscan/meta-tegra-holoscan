@@ -1,6 +1,6 @@
-From 8b3cf925c3651e46f11ffc4cd23ab0955ae9589f Mon Sep 17 00:00:00 2001
+From afac54cdad7c3b191234c2212f88b86e60e760e3 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 27 May 2025 16:19:51 +0100
+Date: Thu, 26 Jun 2025 12:19:11 +0100
 Subject: [PATCH 2/6] Use external library dependencies
 
 This changes the dependencies on the following libraries so
@@ -31,13 +31,15 @@ fetched, built, and installed by CMake:
  - onnxruntime
  - ucx
  - Protobuf
+ - Eigen3
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- CMakeLists.txt                                |  38 -
+ CMakeLists.txt                                |  39 -
  cmake/deps/cli11_rapids.cmake                 |  18 +-
  cmake/deps/dlpack_rapids.cmake                |  18 +-
+ cmake/deps/eigen3_urm.cmake                   |  76 +-
  cmake/deps/expected_rapids.cmake              |  21 +-
  cmake/deps/fmt_rapids.cmake                   |  26 +-
  cmake/deps/glfw_rapids.cmake                  |  20 +-
@@ -68,35 +70,41 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  .../holoviz/tests/functional/CMakeLists.txt   |  14 +-
  .../holoviz/thirdparty/imgui/CMakeLists.txt   |  28 +-
  .../holoscan/operators/holoviz/CMakeLists.txt |   4 +-
- src/CMakeLists.txt                            |  19 +-
- 34 files changed, 69 insertions(+), 1816 deletions(-)
+ src/CMakeLists.txt                            |  27 +-
+ 35 files changed, 73 insertions(+), 1897 deletions(-)
  delete mode 100644 cmake/deps/hwloc.config.h.in
  delete mode 100644 cmake/deps/hwloc.private.config.h.in
  delete mode 100644 cmake/deps/hwloc.static-components.h.in
  delete mode 100644 cmake/deps/nvtx3.cmake
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 9b59284..d0f3c65 100644
+index cc8109e..82f70a8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -248,8 +248,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
+@@ -246,14 +246,11 @@ endif()
+ # List targets to export/install
+ list(APPEND HOLOSCAN_INSTALL_TARGETS
+     core
+-    eigen3_interface
+     holoviz
+     holoviz_imgui
      holoinfer
      infer_utils
      logger
 -    nvtx3-c
 -    nvtx3-cpp
+     data_loggers_basic_console_logger
      op_async_ping_rx
      op_async_ping_tx
-     op_bayer_demosaic
-@@ -268,7 +266,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
-     op_v4l2
+@@ -274,7 +271,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
+     pose_tree
      profiler
      spdlog_logger
 -    yaml-cpp
  )
  if(HOLOSCAN_BUILD_LIBTORCH)
    list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_torch)
-@@ -293,30 +290,6 @@ install(DIRECTORY include/holoscan/
+@@ -299,30 +295,6 @@ install(DIRECTORY include/holoscan/
      COMPONENT holoscan-core
  )
  
@@ -127,7 +135,7 @@ index 9b59284..d0f3c65 100644
  # Copy version file
  install(FILES ${${HOLOSCAN_PACKAGE_NAME}_BINARY_DIR}/include/holoscan/version_config.hpp
      DESTINATION include/holoscan
-@@ -426,17 +399,6 @@ foreach(gxf_component IN LISTS _GXF_components)
+@@ -432,17 +404,6 @@ foreach(gxf_component IN LISTS _GXF_components)
    endif()
  endforeach()
  
@@ -197,6 +205,91 @@ index d207b18..dda7379 100644
 -# root project can use it to include headers
 -set(dlpack_SOURCE_DIR ${dlpack_SOURCE_DIR} PARENT_SCOPE)
 +rapids_find_package(dlpack 1.0 REQUIRED)
+diff --git a/cmake/deps/eigen3_urm.cmake b/cmake/deps/eigen3_urm.cmake
+index 38863ec..1e93483 100644
+--- a/cmake/deps/eigen3_urm.cmake
++++ b/cmake/deps/eigen3_urm.cmake
+@@ -13,79 +13,5 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-include(FetchContent)
++find_package(Eigen3 REQUIRED)
+ 
+-set(EIGEN_PATCH_FILEPATH "${CMAKE_SOURCE_DIR}/cmake/deps/patches/eigen3_urm_neon_memcpy_fix.patch")
+-
+-FetchContent_Declare(
+-    eigen3
+-    URL https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/eigen/eigen-3.4.0.tar.gz
+-    # sha256sum eigen-3.4.0.tar.gz
+-    URL_HASH SHA256=e4b6347ba6e9874f59de6f6f972e48f11c92b08331497152b7d99fd00b9e9aee
+-)
+-
+-FetchContent_GetProperties(eigen3)
+-if(NOT eigen3_POPULATED)
+-    FetchContent_Populate(eigen3)
+-    # eigen3_SOURCE_DIR is now available
+-endif()
+-
+-# --------------------------------------------------------------------
+-# Apply the NEON memcpy-fix patch
+-# (Addresses GCC's -Werror=class-memaccess, which triggers an error on arm64)
+-# --------------------------------------------------------------------
+-
+-# Locate the "patch" program
+-find_program(PATCH_EXECUTABLE patch)
+-if(NOT PATCH_EXECUTABLE)
+-    message(FATAL_ERROR "Cannot find the 'patch' tool needed to patch Eigen.")
+-endif()
+-
+-# Apply the patch once (idempotent thanks to -N)
+-execute_process(
+-    COMMAND "${PATCH_EXECUTABLE}" -N -p1 -i "${EIGEN_PATCH_FILEPATH}"
+-    WORKING_DIRECTORY "${eigen3_SOURCE_DIR}"
+-    RESULT_VARIABLE _eigen_patch_result
+-)
+-
+-if(_eigen_patch_result GREATER 1)   # 0 = success, 1 = already applied
+-    message(FATAL_ERROR "Failed to apply Eigen NEON memcpy patch "
+-                        "(exit code ${_eigen_patch_result}).")
+-endif()
+-
+-# Create a regular INTERFACE library for Eigen's properties
+-add_library(eigen3_interface INTERFACE)
+-
+-# Define include directory for the interface library
+-# Use generator expressions to handle both build-time and install-time include paths
+-target_include_directories(eigen3_interface INTERFACE
+-    $<BUILD_INTERFACE:${eigen3_SOURCE_DIR}/include>
+-    $<INSTALL_INTERFACE:include/3rdparty>
+-)
+-
+-# Set EIGEN_MPL2_ONLY flag to restrict Eigen usage to MPL2-licensed code only
+-target_compile_definitions(eigen3_interface INTERFACE
+-    EIGEN_MPL2_ONLY
+-)
+-
+-# Create an ALIAS target `holoscan::eigen3`
+-add_library(holoscan::eigen3 ALIAS eigen3_interface)
+-
+-# Set the EXPORT_NAME property on the original interface target
+-# This name is used when the target is exported as part of a CMake package.
+-set_target_properties(eigen3_interface PROPERTIES
+-    EXPORT_NAME eigen3  # This will allow it to be found as Holoscan::eigen3
+-)
+-
+-# Install the Eigen headers for SDK development.
+-# This makes the headers available in the CMAKE_INSTALL_PREFIX.
+-if(IS_DIRECTORY "${eigen3_SOURCE_DIR}/include/Eigen")
+-    install(
+-        DIRECTORY "${eigen3_SOURCE_DIR}/include/Eigen/" # Source is the 'Eigen' folder itself
+-        DESTINATION include/3rdparty/Eigen                             # Destination path relative to CMAKE_INSTALL_PREFIX
+-        COMPONENT "holoscan-dependencies"                              # Matches existing component name
+-    )
+-else()
+-    message(FATAL_ERROR "Eigen headers not found in ${eigen3_SOURCE_DIR}/include/Eigen. "
+-                        "The downloaded Eigen archive from URM might have an unexpected structure, or the download failed.")
+-endif()
 diff --git a/cmake/deps/expected_rapids.cmake b/cmake/deps/expected_rapids.cmake
 index 680c6ee..3cfa92a 100644
 --- a/cmake/deps/expected_rapids.cmake
@@ -2065,7 +2158,7 @@ index 6104099..5d777b7 100644
  include(rapids-find)
 +
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index 2fec057..7fb4321 100644
+index d27cd87..4a2c4ed 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
 @@ -48,7 +48,6 @@ superbuild_depend(ucx)
@@ -2073,9 +2166,9 @@ index 2fec057..7fb4321 100644
  superbuild_depend(yaml-cpp_rapids)
  superbuild_depend(gxf)
 -superbuild_depend(nvtx3)
+ superbuild_depend(eigen3_urm)
  
  # Testing dependencies
- if(HOLOSCAN_BUILD_TESTS)
 diff --git a/include/holoscan/profiler/nvtx3.hpp b/include/holoscan/profiler/nvtx3.hpp
 index 52e6c09..c975dfa 100644
 --- a/include/holoscan/profiler/nvtx3.hpp
@@ -2344,10 +2437,10 @@ index e9c5987..43d04bd 100644
 +        ${magic_enum_INCLUDE_DIRS}
  )
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index eb343db..2d9171b 100644
+index afe5c1d..ff890e6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -97,14 +97,10 @@ endif()
+@@ -113,14 +113,10 @@ endif()
  # ##############################################################################
  add_holoscan_library(profiler
      profiler/profiler.cpp)
@@ -2364,9 +2457,28 @@ index eb343db..2d9171b 100644
  )
  
  # ##############################################################################
-@@ -258,21 +254,12 @@ target_link_libraries(core
+@@ -131,13 +127,13 @@ add_holoscan_library(pose_tree
+     pose_tree/pose_tree.cpp
+     pose_tree/pose_tree_manager.cpp)
+ 
+-# Note: holoscan::pose_tree depends on holoscan::core and holoscan::eigen3,
++# Note: holoscan::pose_tree depends on holoscan::core and Eigen3::Eigen,
+ # but we can separate the core pose tree module (which doesn't depend on the Holoscan SDK)
+ # into `holoscan::pose_tree_core` later if needed.
+ target_link_libraries(pose_tree
+     PUBLIC
+         holoscan::core
+-        holoscan::eigen3
++        Eigen3::Eigen
+ )
+ 
+ # ##############################################################################
+@@ -294,25 +290,14 @@ target_link_libraries(core
+         GXF::std
          GXF::ucx
          yaml-cpp
+-        holoscan::eigen3
++        Eigen3::Eigen
      PRIVATE
 -        hwloc
 +        PkgConfig::hwloc
@@ -2381,6 +2493,8 @@ index eb343db..2d9171b 100644
 -      $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
 -      $<BUILD_INTERFACE:${cli11_SOURCE_DIR}/include>
 -      $<BUILD_INTERFACE:${magic_enum_SOURCE_DIR}/include>
+-      $<BUILD_INTERFACE:${nlohmann_json_SOURCE_DIR}/single_include>
+-      $<BUILD_INTERFACE:${concurrent_queue_SOURCE_DIR}>
 -      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/3rdparty>
 -)
 -
