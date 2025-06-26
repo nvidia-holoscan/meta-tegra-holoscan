@@ -1,7 +1,7 @@
-From 1839a2832a01ad439405d062d44432c63c58c000 Mon Sep 17 00:00:00 2001
+From 80f7143e0723db193173cdc2ef9d3203eea22d53 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 15 May 2025 10:35:44 +0100
-Subject: [PATCH 08/10] Skip model download for object_detection_torch
+Date: Thu, 26 Jun 2025 18:58:51 +0100
+Subject: [PATCH 08/11] Skip model download for object_detection_torch
 
 This step requires a native installation of PyTorch, which
 is not available in the OE build. If this model is needed

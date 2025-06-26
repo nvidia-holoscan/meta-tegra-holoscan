@@ -1,7 +1,7 @@
-From f1bf0578349bbd6d425cae200959dab71881a0da Mon Sep 17 00:00:00 2001
+From da65355dab69909b5fb23a145eb1027c2db9bfcc Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 15 May 2025 10:36:22 +0100
-Subject: [PATCH 09/10] Remove native CUDA_ARCHITECTURE
+Date: Thu, 26 Jun 2025 18:59:15 +0100
+Subject: [PATCH 09/11] Remove native CUDA_ARCHITECTURE
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>

@@ -24,8 +24,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "36206bcc3d792bd90920ca6e6f89275ce6719253"
-PV = "3.3.0+git${SRCPV}"
+SRCREV = "eeccf9fd7f984681393ed5074496a9806f75c0b9"
+PV = "3.4.0+git${SRCPV}"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -39,6 +39,7 @@ SRC_URI += " \
     file://0008-Skip-model-download-for-object_detection_torch.patch \
     file://0009-Remove-native-CUDA_ARCHITECTURE.patch \
     file://0010-Revert-to-pybind-2.11.1.patch \
+    file://0011-Fix-dependency-with-Eigen3-Eigen.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -124,6 +125,7 @@ DEPENDS += " \
     cuda-nvrtc-native \
     nlohmann-json \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
+    libeigen \
 "
 
 RDEPENDS:${PN} += " \

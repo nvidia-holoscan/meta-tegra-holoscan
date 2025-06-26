@@ -1,7 +1,7 @@
-From 25c8db6e57885f0be7b1ee20d16f485f783c1dca Mon Sep 17 00:00:00 2001
+From abd5c964ca6932e0a3467ed86ebc7dd1962dee97 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 15 May 2025 10:30:01 +0100
-Subject: [PATCH 02/10] Fix ajantv2 dependencies
+Date: Thu, 26 Jun 2025 18:48:38 +0100
+Subject: [PATCH 02/11] Fix ajantv2 dependencies
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -31,7 +31,7 @@ index ffaa4f5a..ca6fe315 100644
  if(HOLOHUB_DOWNLOAD_DATASETS)
    include(holoscan_download_data)
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 2d16262f..49e5087f 100644
+index 5006dfff..1f941eb4 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)

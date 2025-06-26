@@ -1,7 +1,7 @@
-From d5309a8e5e37502480b6b7b3efa82c1c58d83c5c Mon Sep 17 00:00:00 2001
+From b3ee500d222ccee7c52c5e82578f5116d0a4dbf0 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 15 May 2025 10:32:15 +0100
-Subject: [PATCH 06/10] Fix default data paths in python apps
+Date: Thu, 26 Jun 2025 18:57:54 +0100
+Subject: [PATCH 06/11] Fix default data paths in python apps
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -26,10 +26,10 @@ index 9b4cf38d..cd7a8c88 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index 35efd369..ba3bd50c 100644
+index a8741966..d99e2efc 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-@@ -73,7 +73,7 @@ class EndoscopyApp(Application):
+@@ -89,7 +89,7 @@ class EndoscopyApp(Application):
          self.source = source
  
          if data == "none":

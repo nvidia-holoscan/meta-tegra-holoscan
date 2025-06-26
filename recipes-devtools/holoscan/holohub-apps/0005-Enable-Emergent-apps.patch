@@ -1,7 +1,7 @@
-From 3eebbd93fb7b9da78c4eed1d8427415aed78a1c1 Mon Sep 17 00:00:00 2001
+From 6bd24808c2b6c7b8cbdbe63a69d129f8e3eda133 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 15 May 2025 10:31:36 +0100
-Subject: [PATCH 05/10] Enable Emergent apps
+Date: Thu, 26 Jun 2025 18:53:27 +0100
+Subject: [PATCH 05/11] Enable Emergent apps
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -24,12 +24,12 @@ index f548aada..4719f618 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index fbbc8169..58f43bb7 100644
+index 345ecaef..e6fc7b10 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -52,8 +52,10 @@ add_holohub_application(endoscopy_tool_tracking DEPENDS
+@@ -53,8 +53,10 @@ add_subdirectory(h264)
  
- add_subdirectory(h264)
+ add_holohub_application(isaac_holoscan_bridge)
  
 +if(HOLOHUB_ENABLE_EMERGENT)
  add_holohub_application(high_speed_endoscopy DEPENDS
