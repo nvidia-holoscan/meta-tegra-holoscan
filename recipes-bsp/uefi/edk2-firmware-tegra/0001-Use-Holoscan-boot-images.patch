@@ -1,14 +1,18 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Ian Stewart <istewart@nvidia.com>
-Date: Mon, 22 Jul 2024 12:06:05 -0600
-Subject: Use Holoscan boot images
+From 4a1f8d519254735864bce09de108f2df5e7956d4 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 26 Jun 2025 15:47:37 +0100
+Subject: [PATCH] Use Holoscan boot images
 
+Signed-off-by: Ian Stewart <istewart@nvidia.com>
+---
+ Platform/NVIDIA/NVIDIA.fvmain.fdf.inc | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc b/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
-index aa72a17f..c67fce1c 100644
+index e273ea91..1da960e6 100644
 --- a/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
 +++ b/Platform/NVIDIA/NVIDIA.fvmain.fdf.inc
-@@ -236,9 +236,9 @@ FvNameGuid         = $(PLATFORM_GUID)
+@@ -240,9 +240,9 @@ FvNameGuid         = $(PLATFORM_GUID)
    # Logo Files
    #
    FILE FREEFORM = gNVIDIAPlatformLogoGuid {
