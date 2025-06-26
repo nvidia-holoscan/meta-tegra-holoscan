@@ -1,0 +1,85 @@
+From a6c41b60ce297ad2a64511af62963ac3a56260f6 Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 26 Jun 2025 13:15:39 +0100
+Subject: [PATCH] Fix NEON memcpy
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Gigon Bae <gbae@nvidia.com>
+---
+ Eigen/src/Core/arch/NEON/PacketMath.h | 28 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+diff --git a/Eigen/src/Core/arch/NEON/PacketMath.h b/Eigen/src/Core/arch/NEON/PacketMath.h
+index d2aeef430..c15ccc816 100644
+--- a/Eigen/src/Core/arch/NEON/PacketMath.h
++++ b/Eigen/src/Core/arch/NEON/PacketMath.h
+@@ -1667,9 +1667,7 @@ template<> EIGEN_STRONG_INLINE Packet4f pload<Packet4f>(const float* from)
+ { EIGEN_DEBUG_ALIGNED_LOAD return vld1q_f32(from); }
+ template<> EIGEN_STRONG_INLINE Packet4c pload<Packet4c>(const int8_t* from)
+ {
+-  Packet4c res;
+-  memcpy(&res, from, sizeof(Packet4c));
+-  return res;
++  return *reinterpret_cast<const Packet4c*>(from);
+ }
+ template<> EIGEN_STRONG_INLINE Packet8c pload<Packet8c>(const int8_t* from)
+ { EIGEN_DEBUG_ALIGNED_LOAD return vld1_s8(from); }
+@@ -1677,9 +1675,7 @@ template<> EIGEN_STRONG_INLINE Packet16c pload<Packet16c>(const int8_t* from)
+ { EIGEN_DEBUG_ALIGNED_LOAD return vld1q_s8(from); }
+ template<> EIGEN_STRONG_INLINE Packet4uc pload<Packet4uc>(const uint8_t* from)
+ {
+-  Packet4uc res;
+-  memcpy(&res, from, sizeof(Packet4uc));
+-  return res;
++  return *reinterpret_cast<const Packet4uc*>(from);
+ }
+ template<> EIGEN_STRONG_INLINE Packet8uc pload<Packet8uc>(const uint8_t* from)
+ { EIGEN_DEBUG_ALIGNED_LOAD return vld1_u8(from); }
+@@ -1712,9 +1708,7 @@ template<> EIGEN_STRONG_INLINE Packet4f ploadu<Packet4f>(const float* from)
+ { EIGEN_DEBUG_UNALIGNED_LOAD return vld1q_f32(from); }
+ template<> EIGEN_STRONG_INLINE Packet4c ploadu<Packet4c>(const int8_t* from)
+ {
+-  Packet4c res;
+-  memcpy(&res, from, sizeof(Packet4c));
+-  return res;
++  return *reinterpret_cast<const Packet4c*>(from);
+ }
+ template<> EIGEN_STRONG_INLINE Packet8c ploadu<Packet8c>(const int8_t* from)
+ { EIGEN_DEBUG_UNALIGNED_LOAD return vld1_s8(from); }
+@@ -1722,9 +1716,7 @@ template<> EIGEN_STRONG_INLINE Packet16c ploadu<Packet16c>(const int8_t* from)
+ { EIGEN_DEBUG_UNALIGNED_LOAD return vld1q_s8(from); }
+ template<> EIGEN_STRONG_INLINE Packet4uc ploadu<Packet4uc>(const uint8_t* from)
+ {
+-  Packet4uc res;
+-  memcpy(&res, from, sizeof(Packet4uc));
+-  return res;
++  return *reinterpret_cast<const Packet4uc*>(from);
+ }
+ template<> EIGEN_STRONG_INLINE Packet8uc ploadu<Packet8uc>(const uint8_t* from)
+ { EIGEN_DEBUG_UNALIGNED_LOAD return vld1_u8(from); }
+@@ -1870,14 +1862,18 @@ template<> EIGEN_STRONG_INLINE void pstore<float>(float* to, const Packet2f& fro
+ { EIGEN_DEBUG_ALIGNED_STORE vst1_f32(to,from); }
+ template<> EIGEN_STRONG_INLINE void pstore<float>(float* to, const Packet4f& from)
+ { EIGEN_DEBUG_ALIGNED_STORE vst1q_f32(to,from); }
+-template<> EIGEN_STRONG_INLINE void pstore<int8_t>(int8_t* to, const Packet4c& from)
+-{ memcpy(to, &from, sizeof(from)); }
++template <>
++EIGEN_STRONG_INLINE void pstore<int8_t>(int8_t* to, const Packet4c& from) {
++  *reinterpret_cast<Packet4c*>(to) = from;
++}
+ template<> EIGEN_STRONG_INLINE void pstore<int8_t>(int8_t* to, const Packet8c& from)
+ { EIGEN_DEBUG_ALIGNED_STORE vst1_s8(to,from); }
+ template<> EIGEN_STRONG_INLINE void pstore<int8_t>(int8_t* to, const Packet16c& from)
+ { EIGEN_DEBUG_ALIGNED_STORE vst1q_s8(to,from); }
+-template<> EIGEN_STRONG_INLINE void pstore<uint8_t>(uint8_t* to, const Packet4uc& from)
+-{ memcpy(to, &from, sizeof(from)); }
++template <>
++EIGEN_STRONG_INLINE void pstore<uint8_t>(uint8_t* to, const Packet4uc& from) {
++  *reinterpret_cast<Packet4uc*>(to) = from;
++}
+ template<> EIGEN_STRONG_INLINE void pstore<uint8_t>(uint8_t* to, const Packet8uc& from)
+ { EIGEN_DEBUG_ALIGNED_STORE vst1_u8(to,from); }
+ template<> EIGEN_STRONG_INLINE void pstore<uint8_t>(uint8_t* to, const Packet16uc& from)
+-- 
+2.34.1
+
