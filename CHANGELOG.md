@@ -1,3 +1,12 @@
+## [3.4.0] - 2025-06-30
+### Changed
+- Updated Holoscan SDK and Holohub apps to 3.4.0.
+
+### Fixed
+- Refresh patch for edk2-firmware-tegra
+- Fixed libeigen NEON memcpy
+
+
 ## [3.3.0] - 2025-05-21
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.3.0.
@@ -442,6 +451,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.0.0...v3.1.0
