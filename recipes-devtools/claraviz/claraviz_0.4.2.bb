@@ -1,4 +1,4 @@
-# Copyright (c) 2023, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -21,13 +21,13 @@
 SUMMARY = "NVIDIA Clara Viz"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=7bb1df9531208a3d5eaeaa657cc1205b"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7bb1df9531208a3d5eaeaa657cc1205b"
 
 SRC_URI = "git://github.com/NVIDIA/clara-viz.git;branch=main;protocol=https"
-SRCREV = "b48d0dccfb3a20ddebd6bc23d9fe0f28a591e166"
+SRCREV = "392af55b120a68f5114f886f3f7302dd4ebb5338"
 
 SRC_URI += " \
-    file://0001-Fix-OE-build.patch \
+    file://0001-Updates-for-OE-cross-builds.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -55,6 +55,7 @@ do_install:append() {
 DEPENDS += " \
     nlohmann-json \
     zlib \
+    cccl-native \
 "
 
 INSANE_SKIP:${PN} += "already-stripped"
