@@ -1,6 +1,6 @@
-From 6af51017eff3580b439ce29ef6e550bb7818578c Mon Sep 17 00:00:00 2001
+From b2cf38be7e815005d07e4fdc2e55ba3c1f0337ca Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Wed, 14 May 2025 17:56:27 +0100
+Date: Thu, 4 Sep 2025 14:22:06 +0100
 Subject: [PATCH] Use external library dependencies
 
 This changes the dependencies on the following libraries so
@@ -13,6 +13,7 @@ fetched, built, and installed by CMake:
  - date
  - cutlass
  - flatbuffers
+ - CCCL
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
@@ -20,6 +21,8 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  cmake/CMakeLists.txt                            |  1 -
  cmake/external/cutlass.cmake                    |  1 +
  cmake/external/onnxruntime_external_deps.cmake  | 17 +++++------------
+ .../cuda/bert/embed_layer_norm_impl.cu          |  4 ++--
+ .../contrib_ops/cuda/moe/ft_moe/moe_kernel.cu   |  2 +-
  onnxruntime/core/flatbuffers/schema/ort.fbs.h   |  7 -------
  .../schema/ort_training_checkpoint.fbs.h        |  7 -------
  .../transpose_optimization/optimizer_api.h      |  1 +
@@ -27,7 +30,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  .../OperatorFieldTypes_generated.h              |  7 -------
  .../lora/adapter_format/adapter_schema.fbs.h    |  7 -------
  .../flatbuffers/flatbuffers_utils_test.fbs.h    |  7 -------
- 10 files changed, 7 insertions(+), 55 deletions(-)
+ 12 files changed, 10 insertions(+), 58 deletions(-)
 
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
 index 2714e6f59d..203318888d 100644
@@ -116,6 +119,41 @@ index ebf20ab21b..541fddbd0c 100644
  if (onnxruntime_RUN_ONNX_TESTS)
    add_definitions(-DORT_RUN_EXTERNAL_ONNX_TESTS)
  endif()
+diff --git a/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu b/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu
+index 8a17e945df..0b49124e05 100644
+--- a/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu
++++ b/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu
+@@ -39,7 +39,7 @@ __global__ void MaskIndexKernelSmall(int sequence_length, const int* mask, int*
+   // blockIdx.x is b
+   const int offset = blockIdx.x * sequence_length;  // batch strides of sequence_length
+ 
+-  cub::Min min;
++  ::cuda::minimum min;
+   int thread_data(sequence_length);
+ 
+   const int idx = offset + threadIdx.x;
+@@ -66,7 +66,7 @@ __global__ void MaskIndexKernel(int sequence_length, const int* mask, int* mask_
+   // blockIdx.x is b
+   const int offset = blockIdx.x * sequence_length;  // batch strides of sequence_length
+ 
+-  cub::Min min;
++  ::cuda::minimum min;
+   int thread_data(sequence_length);
+ 
+   for (int i = threadIdx.x; i < sequence_length; i += TPB) {
+diff --git a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
+index a6ea9f4b61..a71d52323d 100644
+--- a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
++++ b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
+@@ -65,7 +65,7 @@ __launch_bounds__(TPB) __global__
+ 
+     const int thread_row_offset = blockIdx.x * num_cols;
+ 
+-    cub::Sum sum;
++    ::cuda::std::plus sum;
+     float threadData(-FLT_MAX);
+ 
+     // Don't touch finished rows.
 diff --git a/onnxruntime/core/flatbuffers/schema/ort.fbs.h b/onnxruntime/core/flatbuffers/schema/ort.fbs.h
 index 50fc1db862..bf5ab15886 100644
 --- a/onnxruntime/core/flatbuffers/schema/ort.fbs.h
