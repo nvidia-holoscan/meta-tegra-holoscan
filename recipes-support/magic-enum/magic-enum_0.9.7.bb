@@ -1,4 +1,4 @@
-# Copyright (c) 2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -20,12 +20,14 @@
 
 SUMMARY = "Static reflection for enums for modern C++"
 HOMEPAGE = "https://github.com/Neargye/magic_enum"
-
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=b15f48588464ec8ef87d2b560aad2caa"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=7e7717cf723eb72f57e80fdb651cb318"
 
-SRC_URI = "https://github.com/Neargye/magic_enum/releases/download/v${PV}/magic_enum-v${PV}.tar.gz;subdir=${BP}"
-SRC_URI[sha256sum] = "0694e1ef160cbb6b8be2f43c7df349295911cb7daebdd4e557adaac2c18420f9"
+SRC_URI = "git://github.com/Neargye/magic_enum.git;protocol=https;branch=master"
+# tag: v0.9.7
+SRCREV = "e046b69a3736d314fad813e159b1c192eaef92cd"
+
+S = "${WORKDIR}/git"
 
 inherit cmake
 
