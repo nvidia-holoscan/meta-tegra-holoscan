@@ -24,8 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-# tag: v3.4.0
-SRCREV = "9c5b3c3d4831f2e65ebda6b79ae9b1c5517c6a7c"
+SRCREV = "94763219acf432fdfe0f2a72925e759fe8d57cae"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -60,6 +59,8 @@ EXTRA_OECMAKE:append = " \
     -Dyaml-cpp_DIR=${RECIPE_SYSROOT}${datadir}/cmake/yaml-cpp \
     -Dglfw3_DIR=${RECIPE_SYSROOT}${libdir}/cmake/glfw3 \
     -DPYTHON_EXECUTABLE=${HOSTTOOLS_DIR}/python3 \
+    -DTENSORRT_ROOT=${RECIPE_SYSROOT}${includedir} \
+    -DCCCL_DIR=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/cmake/cccl \
 "
 
 # Disable unused Holoscan build steps and components.
@@ -89,6 +90,7 @@ DEPENDS += " \
     tensorrt-plugins \
     torchvision \
     ucx \
+    ucxx \
     v4l-utils \
     vulkan-headers \
     vulkan-loader \
@@ -111,6 +113,8 @@ DEPENDS += " \
     cpm-cmake \
     rapids-cmake \
     libeigen \
+    concurrentqueue \
+    matx \
 "
 
 RDEPENDS:${PN} = " \
