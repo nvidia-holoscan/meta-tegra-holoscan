@@ -36,7 +36,7 @@ S = "${WORKDIR}/git"
 
 inherit cuda
 
-DEPENDS += "coreutils-native"
+DEPENDS += "coreutils-native cccl-native"
 
 do_compile () {
     export CXX="${CXX_FOR_CUDA}"
