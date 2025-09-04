@@ -48,6 +48,7 @@ EXTRA_OECMAKE += " \
     -DUSE_CUSPARSELT=OFF \
     -DPROTOBUF_PROTOC_EXECUTABLE=${STAGING_BINDIR_NATIVE}/protoc \
     -DUSE_SYSTEM_PYBIND11=ON \
+    -DCUB_INCLUDE_DIR=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/include/ \
 "
 
 # Disable installing the fmt third-party library, which may cause conflicts
@@ -113,6 +114,7 @@ DEPENDS += " \
     cudnn \
     protobuf \
     protobuf-native \
+    cccl \
 "
 
 FILES:${PN} += " \
