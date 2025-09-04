@@ -20,31 +20,40 @@
 
 DESCRIPTION = "CUDA Core Compute Libraries"
 HOMEPAGE = "https://github.com/NVIDIA/cccl"
-LICENSE = "Apache-2.0 & BSD-3-Clause & MIT & Proprietary & BSL-1.0 & BSD-2-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d77238474f6020834e49307d63d16ec5"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-inherit cmake cuda
+SRC_URI = "https://github.com/NVIDIA/cccl/releases/download/v${PV}/cccl-v${PV}.tar.gz"
+SRC_URI[sha256sum] = "93a4d704fd5179293b392e57cdc98df16cffca613b33fbaded395eb3e35125e4"
+UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+(\.\d+)+)"
+UPSTREAM_CHECK_URI = "https://github.com/NVIDIA/cccl/releases/"
 
-SRC_URI = " \
-    git://github.com/NVIDIA/cccl.git;protocol=https;nobranch=1 \
-    file://0001-Updates-for-OE-cross-builds.patch \
-"
-# tag: v2.2.0
-SRCREV = "36f379f29660761fe033a1306ca9dab6a88cb65c"
-PV .= "+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+SRC_URI:append = " file://0001-Updates-for-OE-cross-builds.patch"
+
+inherit cuda
+
+S = "${WORKDIR}/cccl-v${PV}"
 B = "${S}"
 
-EXTRA_OECMAKE:append = " \
-    -DCCCL_ENABLE_TESTING=OFF \
-    -DCUB_SOURCE_DIR=${B}/cub \
-    -DCUB_ENABLE_TESTING=OFF \
-    -DCUB_ENABLE_EXAMPLES=OFF \
-    -DTHRUST_ENABLE_HEADER_TESTING=OFF \
-    -DTHRUST_ENABLE_TESTING=OFF \
-    -DTHRUST_ENABLE_EXAMPLES=OFF \
-    -DLIBCUDACXX_ENABLE_LIBCUDACXX_TESTS=OFF \
-"
+do_install() {
+    install -d ${D}${prefix}/local/cuda-${CUDA_VERSION}/
+    cp -rd --no-preserve=ownership ${B}/include ${D}${prefix}/local/cuda-${CUDA_VERSION}/
+    install -d ${D}${prefix}/local/cuda-${CUDA_VERSION}/lib
+    cp -rd --no-preserve=ownership ${B}/lib/cmake ${D}${prefix}/local/cuda-${CUDA_VERSION}/lib/
+}
 
-CUDA_NVCC_EXTRA_FLAGS:append = "-I${S}/cub -I${S}/libcudacxx -I${S}/thrust"
+FILES:${PN} += " \
+    ${prefix}/local/cuda-${CUDA_VERSION}/include \
+    ${prefix}/local/cuda-${CUDA_VERSION}/lib \
+"
+FILES:${PN}-dev = ""
+
+SYSROOT_DIRS:append = " ${prefix}/local/cuda-${CUDA_VERSION}"
+
+PROVIDES += "cuda-cccl"
+RPROVIDES:${PN} += "cuda-cccl"
+RCONFLICTS:${PN} = "cuda-cccl"
+RREPLACES:${PN} = "cuda-cccl"
+
+BBCLASSEXTEND = "native nativesdk"
