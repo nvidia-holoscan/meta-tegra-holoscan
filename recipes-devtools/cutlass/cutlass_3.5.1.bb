@@ -34,7 +34,7 @@ PV .= "+git${SRCPV}"
 S = "${WORKDIR}/git"
 B = "${S}"
 
-DEPENDS += "cuda-nvrtc cuda-cudart libcublas googletest"
+DEPENDS += "cuda-nvrtc cuda-cudart libcublas googletest cccl cccl-native"
 
 inherit cmake cuda
 
