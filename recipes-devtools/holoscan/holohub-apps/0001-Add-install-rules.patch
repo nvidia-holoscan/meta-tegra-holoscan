@@ -1,7 +1,7 @@
-From 70ec1032a587313149f3d56ec69769fa67c1a88e Mon Sep 17 00:00:00 2001
+From 40f7e5d7eeef83cf946fc3a9f8aa1429bc56a0e0 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 26 Jun 2025 18:46:56 +0100
-Subject: [PATCH 01/11] Add install rules
+Date: Wed, 3 Sep 2025 07:53:52 +0100
+Subject: [PATCH 01/10] Add install rules
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -36,10 +36,10 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  27 files changed, 183 insertions(+), 1 deletion(-)
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
-index dad4fd08..860f7263 100644
+index 2c4a9b4a..4a609c9e 100644
 --- a/applications/colonoscopy_segmentation/CMakeLists.txt
 +++ b/applications/colonoscopy_segmentation/CMakeLists.txt
-@@ -32,6 +32,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
+@@ -34,6 +34,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
      )
  endif()
  
@@ -53,7 +53,7 @@ index dad4fd08..860f7263 100644
 +
  # Add testing
  if(BUILD_TESTING)
-   # To get the environment path
+ 
 diff --git a/applications/endoscopy_out_of_body_detection/cpp/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/cpp/CMakeLists.txt
 index 40abe32c..ac94d004 100644
 --- a/applications/endoscopy_out_of_body_detection/cpp/CMakeLists.txt
@@ -75,10 +75,10 @@ index 40abe32c..ac94d004 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 8e0a688c..5006dfff 100644
+index 442217f4..270b6c33 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-@@ -54,6 +54,15 @@ add_custom_target(endoscopy_tool_tracking_deps
+@@ -56,6 +56,15 @@ add_custom_target(endoscopy_tool_tracking_deps
  )
  add_dependencies(endoscopy_tool_tracking endoscopy_tool_tracking_deps)
  
@@ -95,12 +95,12 @@ index 8e0a688c..5006dfff 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/endoscopy_tool_tracking/python/CMakeLists.txt b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-index 3188eba6..79686dbb 100644
+index 23d863d5..7a8c3e88 100644
 --- a/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-@@ -30,6 +30,14 @@ add_custom_target(python_endoscopy_tool_tracking_yaml
+@@ -31,6 +31,14 @@ add_custom_target(python_endoscopy_tool_tracking_deps
  
- add_dependencies(python_endoscopy_tool_tracking python_endoscopy_tool_tracking_yaml)
+ add_dependencies(python_endoscopy_tool_tracking python_endoscopy_tool_tracking_deps)
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
@@ -326,10 +326,10 @@ index 8af6d5ec..acab477c 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 45c43c6d..a392485b 100644
+index 09a4dcf6..f7689cfe 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -77,6 +77,15 @@ add_custom_target(object_detection_torch_yaml
+@@ -119,6 +119,15 @@ add_custom_target(object_detection_torch_yaml
  )
  add_dependencies(object_detection_torch object_detection_torch_yaml)
  
@@ -442,10 +442,10 @@ index 68ded45c..fc3fa6b4 100644
 +
 +install(TARGETS gxf_emergent_source_lib gxf_emergent_source)
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index e5c285ba..ea0d2a44 100644
+index 4388d3dc..6bdb1baf 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
-@@ -61,6 +61,8 @@ target_link_libraries(aja_source
+@@ -63,6 +63,8 @@ target_link_libraries(aja_source
          GXF::multimedia
  )
  

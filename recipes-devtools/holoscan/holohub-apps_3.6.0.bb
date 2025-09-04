@@ -24,22 +24,20 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "eeccf9fd7f984681393ed5074496a9806f75c0b9"
-PV = "3.4.0+git${SRCPV}"
+SRCREV = "b67ae6d1a749a24db5b4cdf72f51fcc9860ce688"
 
 SRC_URI += " \
     file://desktop-icons \
     file://0001-Add-install-rules.patch \
     file://0002-Fix-ajantv2-dependencies.patch \
     file://0003-Remove-relative-gxf_extension-paths.patch \
-    file://0004-Build-python-libs-with-install-RPATH.patch \
+    file://0004-Build-python-libs-with-install-RPATH-and-add-find.patch \
     file://0005-Enable-Emergent-apps.patch \
     file://0006-Fix-default-data-paths-in-python-apps.patch \
     file://0007-Fix-volume_renderer-application.patch \
     file://0008-Skip-model-download-for-object_detection_torch.patch \
     file://0009-Remove-native-CUDA_ARCHITECTURE.patch \
-    file://0010-Revert-to-pybind-2.11.1.patch \
-    file://0011-Fix-dependency-with-Eigen3-Eigen.patch \
+    file://0010-Updates-for-OE-cross-builds.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -54,14 +52,14 @@ EXTRA_OECMAKE:append = " \
     -DCMAKE_INSTALL_PREFIX=${HOLOHUB_INSTALL_PATH} \
     -Dholoscan_DIR=${RECIPE_SYSROOT}/opt/nvidia/holoscan/lib/cmake/holoscan \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
-    -DAPP_colonoscopy_segmentation=1 \
-    -DAPP_endoscopy_out_of_body_detection=1 \
-    -DAPP_endoscopy_tool_tracking=1 \
-    -DAPP_multiai_endoscopy=1 \
-    -DAPP_multiai_ultrasound=1 \
-    -DAPP_object_detection_torch=1 \
-    -DAPP_ultrasound_segmentation=1 \
-    -DAPP_volume_rendering=1 \
+    -DAPP_colonoscopy_segmentation=ON \
+    -DAPP_endoscopy_out_of_body_detection=ON \
+    -DAPP_endoscopy_tool_tracking=ON \
+    -DAPP_multiai_endoscopy=ON \
+    -DAPP_multiai_ultrasound=ON \
+    -DAPP_ultrasound_segmentation=ON \
+    -DAPP_volume_rendering=ON \
+    -DSLANG_RUNTIME_TARGETS=${HOST_ARCH} \
 "
 
 # Enable the Emergent apps if Emergent Camera support is enabled.
@@ -125,12 +123,17 @@ DEPENDS += " \
     cuda-nvrtc-native \
     nlohmann-json \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
+    python3-pybind11 \
     libeigen \
+    ucxx \
+    cccl-native \
 "
 
 RDEPENDS:${PN} += " \
     ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
     python3-packaging \
+    pytorch \
+    torchvision \
 "
 
 FILES:${PN}-staticdev += " \

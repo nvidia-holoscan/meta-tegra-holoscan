@@ -1,7 +1,7 @@
-From b3ee500d222ccee7c52c5e82578f5116d0a4dbf0 Mon Sep 17 00:00:00 2001
+From 209027ae2d81688891778e9ceb58c4439cec974e Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 26 Jun 2025 18:57:54 +0100
-Subject: [PATCH 06/11] Fix default data paths in python apps
+Date: Wed, 3 Sep 2025 08:06:36 +0100
+Subject: [PATCH 06/10] Fix default data paths in python apps
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -13,10 +13,10 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-index 9b4cf38d..cd7a8c88 100644
+index 851f2f4a..8a624da0 100644
 --- a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 +++ b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-@@ -96,7 +96,7 @@ class ColonoscopyApp(Application):
+@@ -94,7 +94,7 @@ class ColonoscopyApp(Application):
          self.source = source
  
          if data == "none":
@@ -26,12 +26,12 @@ index 9b4cf38d..cd7a8c88 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index a8741966..d99e2efc 100644
+index ad7dd369..47bad3f5 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-@@ -89,7 +89,7 @@ class EndoscopyApp(Application):
+@@ -93,7 +93,7 @@ class EndoscopyApp(Application):
          self.source = source
- 
+         self.postprocessor = postprocessor
          if data == "none":
 -            data = os.environ.get("HOLOHUB_DATA_PATH", "../data")
 +            data = os.environ.get("HOLOHUB_DATA_PATH", "data/endoscopy")

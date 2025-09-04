@@ -1,7 +1,7 @@
-From abd5c964ca6932e0a3467ed86ebc7dd1962dee97 Mon Sep 17 00:00:00 2001
+From 292752c15e99b43d2d50832a852e9c78ca2f8e9f Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 26 Jun 2025 18:48:38 +0100
-Subject: [PATCH 02/11] Fix ajantv2 dependencies
+Date: Wed, 3 Sep 2025 07:54:23 +0100
+Subject: [PATCH 02/10] Fix ajantv2 dependencies
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -31,7 +31,7 @@ index ffaa4f5a..ca6fe315 100644
  if(HOLOHUB_DOWNLOAD_DATASETS)
    include(holoscan_download_data)
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 5006dfff..1f941eb4 100644
+index 270b6c33..4bd7f91e 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
@@ -96,12 +96,12 @@ index 01e67ea3..2166fef0 100644
      main.cpp
  )
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index a392485b..24529297 100644
+index f7689cfe..b951e1a8 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -19,6 +19,8 @@ project(object_detection_torch CXX)
- find_package(holoscan 0.6 REQUIRED CONFIG
-              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+@@ -53,6 +53,8 @@ if(holoscan_VERSION GREATER 3.5)
+   add_library(torchvision::torchvision ALIAS torchvision)
+ endif()
  
 +find_package(ajantv2 17.0 REQUIRED CONFIG)
 +
@@ -122,7 +122,7 @@ index 83d41ca4..ee28a979 100644
      main.cpp
  )
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index ea0d2a44..c649af5a 100644
+index 6bdb1baf..b17b3c40 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -18,28 +18,7 @@ project(aja_source)

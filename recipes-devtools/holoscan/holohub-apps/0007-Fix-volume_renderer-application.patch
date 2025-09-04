@@ -1,14 +1,14 @@
-From 4b1c981c87995352098579c90e3a6332a19d5dc0 Mon Sep 17 00:00:00 2001
+From 900da7bb94bc4d8ac762c1fd95413e5b4e5ba028 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 26 Jun 2025 18:58:21 +0100
-Subject: [PATCH 07/11]  Fix volume_renderer application
+Date: Wed, 3 Sep 2025 08:09:47 +0100
+Subject: [PATCH 07/10] Fix volume_renderer application
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
  .../volume_rendering/cpp/CMakeLists.txt       |  2 +
- operators/volume_renderer/CMakeLists.txt      | 60 +------------------
- 2 files changed, 5 insertions(+), 57 deletions(-)
+ operators/volume_renderer/CMakeLists.txt      | 58 +------------------
+ 2 files changed, 5 insertions(+), 55 deletions(-)
 
 diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
 index 9858353e..76301978 100644
@@ -24,10 +24,10 @@ index 9858353e..76301978 100644
    json_loader.cpp
    volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index deec02eb..05fcce4b 100644
+index 650c2e64..05fcce4b 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
-@@ -18,63 +18,9 @@ project(volume_renderer)
+@@ -18,61 +18,9 @@ project(volume_renderer)
  find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
@@ -54,14 +54,12 @@ index deec02eb..05fcce4b 100644
 -  set(CMAKE_POLICY_DEFAULT_CMP0146 OLD)
 -endif()
 -
--set(_clara_viz_version "v0.4.1")
+-set(_clara_viz_version "v0.4.2")
 -include(FetchContent)
 -FetchContent_Declare(
 -    ClaraViz
 -    URL https://github.com/NVIDIA/clara-viz/archive/refs/tags/${_clara_viz_version}.tar.gz
--    URL_MD5 cbb39f33316c6365f623bf6920126b5c
--    # apply a patch to fix building with gcc 13
--    PATCH_COMMAND patch -p1 -N < "${CMAKE_CURRENT_SOURCE_DIR}/clara_viz_gcc_13_fix.patch" || true
+-    URL_MD5 79cff506c896eb9d1a0d5b742782e06b
 -    )
 -
 -# enable CMP0077 to allow overwriting option() statements in FetchContent sub-projects
