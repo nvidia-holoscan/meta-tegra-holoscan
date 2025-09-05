@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -19,6 +19,8 @@
 # DEALINGS IN THE SOFTWARE.
 
 require cuda-sbsa.inc
+
+DEPENDS:remove = "cuda-cccl"
 
 MAINSUM:dgpu:aarch64 = "42e7180c2dd38b7c49683c7f063bc0450edb7642a4ec431a4195447c7e28df03"
 MAINSUM:dgpu:x86-64 = "40d5a33c4b2317664accde543c300aa19c7aeb6a053d6505515f8706526625e5"
