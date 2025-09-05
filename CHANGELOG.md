@@ -1,3 +1,23 @@
+## [3.6.0] - 2025-09-05
+### Changed
+- Updated Holoscan SDK and Holohub apps to 3.6.0.
+- Updated GXF to 5.1.0-20250820-2ac8c610f.
+- Updated CCCL to 2.8.5.
+- Updated claraviz to 0.4.2.
+- Updated CPM cmake to 0.40.0.
+- Updated RAPIDS cmake to 24.12.00.
+- Update magic-enum to 0.9.7.
+- Added MatX 0.9.2 recipe to satisfy dependency with Holoscan SDK.
+- Added concurrentqueue 1.0.4 recipe to satisfy dependency with Holoscan SDK.
+- Added UCXX 0.44.0 recipe to satisfy dependency with Holoscan SDK. 
+
+### Fixed
+- Fixed CCCL preferred provider.
+- Fixed dependency loops when CCCL is the preferred provider.
+- Refresh patch for ONNX Runtime. 
+- Dropped CUDA CCCL dependency for CuPY. 
+
+
 ## [3.4.0] - 2025-06-30
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.4.0.
@@ -451,6 +471,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.4.0...v3.6.0
 [3.4.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.1.0...v3.2.0
