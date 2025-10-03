@@ -1,6 +1,6 @@
-From 4edf2dabf946263e52c30523f2371da29bcb5f14 Mon Sep 17 00:00:00 2001
+From 4adcb72a24cf25391ccb4042465803bce154a399 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Wed, 3 Sep 2025 08:10:48 +0100
+Date: Thu, 2 Oct 2025 17:33:59 +0100
 Subject: [PATCH 09/10] Remove native CUDA_ARCHITECTURE
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -10,7 +10,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  1 file changed, 2 deletions(-)
 
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index a288d518..4ecda911 100644
+index a288d51..4ecda91 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt
 +++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
 @@ -30,8 +30,6 @@ set_target_properties(tool_tracking_postprocessor

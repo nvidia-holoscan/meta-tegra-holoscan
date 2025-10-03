@@ -1,6 +1,6 @@
-From 0d1d64e343b0d8a0d8c91604f5b2a007b8323489 Mon Sep 17 00:00:00 2001
+From c4ffce28c9bea36dfe34d9e4aa7455574f0f2cb7 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Wed, 3 Sep 2025 08:06:00 +0100
+Date: Thu, 2 Oct 2025 17:31:59 +0100
 Subject: [PATCH 05/10] Enable Emergent apps
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -12,7 +12,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c9c447d8..aedf656c 100644
+index c9c447d..aedf656 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -47,6 +47,7 @@ include(CTest)
@@ -24,10 +24,10 @@ index c9c447d8..aedf656c 100644
  # Enable flow benchmarking
  option(FLOW_BENCHMARKING "Enable Flow Benchmarking" OFF)
 diff --git a/applications/CMakeLists.txt b/applications/CMakeLists.txt
-index 70962ad7..45586602 100644
+index 2d0469b..ea327d7 100644
 --- a/applications/CMakeLists.txt
 +++ b/applications/CMakeLists.txt
-@@ -59,8 +59,10 @@ add_subdirectory(h264)
+@@ -60,8 +60,10 @@ add_subdirectory(h264)
  
  add_holohub_application(isaac_sim_holoscan_bridge)
  
@@ -39,7 +39,7 @@ index 70962ad7..45586602 100644
  add_subdirectory(holoscan_ros2)
  
 diff --git a/gxf_extensions/emergent_source/CMakeLists.txt b/gxf_extensions/emergent_source/CMakeLists.txt
-index fc3fa6b4..11f8103e 100644
+index fc3fa6b..11f8103 100644
 --- a/gxf_extensions/emergent_source/CMakeLists.txt
 +++ b/gxf_extensions/emergent_source/CMakeLists.txt
 @@ -17,6 +17,10 @@ project(gxf_emergent_source)

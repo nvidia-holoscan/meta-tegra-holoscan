@@ -1,6 +1,6 @@
-From 900da7bb94bc4d8ac762c1fd95413e5b4e5ba028 Mon Sep 17 00:00:00 2001
+From f207549973ae8d22b18857ecb2d4850d658b31de Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Wed, 3 Sep 2025 08:09:47 +0100
+Date: Thu, 2 Oct 2025 17:32:58 +0100
 Subject: [PATCH 07/10] Fix volume_renderer application
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -11,7 +11,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  2 files changed, 5 insertions(+), 55 deletions(-)
 
 diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
-index 9858353e..76301978 100644
+index 9858353..7630197 100644
 --- a/applications/volume_rendering/cpp/CMakeLists.txt
 +++ b/applications/volume_rendering/cpp/CMakeLists.txt
 @@ -18,6 +18,8 @@ project(volume_rendering)
@@ -24,7 +24,7 @@ index 9858353e..76301978 100644
    json_loader.cpp
    volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index 650c2e64..05fcce4b 100644
+index 650c2e6..05fcce4 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -18,61 +18,9 @@ project(volume_renderer)
