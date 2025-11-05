@@ -1,6 +1,6 @@
-From b2a444cc345fce65640794cf193b69f6386c2bce Mon Sep 17 00:00:00 2001
+From 7c4b73041ee52d75680d2fd1de891ef20bfb95a4 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 2 Oct 2025 17:30:53 +0100
+Date: Tue, 11 Nov 2025 10:52:18 +0000
 Subject: [PATCH 03/10] Remove relative gxf_extension paths
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -14,7 +14,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  5 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 56f38e4..8bd5530 100644
+index 56f38e4b..8bd5530e 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 @@ -29,11 +29,11 @@ resources:
@@ -33,7 +33,7 @@ index 56f38e4..8bd5530 100644
  source: "replayer"    # "replayer" or "aja" or "deltacast" or "yuan"
  postprocessor: "tool_tracking_postprocessor" # "slang_shader" or "tool_tracking_postprocessor"
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index b8fbd96..cec09f0 100644
+index b8fbd969..cec09f01 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 @@ -29,9 +29,9 @@ resources:
@@ -50,7 +50,7 @@ index b8fbd96..cec09f0 100644
  visualizer: "holoviz" # "holoviz" or "vtk"
  
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
-index b6bcae5..6b72dbe 100644
+index b6bcae5a..6b72dbe4 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 @@ -19,7 +19,7 @@ extensions:
@@ -63,7 +63,7 @@ index b6bcae5..6b72dbe 100644
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index 735f227..bb7f283 100644
+index 735f227e..bb7f2834 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -76,7 +76,7 @@ index 735f227..bb7f283 100644
  emergent:
    width: 4200
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
-index 735f227..bb7f283 100644
+index 735f227e..bb7f2834 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@

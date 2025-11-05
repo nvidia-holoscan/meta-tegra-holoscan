@@ -1,6 +1,6 @@
-From 92d4158aa4ce1f20c50cddadfc504a103aaba4fa Mon Sep 17 00:00:00 2001
+From 4903d9baad21755ae561e607ea54a522d243f4eb Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 2 Oct 2025 17:32:34 +0100
+Date: Tue, 11 Nov 2025 10:54:42 +0000
 Subject: [PATCH 06/10] Fix default data paths in python apps
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -13,7 +13,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
-index 8441def..85362c0 100644
+index 8441def7..85362c0f 100644
 --- a/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 +++ b/applications/colonoscopy_segmentation/colonoscopy_segmentation.py
 @@ -94,7 +94,7 @@ class ColonoscopyApp(Application):
@@ -26,7 +26,7 @@ index 8441def..85362c0 100644
          self.sample_data_path = data
  
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
-index 112b587..e9074e9 100644
+index 112b5873..e9074e9b 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 @@ -93,7 +93,7 @@ class EndoscopyApp(Application):
@@ -39,7 +39,7 @@ index 112b587..e9074e9 100644
          self.sample_data_path = data
  
 diff --git a/applications/multiai_ultrasound/python/multiai_ultrasound.py b/applications/multiai_ultrasound/python/multiai_ultrasound.py
-index 4e59c4c..a7af369 100644
+index f5cbe16c..c122e843 100644
 --- a/applications/multiai_ultrasound/python/multiai_ultrasound.py
 +++ b/applications/multiai_ultrasound/python/multiai_ultrasound.py
 @@ -37,7 +37,7 @@ class MultiAIICardio(Application):
@@ -52,7 +52,7 @@ index 4e59c4c..a7af369 100644
          # set name
          self.name = "Ultrasound App"
 diff --git a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
-index 4a7c964..c787e40 100644
+index 4a7c9641..c787e409 100644
 --- a/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
 +++ b/applications/ultrasound_segmentation/python/ultrasound_segmentation.py
 @@ -48,7 +48,7 @@ class UltrasoundApp(Application):

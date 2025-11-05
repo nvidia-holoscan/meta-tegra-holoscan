@@ -1,6 +1,6 @@
-From 7e915188e6e4800d8585214a983ae1cf3bc811ce Mon Sep 17 00:00:00 2001
+From cf569d688e227b745cd074347ff8f7989a9bd7bc Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 2 Oct 2025 17:31:22 +0100
+Date: Tue, 11 Nov 2025 10:52:47 +0000
 Subject: [PATCH 04/10] Build python libs with install RPATH and add find
  pybind11 package
 
@@ -12,7 +12,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  1 file changed, 3 insertions(+), 12 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index 27a94a6..785df33 100644
+index 27a94a65..785df33f 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -16,15 +16,7 @@
