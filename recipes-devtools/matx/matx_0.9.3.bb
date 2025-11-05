@@ -29,7 +29,7 @@ SRC_URI = " \
     git://github.com/NVIDIA/MatX.git;protocol=https;nobranch=1 \
     file://0001-Updates-for-OE-cross-builds.patch \
 "
-SRCREV = "fa9e8728bf61c12ca140df93a87322c48886d1aa"
+SRCREV = "86d0b82d35180480fe8d69729279835ce9b033ff"
 
 S = "${WORKDIR}/git"
 
