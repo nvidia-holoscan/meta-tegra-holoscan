@@ -1,4 +1,4 @@
-# Copyright (c) 2022, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2025, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -18,7 +18,7 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
@@ -34,27 +34,37 @@ RUN apt-get update -y \
     diffstat \
     unzip \
     texinfo \
-    gcc-multilib \
+    gcc \
     build-essential \
     chrpath \
     socat \
     cpio \
-    python \
     python3 \
     python3-pip \
+    python3-pexpect \
     python3-yaml \
-    python-pexpect \
+    python3-git \
+    python3-jinja2 \
+    python3-subunit \
     xz-utils \
     debianutils \
     iputils-ping \
+    libegl1-mesa \
+    libsdl1.2-dev \
+    mesa-common-dev \
     ca-certificates \
     locales \
     file \
     zstd \
     liblz4-tool \
+    libssl-dev \
+    libssl3 \
+    openssl \
+    autoconf \
+    xmlto \
  && rm -rf /var/lib/apt/lists/* \
  && rm -rf /var/cache/apt/archives/partial/* \
- && pip install typing-extensions
+ && pip3 install typing-extensions>=4.1.0
 
 RUN locale-gen en_US.UTF-8
 
