@@ -29,16 +29,22 @@ SRC_URI = " \
     git://github.com/rapidsai/rmm.git;protocol=https;nobranch=1 \
     file://0001-Updates-for-OE-cross-builds.patch \
 "
-# tag: v24.04.00
-SRCREV = "8f19c9c3aacf6e612a0cd61f4cf882903bf045aa"
+# tag: v25.10.00
+SRCREV = "7aaad1dee0690a48db8c92210593f6c70f6f7648"
 
 S = "${WORKDIR}/git"
 
-DEPENDS += "fmt spdlog cccl cpm-cmake rapids-cmake"
+DEPENDS += "cuda-cccl nvtx cpm-cmake rapids-cmake rapids-logger"
+
+OECMAKE_SOURCEPATH = "${S}/cpp"
 
 EXTRA_OECMAKE:append = " \
     -DCCCL_DIR=${RECIPE_SYSROOT}/usr/local/cuda-${CUDA_VERSION}/lib/cmake/cccl \
     -DCPM_SOURCE_CACHE=${RECIPE_SYSROOT}${datadir} \
     -DRAPIDS_CMAKE_DIR=${RECIPE_SYSROOT}/opt/nvidia/rapids-cmake \
+    -DRMM_NVTX=ON \
     -DBUILD_TESTS=OFF \
 "
+
+SOLIBS = "*.so*"
+FILES_SOLIBSDEV = ""
