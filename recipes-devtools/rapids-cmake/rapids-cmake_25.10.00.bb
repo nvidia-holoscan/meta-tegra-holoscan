@@ -23,9 +23,12 @@ HOMEPAGE = "https://github.com/rapidsai/rapids-cmake"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3ced5b165b4647193d419f133b7461c2"
 
-SRC_URI = "git://github.com/rapidsai/rapids-cmake.git;protocol=https;nobranch=1"
-# tag: v24.12.00
-SRCREV = "4cb2123dc08ef5d47ecdc9cc51c96bea7b5bb79c"
+SRC_URI = " \
+    git://github.com/rapidsai/rapids-cmake.git;protocol=https;nobranch=1 \
+    file://0001-Update-cmake-required-version.patch \
+"
+# tag: v25.10.00
+SRCREV = "b435ca821fbc08162937071a4b5ac41d4cdb5af3"
 
 S = "${WORKDIR}/git"
 
