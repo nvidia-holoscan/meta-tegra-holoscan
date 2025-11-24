@@ -1,6 +1,6 @@
-From b2cf38be7e815005d07e4fdc2e55ba3c1f0337ca Mon Sep 17 00:00:00 2001
+From 59988f670b00ecab9d5a1c563ce92e2b87f9c9de Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 4 Sep 2025 14:22:06 +0100
+Date: Sun, 23 Nov 2025 18:55:43 +0000
 Subject: [PATCH] Use external library dependencies
 
 This changes the dependencies on the following libraries so
@@ -18,19 +18,25 @@ fetched, built, and installed by CMake:
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- cmake/CMakeLists.txt                            |  1 -
- cmake/external/cutlass.cmake                    |  1 +
- cmake/external/onnxruntime_external_deps.cmake  | 17 +++++------------
- .../cuda/bert/embed_layer_norm_impl.cu          |  4 ++--
- .../contrib_ops/cuda/moe/ft_moe/moe_kernel.cu   |  2 +-
- onnxruntime/core/flatbuffers/schema/ort.fbs.h   |  7 -------
- .../schema/ort_training_checkpoint.fbs.h        |  7 -------
- .../transpose_optimization/optimizer_api.h      |  1 +
- .../DirectMLHelpers/DmlGraphDesc_generated.h    |  7 -------
- .../OperatorFieldTypes_generated.h              |  7 -------
- .../lora/adapter_format/adapter_schema.fbs.h    |  7 -------
- .../flatbuffers/flatbuffers_utils_test.fbs.h    |  7 -------
- 12 files changed, 10 insertions(+), 58 deletions(-)
+ cmake/CMakeLists.txt                          |  1 -
+ cmake/external/cutlass.cmake                  |  1 +
+ .../external/onnxruntime_external_deps.cmake  | 17 ++++---------
+ .../cuda/bert/attention_softmax.cu            | 24 +++++++++----------
+ .../contrib_ops/cuda/bert/bert_padding.cu     |  2 +-
+ .../cuda/bert/embed_layer_norm_impl.cu        |  4 ++--
+ .../cuda/bert/longformer_attention_impl.cu    |  8 +++----
+ .../cuda/bert/longformer_attention_softmax.cu |  4 ++--
+ .../contrib_ops/cuda/moe/ft_moe/moe_kernel.cu |  6 ++---
+ .../qordered_ops/qordered_attention_impl.cu   |  4 ++--
+ .../cuda/transformers/generation_cuda_impl.cu | 12 +++++-----
+ onnxruntime/core/flatbuffers/schema/ort.fbs.h |  7 ------
+ .../schema/ort_training_checkpoint.fbs.h      |  7 ------
+ .../transpose_optimization/optimizer_api.h    |  1 +
+ .../DirectMLHelpers/DmlGraphDesc_generated.h  |  7 ------
+ .../OperatorFieldTypes_generated.h            |  7 ------
+ .../lora/adapter_format/adapter_schema.fbs.h  |  7 ------
+ .../flatbuffers/flatbuffers_utils_test.fbs.h  |  7 ------
+ 18 files changed, 39 insertions(+), 87 deletions(-)
 
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
 index 2714e6f59d..203318888d 100644
@@ -119,6 +125,131 @@ index ebf20ab21b..541fddbd0c 100644
  if (onnxruntime_RUN_ONNX_TESTS)
    add_definitions(-DORT_RUN_EXTERNAL_ONNX_TESTS)
  endif()
+diff --git a/onnxruntime/contrib_ops/cuda/bert/attention_softmax.cu b/onnxruntime/contrib_ops/cuda/bert/attention_softmax.cu
+index 52f94247a8..0930cfcc5b 100644
+--- a/onnxruntime/contrib_ops/cuda/bert/attention_softmax.cu
++++ b/onnxruntime/contrib_ops/cuda/bert/attention_softmax.cu
+@@ -94,7 +94,7 @@ __device__ inline void Softmax(const int total_sequence_length,
+       }
+     }
+   }
+-  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, cub::Max());
++  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, ::cuda::maximum());
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -113,7 +113,7 @@ __device__ inline void Softmax(const int total_sequence_length,
+     }
+   }
+ 
+-  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_sum, cub::Sum());
++  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_sum, ::cuda::std::plus());
+   if (threadIdx.x == 0) {
+     sum_reverse_block = 1.f / sum;
+   }
+@@ -170,7 +170,7 @@ __device__ inline void SoftmaxSmall(const int total_sequence_length,
+   // Infinity divided by Infinity is a NAN. Thus, softmax gets a NAN if one or more item are large enough.
+   // a math transform as below is leveraged to get a stable softmax:
+   // e^xi/(e^x1 + ...e^xn) = e^(xi - max) / (e^(x1 - max) + ... + e^(xn - max))
+-  const auto max = BlockReduce(tmp_storage).Reduce(input_data, cub::Max(), end);
++  const auto max = BlockReduce(tmp_storage).Reduce(input_data, ::cuda::maximum(), end);
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -183,7 +183,7 @@ __device__ inline void SoftmaxSmall(const int total_sequence_length,
+     thread_data_exp = expf(input_data - max_block);
+   }
+ 
+-  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, cub::Sum(), end);
++  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, ::cuda::std::plus(), end);
+ 
+   // Store value of 1.0/sum.
+   if (threadIdx.x == 0) {
+@@ -239,7 +239,7 @@ __global__ void SoftmaxLargeKernel(const int total_sequence_length,
+     cached_data[i] = input_data;
+     thread_data_max = max(thread_data_max, input_data);
+   }
+-  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, cub::Max(), end);
++  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, ::cuda::maximum(), end);
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -253,7 +253,7 @@ __global__ void SoftmaxLargeKernel(const int total_sequence_length,
+     cached_data[i] = is_valid ? expf(cached_data[i] - max_block) : 0.0f;
+     thread_data_exp += cached_data[i];
+   }
+-  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, cub::Sum(), end);
++  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, ::cuda::std::plus(), end);
+ 
+   // Store value of 1.0/sum.
+   if (threadIdx.x == 0) {
+@@ -342,7 +342,7 @@ __global__ void SoftmaxWithRawMaskLargeKernel(const int total_sequence_length,
+     return;
+   }
+ 
+-  const float max = BlockReduce(tmp_storage).Reduce(max_thread_data, cub::Max(), total_sequence_length);
++  const float max = BlockReduce(tmp_storage).Reduce(max_thread_data, ::cuda::maximum(), total_sequence_length);
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -356,7 +356,7 @@ __global__ void SoftmaxWithRawMaskLargeKernel(const int total_sequence_length,
+     cached_data[i] = ev;
+     sum_thread_data_exp += ev;
+   }
+-  const auto sum = BlockReduce(tmp_storage).Reduce(sum_thread_data_exp, cub::Sum(), TPB);
++  const auto sum = BlockReduce(tmp_storage).Reduce(sum_thread_data_exp, ::cuda::std::plus(), TPB);
+ 
+   // Store value of 1.0/sum
+   if (threadIdx.x == 0) {
+@@ -440,7 +440,7 @@ __device__ inline void SoftmaxWithRawMaskSmall(const int total_sequence_length,
+     return;
+   }
+ 
+-  const float max = BlockReduce(tmp_storage).Reduce(thread_data, cub::Max(), total_sequence_length);
++  const float max = BlockReduce(tmp_storage).Reduce(thread_data, ::cuda::maximum(), total_sequence_length);
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -449,7 +449,7 @@ __device__ inline void SoftmaxWithRawMaskSmall(const int total_sequence_length,
+   __syncthreads();
+ 
+   float thread_data_exp = threadIdx.x < total_sequence_length ? expf(thread_data - max_block) : 0.0f;
+-  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, cub::Sum(), total_sequence_length);
++  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, ::cuda::std::plus(), total_sequence_length);
+ 
+   // Store value of 1.0/sum
+   if (threadIdx.x == 0) {
+@@ -595,7 +595,7 @@ __device__ inline void SoftmaxSmallPacked(const int total_sequence_length,
+   float input_data = HAS_BIAS ? float(input[index]) + float(attn_bias[bias_offset + threadIdx.x]) : float(input[index]);
+ 
+   float thread_data_max = is_valid ? input_data : float(-CUDART_INF_F);
+-  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, cub::Max(), end);
++  const auto max = BlockReduce(tmp_storage).Reduce(thread_data_max, ::cuda::maximum(), end);
+ 
+   // Store max value
+   if (threadIdx.x == 0) {
+@@ -608,7 +608,7 @@ __device__ inline void SoftmaxSmallPacked(const int total_sequence_length,
+     thread_data_exp = expf(input_data - max_block);
+   }
+ 
+-  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, cub::Sum(), end);
++  const auto sum = BlockReduce(tmp_storage).Reduce(thread_data_exp, ::cuda::std::plus(), end);
+ 
+   // Store value of 1.0/sum.
+   if (threadIdx.x == 0) {
+diff --git a/onnxruntime/contrib_ops/cuda/bert/bert_padding.cu b/onnxruntime/contrib_ops/cuda/bert/bert_padding.cu
+index 32ed961a68..778cc4bc0e 100644
+--- a/onnxruntime/contrib_ops/cuda/bert/bert_padding.cu
++++ b/onnxruntime/contrib_ops/cuda/bert/bert_padding.cu
+@@ -383,7 +383,7 @@ __global__ void __launch_bounds__(kMAX_THREADS_PER_BLOCK)
+     }
+   }
+ 
+-  int last_leading_position = BlockReduce(temp_storage).Reduce(biggest_position, cub::Max(), blockDim.x);
++  int last_leading_position = BlockReduce(temp_storage).Reduce(biggest_position, ::cuda::maximum(), blockDim.x);
+ 
+   if (threadIdx.x == 0) {
+     int batch_offset = batch_id * sequence_length;
 diff --git a/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu b/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu
 index 8a17e945df..0b49124e05 100644
 --- a/onnxruntime/contrib_ops/cuda/bert/embed_layer_norm_impl.cu
@@ -141,8 +272,70 @@ index 8a17e945df..0b49124e05 100644
    int thread_data(sequence_length);
  
    for (int i = threadIdx.x; i < sequence_length; i += TPB) {
+diff --git a/onnxruntime/contrib_ops/cuda/bert/longformer_attention_impl.cu b/onnxruntime/contrib_ops/cuda/bert/longformer_attention_impl.cu
+index a8f94304f8..03547cebe4 100644
+--- a/onnxruntime/contrib_ops/cuda/bert/longformer_attention_impl.cu
++++ b/onnxruntime/contrib_ops/cuda/bert/longformer_attention_impl.cu
+@@ -272,7 +272,7 @@ __launch_bounds__(blockSize)
+       }
+     }
+ 
+-    float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, cub::Max());
++    float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, ::cuda::maximum());
+     if (tid == 0) {
+       max_shared = max_block;
+     }
+@@ -292,7 +292,7 @@ __launch_bounds__(blockSize)
+       }
+     }
+ 
+-    float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, cub::Sum());
++    float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, ::cuda::std::plus());
+     if (tid == 0) {
+       sum_shared = sum_block;
+     }
+@@ -334,7 +334,7 @@ __launch_bounds__(blockSize)
+         max_input = x;
+     }
+ 
+-    float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, cub::Max());
++    float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, ::cuda::maximum());
+     if (tid == 0) {
+       max_shared = max_block;
+     }
+@@ -346,7 +346,7 @@ __launch_bounds__(blockSize)
+       sum_input += x;
+     }
+ 
+-    float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, cub::Sum());
++    float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, ::cuda::std::plus());
+     if (tid == 0) {
+       sum_shared = sum_block;
+     }
+diff --git a/onnxruntime/contrib_ops/cuda/bert/longformer_attention_softmax.cu b/onnxruntime/contrib_ops/cuda/bert/longformer_attention_softmax.cu
+index 9f92faac25..74b6b96f46 100644
+--- a/onnxruntime/contrib_ops/cuda/bert/longformer_attention_softmax.cu
++++ b/onnxruntime/contrib_ops/cuda/bert/longformer_attention_softmax.cu
+@@ -111,7 +111,7 @@ __launch_bounds__(blockSize)
+     }
+   }
+ 
+-  float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, cub::Max());
++  float max_block = BlockReduce(block_reduce_temp).Reduce(max_input, ::cuda::maximum());
+   if (tid == 0) {
+     max_shared = max_block;
+   }
+@@ -136,7 +136,7 @@ __launch_bounds__(blockSize)
+     }
+   }
+ 
+-  float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, cub::Sum());
++  float sum_block = BlockReduce(block_reduce_temp).Reduce(sum_input, ::cuda::std::plus());
+   if (tid == 0) {
+     sum_shared = sum_block;
+   }
 diff --git a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
-index a6ea9f4b61..a71d52323d 100644
+index a6ea9f4b61..191146a15b 100644
 --- a/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
 +++ b/onnxruntime/contrib_ops/cuda/moe/ft_moe/moe_kernel.cu
 @@ -65,7 +65,7 @@ __launch_bounds__(TPB) __global__
@@ -154,6 +347,98 @@ index a6ea9f4b61..a71d52323d 100644
      float threadData(-FLT_MAX);
  
      // Don't touch finished rows.
+@@ -78,7 +78,7 @@ __launch_bounds__(TPB) __global__
+         threadData = max(static_cast<float>(input[idx]), threadData);
+     }
+ 
+-    const float maxElem = BlockReduce(tmpStorage).Reduce(threadData, cub::Max());
++    const float maxElem = BlockReduce(tmpStorage).Reduce(threadData, ::cuda::maximum());
+     if (threadIdx.x == 0) {
+         float_max = maxElem;
+     }
+@@ -1168,4 +1168,4 @@ template void finalize_moe_routing_kernelLauncher(const float *, float *, const
+ template void finalize_moe_routing_kernelLauncher(const half *, half *, const half *, const half *, const half *,
+                                                   const half *, const int *, const int *, int, int, int, cudaStream_t);
+ 
+-} // namespace ort_fastertransformer
+\ No newline at end of file
++} // namespace ort_fastertransformer
+diff --git a/onnxruntime/contrib_ops/cuda/quantization/qordered_ops/qordered_attention_impl.cu b/onnxruntime/contrib_ops/cuda/quantization/qordered_ops/qordered_attention_impl.cu
+index fd4b51f40f..7cca6a51c3 100644
+--- a/onnxruntime/contrib_ops/cuda/quantization/qordered_ops/qordered_attention_impl.cu
++++ b/onnxruntime/contrib_ops/cuda/quantization/qordered_ops/qordered_attention_impl.cu
+@@ -50,7 +50,7 @@ QOrderMaskedSoftmaxKernel(const int8_t* src, const float* lookup_table, const in
+   }
+   int32_t max_of_4 = max(max(static_cast<int>(ch4.x), static_cast<int>(ch4.y)),
+                          max(static_cast<int>(ch4.z), static_cast<int>(ch4.w)));
+-  const int32_t max_all = BlockReduceInt32(unioned_tmp_storage.i32).Reduce(max_of_4, cub::Max());
++  const int32_t max_all = BlockReduceInt32(unioned_tmp_storage.i32).Reduce(max_of_4, ::cuda::maximum());
+   if (threadIdx.x == 0) {
+     max_in_block = max_all;
+   }
+@@ -62,7 +62,7 @@ QOrderMaskedSoftmaxKernel(const int8_t* src, const float* lookup_table, const in
+       four_masks.z ? lookup_table[255 - max_in_block + ch4.z] : 0.0f,
+       four_masks.w ? lookup_table[255 - max_in_block + ch4.w] : 0.0f};
+   float sum_of_4 = epow_of_4.x + epow_of_4.y + epow_of_4.z + epow_of_4.w;
+-  const float sum_all = BlockReduceFP32(unioned_tmp_storage.f32).Reduce(sum_of_4, cub::Sum());
++  const float sum_all = BlockReduceFP32(unioned_tmp_storage.f32).Reduce(sum_of_4, ::cuda::std::plus());
+   if (threadIdx.x == 0) {
+     sum_reverse_block = (float)(1.0 / ((double)sum_all * scale_dst));
+   }
+diff --git a/onnxruntime/contrib_ops/cuda/transformers/generation_cuda_impl.cu b/onnxruntime/contrib_ops/cuda/transformers/generation_cuda_impl.cu
+index d6a2a3018f..18cb77163f 100644
+--- a/onnxruntime/contrib_ops/cuda/transformers/generation_cuda_impl.cu
++++ b/onnxruntime/contrib_ops/cuda/transformers/generation_cuda_impl.cu
+@@ -97,7 +97,7 @@ __global__ void LogitsProcessKernel(
+ 
+     if (word_id >= vocab_size) {
+       // Set any value within the padding region to the lowest value so that it isn't picked
+-      next_token_scores[index] = cub::FpLimits<T>::Lowest();
++      next_token_scores[index] = ::cuda::std::numeric_limits<T>::lowest();
+     } else {
+       // RepetitionPenaltyLogitsProcessor
+       if (repetition_penalty != 1.0f) {
+@@ -135,27 +135,27 @@ __global__ void LogitsProcessKernel(
+         }
+ 
+         if (found) {
+-          next_token_scores[index] = cub::FpLimits<T>::Lowest();
++          next_token_scores[index] = ::cuda::std::numeric_limits<T>::lowest();
+           return;
+         }
+       }
+ 
+       // VocabMaskLogitsProcessor
+       if (vocab_mask != nullptr && vocab_mask[word_id] == 0) {
+-        next_token_scores[index] = cub::FpLimits<T>::Lowest();
++        next_token_scores[index] = ::cuda::std::numeric_limits<T>::lowest();
+         return;
+       }
+ 
+       // PrefixVocabMaskLogitsProcessor
+       int batch_id = batch_beam_index / num_beams;
+       if (prefix_vocab_mask != nullptr && prefix_vocab_mask[batch_id * vocab_size + word_id] == 0) {
+-        next_token_scores[index] = cub::FpLimits<T>::Lowest();
++        next_token_scores[index] = ::cuda::std::numeric_limits<T>::lowest();
+         return;
+       }
+ 
+       // MinLengthLogitsProcessor
+       if (word_id == demote_token_id) {
+-        next_token_scores[index] = cub::FpLimits<T>::Lowest();
++        next_token_scores[index] = ::cuda::std::numeric_limits<T>::lowest();
+       }
+ 
+       // PresencePenaltyLogitsProcessor
+@@ -1645,7 +1645,7 @@ __global__ void ForceDecodingIdsKernel(
+ #pragma unroll
+   for (int elem = 0; elem < ElementsPerThreads; elem++) {
+     if (token_id < vocab_size) {
+-      beam_scores[token_id] = ((token_id == id_wanted) ? 0.0f : cub::FpLimits<float>::Lowest());
++      beam_scores[token_id] = ((token_id == id_wanted) ? 0.0f : ::cuda::std::numeric_limits<float>::lowest());
+     }
+     token_id += (int)blockDim.x;
+   }
 diff --git a/onnxruntime/core/flatbuffers/schema/ort.fbs.h b/onnxruntime/core/flatbuffers/schema/ort.fbs.h
 index 50fc1db862..bf5ab15886 100644
 --- a/onnxruntime/core/flatbuffers/schema/ort.fbs.h
