@@ -32,6 +32,7 @@ SRC_URI += " \
     file://0003-Fix-RPATH.patch \
     file://0004-Use-native-protobuf-compiler.patch \
     file://0005-Disable-various-warnings.patch \
+    file://0006-Fixups-for-cross-building-in-OE-with-CCCL-3.0.patch \
 "
 
 S = "${WORKDIR}/${PN}-v${PV}"
