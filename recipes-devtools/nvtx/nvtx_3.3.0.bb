@@ -24,23 +24,15 @@ DESCRIPTION = " \
   in your applications."
 HOMEPAGE = "https://github.com/NVIDIA/NVTX"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://include/nvtx3/nvtx3.hpp;endline=15;md5=c03a55fe231fba7bd2f6d33441041844"
+LIC_FILES_CHKSUM = "file://include/nvtx3/nvtx3.hpp;endline=19;md5=d530f84c03bf0c0b89cc31e07132384b"
 
-SRC_URI = "git://github.com/NVIDIA/NVTX.git;protocol=https;nobranch=1"
-# tag: v3.1.0-c-cpp
-SRCREV = "a1ceb0677f67371ed29a2b1c022794f077db5fe7"
-PV .= "+git${SRCPV}"
+SRC_URI = " \
+    git://github.com/NVIDIA/NVTX.git;protocol=https;nobranch=1 \
+    file://0001-Updates-for-OE-cross-builds.patch \
+"
+# tag: v3.3.0-c-cpp
+SRCREV = "7c1f2d47f153dac7a0703b162f4b2eaa0ac47c83"
 
 S = "${WORKDIR}/git"
 
 inherit cmake
-
-do_install() {
-    install -d ${D}/opt/nvidia/nvtx3/include
-    cp -R --preserve=mode,links,timestamps ${S}/include/nvtx3/* ${D}/opt/nvidia/nvtx3/include/
-}
-
-ALLOW_EMPTY:${PN} = "1"
-SYSROOT_DIRS:append = " /opt/nvidia/nvtx3"
-
-FILES:${PN}-dev += "/opt/nvidia/nvtx3"
