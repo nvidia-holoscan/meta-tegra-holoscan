@@ -1,6 +1,6 @@
-From e4115baaf1f050c15a2b92db39d186b51cee31b2 Mon Sep 17 00:00:00 2001
+From 212650ce5d27901394dc564ac5e92a196ebe1b25 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:54:15 +0000
+Date: Mon, 24 Nov 2025 11:38:52 +0000
 Subject: [PATCH 05/10] Enable Emergent apps
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -12,7 +12,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  3 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bd08a260..a6c47973 100644
+index 300c6acd..b59fb58a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -48,6 +48,7 @@ include(CTest)

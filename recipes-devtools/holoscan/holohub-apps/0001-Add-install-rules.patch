@@ -1,6 +1,6 @@
-From 6193f14d706f280c717a8c33c40713273f9803c1 Mon Sep 17 00:00:00 2001
+From 6deac1ab2719fd09c562182f23bb2c7347d099bb Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:51:05 +0000
+Date: Mon, 24 Nov 2025 11:37:02 +0000
 Subject: [PATCH 01/10] Add install rules
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -36,7 +36,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  27 files changed, 181 insertions(+)
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
-index 2c4a9b4a..4a609c9e 100644
+index bdff2308..aa67ff28 100644
 --- a/applications/colonoscopy_segmentation/CMakeLists.txt
 +++ b/applications/colonoscopy_segmentation/CMakeLists.txt
 @@ -34,6 +34,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -399,10 +399,10 @@ index 07312a9b..9858353e 100644
 +  DESTINATION ${install_path}
 +)
 diff --git a/applications/volume_rendering/python/CMakeLists.txt b/applications/volume_rendering/python/CMakeLists.txt
-index ebf82249..3b59b5a0 100644
+index 4a313608..bf531857 100644
 --- a/applications/volume_rendering/python/CMakeLists.txt
 +++ b/applications/volume_rendering/python/CMakeLists.txt
-@@ -52,3 +52,10 @@ if(BUILD_TESTING)
+@@ -51,3 +51,10 @@ if(BUILD_TESTING)
    set_tests_properties(volume_rendering_python_test PROPERTIES
                         PASS_REGULAR_EXPRESSION "Application has finished running.")
  endif()

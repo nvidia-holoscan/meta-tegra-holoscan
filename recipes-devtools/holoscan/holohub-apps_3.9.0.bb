@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "83ae8d2e14ac0a4c15b628b49a23ec02df576c0c"
+SRCREV = "d11c079b4d6857a8bcfd0359055503374d2b04e1"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -127,6 +127,7 @@ DEPENDS += " \
     libeigen \
     ucxx \
     cccl-native \
+    rmm \
 "
 
 RDEPENDS:${PN} += " \
