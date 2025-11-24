@@ -27,10 +27,7 @@ SRC_URI = " \
     git://github.com/NVIDIA/nccl.git;protocol=https;branch=master \
     file://0001-Fixups-for-cross-building-in-OE.patch \
 "
-
-# tag: v2.26.5-1
-SRCREV = "3000e3c797b4b236221188c07aa09c1f3a0170d4"
-PV .= "+git${SRCPV}"
+SRCREV = "3ea7eedf3b9b94f1d9f99f4e55536dfcbd23c1ca"
 
 S = "${WORKDIR}/git"
 
@@ -38,12 +35,15 @@ inherit cuda
 
 DEPENDS += "coreutils-native cccl-native"
 
+CUFLAGS:append = " -std=c++17"
+
 do_compile () {
     export CXX="${CXX_FOR_CUDA}"
     export NVCC="${CUDA_NVCC_EXECUTABLE}"
     export CUDA_HOME="${CUDA_TOOLKIT_ROOT}"
     export NVCC_GENCODE="${CUDA_NVCC_ARCH_FLAGS}"
     export NVCUFLAGS="${CUFLAGS}"
+    export NVCUFLAGS_SYM="${CUFLAGS}"
     oe_runmake src.build
 }
 

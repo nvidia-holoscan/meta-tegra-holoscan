@@ -1,29 +1,61 @@
-From b70d34ba2185f9e18a47033e746e877018f38b32 Mon Sep 17 00:00:00 2001
+From 8f94bcddd5300b04b0bbdd5e94f490d7d62f52f3 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 6 May 2025 16:57:35 +0100
+Date: Fri, 21 Nov 2025 18:14:24 +0000
 Subject: [PATCH] Fixups for cross building in OE
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- makefiles/common.mk | 11 ++---------
- 1 file changed, 2 insertions(+), 9 deletions(-)
+ ext-tuner/example/Makefile |  2 +-
+ makefiles/common.mk        | 21 +++++----------------
+ src/device/Makefile        | 21 +++++++++------------
+ 3 files changed, 15 insertions(+), 29 deletions(-)
 
+diff --git a/ext-tuner/example/Makefile b/ext-tuner/example/Makefile
+index 76c16b6..4dc9830 100644
+--- a/ext-tuner/example/Makefile
++++ b/ext-tuner/example/Makefile
+@@ -41,7 +41,7 @@ optimize-config:
+ 		echo "Example: make optimize-config CSV_FILE=scripts/sample_performance_data.csv"; \
+ 		exit 1; \
+ 	fi
+-	python3 scripts/optimize_config.py $(CSV_FILE) \
++	$(PYTHON) scripts/optimize_config.py $(CSV_FILE) \
+ 		$(if $(OUTPUT),-o $(OUTPUT)) \
+ 		$(if $(METRIC),-m $(METRIC)) \
+ 		$(if $(SIZE_RANGES),--size-ranges $(SIZE_RANGES)) \
 diff --git a/makefiles/common.mk b/makefiles/common.mk
-index 545203a..c4a97e8 100644
+index 6ba9bbf..5a209b3 100644
 --- a/makefiles/common.mk
 +++ b/makefiles/common.mk
-@@ -73,7 +73,8 @@ CXXFLAGS   := -DCUDA_MAJOR=$(CUDA_MAJOR) -DCUDA_MINOR=$(CUDA_MINOR) -fPIC -fvisi
+@@ -72,21 +72,18 @@ else
+ endif
+ $(info NVCC_GENCODE is ${NVCC_GENCODE})
+ 
+-# CUDA 13.0 requires c++17
+-ifeq ($(shell test "0$(CUDA_MAJOR)" -ge 13; echo $$?),0)
+-  CXXSTD ?= -std=c++17
+-else
+-  CXXSTD ?= -std=c++11
+-endif
++CXXSTD ?= -std=c++17
+ 
+-CXXFLAGS   := -DCUDA_MAJOR=$(CUDA_MAJOR) -DCUDA_MINOR=$(CUDA_MINOR) -fPIC -fvisibility=hidden \
++CXXFLAGS   := -DCUDA_MAJOR=$(CUDA_MAJOR) -DCUDA_MINOR=$(CUDA_MINOR) -fPIC -fvisibility=hidden -fpermissive \
+               -Wall -Wno-unused-function -Wno-sign-compare $(CXXSTD) -Wvla \
+               -I $(CUDA_INC) -I $(CUDA_INC)/cccl \
+               $(CXXFLAGS)
  # Maxrregcount needs to be set accordingly to NCCL_MAX_NTHREADS (otherwise it will cause kernel launch errors)
  # 512 : 120, 640 : 96, 768 : 80, 1024 : 60
  # We would not have to set this if we used __launch_bounds__, but this only works on kernels, not on functions.
--NVCUFLAGS  := -ccbin $(CXX) $(NVCC_GENCODE) -std=c++11 --expt-extended-lambda -Xptxas -maxrregcount=96 -Xfatbin -compress-all
-+NVCUFLAGS  ?= -ccbin $(CXX) $(NVCC_GENCODE) -Xptxas -maxrregcount=96 -Xfatbin -compress-all
+-NVCUFLAGS  := -ccbin $(CXX) $(NVCC_GENCODE) $(CXXSTD) --expt-extended-lambda -Xptxas -maxrregcount=96 -Xfatbin -compress-all
++NVCUFLAGS  ?= -ccbin $(CXX) $(NVCC_GENCODE) $(CXXSTD) -Xptxas -maxrregcount=96 -Xfatbin -compress-all
 +NVCUFLAGS  += --expt-extended-lambda
++NVCUFLAGS  += --compiler-options "-fpermissive -fPIC -fvisibility=hidden"
  # Use addprefix so that we can specify more than one path
  NVLDFLAGS  := -L${CUDA_LIB} -lcudart -lrt
  
-@@ -87,14 +88,6 @@ NVLDFLAGS   += ${GCOV_FLAGS:%=-Xcompiler %}
+@@ -100,14 +97,6 @@ NVLDFLAGS   += ${GCOV_FLAGS:%=-Xcompiler %}
  # $(warning GCOV_FLAGS=${GCOV_FLAGS})
  ########## GCOV ##########
  
@@ -38,6 +70,48 @@ index 545203a..c4a97e8 100644
  # Make sure to run with ASAN_OPTIONS=protect_shadow_gap=0 otherwise CUDA will fail with OOM
  ifneq ($(ASAN), 0)
  CXXFLAGS += -fsanitize=address
+diff --git a/src/device/Makefile b/src/device/Makefile
+index 67ab176..d31126d 100644
+--- a/src/device/Makefile
++++ b/src/device/Makefile
+@@ -20,11 +20,12 @@ MANIFEST := $(OBJDIR)/manifest
+ DEVGLUE_OBJ  := $(OBJDIR)/device_glue.o
+ 
+ INCFLAGS  = -I. -I.. -I$(BUILDDIR)/include -I../include
+-NVCUFLAGS += $(INCFLAGS) --compiler-options "-fPIC -fvisibility=hidden"
+-CXXFLAGS  += $(INCFLAGS)
++NVCUFLAGS += $(INCFLAGS) --compiler-options "-fPIC -fvisibility=hidden -fpermissive"
++CXXFLAGS  += $(INCFLAGS) -fpermissive
+ 
+-NVCUFLAGS_SYM := -ccbin $(CXX) $(CXXSTD) --expt-extended-lambda -Xptxas -maxrregcount=128 -Xfatbin -compress-all
+-NVCUFLAGS_SYM += $(INCFLAGS) --compiler-options "-fPIC -fvisibility=hidden"
++NVCUFLAGS_SYM  ?= -ccbin $(CXX) $(NVCC_GENCODE) $(CXXSTD) -Xptxas -maxrregcount=128 -Xfatbin -compress-all
++NVCUFLAGS_SYM  += --expt-extended-lambda
++NVCUFLAGS_SYM += $(INCFLAGS) --compiler-options "-fPIC -fvisibility=hidden -fpermissive"
+ 
+ SAY = @bash -c 'path="$$2"; [[ "$$(realpath "$$2")" =~ ^$(subst .,\.,$(abspath $(NCCLDIR)))/(.*)$$ ]] && path="$${BASH_REMATCH[1]}"; printf "%-15s %s\n" "$$1" "$$path"' SAY
+ 
+@@ -66,16 +67,12 @@ endef
+ all: $(MANIFEST)
+ 
+ $(OBJDIR)/gensrc: generate.py
+-	@mkdir -p $@
+-	(which python3 >/dev/null || \
+-	  (bar='!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'; \
+-	   printf "\n$${bar}\nERROR: Building NCCL requires a Python 3 installation invokable as 'python3'.\n$${bar}\n\n" 1>&2; \
+-	   exit 1)) \
+-	&& ./generate.py $@ "$(ONLY_FUNCS)"
++	mkdir -p $@
++	$(PYTHON) ./generate.py $@ "$(ONLY_FUNCS)"
+ 
+ $(OBJDIR)/gensrc/symmetric: $(OBJDIR)/gensrc symmetric/generate.py
+-	@mkdir -p $@
+-	./symmetric/generate.py $@
++	mkdir -p $@
++	$(PYTHON) ./symmetric/generate.py $@
+ 
+ # The trailing ";" is necessary to make this an "empty recipe":
+ # https://www.gnu.org/software/make/manual/html_node/Empty-Recipes.html
 -- 
 2.34.1
 
