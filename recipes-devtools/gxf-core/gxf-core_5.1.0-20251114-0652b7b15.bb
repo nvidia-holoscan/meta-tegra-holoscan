@@ -26,8 +26,8 @@ PACKAGES = "${PN} ${PN}-dev"
 
 GXF_VERSION = "${@d.getVar('PV').replace('-', '_')}"
 GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
-SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;subdir=${GXF_PACKAGE}"
-SRC_URI[sha256sum] = "af753c0fa0e2b867f753348e49c53c85c30fab57ad4ade414d558a411aa73bb8"
+SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
+SRC_URI[gxf.sha256sum] = "d17c24ce32c4a65d5b06a52f9b61916c2585824ea6fb663fe8905ebe7efa09f6"
 
 SRC_URI += " \
     file://0001-OE-cross-build-fixups.patch \
