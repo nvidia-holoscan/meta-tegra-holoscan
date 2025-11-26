@@ -38,7 +38,8 @@ SUMMARY:${PN}-base = "Holoscan desktop - base packages"
 RDEPENDS:${PN}-base = "packagegroup-core-x11-sato-base"
 
 SUMMARY:${PN}-apps = "Holoscan desktop - applications"
-RDEPENDS:${PN}-apps = "\
+RDEPENDS:${PN}-apps = " \
     sato-screenshot \
     holohub-apps \
-    "
+    vulkan-tools \
+"
