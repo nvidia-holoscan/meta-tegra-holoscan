@@ -1,3 +1,27 @@
+## [3.9.0] - 2025-11-26
+### Changed
+- Updated Holoscan SDK and Holohub apps to 3.9.0.
+- Updated GXF to 5.1.0-20251114-0652b7b15.
+- Updated yaml-cpp to 0.8.0.
+- Updated CCCL to 3.0.3.
+- Updated CPM cmake to 0.40.2.
+- Updated RAPIDS cmake to 25.10.00.
+- Updated fmt to 11.0.2.
+- Added spdlog 1.14.1 recipe to satisfy dependency with RAPIDS logger.
+- Added RAPIDS logger 0.2.0 to satisfy dependency with RMM.
+- Updated RMM to 25.10.00 to satisfy dependency with Holoscan SDK.
+- Updated NVTX to 3.3.0 to satisfy dependency with CuPy and Holoscan SDK.
+- Updated nccl to 2.27.5 to satisfy dependency with CuPy.
+- Updated CuPY to 13.6.0.
+
+### Fixed
+- Fixed Pytorch build with CCCL 3.x.
+- Fixed ONNX Runtime build with CCCL 3.x.
+- Fixed MatX build with CPM cmake and RAPIDS cmake.
+- Fixed vulkan-tools recipe.
+- Fixed docker container support for dGPU mode.
+
+
 ## [3.8.0] - 2025-11-05
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.8.0.
@@ -482,6 +506,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.9.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.8.0...v3.9.0
 [3.8.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.7.0...v3.8.0
 [3.7.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.6.0...v3.7.0
 [3.6.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.4.0...v3.6.0
