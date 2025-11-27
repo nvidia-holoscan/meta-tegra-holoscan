@@ -23,6 +23,7 @@ require nvidia-driver-common.inc
 SRC_URI[sha256sum] = "72340fd7e11265bcdab4c3ce53f72bb99ccdecfe310ec10a82774c289ce22783"
 
 do_install:append() {
+    ln -s libnvidia-ngx.so.${PV} ${D}${libdir}/libnvidia-ngx.so.1
     install -d ${D}${libdir}/xorg/modules/extensions
     ln -s ${libdir}/nvidia/xorg/libglxserver_nvidia.so ${D}${libdir}/xorg/modules/extensions/
 }
