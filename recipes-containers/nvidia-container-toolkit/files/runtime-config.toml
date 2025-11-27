@@ -1,8 +1,0 @@
-disable-require = false
-
-[nvidia-container-cli]
-environment = []
-load-kmods = true
-ldconfig = "@/sbin/ldconfig"
-
-[nvidia-container-runtime]
