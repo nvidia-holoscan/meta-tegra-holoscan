@@ -1,4 +1,13 @@
-# OpenEmbedded/Yocto Build Container for NVIDIA Holoscan
+## Overview
+
+### What is Holoscan OpenEmbedded Builder?
+
+The Holoscan OpenEmbedded Builder is a containerized build environment based on the Yocto Project and OpenEmbedded framework, specifically tailored for developing and building Linux-based software for NVIDIA Holoscan Developer Kits. It leverages the OpenEmbedded build system to create custom Board Support Package (BSP) images, allowing developers to cross-compile and integrate applications optimized for Holoscan's edge AI and medical computing platforms.
+
+This builder simplifies the setup process by packaging all required dependencies, tools, scripts, and NVIDIA-proprietary binaries into a single, reproducible Docker container—ideal for embedded Linux development targeting Holoscan hardware.
+___
+
+## OpenEmbedded/Yocto Build Container for NVIDIA Holoscan
 
 This container image contains runtime dependencies, scripts, and the
 NVIDIA-proprietary binary packages that are required to build an OpenEmbedded
@@ -18,7 +27,7 @@ amount of resources, and at least **300GB of free disk space is required to
 build**. See the `System Requirements` section in the main `README` for more
 details.
 
-## 1. Setting up the Local Development Environment
+### 1. Setting up the Local Development Environment
 
 While it would be possible to build an OE image directly from source that is
 stored within a container, doing so would mean that any additions or
@@ -35,7 +44,7 @@ would like to initialize the development environment and run the following
 (making sure `IMAGE` matches the name and tag of this container image):
 
 ```sh
-$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v1.0.0
+$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v3.9.0
 $ docker run -it --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 
@@ -62,7 +71,7 @@ This setup processes initializes the following:
    This is used by the `bitbake.sh` script and prevents the need to export
    an IMAGE environment variable anytime a build is performed.
 
-## 2. Configure the Image
+### 2. Configure the Image
 
 The OE image configuration file is created by the previous step and is written
 to `build/conf/local.conf`. This file is based on the default `local.conf` that
@@ -83,7 +92,7 @@ standard OpenEmbedded `local.conf`, as well as some documentation as to what
 additional components offered by this meta-tegra-holoscan layer may be enabled,
 scroll down to the "BEGIN NVIDIA CONFIGURATION" section in this file.
 
-## 3. Build the Image
+### 3. Build the Image
 
 Once the image has been configured in the local host development tree, the
 container image is used again for the actual `bitbake` build process. This
@@ -119,7 +128,7 @@ write the final output to:
 build/tmp/deploy/images/igx-orin-devkit/core-image-holoscan-igx-orin-devkit.tegraflash.tar.gz
 ```
 
-## 4. Flash the Image
+### 4. Flash the Image
 
 The `flash.sh` script can be used to flash the BSP image that is output by the
 previous step onto the Holoscan Developer Kit hardware. For example, to flash the
@@ -177,7 +186,7 @@ for diagrams showing the locations of these display connections. During boot
 you will see a black screen with only a cursor for a few moments before an X11
 terminal or GUI appears (depending on your image type).
 
-#### Running the Holoscan SDK and HoloHub Applications
+##### Running the Holoscan SDK and HoloHub Applications
 
 When the `core-image-holoscan` reference image is used, the Holoscan SDK and
 Holohub apps are built into the image, including some tweaks to make running the
@@ -233,3 +242,8 @@ To run the Python version of an application, run the application in the
 $ cd /opt/nvidia/holohub
 $ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 ```
+___
+
+## License
+
+By pulling and using the container, you accept the terms and conditions of this [End User License Agreement](https://developer.nvidia.com/clara-holoscan-EULA).
