@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2026, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -25,18 +25,37 @@ SRC_URI:append = " \
     ${@bb.utils.contains('IMAGE_FEATURES', 'kata-containers', 'file://Enable-kata-container-module-dependencies.cfg', '', d)} \
 "
 
-SRC_URI:append = "${@'file://Add-MMU_NOTIFIER-dependency-in-nv-p2p-Kconfig.patch' if 'RT_PATCH' in d else ''}"
+prepare_rt_patch () {
+    cp -f ${S}/arch/arm64/configs/defconfig ${S}/arch/arm64/configs/.updated.defconfig
+    cp -f ${S}/arch/arm64/configs/tegra_prod_defconfig ${S}/arch/arm64/configs/.updated.tegra_prod_defconfig
+    ${S}/scripts/config --file ${S}/arch/arm64/configs/.updated.defconfig --enable PREEMPT_RT  --disable DEBUG_PREEMPT \
+        --disable KVM \
+        --enable EMBEDDED \
+        --enable NAMESPACES \
+        --enable OSNOISE_TRACER \
+        --enable TIMERLAT_TRACER \
+        --enable HWLAT_TRACER \
+        --disable CPU_IDLE_TEGRA18X \
+        --disable CPU_FREQ_GOV_INTERACTIVE \
+        --disable CPU_FREQ_TIMES \
+        --disable FAIR_GROUP_SCHED
+    ${S}/scripts/config --file ${S}/arch/arm64/configs/.updated.tegra_prod_defconfig --enable PREEMPT_RT  --disable DEBUG_PREEMPT \
+        --disable KVM \
+        --enable EMBEDDED \
+        --enable NAMESPACES \
+        --enable OSNOISE_TRACER \
+        --enable TIMERLAT_TRACER \
+        --enable HWLAT_TRACER \
+        --disable CPU_IDLE_TEGRA18X \
+        --disable CPU_FREQ_GOV_INTERACTIVE \
+        --disable CPU_FREQ_TIMES \
+        --disable FAIR_GROUP_SCHED
+    rm -f ${S}/arch/arm64/configs/defconfig ${S}/arch/arm64/configs/tegra_prod_defconfig
+    cp -f ${S}/arch/arm64/configs/.updated.defconfig ${S}/arch/arm64/configs/defconfig
+    cp -f ${S}/arch/arm64/configs/.updated.tegra_prod_defconfig ${S}/arch/arm64/configs/tegra_prod_defconfig
+}
 
-do_patch:append () {
-    if [ "${@d.getVar('RT_PATCH', True)}" = "1" ]; then
-        cd ${S}/scripts
-        ./rt-patch.sh apply-patches
-        # The below changes are needed so that the symlinks are
-        # relative to the local directories and not absolute
-        cd ${S}/arch/arm64/configs/
-        mv .updated.defconfig updated.defconfig
-        mv .orig.defconfig orig.defconfig
-        ln -sfn updated.defconfig defconfig
-        ln -sfn defconfig tegra_defconfig
-    fi
+python __anonymous () {
+    if bb.utils.to_boolean(d.getVar("RT_PATCH")):
+        d.appendVarFlag("do_patch", "postfuncs", " prepare_rt_patch")
 }
