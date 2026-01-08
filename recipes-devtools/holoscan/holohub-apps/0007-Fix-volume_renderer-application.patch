@@ -1,7 +1,7 @@
-From 71520628a7e2157dc48193d61526515720db9d1c Mon Sep 17 00:00:00 2001
+From 51bc92bf4fb2e412219495fa6b11ffe0a81adead Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:55:09 +0000
-Subject: [PATCH 07/10] Fix volume_renderer application
+Date: Thu, 8 Jan 2026 10:32:18 -0800
+Subject: [PATCH 07/10]  Fix volume_renderer application
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -24,12 +24,12 @@ index 9858353e..76301978 100644
    json_loader.cpp
    volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index 650c2e64..05fcce4b 100644
+index 54e06bd1..584b7a84 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
-@@ -18,61 +18,9 @@ project(volume_renderer)
- find_package(holoscan 0.6 REQUIRED CONFIG
-              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+@@ -20,61 +20,9 @@ find_package(holoscan 0.6 REQUIRED CONFIG
+ 
+ find_package(ZLIB REQUIRED)
  
 -# we don't need the gRPC interface, OpenH264 and the examples
 -set(CLARA_VIZ_WITH_GRPC OFF CACHE INTERNAL "")

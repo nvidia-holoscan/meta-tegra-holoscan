@@ -1,6 +1,6 @@
-From 314e340342655f58607012e1b58f9215d8567481 Mon Sep 17 00:00:00 2001
+From b3c87ba8c857256356f1d38fdcdeffd1c0cd53e6 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Mon, 24 Nov 2025 11:40:45 +0000
+Date: Thu, 8 Jan 2026 10:33:34 -0800
 Subject: [PATCH 10/10] Updates for OE cross builds
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -28,7 +28,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  19 files changed, 52 insertions(+), 8 deletions(-)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index ef92067b..412bfd6e 100644
+index e8c7d1d0..1b635a51 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -17,6 +17,10 @@ cmake_minimum_required(VERSION 3.20)
@@ -264,7 +264,7 @@ index c3ed9a2c..2c57060f 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index 05fcce4b..8657de20 100644
+index 584b7a84..a30bc550 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -15,6 +15,9 @@

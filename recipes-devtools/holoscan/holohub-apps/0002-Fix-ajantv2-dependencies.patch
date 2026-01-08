@@ -1,10 +1,11 @@
-From 5c4fc2d2f0547c256a79c9e96fbfd85adec8ce63 Mon Sep 17 00:00:00 2001
+From 7ef8ee6f7ba1a6bf343bb6c57c1349e0b831f8f9 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:51:45 +0000
+Date: Thu, 8 Jan 2026 10:28:31 -0800
 Subject: [PATCH 02/10] Fix ajantv2 dependencies
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
  .../CMakeLists.txt                            |  2 ++
  .../cpp/CMakeLists.txt                        |  2 ++
@@ -18,7 +19,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  9 files changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index 219ef28c..ef92067b 100644
+index 1b92f49d..e8c7d1d0 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(endoscopy_out_of_body_detection CXX)
@@ -122,7 +123,7 @@ index 78ce3d7a..7c375b59 100644
      main.cpp
  )
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 6bdb1baf..b17b3c40 100644
+index 90f14463..b17b3c40 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -18,28 +18,7 @@ project(aja_source)
@@ -134,7 +135,7 @@ index 6bdb1baf..b17b3c40 100644
 -FetchContent_Declare(
 -    ajantv2
 -    GIT_REPOSITORY https://github.com/nvidia-holoscan/libajantv2.git
--    GIT_TAG d4250c556bcf1ebade627a3ef7a2027de7dc85ee
+-    GIT_TAG f74a9cab77a3bdb9f448b3eacc493fe63d363e9f
 -)
 -
 -set(ENV{NTV2_VERSION_BUILD} 1)

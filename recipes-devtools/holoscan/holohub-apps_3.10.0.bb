@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2025, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2023-2026, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "d11c079b4d6857a8bcfd0359055503374d2b04e1"
+SRCREV = "1f59b5b75f96583a405dba26fc01aff30925a15e"
 
 SRC_URI += " \
     file://desktop-icons \

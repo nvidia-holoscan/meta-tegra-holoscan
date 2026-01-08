@@ -1,6 +1,6 @@
-From 6deac1ab2719fd09c562182f23bb2c7347d099bb Mon Sep 17 00:00:00 2001
+From 62e4984e4765e8b2fdfd00dd3687b9af522ff8ea Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Mon, 24 Nov 2025 11:37:02 +0000
+Date: Thu, 8 Jan 2026 10:14:01 -0800
 Subject: [PATCH 01/10] Add install rules
 
 Upstream-Status: Inappropriate [OE-specific]
@@ -438,7 +438,7 @@ index 68ded45c..fc3fa6b4 100644
 +
 +install(TARGETS gxf_emergent_source_lib gxf_emergent_source)
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 4388d3dc..6bdb1baf 100644
+index 490e3c6e..90f14463 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -63,6 +63,8 @@ target_link_libraries(aja_source
