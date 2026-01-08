@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2025, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2022-2026, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -27,7 +27,7 @@ PACKAGES = "${PN} ${PN}-dev"
 GXF_VERSION = "${@d.getVar('PV').replace('-', '_')}"
 GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
-SRC_URI[gxf.sha256sum] = "d17c24ce32c4a65d5b06a52f9b61916c2585824ea6fb663fe8905ebe7efa09f6"
+SRC_URI[gxf.sha256sum] = "4c4ec192dd3bc5ac4a170ae571a3eb38978510c2957589efe2f7df0a925b3dc4"
 
 SRC_URI += " \
     file://0001-OE-cross-build-fixups.patch \
