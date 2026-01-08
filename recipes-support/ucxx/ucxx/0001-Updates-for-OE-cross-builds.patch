@@ -1,22 +1,15 @@
-From 821329975c0b54409790e515dac659c5e9d520b6 Mon Sep 17 00:00:00 2001
+From 91657ef0a4b075c443040a32bd5491b4d9379a69 Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 4 Sep 2025 21:12:48 +0100
+Date: Thu, 8 Jan 2026 09:49:13 -0800
 Subject: [PATCH] Updates for OE cross builds
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- RAPIDS_VERSION            |  2 +-
  cmake/rapids_config.cmake | 13 ++++++++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ cpp/CMakeLists.txt        | 13 ++-----------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/RAPIDS_VERSION b/RAPIDS_VERSION
-index cc83d7a..af28c42 100644
---- a/RAPIDS_VERSION
-+++ b/RAPIDS_VERSION
-@@ -1 +1 @@
--25.06.00
-+24.12.00
 diff --git a/cmake/rapids_config.cmake b/cmake/rapids_config.cmake
 index 0051673..8253620 100644
 --- a/cmake/rapids_config.cmake
@@ -39,6 +32,35 @@ index 0051673..8253620 100644
 +
 +set(rapids-cmake-dir "${RAPIDS_CMAKE_DIR}/rapids-cmake")
 +include("${RAPIDS_CMAKE_DIR}/RAPIDS.cmake")
+diff --git a/cpp/CMakeLists.txt b/cpp/CMakeLists.txt
+index f0b659e..20fd432 100644
+--- a/cpp/CMakeLists.txt
++++ b/cpp/CMakeLists.txt
+@@ -70,22 +70,13 @@ rapids_cmake_support_conda_env(conda_env MODIFY_PREFIX_PATH)
+ 
+ # ##################################################################################################
+ # * compiler options ------------------------------------------------------------------------------
+-rapids_find_package(
+-  ucx REQUIRED
+-  GLOBAL_TARGETS ucx::ucp
+-  BUILD_EXPORT_SET ucxx-exports
+-  INSTALL_EXPORT_SET ucxx-exports
+-)
++find_package(ucx 1.17.0 REQUIRED)
+ 
+ # ##################################################################################################
+ # * dependencies ----------------------------------------------------------------------------------
+ 
+ # find Threads (needed by ucxxtestutil)
+-rapids_find_package(
+-  Threads REQUIRED
+-  BUILD_EXPORT_SET ucxx-exports
+-  INSTALL_EXPORT_SET ucxx-exports
+-)
++find_package(Threads REQUIRED)
+ 
+ # add third party dependencies using CPM
+ rapids_cpm_init()
 -- 
 2.34.1
 

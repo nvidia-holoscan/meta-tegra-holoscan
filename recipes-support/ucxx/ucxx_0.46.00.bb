@@ -1,4 +1,4 @@
-# Copyright (c) 2025, NVIDIA CORPORATION. All rights reserved.
+# Copyright (c) 2025-2026, NVIDIA CORPORATION. All rights reserved.
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -31,7 +31,7 @@ SRC_URI = " \
     git://github.com/rapidsai/ucxx.git;protocol=https;nobranch=1 \
     file://0001-Updates-for-OE-cross-builds.patch \
 "
-SRCREV = "7b160b312b15cecbed9932145c53e760d7a1dd62"
+SRCREV = "64355220c2a03ef14a1fc912e7c410b2f3f48f8b"
 
 DEPENDS += "ucx cccl cpm-cmake rapids-cmake"
 
