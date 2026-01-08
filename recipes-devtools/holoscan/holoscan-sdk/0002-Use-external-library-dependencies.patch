@@ -1,7 +1,7 @@
-From e2015e592f413b1c771bb64d3ca615da7aff32c9 Mon Sep 17 00:00:00 2001
+From 553a0473c71d04a9fd3f2ee3a57488c908193d1e Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Fri, 21 Nov 2025 17:26:32 +0000
-Subject: [PATCH 2/6] Use external library dependencies
+Date: Thu, 8 Jan 2026 08:50:12 -0800
+Subject: [PATCH 2/2] Use external library dependencies
 
 This changes the dependencies on the following libraries so
 that they are provided at build time instead of being
@@ -41,6 +41,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  cmake/deps/cccl.cmake                         |  26 +-
  cmake/deps/cli11_rapids.cmake                 |  18 +-
  cmake/deps/concurrent_queue.cmake             |  18 +-
+ cmake/deps/configs/ucx-config.cmake.in        |  57 --
  cmake/deps/dlpack_rapids.cmake                |  18 +-
  cmake/deps/eigen3_urm.cmake                   |  77 +-
  cmake/deps/expected_rapids.cmake              |  21 +-
@@ -58,14 +59,14 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  cmake/deps/pybind11.cmake                     |  20 +-
  cmake/deps/rmm.cmake                          |  39 +-
  cmake/deps/spdlog_rapids.cmake                |  29 +-
- cmake/deps/ucx.cmake                          |  65 --
+ cmake/deps/ucx.cmake                          | 107 +--
  cmake/deps/ucxx_rapids.cmake                  | 132 +--
  cmake/deps/yaml-cpp_rapids.cmake              |  51 +-
  cmake/modules/FindONNXRuntime.cmake           |  45 +-
  cmake/modules/SetupCUDA.cmake                 |  44 -
  cmake/modules/SetupCache.cmake                |   3 -
  cmake/modules/SetupRapidsCMake.cmake          |  24 +-
- cmake/setup_dependencies.cmake                |   6 -
+ cmake/setup_dependencies.cmake                |   7 -
  examples/CMakeLists.txt                       |   1 -
  .../cpp/operator_status_tracking.cpp          |   2 +-
  .../matx/matx_basic/cpp/CMakeLists.min.txt    |  33 +-
@@ -74,7 +75,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  .../core/resources/async_data_logger.hpp      |   2 +-
  modules/holoinfer/src/CMakeLists.txt          |  15 +-
  .../holoinfer/src/infer/onnx/CMakeLists.txt   |   8 +-
- .../holoinfer/src/infer/torch/CMakeLists.txt  |   3 +-
+ .../holoinfer/src/infer/torch/CMakeLists.txt  |  17 +-
  modules/holoviz/examples/demo/CMakeLists.txt  |  14 +-
  .../holoviz/examples/depth_map/CMakeLists.txt |  14 +-
  .../holoviz/tests/functional/CMakeLists.txt   |  14 +-
@@ -88,13 +89,14 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  .../simple_text_serializer.cpp                |   2 +-
  src/operators/holoviz/holoviz.cpp             |   2 +-
  .../v4l2_video_capture/v4l2_video_capture.cpp |   2 +-
- 51 files changed, 138 insertions(+), 2272 deletions(-)
+ 52 files changed, 141 insertions(+), 2383 deletions(-)
+ delete mode 100644 cmake/deps/configs/ucx-config.cmake.in
  delete mode 100644 cmake/deps/hwloc.config.h.in
  delete mode 100644 cmake/deps/hwloc.private.config.h.in
  delete mode 100644 cmake/deps/hwloc.static-components.h.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1292c0c..d100f21 100644
+index 1292c0c3..d100f214 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -296,7 +296,6 @@ endif()
@@ -233,7 +235,7 @@ index 1292c0c..d100f21 100644
  set(GXF_EXTENSIONS_DIR "${PACKAGE_PREFIX_DIR}/lib/gxf_extensions")
  
 diff --git a/cmake/deps/cccl.cmake b/cmake/deps/cccl.cmake
-index 4b508e9..b563196 100644
+index 4b508e90..b563196e 100644
 --- a/cmake/deps/cccl.cmake
 +++ b/cmake/deps/cccl.cmake
 @@ -16,25 +16,7 @@
@@ -267,7 +269,7 @@ index 4b508e9..b563196 100644
 +find_package(libcudacxx REQUIRED)
 +find_package(Thrust REQUIRED)
 diff --git a/cmake/deps/cli11_rapids.cmake b/cmake/deps/cli11_rapids.cmake
-index db010da..c2b602c 100644
+index db010da4..c2b602c4 100644
 --- a/cmake/deps/cli11_rapids.cmake
 +++ b/cmake/deps/cli11_rapids.cmake
 @@ -14,20 +14,4 @@
@@ -293,7 +295,7 @@ index db010da..c2b602c 100644
 -set(cli11_SOURCE_DIR ${CLI11_SOURCE_DIR} PARENT_SCOPE)
 +rapids_find_package(CLI11 2.3.2 REQUIRED)
 diff --git a/cmake/deps/concurrent_queue.cmake b/cmake/deps/concurrent_queue.cmake
-index 059f2c4..d7d9692 100644
+index 059f2c44..d7d96921 100644
 --- a/cmake/deps/concurrent_queue.cmake
 +++ b/cmake/deps/concurrent_queue.cmake
 @@ -13,20 +13,4 @@
@@ -318,8 +320,71 @@ index 059f2c4..d7d9692 100644
 -# root project can use it to include headers
 -set(concurrent_queue_SOURCE_DIR ${concurrent_queue_SOURCE_DIR} PARENT_SCOPE)
 +rapids_find_package(concurrentqueue 1.0.0 REQUIRED)
+diff --git a/cmake/deps/configs/ucx-config.cmake.in b/cmake/deps/configs/ucx-config.cmake.in
+deleted file mode 100644
+index fb950c37..00000000
+--- a/cmake/deps/configs/ucx-config.cmake.in
++++ /dev/null
+@@ -1,57 +0,0 @@
+-# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+-# SPDX-License-Identifier: Apache-2.0
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-#      http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-#
+-
+-# Custom UCX configuration file to enable development with UCX shared libraries
+-# revendored with the Holoscan SDK binary distribution.
+-# Based on UCX 1.19.0 ucx-config.cmake
+-
+-get_filename_component(prefix "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+-set(exec_prefix "${prefix}")
+-
+-if(NOT TARGET ucx::ucs)
+-  add_library(ucx::ucs SHARED IMPORTED)
+-
+-  set_target_properties(ucx::ucs PROPERTIES
+-    IMPORTED_LOCATION "${exec_prefix}/lib/libucs.so"
+-    INTERFACE_INCLUDE_DIRECTORIES "${prefix}/include/3rdparty/ucx"
+-  )
+-endif()
+-
+-if(NOT TARGET ucx::ucp)
+-  add_library(ucx::ucp SHARED IMPORTED)
+-
+-  set_target_properties(ucx::ucp PROPERTIES
+-    IMPORTED_LOCATION "${exec_prefix}/lib/libucp.so"
+-    INTERFACE_INCLUDE_DIRECTORIES "${prefix}/include/3rdparty/ucx"
+-  )
+-endif()
+-
+-if(NOT TARGET ucx::uct)
+-  add_library(ucx::uct SHARED IMPORTED)
+-
+-  set_target_properties(ucx::uct PROPERTIES
+-    IMPORTED_LOCATION "${exec_prefix}/lib/libuct.so"
+-    INTERFACE_INCLUDE_DIRECTORIES "${prefix}/include/3rdparty/ucx"
+-  )
+-endif()
+-
+-set(UCX_LIBRARIES "${exec_prefix}/lib")
+-set(UCX_INCLUDE_DIRS "${prefix}/include")
+-
+-# Report UCX found message unless QUIET is specified
+-if(NOT ucx_FIND_QUIETLY)
+-  message(STATUS "Found UCX: ${ucx_DIR} (found version \"${ucx_VERSION}\")")
+-endif()
 diff --git a/cmake/deps/dlpack_rapids.cmake b/cmake/deps/dlpack_rapids.cmake
-index d207b18..dda7379 100644
+index d207b181..dda7379c 100644
 --- a/cmake/deps/dlpack_rapids.cmake
 +++ b/cmake/deps/dlpack_rapids.cmake
 @@ -14,20 +14,4 @@
@@ -345,7 +410,7 @@ index d207b18..dda7379 100644
 -set(dlpack_SOURCE_DIR ${dlpack_SOURCE_DIR} PARENT_SCOPE)
 +rapids_find_package(dlpack 1.0 REQUIRED)
 diff --git a/cmake/deps/eigen3_urm.cmake b/cmake/deps/eigen3_urm.cmake
-index 38863ec..8a2b5c8 100644
+index 38863ec3..8a2b5c86 100644
 --- a/cmake/deps/eigen3_urm.cmake
 +++ b/cmake/deps/eigen3_urm.cmake
 @@ -13,79 +13,4 @@
@@ -430,7 +495,7 @@ index 38863ec..8a2b5c8 100644
 -endif()
 +find_package(Eigen3 REQUIRED)
 diff --git a/cmake/deps/expected_rapids.cmake b/cmake/deps/expected_rapids.cmake
-index 680c6ee..3cfa92a 100644
+index 680c6ee2..3cfa92a0 100644
 --- a/cmake/deps/expected_rapids.cmake
 +++ b/cmake/deps/expected_rapids.cmake
 @@ -13,23 +13,4 @@
@@ -459,7 +524,7 @@ index 680c6ee..3cfa92a 100644
 -set(tl-expected_SOURCE_DIR ${tl-expected_SOURCE_DIR} PARENT_SCOPE)
 +rapids_find_package(tl-expected 1.1.0 REQUIRED)
 diff --git a/cmake/deps/fmt_rapids.cmake b/cmake/deps/fmt_rapids.cmake
-index 4be303e..a943e4d 100644
+index 4be303eb..a943e4d4 100644
 --- a/cmake/deps/fmt_rapids.cmake
 +++ b/cmake/deps/fmt_rapids.cmake
 @@ -13,27 +13,4 @@
@@ -492,7 +557,7 @@ index 4be303e..a943e4d 100644
 -endif()
 +find_package(fmt 11.0.2 REQUIRED)
 diff --git a/cmake/deps/glfw_rapids.cmake b/cmake/deps/glfw_rapids.cmake
-index 7ed90e6..77f3e08 100644
+index 7ed90e65..77f3e08e 100644
 --- a/cmake/deps/glfw_rapids.cmake
 +++ b/cmake/deps/glfw_rapids.cmake
 @@ -68,22 +68,4 @@ if(NOT Wayland_FOUND)
@@ -520,7 +585,7 @@ index 7ed90e6..77f3e08 100644
 -)
 +rapids_find_package(glfw3 3.4.0 REQUIRED)
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
-index 360f64c..8b877f0 100644
+index 360f64c5..8b877f04 100644
 --- a/cmake/deps/grpc.cmake
 +++ b/cmake/deps/grpc.cmake
 @@ -75,7 +75,7 @@ endfunction()
@@ -548,7 +613,7 @@ index 360f64c..8b877f0 100644
  # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
  find_package(gRPC CONFIG REQUIRED)
 diff --git a/cmake/deps/gtest_rapids.cmake b/cmake/deps/gtest_rapids.cmake
-index 0c40dd0..b4f806a 100644
+index 0c40dd09..b4f806ae 100644
 --- a/cmake/deps/gtest_rapids.cmake
 +++ b/cmake/deps/gtest_rapids.cmake
 @@ -13,40 +13,4 @@
@@ -594,7 +659,7 @@ index 0c40dd0..b4f806a 100644
 -endif()
 +find_package(GTest 1.16.0 REQUIRED)
 diff --git a/cmake/deps/hwloc.cmake b/cmake/deps/hwloc.cmake
-index 9c20ea4..be9c2a0 100644
+index 9c20ea44..be9c2a0b 100644
 --- a/cmake/deps/hwloc.cmake
 +++ b/cmake/deps/hwloc.cmake
 @@ -13,113 +13,5 @@
@@ -715,7 +780,7 @@ index 9c20ea4..be9c2a0 100644
 +pkg_check_modules(hwloc REQUIRED IMPORTED_TARGET GLOBAL hwloc>=2.9.0)
 diff --git a/cmake/deps/hwloc.config.h.in b/cmake/deps/hwloc.config.h.in
 deleted file mode 100644
-index 30a6708..0000000
+index 30a6708d..00000000
 --- a/cmake/deps/hwloc.config.h.in
 +++ /dev/null
 @@ -1,259 +0,0 @@
@@ -980,7 +1045,7 @@ index 30a6708..0000000
 -#endif /* HWLOC_CONFIG_H */
 diff --git a/cmake/deps/hwloc.private.config.h.in b/cmake/deps/hwloc.private.config.h.in
 deleted file mode 100644
-index bd45111..0000000
+index bd45111f..00000000
 --- a/cmake/deps/hwloc.private.config.h.in
 +++ /dev/null
 @@ -1,882 +0,0 @@
@@ -1868,7 +1933,7 @@ index bd45111..0000000
 -#endif /* HWLOC_CONFIGURE_H */
 diff --git a/cmake/deps/hwloc.static-components.h.in b/cmake/deps/hwloc.static-components.h.in
 deleted file mode 100644
-index a788a24..0000000
+index a788a246..00000000
 --- a/cmake/deps/hwloc.static-components.h.in
 +++ /dev/null
 @@ -1,32 +0,0 @@
@@ -1905,7 +1970,7 @@ index a788a24..0000000
 -    // &hwloc_x86_component,
 -    NULL};
 diff --git a/cmake/deps/magic_enum.cmake b/cmake/deps/magic_enum.cmake
-index 3f8203b..bff89fc 100644
+index 3f8203b7..bff89fc0 100644
 --- a/cmake/deps/magic_enum.cmake
 +++ b/cmake/deps/magic_enum.cmake
 @@ -13,31 +13,4 @@
@@ -1942,7 +2007,7 @@ index 3f8203b..bff89fc 100644
 -endif()
 +rapids_find_package(magic_enum 0.9.7 REQUIRED)
 diff --git a/cmake/deps/matx.cmake b/cmake/deps/matx.cmake
-index c99f31e..a02910c 100644
+index c99f31e5..a02910c7 100644
 --- a/cmake/deps/matx.cmake
 +++ b/cmake/deps/matx.cmake
 @@ -13,35 +13,4 @@
@@ -1983,7 +2048,7 @@ index c99f31e..a02910c 100644
 -endif()
 +rapids_find_package(matx 0.9.3 REQUIRED)
 diff --git a/cmake/deps/nvtx3.cmake b/cmake/deps/nvtx3.cmake
-index a3990c3..fa8c831 100644
+index a3990c3e..fa8c8319 100644
 --- a/cmake/deps/nvtx3.cmake
 +++ b/cmake/deps/nvtx3.cmake
 @@ -13,22 +13,4 @@
@@ -2011,7 +2076,7 @@ index a3990c3..fa8c831 100644
 -endif()
 +find_package(nvtx3 3.3.0 REQUIRED)
 diff --git a/cmake/deps/pybind11.cmake b/cmake/deps/pybind11.cmake
-index 3aa140e..ec475f2 100644
+index 3aa140e6..ec475f20 100644
 --- a/cmake/deps/pybind11.cmake
 +++ b/cmake/deps/pybind11.cmake
 @@ -14,22 +14,4 @@
@@ -2039,7 +2104,7 @@ index 3aa140e..ec475f2 100644
 -endif()
 +rapids_find_package(pybind11 2.11.1 REQUIRED)
 diff --git a/cmake/deps/rmm.cmake b/cmake/deps/rmm.cmake
-index 49dc455..b710dd2 100644
+index 49dc4558..b710dd2c 100644
 --- a/cmake/deps/rmm.cmake
 +++ b/cmake/deps/rmm.cmake
 @@ -13,40 +13,5 @@
@@ -2086,7 +2151,7 @@ index 49dc455..b710dd2 100644
 +rapids_find_package(rapids_logger 0.2.0 REQUIRED)
 +rapids_find_package(rmm 25.10.0 REQUIRED)
 diff --git a/cmake/deps/spdlog_rapids.cmake b/cmake/deps/spdlog_rapids.cmake
-index 74baaa7..3f5600a 100644
+index 74baaa7a..3f5600aa 100644
 --- a/cmake/deps/spdlog_rapids.cmake
 +++ b/cmake/deps/spdlog_rapids.cmake
 @@ -13,31 +13,4 @@
@@ -2123,32 +2188,37 @@ index 74baaa7..3f5600a 100644
 -endif()
 +rapids_find_package(spdlog 1.14.1 REQUIRED)
 diff --git a/cmake/deps/ucx.cmake b/cmake/deps/ucx.cmake
-index 2273e95..be105bc 100644
+index 9d96eb2d..ef907323 100644
 --- a/cmake/deps/ucx.cmake
 +++ b/cmake/deps/ucx.cmake
-@@ -14,68 +14,3 @@
+@@ -13,109 +13,4 @@
+ # See the License for the specific language governing permissions and
  # limitations under the License.
  
- find_package(ucx 1.17.0 REQUIRED)
+-find_package(ucx 1.17.0 REQUIRED)
 -
--# Install UCX shared libs under <prefix>/lib/libuc*.so*
+-# Install UCX shared libs under <prefix>/lib/libuc*.so* and libgdrapi*.so*
+-# Core UCX libraries: libucp.so, libucs.so, libuct.so, libucm.so, libucs_signal.so
+-# gdrcopy library: libgdrapi.so (copied to UCX lib dir during Docker build)
 -file(GLOB TOP_UCX_LIB_FILES "${UCX_LIBRARIES}/libuc*.so*")
+-file(GLOB GDRCOPY_LIB_FILES "${UCX_LIBRARIES}/libgdrapi*.so*")
 -install(
--  FILES ${TOP_UCX_LIB_FILES}
+-  FILES ${TOP_UCX_LIB_FILES} ${GDRCOPY_LIB_FILES}
 -  DESTINATION "${HOLOSCAN_INSTALL_LIB_DIR}"
 -  COMPONENT "holoscan-dependencies"
 -)
 -
--# Set RPATH on installed UCX libraries so they can find each other
+-# Set RPATH on installed UCX and gdrcopy libraries so they can find each other
 -# Note: CPack sets and requires the DESTDIR prefix. See:
 -# https://gitlab.kitware.com/cmake/cmake/-/issues/24212
 -install(CODE "
 -  file(GLOB UCX_INSTALLED_LIBS \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${HOLOSCAN_INSTALL_LIB_DIR}/libuc*.so*\")
+-  file(GLOB GDRCOPY_INSTALLED_LIBS \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${HOLOSCAN_INSTALL_LIB_DIR}/libgdrapi*.so*\")
 -  list(LENGTH UCX_INSTALLED_LIBS UCX_INSTALLED_LIBS_COUNT)
 -  if(UCX_INSTALLED_LIBS_COUNT LESS_EQUAL 0)
 -    message(WARNING \"No UCX libraries found in \$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${HOLOSCAN_INSTALL_LIB_DIR}/\")
 -  endif()
--  foreach(ucx_lib \${UCX_INSTALLED_LIBS})
+-  foreach(ucx_lib \${UCX_INSTALLED_LIBS} \${GDRCOPY_INSTALLED_LIBS})
 -    if(NOT IS_SYMLINK \${ucx_lib})
 -      execute_process(COMMAND patchelf --set-rpath \$ORIGIN \${ucx_lib})
 -    endif()
@@ -2175,6 +2245,42 @@ index 2273e95..be105bc 100644
 -  endforeach()
 -" COMPONENT "holoscan-dependencies")
 -
+-# Install essential UCX binaries for diagnostics and benchmarking:
+-# - ucx_info: Display UCX configuration, available transports, and devices
+-# - ucx_perftest: Benchmark UCX performance (latency, bandwidth)
+-# These binaries are built against Holoscan's UCX version to avoid version conflicts
+-# with HPC-X UCX that may be present in base images.
+-get_filename_component(UCX_ROOT "${UCX_LIBRARIES}" DIRECTORY)
+-set(UCX_BIN_DIR "${UCX_ROOT}/bin")
+-if(EXISTS "${UCX_BIN_DIR}")
+-  set(UCX_ESSENTIAL_BINS
+-    "${UCX_BIN_DIR}/ucx_info"
+-    "${UCX_BIN_DIR}/ucx_perftest"
+-  )
+-  foreach(ucx_bin ${UCX_ESSENTIAL_BINS})
+-    if(EXISTS "${ucx_bin}")
+-      install(
+-        PROGRAMS "${ucx_bin}"
+-        DESTINATION "${CMAKE_INSTALL_BINDIR}"
+-        COMPONENT "holoscan-dependencies"
+-      )
+-    endif()
+-  endforeach()
+-
+-  # Set RPATH on installed UCX binaries to find libraries in ../lib
+-  # Note: CPack sets and requires the DESTDIR prefix. See:
+-  # https://gitlab.kitware.com/cmake/cmake/-/issues/24212
+-  install(CODE "
+-    set(UCX_BIN_NAMES ucx_info ucx_perftest)
+-    foreach(ucx_bin_name \${UCX_BIN_NAMES})
+-      set(ucx_bin \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/\${ucx_bin_name}\")
+-      if(EXISTS \${ucx_bin} AND NOT IS_SYMLINK \${ucx_bin})
+-        execute_process(COMMAND patchelf --set-rpath \$ORIGIN/../lib \${ucx_bin})
+-      endif()
+-    endforeach()
+-  " COMPONENT "holoscan-dependencies")
+-endif()
+-
 -# Install UCX headers
 -foreach(ucx_target ucm ucp ucs uct)
 -  install(
@@ -2195,8 +2301,9 @@ index 2273e95..be105bc 100644
 -  COMPONENT "holoscan-dependencies"
 -  RENAME "ucx-config.cmake"
 -)
++find_package(ucx 1.17.0 REQUIRED)
 diff --git a/cmake/deps/ucxx_rapids.cmake b/cmake/deps/ucxx_rapids.cmake
-index bf0f43b..cc4d34f 100644
+index 6ecbdc23..a91d0b2e 100644
 --- a/cmake/deps/ucxx_rapids.cmake
 +++ b/cmake/deps/ucxx_rapids.cmake
 @@ -13,134 +13,4 @@
@@ -2206,13 +2313,13 @@ index bf0f43b..cc4d34f 100644
 -# https://docs.rapids.ai/api/rapids-cmake/stable/command/rapids_cpm_find.html
 -include(${rapids-cmake-dir}/cpm/find.cmake)
 -
--rapids_cpm_find(ucxx 0.44.0
+-rapids_cpm_find(ucxx 0.46.0
 -    GLOBAL_TARGETS ucxx
 -    BUILD_EXPORT_SET ${HOLOSCAN_PACKAGE_NAME}-exports
 -    CPM_ARGS
 -
 -    GITHUB_REPOSITORY rapidsai/ucxx
--    GIT_TAG v0.44.00
+-    GIT_TAG v0.46.00
 -    GIT_SHALLOW TRUE
 -    SOURCE_SUBDIR cpp
 -    DOWNLOAD_ONLY TRUE
@@ -2334,9 +2441,9 @@ index bf0f43b..cc4d34f 100644
 -        COMPONENT "holoscan-dependencies"
 -        )
 -endif()
-+find_package(ucxx 0.44.0 REQUIRED)
++find_package(ucxx 0.46.0 REQUIRED)
 diff --git a/cmake/deps/yaml-cpp_rapids.cmake b/cmake/deps/yaml-cpp_rapids.cmake
-index f13166f..3e49726 100644
+index f13166f7..541077f2 100644
 --- a/cmake/deps/yaml-cpp_rapids.cmake
 +++ b/cmake/deps/yaml-cpp_rapids.cmake
 @@ -13,53 +13,4 @@
@@ -2395,7 +2502,7 @@ index f13166f..3e49726 100644
 -endif()
 +rapids_find_package(yaml-cpp 0.8.0 REQUIRED)
 diff --git a/cmake/modules/FindONNXRuntime.cmake b/cmake/modules/FindONNXRuntime.cmake
-index 9f8c10a..8b4df5b 100644
+index 9f8c10a7..8b4df5b2 100644
 --- a/cmake/modules/FindONNXRuntime.cmake
 +++ b/cmake/modules/FindONNXRuntime.cmake
 @@ -13,47 +13,6 @@
@@ -2449,7 +2556,7 @@ index 9f8c10a..8b4df5b 100644
 -    REQUIRED_VARS ONNXRuntime_LIBRARY ONNXRuntime_INCLUDE_DIR
 -)
 diff --git a/cmake/modules/SetupCUDA.cmake b/cmake/modules/SetupCUDA.cmake
-index ac575df..781faf8 100644
+index ac575df4..781faf82 100644
 --- a/cmake/modules/SetupCUDA.cmake
 +++ b/cmake/modules/SetupCUDA.cmake
 @@ -15,49 +15,5 @@
@@ -2503,7 +2610,7 @@ index ac575df..781faf8 100644
 -    endif()
 -endif()
 diff --git a/cmake/modules/SetupCache.cmake b/cmake/modules/SetupCache.cmake
-index cc54d58..e5dae04 100644
+index cc54d586..e5dae043 100644
 --- a/cmake/modules/SetupCache.cmake
 +++ b/cmake/modules/SetupCache.cmake
 @@ -207,9 +207,6 @@ if(${HOLOSCAN_CACHE_DIR} STREQUAL " ")
@@ -2517,7 +2624,7 @@ index cc54d58..e5dae04 100644
      configure_ccache(HOLOSCAN_CACHE_DIR)
  endif()
 diff --git a/cmake/modules/SetupRapidsCMake.cmake b/cmake/modules/SetupRapidsCMake.cmake
-index 72b2a02..2df6f7d 100644
+index 72b2a02d..2df6f7de 100644
 --- a/cmake/modules/SetupRapidsCMake.cmake
 +++ b/cmake/modules/SetupRapidsCMake.cmake
 @@ -16,15 +16,25 @@
@@ -2554,7 +2661,7 @@ index 72b2a02..2df6f7d 100644
  include(rapids-cmake)
  include(rapids-cpm)
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index bcfbc38..0e767f4 100644
+index bcfbc385..4cc953cd 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
 @@ -15,12 +15,6 @@
@@ -2570,8 +2677,16 @@ index bcfbc38..0e767f4 100644
  function(superbuild_depend module_name)
      cmake_parse_arguments(PARSE_ARGV 1 _SUPER_BUILD "" "COMPONENT" "")
      # Set CMAKE_INSTALL_DEFAULT_COMPONENT_NAME before including .cmake file
+@@ -60,7 +54,6 @@ superbuild_depend(nvtx3)
+ superbuild_depend(rmm)
+ superbuild_depend(tensorrt)
+ superbuild_depend(threads)
+-superbuild_depend(ucx)
+ superbuild_depend(v4l2)
+ superbuild_depend(yaml-cpp_rapids)
+ superbuild_depend(gxf)
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 5bf0050..97946b3 100644
+index 5bf0050c..97946b37 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
 @@ -57,7 +57,6 @@ include(CTest)
@@ -2583,7 +2698,7 @@ index 5bf0050..97946b3 100644
    add_subdirectory(ping_conditional)
    add_subdirectory(ping_cycle)
 diff --git a/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp b/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
-index d931057..f1e7e30 100644
+index d931057e..f1e7e301 100644
 --- a/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
 +++ b/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
 @@ -22,7 +22,7 @@
@@ -2596,7 +2711,7 @@ index d931057..f1e7e30 100644
  // A simple operator that processes a fixed number of times and then completes
  class FiniteSourceOp : public holoscan::Operator {
 diff --git a/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
-index 3aa2cb1..1202629 100644
+index 3aa2cb1b..1202629e 100644
 --- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 +++ b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 @@ -26,32 +26,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES LESS 70)
@@ -2647,7 +2762,7 @@ index 3aa2cb1..1202629 100644
  
  # Testing
 diff --git a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
-index 7588cae..8fdaf3a 100644
+index 7588cae4..8fdaf3a4 100644
 --- a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_executable(distributed_pose_tree
@@ -2664,7 +2779,7 @@ index 7588cae..8fdaf3a 100644
  
  # Copy config file
 diff --git a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
-index ae533f1..0842e08 100644
+index ae533f13..0842e086 100644
 --- a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_executable(pose_tree_basic
@@ -2681,7 +2796,7 @@ index ae533f1..0842e08 100644
  
  # Copy config file
 diff --git a/include/holoscan/core/resources/async_data_logger.hpp b/include/holoscan/core/resources/async_data_logger.hpp
-index 86039a9..9b05a5d 100644
+index 32e92936..b6d804a9 100644
 --- a/include/holoscan/core/resources/async_data_logger.hpp
 +++ b/include/holoscan/core/resources/async_data_logger.hpp
 @@ -31,7 +31,7 @@
@@ -2694,7 +2809,7 @@ index 86039a9..9b05a5d 100644
  #include "holoscan/core/component_spec.hpp"
  #include "holoscan/core/domain/tensor.hpp"
 diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
-index 48f48de..33a4456 100644
+index 48f48de6..33a44563 100644
 --- a/modules/holoinfer/src/CMakeLists.txt
 +++ b/modules/holoinfer/src/CMakeLists.txt
 @@ -49,6 +49,15 @@ set_target_properties(holoinfer_utils PROPERTIES
@@ -2727,7 +2842,7 @@ index 48f48de..33a4456 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoinfer/src/infer/onnx/CMakeLists.txt b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
-index 903f006..a944c2c 100644
+index 903f006f..a944c2c4 100644
 --- a/modules/holoinfer/src/infer/onnx/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
 @@ -15,7 +15,9 @@
@@ -2759,18 +2874,32 @@ index 903f006..a944c2c 100644
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
      )
 diff --git a/modules/holoinfer/src/infer/torch/CMakeLists.txt b/modules/holoinfer/src/infer/torch/CMakeLists.txt
-index faadf2b..92ee017 100644
+index c228bb33..92ee017e 100644
 --- a/modules/holoinfer/src/infer/torch/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/torch/CMakeLists.txt
-@@ -51,6 +51,7 @@ message(STATUS "TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}")
+@@ -49,18 +49,9 @@ else()
+ endif()
+ message(STATUS "TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}")
  
- # Find dependencies
- find_package(Torch REQUIRED)
+-# Find Torch
+-find_package(Python3 COMPONENTS Interpreter QUIET)
+-set(PYTHON_MAJOR_MINOR "${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}")
+-set(TORCH_SEARCH_DIRS
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "$ENV{HOME}/.local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/opt/nvidia/torch"
+-)
+-find_package(Torch 2.8 REQUIRED CONFIG PATHS ${TORCH_SEARCH_DIRS})
++# Find dependencies
++find_package(Torch REQUIRED)
 +find_package(dlpack 1.0 REQUIRED)
  
  # Create the holoinfer torch backend library
  add_library(holoinfer_torch SHARED core.cpp)
-@@ -76,6 +77,6 @@ target_include_directories(holoinfer_torch
+@@ -86,6 +77,6 @@ target_include_directories(holoinfer_torch
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
      PUBLIC
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
@@ -2779,7 +2908,7 @@ index faadf2b..92ee017 100644
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
      )
 diff --git a/modules/holoviz/examples/demo/CMakeLists.txt b/modules/holoviz/examples/demo/CMakeLists.txt
-index 8b96a52..3f26fae 100644
+index 8b96a52a..3f26faef 100644
 --- a/modules/holoviz/examples/demo/CMakeLists.txt
 +++ b/modules/holoviz/examples/demo/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -2811,7 +2940,7 @@ index 8b96a52..3f26fae 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/examples/depth_map/CMakeLists.txt b/modules/holoviz/examples/depth_map/CMakeLists.txt
-index af2b7a3..0f87a07 100644
+index af2b7a30..0f87a07e 100644
 --- a/modules/holoviz/examples/depth_map/CMakeLists.txt
 +++ b/modules/holoviz/examples/depth_map/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -2843,7 +2972,7 @@ index af2b7a3..0f87a07 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/tests/functional/CMakeLists.txt b/modules/holoviz/tests/functional/CMakeLists.txt
-index c52e451..769fa81 100644
+index c52e4516..769fa81e 100644
 --- a/modules/holoviz/tests/functional/CMakeLists.txt
 +++ b/modules/holoviz/tests/functional/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -2875,7 +3004,7 @@ index c52e451..769fa81 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/thirdparty/imgui/CMakeLists.txt b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
-index 3facf71..8d880dc 100644
+index 3facf71b..8d880dc9 100644
 --- a/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 +++ b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 @@ -18,29 +18,17 @@ include(GNUInstallDirs)
@@ -2963,7 +3092,7 @@ index 3facf71..8d880dc 100644
    )
 \ No newline at end of file
 diff --git a/python/holoscan/operators/holoviz/CMakeLists.txt b/python/holoscan/operators/holoviz/CMakeLists.txt
-index e9c5987..f0414b4 100644
+index e9c59876..f0414b47 100644
 --- a/python/holoscan/operators/holoviz/CMakeLists.txt
 +++ b/python/holoscan/operators/holoviz/CMakeLists.txt
 @@ -13,6 +13,9 @@
@@ -2984,7 +3113,7 @@ index e9c5987..f0414b4 100644
 +        ${MAGIC_ENUM_INCLUDE_DIRS}
  )
 diff --git a/python/holoscan/operators/holoviz/holoviz.cpp b/python/holoscan/operators/holoviz/holoviz.cpp
-index 1ec8f04..fe85b84 100644
+index 1ec8f042..fe85b84d 100644
 --- a/python/holoscan/operators/holoviz/holoviz.cpp
 +++ b/python/holoscan/operators/holoviz/holoviz.cpp
 @@ -31,7 +31,7 @@
@@ -2997,7 +3126,7 @@ index 1ec8f04..fe85b84 100644
  #include "../../core/component_util.hpp"
  #include "../operator_util.hpp"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2eabe6c..a6db095 100644
+index 2eabe6c1..a6db0959 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -75,6 +75,7 @@ endfunction()
@@ -3090,7 +3219,7 @@ index 2eabe6c..a6db095 100644
  
  # ##############################################################################
 diff --git a/src/core/conditions/gxf/asynchronous.cpp b/src/core/conditions/gxf/asynchronous.cpp
-index 6485a4f..7c9d70c 100644
+index 6485a4f2..7c9d70cd 100644
 --- a/src/core/conditions/gxf/asynchronous.cpp
 +++ b/src/core/conditions/gxf/asynchronous.cpp
 @@ -19,7 +19,7 @@
@@ -3103,7 +3232,7 @@ index 6485a4f..7c9d70c 100644
  
  namespace holoscan {
 diff --git a/src/core/gxf/gxf_utils.cpp b/src/core/gxf/gxf_utils.cpp
-index c5abb79..ec06c7a 100644
+index c5abb79b..ec06c7a1 100644
 --- a/src/core/gxf/gxf_utils.cpp
 +++ b/src/core/gxf/gxf_utils.cpp
 @@ -25,7 +25,7 @@
@@ -3116,10 +3245,10 @@ index c5abb79..ec06c7a 100644
  #include "holoscan/core/gxf/gxf_utils.hpp"
  #include "holoscan/logger/logger.hpp"
 diff --git a/src/core/resources/async_data_logger.cpp b/src/core/resources/async_data_logger.cpp
-index b2a0e90..c0d1060 100644
+index cccaa316..ec89e016 100644
 --- a/src/core/resources/async_data_logger.cpp
 +++ b/src/core/resources/async_data_logger.cpp
-@@ -26,7 +26,7 @@
+@@ -27,7 +27,7 @@
  #include <string>
  #include <utility>
  
@@ -3129,7 +3258,7 @@ index b2a0e90..c0d1060 100644
  #include "holoscan/core/component_spec.hpp"
  #include "holoscan/core/domain/tensor.hpp"
 diff --git a/src/data_loggers/basic_console_logger/simple_text_serializer.cpp b/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
-index b48f7ec..7e7c18d 100644
+index b48f7ec3..7e7c18d8 100644
 --- a/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
 +++ b/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
 @@ -28,7 +28,7 @@
@@ -3142,7 +3271,7 @@ index b48f7ec..7e7c18d 100644
  #include "gxf/core/handle.hpp"
  #include "gxf/multimedia/video.hpp"
 diff --git a/src/operators/holoviz/holoviz.cpp b/src/operators/holoviz/holoviz.cpp
-index 628dd39..cbf6768 100644
+index 628dd394..cbf6768e 100644
 --- a/src/operators/holoviz/holoviz.cpp
 +++ b/src/operators/holoviz/holoviz.cpp
 @@ -26,7 +26,7 @@
@@ -3155,7 +3284,7 @@ index 628dd39..cbf6768 100644
  #include "holoscan/core/application.hpp"
  #include "holoscan/core/condition.hpp"
 diff --git a/src/operators/v4l2_video_capture/v4l2_video_capture.cpp b/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
-index b8b1d1f..7c7ae4f 100644
+index b8b1d1f0..7c7ae4f5 100644
 --- a/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
 +++ b/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
 @@ -35,7 +35,7 @@
