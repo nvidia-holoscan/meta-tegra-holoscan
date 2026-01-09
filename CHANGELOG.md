@@ -1,3 +1,16 @@
+## [3.10.0] - 2026-01-08
+### Changed
+- Updated Holoscan SDK and Holohub apps to 3.10.0.
+- Updated GXF to 5.2.0-20251212-8f83bf174.
+- Updated UCXX to 0.46.00.
+- Dropped the prebuild OE builder docker container image from NGC. 
+  Users can build the OE builder then start building the holoscan reference image. 
+
+### Fixed
+- Fixed Preempt-RT enablement.
+- Fixed OpenRM driver build when Preempt-RT is enabled.
+
+
 ## [3.9.0] - 2025-11-26
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.9.0.
@@ -506,6 +519,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.10.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.9.0...v3.10.0
 [3.9.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.8.0...v3.9.0
 [3.8.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.7.0...v3.8.0
 [3.7.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.6.0...v3.7.0
