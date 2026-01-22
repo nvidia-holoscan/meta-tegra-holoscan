@@ -43,8 +43,20 @@ In order to perform this initial setup navigate to the directory into which you
 would like to initialize the development environment and run the following
 (making sure `IMAGE` matches the name and tag of this container image):
 
+
+**Note:** Download the [rivermax package](https://developer.nvidia.com/downloads/networking/secure/rivermax-linux-sdk/installation-package/version-1.40.x/rivermax_ubuntu2204_1.40.11.tar.gz)
+
 ```sh
-$ export IMAGE=nvcr.io/nvidia/clara-holoscan/holoscan-oe-builder:v3.9.0
+$ cd /tmp
+$ git clone https://github.com/nvidia-holoscan/meta-tegra-holoscan.git -b v3.10.0
+$ cp rivermax_ubuntu2204_1.40.11.tar.gz meta-tegra-holoscan/recipes-connectivity/rivermax/files
+$ cd meta-tegra-holoscan/env
+$ ./docker_build.sh holoscan-oe-builder:v3.10.0
+$ cd /tmp && rm -rf meta-tegra-holoscan
+```
+
+```sh
+$ export IMAGE=holoscan-oe-builder:v3.10.0
 $ docker run -it --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 
