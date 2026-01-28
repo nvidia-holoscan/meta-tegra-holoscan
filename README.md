@@ -30,7 +30,7 @@ For example, on a system with the following specifications:
 * RAM: 32GB DDR4-2133
 * Disk: Samsung EVO 870 2TB SSD
 * Network: 1 Gigabit Fiber Internet
-* Operating System: Ubuntu 18.04
+* Operating System: Ubuntu 22.04
 
 a complete build using the `core-image-holoscan` target and the default
 package configuration (including CUDA, TensorRT, and Holoscan SDK) takes:
