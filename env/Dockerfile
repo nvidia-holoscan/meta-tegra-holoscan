@@ -70,7 +70,6 @@ RUN locale-gen en_US.UTF-8
 
 WORKDIR /opt/nvidia/meta-tegra-holoscan
 COPY . .
-RUN env/docker_check_packages.sh
 RUN ln -s container_setup.sh env/setup.sh
 ENV PATH="/opt/nvidia/meta-tegra-holoscan/env:${PATH}"
 

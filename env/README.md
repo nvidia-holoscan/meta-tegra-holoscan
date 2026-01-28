@@ -48,15 +48,14 @@ would like to initialize the development environment and run the following
 
 ```sh
 $ cd /tmp
-$ git clone https://github.com/nvidia-holoscan/meta-tegra-holoscan.git -b v3.10.0
-$ cp rivermax_ubuntu2204_1.40.11.tar.gz meta-tegra-holoscan/recipes-connectivity/rivermax/files
+$ git clone https://github.com/nvidia-holoscan/meta-tegra-holoscan.git
 $ cd meta-tegra-holoscan/env
-$ ./docker_build.sh holoscan-oe-builder:v3.10.0
+$ ./docker_build.sh holoscan-oe-builder
 $ cd /tmp && rm -rf meta-tegra-holoscan
 ```
 
 ```sh
-$ export IMAGE=holoscan-oe-builder:v3.10.0
+$ export IMAGE=holoscan-oe-builder
 $ docker run -it --rm -v $(pwd):/workspace --network host ${IMAGE} setup.sh ${IMAGE} $(id -u) $(id -g)
 ```
 

@@ -2,7 +2,7 @@
 
 This layer adds OpenEmbedded recipes and sample build configurations to build
 BSPs for NVIDIA Holoscan Developer Kits that feature support for discrete GPUs
-(dGPU), Rivermax, AJA Video Systems I/O boards, and the NVIDIA Holoscan SDK.
+(dGPU), AJA Video Systems I/O boards, and the NVIDIA Holoscan SDK.
 These BSPs are built on a developer's host machine and are then flashed onto a
 Holoscan Developer Kit using provided scripts.
 
@@ -119,13 +119,6 @@ into and then run `git checkout {commit id}`.
     manually downloaded and placed into the corresponding recipe directory
     before building.
 
-    The current list of manually downloaded packages is as follows:
-
-    * #### Rivermax SDK (1.40.11)
-
-      Download: https://developer.nvidia.com/downloads/networking/secure/rivermax-linux-sdk/installation-package/version-1.40.x/rivermax_ubuntu2204_1.40.11.tar.gz
-      Local Destination: `meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax_ubuntu2204_1.40.11.tar.gz`
-
 #### iGPU and dGPU Configurations
 
 This layer provides both iGPU and dGPU support for the Holoscan platforms
@@ -207,22 +200,6 @@ The `PREEMPT_RT` patch is currently only supported with iGPU configuration,
 enabling the `PREEMPT_RT` patch with dGPU configuration will lead to build 
 failures. 
 
-##### Enabling Rivermax
-
-Rivermax support is added by including the `conf/rivermax.conf` file:
-
-```
-require conf/rivermax.conf
-```
-
-Using Rivermax requires a valid license file, and the `rivermax-license` recipe
-is responsible for installing the Rivermax license file provided by
-`meta-tegra-holoscan/recipes-connectivity/rivermax/files/rivermax.lic`.
-This file is an empty (invalid) license file by default, and must be replaced
-with a valid Rivermax license file in order to fully enable Rivermax support.
-Alternatively, the license file can be copied to the device at runtime by
-replacing `/opt/mellanox/rivermax/rivermax.lic`.
-
 ##### Enabling AJA Video Devices
 
 To enable support for AJA Video I/O devices, the AJA NTV2 kernel modules can be
@@ -292,15 +269,6 @@ $ bitbake core-image-holoscan
 
 > **_Note:_** Race conditions have been encountered that lead to errors during
 > the `do_rootfs` stage of the build such as `Couldn't find anything to satisfy
-> 'rivermax'`. If this occurs, try cleaning the failing package, build the
-> package by itself, then build the image again. For example, if the `rivermax`
-> package fails to install, try the following:
->
-> ```sh
-> $ bitbake rivermax -c cleansstate
-> $ bitbake rivermax
-> $ bitbake core-image-holoscan
-> ```
 
 Using the configuration described above, this will build the BSP image and write
 the output to
@@ -411,10 +379,8 @@ $ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.
 ### 2. Holoscan OpenEmbedded/Yocto Build Container
 
 Instead of downloading and installing all of the build tools, dependencies, and
-proprietary binaries manually, NVIDIA also provides a [Holoscan OpenEmbedded/Yocto Build
-Container](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/clara-holoscan/containers/holoscan-oe-builder)
-on the [NVIDIA GPU Cloud (NGC)](https://catalog.ngc.nvidia.com/) website.  This
-container image includes all of the tools and dependencies that are needed
+proprietary binaries manually, we provide a Docker file to create a build container.  
+This container includes all of the tools and dependencies that are needed
 either within the container or as part of a setup script that initializes a
 local build tree, and it simplifies the process such that building and flashing
 a Holoscan BSP can be done in just a few simple commands. See

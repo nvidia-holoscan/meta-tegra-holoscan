@@ -1,3 +1,7 @@
+## [3.11.0] - 2026-01-30
+### Changed
+- Removed Rivermax
+
 ## [3.10.0] - 2026-01-08
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 3.10.0.
