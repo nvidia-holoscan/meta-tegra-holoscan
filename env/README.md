@@ -43,9 +43,6 @@ In order to perform this initial setup navigate to the directory into which you
 would like to initialize the development environment and run the following
 (making sure `IMAGE` matches the name and tag of this container image):
 
-
-**Note:** Download the [rivermax package](https://developer.nvidia.com/downloads/networking/secure/rivermax-linux-sdk/installation-package/version-1.40.x/rivermax_ubuntu2204_1.40.11.tar.gz)
-
 ```sh
 $ cd /tmp
 $ git clone https://github.com/nvidia-holoscan/meta-tegra-holoscan.git
@@ -93,9 +90,9 @@ For example, the `MACHINE` configuration in this template file is set to
 TensorRT, Holoscan SDK, and the HoloHub sample applications are installed by
 default. This configuration can be used as-is to build a BSP for the IGX Orin
 Developer Kit using the A6000 dGPU, but it may be neccessary to change this
-configuration to use the iGPU or to add additional components like Rivermax or
-support for third-party hardware such as AJA video capture cards or Emergent
-high-speed cameras. See the `Build Configuration` section in the main `README`
+configuration to use the iGPU or to add additional components like support 
+for third-party hardware such as AJA video capture cards. 
+See the `Build Configuration` section in the main `README`
 for more details.
 
 To see the additional configuration that is added to this file relative to the
