@@ -62,12 +62,6 @@ EXTRA_OECMAKE:append = " \
     -DSLANG_RUNTIME_TARGETS=${HOST_ARCH} \
 "
 
-# Enable the Emergent apps if Emergent Camera support is enabled.
-EXTRA_OECMAKE:append = " \
-    ${@'-DHOLOHUB_ENABLE_EMERGENT=ON' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
-    ${@'-DEMERGENT_ROOT_DIR=${RECIPE_SYSROOT}/opt/EVT/eSDK' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
-"
-
 # Allow CMake to fetch datasets or dependencies during the configure and compile steps.
 do_configure[network] = "1"
 do_compile[network] = "1"
@@ -122,7 +116,6 @@ DEPENDS += " \
     tensorrt-core \
     cuda-nvrtc-native \
     nlohmann-json \
-    ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
     python3-pybind11 \
     libeigen \
     ucxx \
@@ -131,7 +124,6 @@ DEPENDS += " \
 "
 
 RDEPENDS:${PN} += " \
-    ${@'emergent-camera' if d.getVar('EMERGENT_CAMERA') == '1' else ''} \
     python3-packaging \
     pytorch \
     torchvision \
