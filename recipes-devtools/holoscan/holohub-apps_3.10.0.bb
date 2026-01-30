@@ -32,12 +32,11 @@ SRC_URI += " \
     file://0002-Fix-ajantv2-dependencies.patch \
     file://0003-Remove-relative-gxf_extension-paths.patch \
     file://0004-Build-python-libs-with-install-RPATH-and-add-find-py.patch \
-    file://0005-Enable-Emergent-apps.patch \
-    file://0006-Fix-default-data-paths-in-python-apps.patch \
-    file://0007-Fix-volume_renderer-application.patch \
-    file://0008-Skip-model-download-for-object_detection_torch.patch \
-    file://0009-Remove-native-CUDA_ARCHITECTURE.patch \
-    file://0010-Updates-for-OE-cross-builds.patch \
+    file://0005-Fix-default-data-paths-in-python-apps.patch \
+    file://0006-Fix-volume_renderer-application.patch \
+    file://0007-Skip-model-download-for-object_detection_torch.patch \
+    file://0008-Remove-native-CUDA_ARCHITECTURE.patch \
+    file://0009-Updates-for-OE-cross-builds.patch \
 "
 
 S = "${WORKDIR}/git"
