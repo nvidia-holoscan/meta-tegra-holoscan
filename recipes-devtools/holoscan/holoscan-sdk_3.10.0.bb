@@ -28,10 +28,12 @@ SRCREV = "e7cd7d15c4fa39d4c57985992486bbf75d147f47"
 
 SRC_URI += " \
     file://desktop-icons \
-    file://0001-Use-external-library-dependencies.patch \
-    file://0002-Build-python-libs-with-install-RPATH.patch \
-    file://0003-Fix-TensorRT-include-interface.patch \
-    file://0004-Disable-various-warnings-as-errors.patch \
+    file://0001-Fix-main-cmake.patch \
+    file://0002-Use-external-dependencies-deps.patch \
+    file://0003-Fix-cmakelists.patch \
+    file://0004-Build-python-libs-with-install-RPATH.patch \
+    file://0005-Fix-TensorRT-include-interface.patch \
+    file://0006-Disable-various-warnings-as-errors.patch \
 "
 
 S = "${WORKDIR}/git"

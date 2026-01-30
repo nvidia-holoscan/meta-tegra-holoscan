@@ -1,0 +1,501 @@
+From 553a0473c71d04a9fd3f2ee3a57488c908193d3e Mon Sep 17 00:00:00 2001
+From: Ilies CHERGUI <ichergui@nvidia.com>
+Date: Thu, 8 Jan 2026 08:52:12 -0800
+Subject: [PATCH 3/3] Use external dependencies - Modules and examples
+
+Update cmake modules, examples, and source CMakeLists files to use
+external library dependencies.
+
+Upstream-Status: Inappropriate [OE-specific]
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
+---
+
+diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
+index 5bf0050c..97946b37 100644
+--- a/examples/CMakeLists.txt
++++ b/examples/CMakeLists.txt
+@@ -57,7 +57,6 @@ include(CTest)
+ if(HOLOSCAN_CPP_EXAMPLES)
+   add_subdirectory(gpu_resident_example)
+   add_subdirectory(gpu_resident_input)
+-  add_subdirectory(matx)
+   add_subdirectory(ping_any)
+   add_subdirectory(ping_conditional)
+   add_subdirectory(ping_cycle)
+diff --git a/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
+index 3aa2cb1b..1202629e 100644
+--- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
++++ b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
+@@ -26,32 +26,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES LESS 70)
+   set(CMAKE_CUDA_ARCHITECTURES "70")
+ endif()
+ 
+-find_package(CUDAToolkit QUIET)
+-if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
+-  set(MATX_CCCL_MIN_VERSION 3.0)
+-else()
+-  set(MATX_CCCL_MIN_VERSION 2.8)
+-endif()
+-
+-# Holoscan SDK core features depend on CCCL >= 2.5 while the optional holoscan::matx feature
+-# depends on CCCL >= 2.8. Skip this example if no compatible CCCL is found.
+-if(MATX_CCCL_MIN_VERSION VERSION_GREATER_EQUAL 3.0)
+-  find_package(CCCL ${MATX_CCCL_MIN_VERSION} PATHS /usr/local/cuda/lib64/cmake/cccl)
+-else()
+-  # Allow compatibility across CCCL major versions
+-  find_package(CCCL 3.0 PATHS /usr/local/cuda/lib64/cmake/cccl QUIET)
+-  if(NOT CCCL_FOUND)
+-    find_package(CCCL ${MATX_CCCL_MIN_VERSION} PATHS /usr/local/cuda/lib64/cmake/cccl QUIET)
+-  endif()
+-endif()
+-
+-if(NOT CCCL_FOUND)
+-  message(WARNING "Found CCCL ${CCCL_VERSION} but need at least CCCL ${MATX_CCCL_MIN_VERSION} for MatX.
+-Please install a compatible CCCL version from https://github.com/NVIDIA/cccl.git
+-and re-configure the project with -DCCCL_ROOT=path/to/cccl to resolve the issue.
+-Skipping the matx_basic example...")
+-  return()
+-endif()
++find_package(CCCL REQUIRED)
++find_package(CUB REQUIRED)
++find_package(libcudacxx REQUIRED)
++find_package(Thrust REQUIRED)
++find_package(matx 0.9.1 REQUIRED)
+ 
+ # Finds the package holoscan
+ find_package(holoscan REQUIRED CONFIG
+@@ -64,7 +43,7 @@ add_executable(matx_basic
+ target_link_libraries(matx_basic
+   PRIVATE
+   holoscan::core
+-  holoscan::matx
++  matx::matx
+ )
+ 
+ # Testing
+diff --git a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
+index 7588cae4..8fdaf3a4 100644
+--- a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
++++ b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
+@@ -19,8 +19,10 @@ add_executable(distributed_pose_tree
+ )
+ target_link_libraries(distributed_pose_tree
+   PUBLIC
+-  holoscan::core
+-  holoscan::pose_tree
++    holoscan::core
++    holoscan::pose_tree
++  PRIVATE
++    ucxx::ucxx
+ )
+ 
+ # Copy config file
+diff --git a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
+index ae533f13..0842e086 100644
+--- a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
++++ b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
+@@ -19,8 +19,10 @@ add_executable(pose_tree_basic
+ )
+ target_link_libraries(pose_tree_basic
+   PUBLIC
+-  holoscan::core
+-  holoscan::pose_tree
++    holoscan::core
++    holoscan::pose_tree
++  PRIVATE
++    ucxx::ucxx
+ )
+ 
+ # Copy config file
+diff --git a/include/holoscan/core/resources/async_data_logger.hpp b/include/holoscan/core/resources/async_data_logger.hpp
+index 32e92936..b6d804a9 100644
+--- a/include/holoscan/core/resources/async_data_logger.hpp
++++ b/include/holoscan/core/resources/async_data_logger.hpp
+@@ -31,7 +31,7 @@
+ 
+ #include "yaml-cpp/yaml.h"
+ 
+-#include "concurrentqueue.h"
++#include "concurrentqueue/moodycamel/concurrentqueue.h"
+ #include "holoscan/core/arg.hpp"
+ #include "holoscan/core/component_spec.hpp"
+ #include "holoscan/core/domain/tensor.hpp"
+diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
+index 48f48de6..33a44563 100644
+--- a/modules/holoinfer/src/CMakeLists.txt
++++ b/modules/holoinfer/src/CMakeLists.txt
+@@ -49,6 +49,15 @@ set_target_properties(holoinfer_utils PROPERTIES
+     VERSION ${PROJECT_VERSION}
+ )
+ 
++find_package(CUDAToolkit REQUIRED)
++find_package(dlpack 1.0 REQUIRED)
++find_package(tl-expected 1.1.0 REQUIRED)
++find_package(CLI11 2.3.2 REQUIRED)
++find_package(magic_enum 0.9.7 REQUIRED)
++get_target_property(DLPACK_INCLUDE_DIRS dlpack::dlpack INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(TL_EXPECTED_INCLUDE_DIRS tl::expected INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(MAGIC_ENUM_INCLUDE_DIRS magic_enum::magic_enum INTERFACE_INCLUDE_DIRECTORIES)
++
+ set(holoinfer_src
+     infer/trt/core.cpp
+     infer/trt/utils.cpp
+@@ -73,9 +82,9 @@ target_include_directories(${PROJECT_NAME}
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/manager>
+     PUBLIC
+-        $<BUILD_INTERFACE:${tl-expected_SOURCE_DIR}/include>
+-        $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
+-        $<BUILD_INTERFACE:${magic_enum_SOURCE_DIR}/include>
++        ${TL_EXPECTED_INCLUDE_DIRS}
++        ${DLPACK_INCLUDE_DIRS}
++        ${MAGIC_ENUM_INCLUDE_DIRS}
+ )
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/modules/holoinfer/src/infer/onnx/CMakeLists.txt b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
+index 903f006f..a944c2c4 100644
+--- a/modules/holoinfer/src/infer/onnx/CMakeLists.txt
++++ b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
+@@ -15,7 +15,9 @@
+ # limitations under the License.
+ #
+ 
+-find_package(ONNXRuntime REQUIRED)
++find_package(PkgConfig)
++pkg_check_modules(libonnxruntime REQUIRED IMPORTED_TARGET GLOBAL libonnxruntime>=1.21.0)
++find_package(dlpack 1.0 REQUIRED)
+ add_library(holoinfer_ort SHARED core.cpp)
+ add_library(holoscan::infer::onnx_runtime ALIAS holoinfer_ort)
+ set_target_properties(holoinfer_ort PROPERTIES
+@@ -27,7 +29,7 @@ set_target_properties(holoinfer_ort PROPERTIES
+ )
+ target_link_libraries(holoinfer_ort
+     PRIVATE
+-        ONNXRuntime::ONNXRuntime
++        PkgConfig::libonnxruntime
+         CUDA::cudart
+         holoscan::logger
+         holoscan::holoinfer_utils
+@@ -39,6 +41,6 @@ target_include_directories(holoinfer_ort
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+-        $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
++        ${dlpack_INCLUDE_DIRS}
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+     )
+diff --git a/modules/holoinfer/src/infer/torch/CMakeLists.txt b/modules/holoinfer/src/infer/torch/CMakeLists.txt
+index c228bb33..92ee017e 100644
+--- a/modules/holoinfer/src/infer/torch/CMakeLists.txt
++++ b/modules/holoinfer/src/infer/torch/CMakeLists.txt
+@@ -49,18 +49,9 @@ else()
+ endif()
+ message(STATUS "TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}")
+ 
+-# Find Torch
+-find_package(Python3 COMPONENTS Interpreter QUIET)
+-set(PYTHON_MAJOR_MINOR "${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}")
+-set(TORCH_SEARCH_DIRS
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "$ENV{HOME}/.local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/opt/nvidia/torch"
+-)
+-find_package(Torch 2.8 REQUIRED CONFIG PATHS ${TORCH_SEARCH_DIRS})
++# Find dependencies
++find_package(Torch REQUIRED)
++find_package(dlpack 1.0 REQUIRED)
+ 
+ # Create the holoinfer torch backend library
+ add_library(holoinfer_torch SHARED core.cpp)
+@@ -86,6 +77,6 @@ target_include_directories(holoinfer_torch
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+-        $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
++        ${dlpack_INCLUDE_DIRS}
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+     )
+diff --git a/modules/holoviz/examples/demo/CMakeLists.txt b/modules/holoviz/examples/demo/CMakeLists.txt
+index 8b96a52a..3f26faef 100644
+--- a/modules/holoviz/examples/demo/CMakeLists.txt
++++ b/modules/holoviz/examples/demo/CMakeLists.txt
+@@ -15,18 +15,6 @@
+ 
+ set(PROJECT_NAME holoviz_demo)
+ 
+-# fetch the dependencies
+-include(FetchContent)
+-
+-# stb
+-FetchContent_Declare(
+-    stb
+-    GIT_REPOSITORY https://github.com/nothings/stb.git
+-    GIT_TAG af1a5bc352164740c1cc1354942b1c6b72eacb8a
+-    GIT_PROGRESS TRUE
+-    )
+-FetchContent_MakeAvailable(stb)
+-
+ add_executable(${PROJECT_NAME})
+ 
+ target_sources(${PROJECT_NAME}
+@@ -36,7 +24,7 @@ target_sources(${PROJECT_NAME}
+ 
+ target_include_directories(${PROJECT_NAME}
+     PRIVATE
+-        ${stb_SOURCE_DIR}
++        ${stb_INCLUDE_DIRS}
+     )
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/modules/holoviz/examples/depth_map/CMakeLists.txt b/modules/holoviz/examples/depth_map/CMakeLists.txt
+index af2b7a30..0f87a07e 100644
+--- a/modules/holoviz/examples/depth_map/CMakeLists.txt
++++ b/modules/holoviz/examples/depth_map/CMakeLists.txt
+@@ -15,18 +15,6 @@
+ 
+ set(PROJECT_NAME holoviz_depth_map)
+ 
+-# fetch the dependencies
+-include(FetchContent)
+-
+-# stb
+-FetchContent_Declare(
+-    stb
+-    GIT_REPOSITORY https://github.com/nothings/stb.git
+-    GIT_TAG af1a5bc352164740c1cc1354942b1c6b72eacb8a
+-    GIT_PROGRESS TRUE
+-    )
+-FetchContent_MakeAvailable(stb)
+-
+ add_executable(${PROJECT_NAME})
+ 
+ target_sources(${PROJECT_NAME}
+@@ -36,7 +24,7 @@ target_sources(${PROJECT_NAME}
+ 
+ target_include_directories(${PROJECT_NAME}
+     PRIVATE
+-        ${stb_SOURCE_DIR}
++        ${stb_INCLUDE_DIRS}
+     )
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/modules/holoviz/tests/functional/CMakeLists.txt b/modules/holoviz/tests/functional/CMakeLists.txt
+index c52e4516..769fa81e 100644
+--- a/modules/holoviz/tests/functional/CMakeLists.txt
++++ b/modules/holoviz/tests/functional/CMakeLists.txt
+@@ -15,18 +15,6 @@
+ 
+ set(PROJECT_NAME holoviz_functionaltests)
+ 
+-# fetch the dependencies
+-include(FetchContent)
+-
+-# stb
+-FetchContent_Declare(
+-    stb
+-    GIT_REPOSITORY https://github.com/nothings/stb.git
+-    GIT_TAG af1a5bc352164740c1cc1354942b1c6b72eacb8a
+-    GIT_PROGRESS TRUE
+-)
+-FetchContent_MakeAvailable(stb)
+-
+ find_package(CUDAToolkit REQUIRED)
+ find_package(X11 REQUIRED)
+ find_package(Vulkan REQUIRED)
+@@ -62,7 +50,7 @@ target_compile_definitions(${PROJECT_NAME}
+ 
+ target_include_directories(${PROJECT_NAME}
+     PRIVATE
+-        ${stb_SOURCE_DIR}
++        ${stb_INCLUDE_DIRS}
+     )
+ 
+ target_link_libraries(${PROJECT_NAME}
+diff --git a/modules/holoviz/thirdparty/imgui/CMakeLists.txt b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
+index 3facf71b..8d880dc9 100644
+--- a/modules/holoviz/thirdparty/imgui/CMakeLists.txt
++++ b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
+@@ -18,29 +18,17 @@ include(GNUInstallDirs)
+ 
+ find_package(Vulkan REQUIRED)
+ 
+-set(imgui_TAG "f3373780668fba1f9bd64c208d05c20b781c9a39")
+-FetchContent_Declare(
+-  imgui
+-  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+-  GIT_TAG "${imgui_TAG}"
+-  GIT_PROGRESS TRUE
+-  PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/imgui.patch" || true
+-  )
+-
+-message(STATUS "Fetching imgui@${imgui_TAG}")
+-FetchContent_MakeAvailable(imgui)
+-
+ add_library(imgui_backend STATIC)
+ 
+ target_sources(imgui_backend
+   PRIVATE
+-    ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+-    ${imgui_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
++    ${IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
++    ${IMGUI_SOURCE_DIR}/backends/imgui_impl_vulkan.cpp
+   )
+ 
+ target_include_directories(imgui_backend
+   PUBLIC
+-    ${imgui_SOURCE_DIR}
++    ${IMGUI_SOURCE_DIR}
+   )
+ 
+ target_compile_definitions(imgui_backend
+@@ -62,16 +50,16 @@ add_library(holoscan::viz::imgui ALIAS holoviz_imgui)
+ 
+ target_sources(holoviz_imgui
+   PRIVATE
+-    ${imgui_SOURCE_DIR}/imgui.cpp
+-    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+-    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+-    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+-    ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
++    ${IMGUI_SOURCE_DIR}/imgui.cpp
++    ${IMGUI_SOURCE_DIR}/imgui_draw.cpp
++    ${IMGUI_SOURCE_DIR}/imgui_tables.cpp
++    ${IMGUI_SOURCE_DIR}/imgui_widgets.cpp
++    ${IMGUI_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
+   )
+ 
+ target_include_directories(holoviz_imgui
+   PUBLIC
+-    $<BUILD_INTERFACE:${imgui_SOURCE_DIR}>
++    $<BUILD_INTERFACE:${IMGUI_SOURCE_DIR}>
+     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/holoviz/imgui
+   )
+ 
+@@ -82,19 +70,19 @@ set_target_properties(holoviz_imgui
+ 
+ install(
+   FILES
+-    ${imgui_SOURCE_DIR}/imconfig.h
+-    ${imgui_SOURCE_DIR}/imgui_internal.h
+-    ${imgui_SOURCE_DIR}/imgui.h
+-    ${imgui_SOURCE_DIR}/imstb_rectpack.h
+-    ${imgui_SOURCE_DIR}/imstb_textedit.h
+-    ${imgui_SOURCE_DIR}/imstb_truetype.h
++    ${IMGUI_SOURCE_DIR}/imconfig.h
++    ${IMGUI_SOURCE_DIR}/imgui_internal.h
++    ${IMGUI_SOURCE_DIR}/imgui.h
++    ${IMGUI_SOURCE_DIR}/imstb_rectpack.h
++    ${IMGUI_SOURCE_DIR}/imstb_textedit.h
++    ${IMGUI_SOURCE_DIR}/imstb_truetype.h
+   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/holoviz/imgui
+   COMPONENT "holoscan-dependencies"
+   )
+ 
+ install(
+   FILES
+-    ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
++    ${IMGUI_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
+   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/holoviz/imgui/misc/cpp
+   COMPONENT "holoscan-dependencies"
+   )
+\ No newline at end of file
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2eabe6c1..a6db0959 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -75,6 +75,7 @@ endfunction()
+ # ##############################################################################
+ # # Add library holoscan::spdlog_logger
+ # ##############################################################################
++find_package(spdlog 1.14.1 REQUIRED)
+ add_holoscan_library(spdlog_logger common/logger/spdlog_logger.cpp)
+ target_link_libraries(spdlog_logger
+     PUBLIC
+@@ -127,14 +128,10 @@ target_link_libraries(holoscan_matx
+ # ##############################################################################
+ add_holoscan_library(profiler
+     profiler/profiler.cpp)
+-target_link_libraries(profiler
+-    PUBLIC
+-        nvtx3-cpp
+-)
++
+ target_include_directories(profiler
+     PUBLIC
+-      $<BUILD_INTERFACE:${nvtx3_SOURCE_DIR}/include>
+-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/3rdparty>
++      ${NVTX3_INCLUDEDIR}
+ )
+ 
+ # ##############################################################################
+@@ -148,19 +145,29 @@ add_holoscan_library(pose_tree
+     pose_tree/pose_tree_ucx_server.cpp
+ )
+ 
+-# Note: holoscan::pose_tree depends on holoscan::core and holoscan::eigen3,
++# Note: holoscan::pose_tree depends on holoscan::core and Eigen3::Eigen,
+ # but we can separate the core pose tree module (which doesn't depend on the Holoscan SDK)
+ # into `holoscan::pose_tree_core` later if needed.
+ target_link_libraries(pose_tree
+     PUBLIC
+         holoscan::core
+-        holoscan::eigen3
++        Eigen3::Eigen
+ )
+ 
+ # ##############################################################################
+ # # Add library: holoscan::core
+ # ##############################################################################
+ 
++find_package(dlpack 1.0 REQUIRED)
++find_package(tl-expected 1.1.0 REQUIRED)
++find_package(CLI11 2.3.2 REQUIRED)
++find_package(magic_enum 0.9.7 REQUIRED)
++
++get_target_property(DLPACK_INCLUDE_DIRS dlpack::dlpack INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(TL_EXPECTED_INCLUDE_DIRS tl::expected INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(CLI11_INCLUDE_DIRS CLI11::CLI11 INTERFACE_INCLUDE_DIRECTORIES)
++get_target_property(MAGIC_ENUM_INCLUDE_DIRS magic_enum::magic_enum INTERFACE_INCLUDE_DIRECTORIES)
++
+ set(CORE_PROTO_FILES
+     core/distributed/proto/app_driver.proto
+     core/distributed/proto/app_worker.proto
+@@ -327,11 +334,9 @@ target_link_libraries(core
+         GXF::std
+         GXF::ucx
+         yaml-cpp
+-        holoscan::eigen3
+-    INTERFACE
+-        ucxx::ucxx
++        Eigen3::Eigen
+     PRIVATE
+-        hwloc
++        PkgConfig::hwloc
+         gRPC::grpc++
+         gRPC::grpc++_reflection
+         protobuf::libprotobuf
+@@ -340,13 +345,10 @@ target_link_libraries(core
+ 
+ target_include_directories(core
+     PUBLIC
+-      $<BUILD_INTERFACE:${tl-expected_SOURCE_DIR}/include>
+-      $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
+-      $<BUILD_INTERFACE:${cli11_SOURCE_DIR}/include>
+-      $<BUILD_INTERFACE:${magic_enum_SOURCE_DIR}/include>
+-      $<BUILD_INTERFACE:${nlohmann_json_SOURCE_DIR}/single_include>
+-      $<BUILD_INTERFACE:${concurrent_queue_SOURCE_DIR}>
+-      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/3rdparty>
++      ${TL_EXPECTED_INCLUDE_DIRS}
++      ${DLPACK_INCLUDE_DIRS}
++      ${CLI11_INCLUDE_DIRS}
++      ${MAGIC_ENUM_INCLUDE_DIRS}/magic_enum
+ )
+ 
+ # ##############################################################################
+-- 
+2.34.1
+
