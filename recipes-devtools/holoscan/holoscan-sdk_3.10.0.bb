@@ -28,12 +28,10 @@ SRCREV = "e7cd7d15c4fa39d4c57985992486bbf75d147f47"
 
 SRC_URI += " \
     file://desktop-icons \
-    file://0001-Fix-GXF-TypenameAsString-error.patch \
-    file://0002-Use-external-library-dependencies.patch \
-    file://0003-Build-python-libs-with-install-RPATH.patch \
-    file://0004-Fix-TensorRT-include-interface.patch \
-    file://0005-Disable-various-warnings-as-errors.patch \
-    file://0006-Remove-GXF-python-modules-install.patch \
+    file://0001-Use-external-library-dependencies.patch \
+    file://0002-Build-python-libs-with-install-RPATH.patch \
+    file://0003-Fix-TensorRT-include-interface.patch \
+    file://0004-Disable-various-warnings-as-errors.patch \
 "
 
 S = "${WORKDIR}/git"

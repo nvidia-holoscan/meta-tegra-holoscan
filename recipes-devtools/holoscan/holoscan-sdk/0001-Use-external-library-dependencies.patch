@@ -2697,19 +2697,6 @@ index 5bf0050c..97946b37 100644
    add_subdirectory(ping_any)
    add_subdirectory(ping_conditional)
    add_subdirectory(ping_cycle)
-diff --git a/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp b/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
-index d931057e..f1e7e301 100644
---- a/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
-+++ b/examples/execution_control/operator_status_tracking/cpp/operator_status_tracking.cpp
-@@ -22,7 +22,7 @@
- #include <vector>
- 
- #include <holoscan/holoscan.hpp>
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- 
- // A simple operator that processes a fixed number of times and then completes
- class FiniteSourceOp : public holoscan::Operator {
 diff --git a/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 index 3aa2cb1b..1202629e 100644
 --- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
@@ -3091,40 +3078,6 @@ index 3facf71b..8d880dc9 100644
    COMPONENT "holoscan-dependencies"
    )
 \ No newline at end of file
-diff --git a/python/holoscan/operators/holoviz/CMakeLists.txt b/python/holoscan/operators/holoviz/CMakeLists.txt
-index e9c59876..f0414b47 100644
---- a/python/holoscan/operators/holoviz/CMakeLists.txt
-+++ b/python/holoscan/operators/holoviz/CMakeLists.txt
-@@ -13,6 +13,9 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
- 
-+find_package(magic_enum 0.9.7 REQUIRED)
-+get_target_property(MAGIC_ENUM_INCLUDE_DIRS magic_enum::magic_enum INTERFACE_INCLUDE_DIRECTORIES)
-+
- holoscan_pybind11_module(holoviz
-     holoviz.cpp
-     ../../core/emitter_receiver_registry.cpp
-@@ -23,5 +26,5 @@ target_link_libraries(holoviz_python
- 
- target_include_directories(holoviz_python
-     PUBLIC
--        $<BUILD_INTERFACE:${magic_enum_SOURCE_DIR}/include>
-+        ${MAGIC_ENUM_INCLUDE_DIRS}
- )
-diff --git a/python/holoscan/operators/holoviz/holoviz.cpp b/python/holoscan/operators/holoviz/holoviz.cpp
-index 1ec8f042..fe85b84d 100644
---- a/python/holoscan/operators/holoviz/holoviz.cpp
-+++ b/python/holoscan/operators/holoviz/holoviz.cpp
-@@ -31,7 +31,7 @@
- 
- // the default range for enums is 128 which is not enough for the Key enum, increase to 512
- #define MAGIC_ENUM_RANGE_MAX 512  // NOLINT(cppcoreguidelines-macro-usage)
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- 
- #include "../../core/component_util.hpp"
- #include "../operator_util.hpp"
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 2eabe6c1..a6db0959 100644
 --- a/src/CMakeLists.txt
@@ -3214,88 +3167,10 @@ index 2eabe6c1..a6db0959 100644
 +      ${TL_EXPECTED_INCLUDE_DIRS}
 +      ${DLPACK_INCLUDE_DIRS}
 +      ${CLI11_INCLUDE_DIRS}
-+      ${MAGIC_ENUM_INCLUDE_DIRS}
++      ${MAGIC_ENUM_INCLUDE_DIRS}/magic_enum
  )
  
  # ##############################################################################
-diff --git a/src/core/conditions/gxf/asynchronous.cpp b/src/core/conditions/gxf/asynchronous.cpp
-index 6485a4f2..7c9d70cd 100644
---- a/src/core/conditions/gxf/asynchronous.cpp
-+++ b/src/core/conditions/gxf/asynchronous.cpp
-@@ -19,7 +19,7 @@
- 
- #include <string>
- 
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- #include "holoscan/core/component_spec.hpp"
- 
- namespace holoscan {
-diff --git a/src/core/gxf/gxf_utils.cpp b/src/core/gxf/gxf_utils.cpp
-index c5abb79b..ec06c7a1 100644
---- a/src/core/gxf/gxf_utils.cpp
-+++ b/src/core/gxf/gxf_utils.cpp
-@@ -25,7 +25,7 @@
- #include <common/fixed_vector.hpp>
- #include <gxf/core/entity.hpp>
- #include <gxf/std/resources.hpp>  // GPUDevice
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- 
- #include "holoscan/core/gxf/gxf_utils.hpp"
- #include "holoscan/logger/logger.hpp"
-diff --git a/src/core/resources/async_data_logger.cpp b/src/core/resources/async_data_logger.cpp
-index cccaa316..ec89e016 100644
---- a/src/core/resources/async_data_logger.cpp
-+++ b/src/core/resources/async_data_logger.cpp
-@@ -27,7 +27,7 @@
- #include <string>
- #include <utility>
- 
--#include "magic_enum.hpp"
-+#include "magic_enum/magic_enum.hpp"
- 
- #include "holoscan/core/component_spec.hpp"
- #include "holoscan/core/domain/tensor.hpp"
-diff --git a/src/data_loggers/basic_console_logger/simple_text_serializer.cpp b/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
-index b48f7ec3..7e7c18d8 100644
---- a/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
-+++ b/src/data_loggers/basic_console_logger/simple_text_serializer.cpp
-@@ -28,7 +28,7 @@
- #include <string>
- #include <vector>
- 
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- #include "gxf/core/entity.hpp"
- #include "gxf/core/handle.hpp"
- #include "gxf/multimedia/video.hpp"
-diff --git a/src/operators/holoviz/holoviz.cpp b/src/operators/holoviz/holoviz.cpp
-index 628dd394..cbf6768e 100644
---- a/src/operators/holoviz/holoviz.cpp
-+++ b/src/operators/holoviz/holoviz.cpp
-@@ -26,7 +26,7 @@
- #include <utility>
- #include <vector>
- 
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- 
- #include "holoscan/core/application.hpp"
- #include "holoscan/core/condition.hpp"
-diff --git a/src/operators/v4l2_video_capture/v4l2_video_capture.cpp b/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
-index b8b1d1f0..7c7ae4f5 100644
---- a/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
-+++ b/src/operators/v4l2_video_capture/v4l2_video_capture.cpp
-@@ -35,7 +35,7 @@
- #include <utility>
- #include <vector>
- 
--#include <magic_enum.hpp>
-+#include <magic_enum/magic_enum.hpp>
- 
- #include "holoscan/core/execution_context.hpp"
- #include "holoscan/core/resources/gxf/allocator.hpp"
 -- 
 2.34.1
 

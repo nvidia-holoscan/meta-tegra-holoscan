@@ -6,18 +6,22 @@ Subject: [PATCH 4/6] Fix TensorRT include interface
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
- cmake/modules/FindTensorRT.cmake | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ cmake/modules/FindTensorRT.cmake | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/cmake/modules/FindTensorRT.cmake b/cmake/modules/FindTensorRT.cmake
 index 4fbc500..84f4c1d 100644
 --- a/cmake/modules/FindTensorRT.cmake
 +++ b/cmake/modules/FindTensorRT.cmake
-@@ -60,7 +60,7 @@ macro(find_trt_library libname)
+@@ -56,11 +56,12 @@ include(FetchContent)
+ macro(find_trt_library libname)
+   if(NOT TARGET TensorRT::${libname})
+     find_library(TensorRT_${libname}_LIBRARY NAMES ${libname} REQUIRED)
+     mark_as_advanced(TensorRT_${libname}_LIBRARY)
      add_library(TensorRT::${libname} SHARED IMPORTED GLOBAL)
      set_target_properties(TensorRT::${libname} PROPERTIES
          IMPORTED_LOCATION "${TensorRT_${libname}_LIBRARY}"
--        INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TensorRT_INCLUDE_DIR}"
+         INTERFACE_SYSTEM_INCLUDE_DIRECTORIES "${TensorRT_INCLUDE_DIR}"
 +        INTERFACE_INCLUDE_DIRECTORIES "${TensorRT_INCLUDE_DIR}"
      )
    endif()

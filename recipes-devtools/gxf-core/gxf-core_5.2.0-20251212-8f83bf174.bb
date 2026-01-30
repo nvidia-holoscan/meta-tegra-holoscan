@@ -29,10 +29,6 @@ GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
 SRC_URI[gxf.sha256sum] = "4c4ec192dd3bc5ac4a170ae571a3eb38978510c2957589efe2f7df0a925b3dc4"
 
-SRC_URI += " \
-    file://0001-OE-cross-build-fixups.patch \
-"
-
 S = "${WORKDIR}/${GXF_PACKAGE}"
 
 INSTALL_PATH = "${base_prefix}/opt/nvidia/gxf"

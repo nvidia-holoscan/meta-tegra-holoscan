@@ -33,21 +33,6 @@ index d100f21..5b4a1c4 100644
  # ##############################################################################
  # # RAPIDS CMAKE configurations
  # # (https://docs.rapids.ai/api/rapids-cmake/stable/api.html)
-diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
-index 33a4456..31e78e9 100644
---- a/modules/holoinfer/src/CMakeLists.txt
-+++ b/modules/holoinfer/src/CMakeLists.txt
-@@ -77,6 +77,10 @@ target_compile_definitions(${PROJECT_NAME}
-         PROJECT_VERSION_MAJOR=${PROJECT_VERSION_MAJOR}
- )
- 
-+target_compile_options(${PROJECT_NAME} PRIVATE
-+    $<$<COMPILE_LANGUAGE:CUDA>:-Xcompiler=-Wno-deprecated-declarations>
-+)
-+
- target_include_directories(${PROJECT_NAME}
-     PRIVATE
-         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 -- 
 2.34.1
 
