@@ -1,7 +1,7 @@
 From 553a0473c71d04a9fd3f2ee3a57488c908193d2e Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 08:51:12 -0800
-Subject: [PATCH 2/3] Use external dependencies - CMake deps
+From: Julien JOMIER <jjomier@nvidia.com>
+Date: Thu, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH 3/6] Use external dependencies - CMake deps
 
 Replace cmake/deps build scripts to use external library dependencies
 instead of fetching and building them internally.

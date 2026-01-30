@@ -1,7 +1,7 @@
 From 553a0473c71d04a9fd3f2ee3a57488c908193d1e Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 08:50:12 -0800
-Subject: [PATCH 1/3] Use external dependencies - Main CMakeLists
+From: Julien JOMIER <jjomier@nvidia.com>
+Date: Thu, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH 1/6] Use external dependencies - Main CMakeLists
 
 Update main CMakeLists.txt to use external library dependencies.
 

@@ -1,7 +1,7 @@
 From 29ef589ec0beb3e198c9ee2f57d9ab6787b028fc Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
+From: Julien JOMIER <jjomier@nvidia.com>
 Date: Fri, 21 Nov 2025 17:41:46 +0000
-Subject: [PATCH 5/6] Disable various warnings as errors
+Subject: [PATCH 6/6] Disable various warnings as errors
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
