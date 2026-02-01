@@ -1,7 +1,7 @@
-From 1f13ce00cd379f3218eb8f7130b97ecfd24da18f Mon Sep 17 00:00:00 2001
+From 182f596cd2073f748ed3664506dd214f5952d5df Mon Sep 17 00:00:00 2001
 From: Julien JOMIER <jjomier@nvidia.com>
-Date: Thu, 30 Jan 2026 18:00:00 -0800
-Subject: [PATCH 3/6] Build python libs with install RPATH
+Date: Fri, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH] Build python libs with install RPATH
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -25,6 +25,3 @@ index 21a44ff..7eb1a91 100644
      unset(_rpath)
  
      # make submodule folder
--- 
-2.34.1
-

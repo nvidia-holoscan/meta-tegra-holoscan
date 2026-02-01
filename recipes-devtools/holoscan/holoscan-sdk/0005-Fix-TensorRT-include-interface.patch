@@ -1,7 +1,7 @@
-From bb96f1bed674bdba25a085d7a11a6c2eb6cb2646 Mon Sep 17 00:00:00 2001
+From ea9cc2446f50cc40483642d59157739a264b9e53 Mon Sep 17 00:00:00 2001
 From: Julien JOMIER <jjomier@nvidia.com>
-Date: Thu, 30 Jan 2026 18:00:00 -0800
-Subject: [PATCH 5/6] Fix TensorRT include interface
+Date: Fri, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH] Fix TensorRT include interface
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -22,6 +22,3 @@ index 4fbc500..84f4c1d 100644
      )
    endif()
  endmacro()
--- 
-2.34.1
-

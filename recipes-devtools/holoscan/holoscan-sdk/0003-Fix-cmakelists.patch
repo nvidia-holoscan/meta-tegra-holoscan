@@ -1,7 +1,7 @@
-From 553a0473c71d04a9fd3f2ee3a57488c908193d3e Mon Sep 17 00:00:00 2001
+From c409710e6e93fb96161d323f00d5f9b860f811d5 Mon Sep 17 00:00:00 2001
 From: Julien JOMIER <jjomier@nvidia.com>
-Date: Thu, 30 Jan 2026 18:00:00 -0800
-Subject: [PATCH 4/6] Use external dependencies - Modules and examples
+Date: Fri, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH] Use external dependencies - Modules and examples
 
 Update cmake modules, examples, and source CMakeLists files to use
 external library dependencies.
@@ -9,9 +9,23 @@ external library dependencies.
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
+ examples/CMakeLists.txt                       |  1 -
+ .../matx/matx_basic/cpp/CMakeLists.min.txt    | 33 +++-----------
+ .../distributed_pose_tree/cpp/CMakeLists.txt  |  6 ++-
+ .../pose_tree_basic/cpp/CMakeLists.txt        |  6 ++-
+ .../core/resources/async_data_logger.hpp      |  2 +-
+ modules/holoinfer/src/CMakeLists.txt          | 15 +++++--
+ .../holoinfer/src/infer/onnx/CMakeLists.txt   |  8 ++--
+ .../holoinfer/src/infer/torch/CMakeLists.txt  | 17 ++-----
+ modules/holoviz/examples/demo/CMakeLists.txt  | 14 +-----
+ .../holoviz/examples/depth_map/CMakeLists.txt | 14 +-----
+ .../holoviz/tests/functional/CMakeLists.txt   | 14 +-----
+ .../holoviz/thirdparty/imgui/CMakeLists.txt   | 44 +++++++------------
+ src/CMakeLists.txt                            | 40 +++++++++--------
+ 13 files changed, 76 insertions(+), 138 deletions(-)
 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 5bf0050c..97946b37 100644
+index 5bf0050..97946b3 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
 @@ -57,7 +57,6 @@ include(CTest)
@@ -23,7 +37,7 @@ index 5bf0050c..97946b37 100644
    add_subdirectory(ping_conditional)
    add_subdirectory(ping_cycle)
 diff --git a/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
-index 3aa2cb1b..1202629e 100644
+index 3aa2cb1..1202629 100644
 --- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 +++ b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 @@ -26,32 +26,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES LESS 70)
@@ -74,7 +88,7 @@ index 3aa2cb1b..1202629e 100644
  
  # Testing
 diff --git a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
-index 7588cae4..8fdaf3a4 100644
+index 7588cae..8fdaf3a 100644
 --- a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_executable(distributed_pose_tree
@@ -91,7 +105,7 @@ index 7588cae4..8fdaf3a4 100644
  
  # Copy config file
 diff --git a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
-index ae533f13..0842e086 100644
+index ae533f1..0842e08 100644
 --- a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
 @@ -19,8 +19,10 @@ add_executable(pose_tree_basic
@@ -108,7 +122,7 @@ index ae533f13..0842e086 100644
  
  # Copy config file
 diff --git a/include/holoscan/core/resources/async_data_logger.hpp b/include/holoscan/core/resources/async_data_logger.hpp
-index 32e92936..b6d804a9 100644
+index 32e9293..b6d804a 100644
 --- a/include/holoscan/core/resources/async_data_logger.hpp
 +++ b/include/holoscan/core/resources/async_data_logger.hpp
 @@ -31,7 +31,7 @@
@@ -121,7 +135,7 @@ index 32e92936..b6d804a9 100644
  #include "holoscan/core/component_spec.hpp"
  #include "holoscan/core/domain/tensor.hpp"
 diff --git a/modules/holoinfer/src/CMakeLists.txt b/modules/holoinfer/src/CMakeLists.txt
-index 48f48de6..33a44563 100644
+index 48f48de..33a4456 100644
 --- a/modules/holoinfer/src/CMakeLists.txt
 +++ b/modules/holoinfer/src/CMakeLists.txt
 @@ -49,6 +49,15 @@ set_target_properties(holoinfer_utils PROPERTIES
@@ -154,7 +168,7 @@ index 48f48de6..33a44563 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoinfer/src/infer/onnx/CMakeLists.txt b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
-index 903f006f..a944c2c4 100644
+index 903f006..a944c2c 100644
 --- a/modules/holoinfer/src/infer/onnx/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
 @@ -15,7 +15,9 @@
@@ -186,7 +200,7 @@ index 903f006f..a944c2c4 100644
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
      )
 diff --git a/modules/holoinfer/src/infer/torch/CMakeLists.txt b/modules/holoinfer/src/infer/torch/CMakeLists.txt
-index c228bb33..92ee017e 100644
+index c228bb3..92ee017 100644
 --- a/modules/holoinfer/src/infer/torch/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/torch/CMakeLists.txt
 @@ -49,18 +49,9 @@ else()
@@ -220,7 +234,7 @@ index c228bb33..92ee017e 100644
          $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
      )
 diff --git a/modules/holoviz/examples/demo/CMakeLists.txt b/modules/holoviz/examples/demo/CMakeLists.txt
-index 8b96a52a..3f26faef 100644
+index 8b96a52..3f26fae 100644
 --- a/modules/holoviz/examples/demo/CMakeLists.txt
 +++ b/modules/holoviz/examples/demo/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -252,7 +266,7 @@ index 8b96a52a..3f26faef 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/examples/depth_map/CMakeLists.txt b/modules/holoviz/examples/depth_map/CMakeLists.txt
-index af2b7a30..0f87a07e 100644
+index af2b7a3..0f87a07 100644
 --- a/modules/holoviz/examples/depth_map/CMakeLists.txt
 +++ b/modules/holoviz/examples/depth_map/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -284,7 +298,7 @@ index af2b7a30..0f87a07e 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/tests/functional/CMakeLists.txt b/modules/holoviz/tests/functional/CMakeLists.txt
-index c52e4516..769fa81e 100644
+index c52e451..769fa81 100644
 --- a/modules/holoviz/tests/functional/CMakeLists.txt
 +++ b/modules/holoviz/tests/functional/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -316,7 +330,7 @@ index c52e4516..769fa81e 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/thirdparty/imgui/CMakeLists.txt b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
-index 3facf71b..8d880dc9 100644
+index 3facf71..8d880dc 100644
 --- a/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 +++ b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 @@ -18,29 +18,17 @@ include(GNUInstallDirs)
@@ -404,7 +418,7 @@ index 3facf71b..8d880dc9 100644
    )
 \ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2eabe6c1..a6db0959 100644
+index 2eabe6c..4b0a69b 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -75,6 +75,7 @@ endfunction()
@@ -496,6 +510,3 @@ index 2eabe6c1..a6db0959 100644
  )
  
  # ##############################################################################
--- 
-2.34.1
-

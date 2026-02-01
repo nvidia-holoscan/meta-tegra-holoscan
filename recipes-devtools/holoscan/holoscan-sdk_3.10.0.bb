@@ -49,6 +49,7 @@ do_compile[network] = "1"
 
 # Add extra build paths.
 EXTRA_OECMAKE:append = " \
+    -DHOLOSCAN_BUILD_DEPENDENCIES=OFF \
     -DCMAKE_INSTALL_PREFIX=${HOLOSCAN_INSTALL_PATH} \
     -DGXF_DIR=${RECIPE_SYSROOT}/opt/nvidia/gxf/lib/cmake/GXF \
     -DIMGUI_SOURCE_DIR=${RECIPE_SYSROOT}/opt/nvidia/imgui \

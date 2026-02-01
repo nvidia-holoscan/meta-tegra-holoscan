@@ -1,17 +1,18 @@
-From 553a0473c71d04a9fd3f2ee3a57488c908193d1e Mon Sep 17 00:00:00 2001
+From 248cae498b8f97711070bbaa8974fc60c6eca486 Mon Sep 17 00:00:00 2001
 From: Julien JOMIER <jjomier@nvidia.com>
-Date: Thu, 30 Jan 2026 18:00:00 -0800
-Subject: [PATCH 1/6] Use external dependencies - Main CMakeLists
+Date: Fri, 30 Jan 2026 18:00:00 -0800
+Subject: [PATCH] Use external dependencies - Main CMakeLists
 
 Update main CMakeLists.txt to use external library dependencies.
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- CMakeLists.txt | XX files changed
+ CMakeLists.txt | 93 +-------------------------------------------------
+ 1 file changed, 1 insertion(+), 92 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1292c0c3..d100f214 100644
+index 1292c0c..d100f21 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -296,7 +296,6 @@ endif()
