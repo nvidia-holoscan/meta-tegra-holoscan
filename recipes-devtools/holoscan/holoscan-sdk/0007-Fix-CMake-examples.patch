@@ -1,0 +1,104 @@
+From 07bce0627b056150fb41ed4841415f6c2097b6cb Mon Sep 17 00:00:00 2001
+From: Julien Jomier <jjomier@nvidia.com>
+Date: Mon, 2 Feb 2026 09:50:42 -0500
+Subject: [PATCH] Fix CMake examples
+
+---
+ .../matx/matx_basic/cpp/CMakeLists.min.txt    | 31 +++----------------
+ .../core/resources/data_logger_queue.hpp      |  2 +-
+ .../holoinfer/src/infer/torch/CMakeLists.txt  | 21 +++----------
+ 3 files changed, 10 insertions(+), 44 deletions(-)
+
+diff --git a/public/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/public/examples/matx/matx_basic/cpp/CMakeLists.min.txt
+index db9c63e94..90329df64 100644
+--- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
++++ b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
+@@ -26,32 +26,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES LESS 70)
+   set(CMAKE_CUDA_ARCHITECTURES "70")
+ endif()
+ 
+-find_package(CUDAToolkit QUIET)
+-if(CUDAToolkit_VERSION VERSION_GREATER_EQUAL 13.0)
+-  set(MATX_CCCL_MIN_VERSION 3.0)
+-else()
+-  set(MATX_CCCL_MIN_VERSION 2.8)
+-endif()
+-
+-# Holoscan SDK core features depend on CCCL >= 2.5 while the optional holoscan::matx feature
+-# depends on CCCL >= 2.8. Skip this example if no compatible CCCL is found.
+-if(MATX_CCCL_MIN_VERSION VERSION_GREATER_EQUAL 3.0)
+-  find_package(CCCL ${MATX_CCCL_MIN_VERSION} PATHS /usr/local/cuda/lib64/cmake/cccl)
+-else()
+-  # Allow compatibility across CCCL major versions
+-  find_package(CCCL 3.0 PATHS /usr/local/cuda/lib64/cmake/cccl QUIET)
+-  if(NOT CCCL_FOUND)
+-    find_package(CCCL ${MATX_CCCL_MIN_VERSION} PATHS /usr/local/cuda/lib64/cmake/cccl QUIET)
+-  endif()
+-endif()
+-
+-if(NOT CCCL_FOUND)
+-  message(STATUS "Found CCCL ${CCCL_VERSION} but need at least CCCL ${MATX_CCCL_MIN_VERSION} for MatX.
+-Please install a compatible CCCL version from https://github.com/NVIDIA/cccl.git
+-and re-configure the project with -DCCCL_ROOT=path/to/cccl to resolve the issue.
+-Skipping the matx_basic example...")
+-  return()
+-endif()
++find_package(CCCL REQUIRED)
++find_package(CUB REQUIRED)
++find_package(libcudacxx REQUIRED)
++find_package(Thrust REQUIRED)
++find_package(matx 0.9.1 REQUIRED)
+ 
+ # Finds the package holoscan
+ find_package(holoscan REQUIRED CONFIG
+diff --git a/public/include/holoscan/core/resources/data_logger_queue.hpp b/public/include/holoscan/core/resources/data_logger_queue.hpp
+index bc70538e5..940778001 100644
+--- a/include/holoscan/core/resources/data_logger_queue.hpp
++++ b/include/holoscan/core/resources/data_logger_queue.hpp
+@@ -28,7 +28,7 @@
+ #include <string>
+ #include <utility>
+ 
+-#include "concurrentqueue.h"
++#include "concurrentqueue/moodycamel/concurrentqueue.h"
+ #include "yaml-cpp/yaml.h"
+ 
+ namespace holoscan {
+diff --git a/public/modules/holoinfer/src/infer/torch/CMakeLists.txt b/public/modules/holoinfer/src/infer/torch/CMakeLists.txt
+index 9896f6619..1a5901508 100644
+--- a/modules/holoinfer/src/infer/torch/CMakeLists.txt
++++ b/modules/holoinfer/src/infer/torch/CMakeLists.txt
+@@ -49,22 +49,9 @@ else()
+ endif()
+ message(STATUS "TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}")
+ 
+-# Find Torch
+-find_package(Python3 COMPONENTS Interpreter QUIET)
+-set(PYTHON_MAJOR_MINOR "${Python3_VERSION_MAJOR}.${Python3_VERSION_MINOR}")
+-set(TORCH_SEARCH_DIRS
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/dist-packages"
+-  "/usr/local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/usr/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "$ENV{HOME}/.local/lib/python${PYTHON_MAJOR_MINOR}/site-packages"
+-  "/opt/nvidia/torch"
+-)
+-# Suppress PyTorch's CUDA hash computation warning
+-set(_CMAKE_MESSAGE_LOG_LEVEL ${CMAKE_MESSAGE_LOG_LEVEL})
+-set(CMAKE_MESSAGE_LOG_LEVEL ERROR)
+-find_package(Torch 2.8 REQUIRED CONFIG PATHS ${TORCH_SEARCH_DIRS})
+-set(CMAKE_MESSAGE_LOG_LEVEL ${_CMAKE_MESSAGE_LOG_LEVEL})
++# Find dependencies
++find_package(Torch REQUIRED)
++find_package(dlpack 1.0 REQUIRED)
+ 
+ # Create the holoinfer torch backend library
+ add_library(holoinfer_torch SHARED core.cpp)
+@@ -90,6 +77,6 @@ target_include_directories(holoinfer_torch
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
+     PUBLIC
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>
+-        $<BUILD_INTERFACE:${dlpack_SOURCE_DIR}/include>
++        ${dlpack_INCLUDE_DIRS}
+         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+     )
