@@ -20,14 +20,14 @@
 
 SUMMARY = "NVIDIA GXF Core"
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://gxf-install/include/gxf/core/gxf.h;endline=16;md5=ffcd9e991308047ac45f73c0d6b7dea0"
+LIC_FILES_CHKSUM = "file://gxf-install/include/gxf/core/gxf.h;endline=16;md5=f3ad46af80e57edcddfce5c9aaedd6c5"
 
 PACKAGES = "${PN} ${PN}-dev"
 
 GXF_VERSION = "${@d.getVar('PV').replace('-', '_')}"
 GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
-SRC_URI[gxf.sha256sum] = "4c4ec192dd3bc5ac4a170ae571a3eb38978510c2957589efe2f7df0a925b3dc4"
+SRC_URI[gxf.sha256sum] = "2839ba7bc245f2aa4b6c61e233ac31ace7c5cb4dccdb8f31f77d3aee916cacc3"
 
 S = "${WORKDIR}/${GXF_PACKAGE}"
 
