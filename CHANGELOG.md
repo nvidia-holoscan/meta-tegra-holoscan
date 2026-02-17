@@ -1,6 +1,11 @@
 ## [3.11.0] - 2026-01-30
 ### Changed
-- Removed Rivermax
+- Updated Holoscan SDK and Holohub apps to 3.11.0.
+- Updated GXF to 5.3.0-20260130-b825fab47.
+- Updated UCX to 1.19.0.
+- Dropped Rivermax.
+- Dropped Emergent.
+
 
 ## [3.10.0] - 2026-01-08
 ### Changed
