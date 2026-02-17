@@ -528,6 +528,7 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[3.11.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.10.0...v3.11.0
 [3.10.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.9.0...v3.10.0
 [3.9.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.8.0...v3.9.0
 [3.8.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.7.0...v3.8.0
