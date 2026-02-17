@@ -1,31 +1,26 @@
-From 7c4b73041ee52d75680d2fd1de891ef20bfb95a4 Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:52:18 +0000
+From 84445f3ef3f5a4ce2d06f1cf76ec0b65df1dc86a Mon Sep 17 00:00:00 2001
+From: Julien Jomier <jjomier@nvidia.com>
+Date: Mon, 2 Feb 2026 16:10:00 +0000
 Subject: [PATCH 03/10] Remove relative gxf_extension paths
 
-Upstream-Status: Inappropriate [OE-specific]
-Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
- .../cpp/endoscopy_tool_tracking.yaml                        | 6 +++---
+ .../cpp/endoscopy_tool_tracking.yaml                        | 4 ++--
  .../python/endoscopy_tool_tracking.yaml                     | 6 +++---
  .../cpp/h264_endoscopy_tool_tracking.yaml                   | 2 +-
  .../high_speed_endoscopy/cpp/high_speed_endoscopy.yaml      | 2 +-
  .../high_speed_endoscopy/python/high_speed_endoscopy.yaml   | 2 +-
- 5 files changed, 9 insertions(+), 9 deletions(-)
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 56f38e4b..8bd5530e 100644
+index 1ea94c4a..d5926cca 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-@@ -29,11 +29,11 @@ resources:
+@@ -29,9 +29,9 @@ resources:
    gpuMemory: 1Gi
  
  extensions:
 -  - lib/gxf_extensions/libgxf_lstm_tensor_rt_inference.so
 +  - libgxf_lstm_tensor_rt_inference.so
- # Uncomment the following extension when using deltacast as a source
--#  - lib/gxf_extensions/libgxf_videomaster.so
-+#  - libgxf_videomaster.so
  # Uncomment the following extension when using yuan as source
 -#  - lib/gxf_extensions/libgxf_qcap_source.so
 +#  - libgxf_qcap_source.so
@@ -88,6 +83,3 @@ index 735f227e..bb7f2834 100644
  
  emergent:
    width: 4200
--- 
-2.34.1
-
