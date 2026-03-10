@@ -27,7 +27,7 @@ PACKAGES = "${PN} ${PN}-dev"
 GXF_VERSION = "${@d.getVar('PV').replace('-', '_')}"
 GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
-SRC_URI[gxf.sha256sum] = "2839ba7bc245f2aa4b6c61e233ac31ace7c5cb4dccdb8f31f77d3aee916cacc3"
+SRC_URI[gxf.sha256sum] = "b50385431741410e15081f176970108e140c4e98216003d2424550f023d4e6a8"
 
 S = "${WORKDIR}/${GXF_PACKAGE}"
 
