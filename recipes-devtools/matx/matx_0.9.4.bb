@@ -28,8 +28,9 @@ inherit cmake cuda
 SRC_URI = " \
     git://github.com/NVIDIA/MatX.git;protocol=https;nobranch=1 \
     file://0001-Updates-for-OE-cross-builds.patch \
+    file://0002-matx_setvals.patch \
 "
-SRCREV = "86d0b82d35180480fe8d69729279835ce9b033ff"
+SRCREV = "ad55c6b894f0fdef65294858d9561ba31baa8734"
 
 S = "${WORKDIR}/git"
 
