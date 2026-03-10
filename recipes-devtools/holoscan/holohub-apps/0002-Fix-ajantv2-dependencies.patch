@@ -1,7 +1,7 @@
-From 7ef8ee6f7ba1a6bf343bb6c57c1349e0b831f8f9 Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 10:28:31 -0800
-Subject: [PATCH 02/10] Fix ajantv2 dependencies
+From 7da66482132a3f09f6664f0b70f518706a463f14 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:53 -0400
+Subject: [PATCH] Fix ajantv2 dependencies
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -19,7 +19,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  9 files changed, 17 insertions(+), 22 deletions(-)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index 1b92f49d..e8c7d1d0 100644
+index 941ad61b..ccd6b337 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -20,6 +20,8 @@ project(endoscopy_out_of_body_detection CXX)
@@ -97,10 +97,10 @@ index 09877bc8..36848539 100644
      main.cpp
  )
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 6d9e685d..b91d3519 100644
+index 9df6d7f2..52385a5c 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -54,6 +54,8 @@ if(holoscan_VERSION GREATER 3.5)
+@@ -59,6 +59,8 @@ if(holoscan_VERSION VERSION_GREATER 3.5)
    add_library(torchvision::torchvision ALIAS torchvision)
  endif()
  
@@ -110,7 +110,7 @@ index 6d9e685d..b91d3519 100644
      main.cpp
  )
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 78ce3d7a..7c375b59 100644
+index d55760c9..8d8f4023 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(ultrasound_segmentation CXX)
@@ -123,7 +123,7 @@ index 78ce3d7a..7c375b59 100644
      main.cpp
  )
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 90f14463..b17b3c40 100644
+index 83af79ff..3da6b68d 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -18,28 +18,7 @@ project(aja_source)
@@ -157,5 +157,5 @@ index 90f14463..b17b3c40 100644
  add_library(aja_source SHARED
    aja_source.hpp
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

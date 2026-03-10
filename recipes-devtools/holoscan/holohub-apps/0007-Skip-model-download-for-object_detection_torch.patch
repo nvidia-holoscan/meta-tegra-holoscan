@@ -1,7 +1,7 @@
-From 16adde5e57af96e7ab2a3c9f2ebb7ea4fdf5fd87 Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:55:39 +0000
-Subject: [PATCH 08/10] Skip model download for object_detection_torch
+From 94f01d33fbaef6e497f579c7f35e1ebdc8654282 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:54 -0400
+Subject: [PATCH] Skip model download for object_detection_torch
 
 This step requires a native installation of PyTorch, which
 is not available in the OE build. If this model is needed
@@ -15,10 +15,10 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  1 file changed, 8 deletions(-)
 
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index b91d3519..8e5d0d78 100644
+index 52385a5c..e5e014d8 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -104,14 +104,6 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
+@@ -109,14 +109,6 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
      GXF_ENTITIES_FRAMERATE 30
    )
    add_dependencies(object_detection_torch object_detection_torch_data)
@@ -34,5 +34,5 @@ index b91d3519..8e5d0d78 100644
  
  # Copy config file
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

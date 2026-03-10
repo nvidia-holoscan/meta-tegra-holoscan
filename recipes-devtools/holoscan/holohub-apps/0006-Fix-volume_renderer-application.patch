@@ -1,7 +1,7 @@
-From 51bc92bf4fb2e412219495fa6b11ffe0a81adead Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 10:32:18 -0800
-Subject: [PATCH 07/10]  Fix volume_renderer application
+From 71dc48056b200dcccdbcff6b77e7ceae1143d7d1 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:54 -0400
+Subject: [PATCH] Fix volume_renderer application
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -24,7 +24,7 @@ index 9858353e..76301978 100644
    json_loader.cpp
    volume_rendering.cpp
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index 54e06bd1..584b7a84 100644
+index e1e9a018..39570a8a 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -20,61 +20,9 @@ find_package(holoscan 0.6 REQUIRED CONFIG
@@ -93,5 +93,5 @@ index 54e06bd1..584b7a84 100644
  add_library(volume_renderer SHARED
    dataset.cpp
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

@@ -1,8 +1,7 @@
-From cf569d688e227b745cd074347ff8f7989a9bd7bc Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Tue, 11 Nov 2025 10:52:47 +0000
-Subject: [PATCH 04/10] Build python libs with install RPATH and add find
- pybind11 package
+From d56cc358ea96394ed55b388b4dbf0a26dd83f778 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:54 -0400
+Subject: [PATCH] Build python libs with install RPATH and add find
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -45,5 +44,5 @@ index 27a94a65..785df33f 100644
  
      # make submodule folder
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

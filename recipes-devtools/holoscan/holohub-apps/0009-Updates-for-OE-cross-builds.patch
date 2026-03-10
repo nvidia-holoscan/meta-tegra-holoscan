@@ -1,7 +1,7 @@
-From b3c87ba8c857256356f1d38fdcdeffd1c0cd53e6 Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 10:33:34 -0800
-Subject: [PATCH 10/10] Updates for OE cross builds
+From 7824e11ee60a0d37c64e4577465f9114d092bfa8 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:55 -0400
+Subject: [PATCH] Updates for OE cross builds
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
@@ -28,7 +28,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  19 files changed, 52 insertions(+), 8 deletions(-)
 
 diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
-index e8c7d1d0..1b635a51 100644
+index ccd6b337..3cdf964c 100644
 --- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 +++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
 @@ -17,6 +17,10 @@ cmake_minimum_required(VERSION 3.20)
@@ -85,7 +85,7 @@ index 36848539..499f5fcf 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
-index c2bad623..15d4dadf 100644
+index 021243b9..e482e415 100644
 --- a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
 @@ -15,6 +15,9 @@
@@ -99,7 +99,7 @@ index c2bad623..15d4dadf 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 8e5d0d78..ed8edb88 100644
+index e5e014d8..516da706 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -16,6 +16,9 @@
@@ -113,7 +113,7 @@ index 8e5d0d78..ed8edb88 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 7c375b59..4b789859 100644
+index 8d8f4023..48167458 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -16,6 +16,9 @@
@@ -167,7 +167,7 @@ index 6175810c..ddee7862 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index b17b3c40..17a8a70a 100644
+index 3da6b68d..3412fe1b 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -15,6 +15,9 @@
@@ -181,7 +181,7 @@ index b17b3c40..17a8a70a 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/lstm_tensor_rt_inference/CMakeLists.txt b/operators/lstm_tensor_rt_inference/CMakeLists.txt
-index 3e6720c1..e481da44 100644
+index 78d3d642..51059f34 100644
 --- a/operators/lstm_tensor_rt_inference/CMakeLists.txt
 +++ b/operators/lstm_tensor_rt_inference/CMakeLists.txt
 @@ -15,6 +15,9 @@
@@ -236,7 +236,7 @@ index 537a7928..b25db6a4 100644
  # Add slang_shader operator
  add_library(slang_shader SHARED
 diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
-index 4ecda911..40f70afe 100644
+index 1aaa53aa..f0144f68 100644
 --- a/operators/tool_tracking_postprocessor/CMakeLists.txt
 +++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
 @@ -16,6 +16,9 @@ cmake_minimum_required(VERSION 3.24)
@@ -264,7 +264,7 @@ index c3ed9a2c..2c57060f 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
-index 584b7a84..a30bc550 100644
+index 39570a8a..0856af61 100644
 --- a/operators/volume_renderer/CMakeLists.txt
 +++ b/operators/volume_renderer/CMakeLists.txt
 @@ -15,6 +15,9 @@
@@ -278,7 +278,7 @@ index 584b7a84..a30bc550 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/volume_renderer/dataset.cpp b/operators/volume_renderer/dataset.cpp
-index 62caa6ad..b73afdd3 100644
+index 74924941..eead61cc 100644
 --- a/operators/volume_renderer/dataset.cpp
 +++ b/operators/volume_renderer/dataset.cpp
 @@ -14,6 +14,7 @@
@@ -290,7 +290,7 @@ index 62caa6ad..b73afdd3 100644
  
  #include <filesystem>
 diff --git a/operators/xr/CMakeLists.txt b/operators/xr/CMakeLists.txt
-index e637f743..9e8324b5 100644
+index cd5525ce..3a781a17 100644
 --- a/operators/xr/CMakeLists.txt
 +++ b/operators/xr/CMakeLists.txt
 @@ -14,6 +14,8 @@
@@ -303,5 +303,5 @@ index e637f743..9e8324b5 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  find_package(Vulkan REQUIRED)
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

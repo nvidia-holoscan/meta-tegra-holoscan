@@ -1,7 +1,7 @@
-From 62e4984e4765e8b2fdfd00dd3687b9af522ff8ea Mon Sep 17 00:00:00 2001
-From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Thu, 8 Jan 2026 10:14:01 -0800
-Subject: [PATCH 01/10] Add install rules
+From f48916d03c298638150b6e55eed5ea603a42f955 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:53 -0400
+Subject: [PATCH] Add install rules
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
@@ -36,7 +36,7 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  27 files changed, 181 insertions(+)
 
 diff --git a/applications/colonoscopy_segmentation/CMakeLists.txt b/applications/colonoscopy_segmentation/CMakeLists.txt
-index bdff2308..aa67ff28 100644
+index aee71228..b96014bd 100644
 --- a/applications/colonoscopy_segmentation/CMakeLists.txt
 +++ b/applications/colonoscopy_segmentation/CMakeLists.txt
 @@ -34,6 +34,14 @@ if(HOLOHUB_DOWNLOAD_DATASETS)
@@ -294,7 +294,7 @@ index c491ca40..09877bc8 100644
  if(BUILD_TESTING)
    set(RECORDING_DIR ${CMAKE_CURRENT_BINARY_DIR}/recording_output)
 diff --git a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
-index 7453836c..c2bad623 100644
+index 81a13c79..021243b9 100644
 --- a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
 +++ b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
 @@ -41,6 +41,8 @@ endif()
@@ -326,10 +326,10 @@ index 8af6d5ec..acab477c 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 163c6a00..6d9e685d 100644
+index 962230e7..9df6d7f2 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -129,6 +129,15 @@ add_custom_target(object_detection_torch_yaml
+@@ -134,6 +134,15 @@ add_custom_target(object_detection_torch_yaml
  )
  add_dependencies(object_detection_torch object_detection_torch_yaml)
  
@@ -346,7 +346,7 @@ index 163c6a00..6d9e685d 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
-index 543f7e1a..78ce3d7a 100644
+index 09fb94b5..d55760c9 100644
 --- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 +++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
 @@ -47,6 +47,15 @@ add_custom_target(ultrasound_segmentation_yaml
@@ -399,7 +399,7 @@ index 07312a9b..9858353e 100644
 +  DESTINATION ${install_path}
 +)
 diff --git a/applications/volume_rendering/python/CMakeLists.txt b/applications/volume_rendering/python/CMakeLists.txt
-index 4a313608..bf531857 100644
+index c1f82dc2..40a45d8b 100644
 --- a/applications/volume_rendering/python/CMakeLists.txt
 +++ b/applications/volume_rendering/python/CMakeLists.txt
 @@ -51,3 +51,10 @@ if(BUILD_TESTING)
@@ -438,7 +438,7 @@ index 68ded45c..fc3fa6b4 100644
 +
 +install(TARGETS gxf_emergent_source_lib gxf_emergent_source)
 diff --git a/operators/aja_source/CMakeLists.txt b/operators/aja_source/CMakeLists.txt
-index 490e3c6e..90f14463 100644
+index 52ea2635..83af79ff 100644
 --- a/operators/aja_source/CMakeLists.txt
 +++ b/operators/aja_source/CMakeLists.txt
 @@ -63,6 +63,8 @@ target_link_libraries(aja_source
@@ -500,5 +500,5 @@ index 1c9a5097..bc3d11d3 100644
 +
 +install(TARGETS video_encoder)
 -- 
-2.34.1
+2.50.1 (Apple Git-155)
 

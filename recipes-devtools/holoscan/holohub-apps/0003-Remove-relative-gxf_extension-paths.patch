@@ -1,7 +1,7 @@
-From 84445f3ef3f5a4ce2d06f1cf76ec0b65df1dc86a Mon Sep 17 00:00:00 2001
-From: Julien Jomier <jjomier@nvidia.com>
-Date: Mon, 2 Feb 2026 16:10:00 +0000
-Subject: [PATCH 03/10] Remove relative gxf_extension paths
+From d76ba89077a32212aa2fc5a813eb27a3e30e195d Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 15:43:54 -0400
+Subject: [PATCH] Remove relative gxf_extension paths
 
 ---
  .../cpp/endoscopy_tool_tracking.yaml                        | 4 ++--
@@ -45,7 +45,7 @@ index b8fbd969..cec09f01 100644
  visualizer: "holoviz" # "holoviz" or "vtk"
  
 diff --git a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
-index b6bcae5a..6b72dbe4 100644
+index 2c0a91d0..245418b6 100644
 --- a/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 +++ b/applications/h264/h264_endoscopy_tool_tracking/cpp/h264_endoscopy_tool_tracking.yaml
 @@ -19,7 +19,7 @@ extensions:
@@ -58,7 +58,7 @@ index b6bcae5a..6b72dbe4 100644
  record_output: true # Setting this to `false` disables H264 encoding of output and recording it to the file.
  
 diff --git a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
-index 735f227e..bb7f2834 100644
+index 165170c2..7f9d82f0 100644
 --- a/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/cpp/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -71,7 +71,7 @@ index 735f227e..bb7f2834 100644
  emergent:
    width: 4200
 diff --git a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
-index 735f227e..bb7f2834 100644
+index 165170c2..7f9d82f0 100644
 --- a/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 +++ b/applications/high_speed_endoscopy/python/high_speed_endoscopy.yaml
 @@ -15,7 +15,7 @@
@@ -83,3 +83,6 @@ index 735f227e..bb7f2834 100644
  
  emergent:
    width: 4200
+-- 
+2.50.1 (Apple Git-155)
+
