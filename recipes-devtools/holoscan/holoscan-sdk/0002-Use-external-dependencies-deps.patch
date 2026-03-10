@@ -1,14 +1,15 @@
-From 7b2225c1e03274b7b1de5d47f09720c699f67930 Mon Sep 17 00:00:00 2001
-From: Julien Jomier <jjomier@nvidia.com>
-Date: Mon, 2 Feb 2026 15:51:17 +0000
+From 106ba4843c4ab7972bb02f857f338b8861de275f Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 12:48:00 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
 
+Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
- cmake/deps/grpc.cmake                | 10 ++-
- cmake/modules/SetupCache.cmake       |  3 -
- cmake/modules/SetupRapidsCMake.cmake | 24 ++++--
- cmake/setup_dependencies.cmake       | 96 ++++++++++++++-------
- 4 files changed, 90 insertions(+), 43 deletions(-)
+ cmake/deps/grpc.cmake                |  10 ++-
+ cmake/modules/SetupCache.cmake       |   3 -
+ cmake/modules/SetupRapidsCMake.cmake |  24 ++++--
+ cmake/setup_dependencies.cmake       | 116 +++++++++++++++++----------
+ 4 files changed, 100 insertions(+), 53 deletions(-)
 
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
 index 360f64c52..8b877f043 100644
@@ -90,12 +91,12 @@ index 72b2a02da..2df6f7dee 100644
  include(rapids-cmake)
  include(rapids-cpm)
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index 1b78a4ab7..7f7582ccc 100644
+index 17d69e5e5..4da0db074 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
-@@ -15,12 +15,6 @@
- 
- list(APPEND CMAKE_MESSAGE_CONTEXT "deps")
+@@ -20,12 +20,6 @@ list(APPEND CMAKE_MESSAGE_CONTEXT "deps")
+ set(_SAVED_CMAKE_IGNORE_PREFIX_PATH ${CMAKE_IGNORE_PREFIX_PATH})
+ list(APPEND CMAKE_IGNORE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
  
 -# Disable FetchContent_Populate deprecation warnings for older CPM version
 -# See: https://cmake.org/cmake/help/latest/policy/CMP0169.html
@@ -106,7 +107,7 @@ index 1b78a4ab7..7f7582ccc 100644
  function(superbuild_depend module_name)
      cmake_parse_arguments(PARSE_ARGV 1 _SUPER_BUILD "" "COMPONENT" "")
      # Set CMAKE_INSTALL_DEFAULT_COMPONENT_NAME before including .cmake file
-@@ -45,32 +39,66 @@ rapids_cpm_init(OVERRIDE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/deps/rapids-cmake-pa
+@@ -50,48 +44,88 @@ rapids_cpm_init(OVERRIDE "${CMAKE_CURRENT_SOURCE_DIR}/cmake/deps/rapids-cmake-pa
  set(_SAVED_CMAKE_CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}")
  set(CMAKE_CXX_CLANG_TIDY "")
  
@@ -114,6 +115,34 @@ index 1b78a4ab7..7f7582ccc 100644
 -superbuild_depend(cccl)
 -# fmt must be populated before rmm and spdlog to ensure fmt headers are installed in the package
 -superbuild_depend(fmt_rapids)
+-
+-# Other dependencies
+-superbuild_depend(cli11_rapids)
+-superbuild_depend(cudatoolkit_rapids)
+-superbuild_depend(concurrent_queue)
+-superbuild_depend(dlpack_rapids)
+-superbuild_depend(expected_rapids)
+-superbuild_depend(glfw_rapids)
+-superbuild_depend(grpc)
+-superbuild_depend(hwloc)
+-superbuild_depend(magic_enum)
+-superbuild_depend(nvtx3)
+-
+-# populate spdlog, rapids_logger, RMM in transitive dependency order
+-# to control fetch, patch, and export behavior
+-superbuild_depend(spdlog_rapids)
+-superbuild_depend(rapids_logger)
+-superbuild_depend(rmm)
+-
+-superbuild_depend(tensorrt)
+-superbuild_depend(threads)
+-superbuild_depend(ucx)
+-superbuild_depend(v4l2)
+-superbuild_depend(yaml-cpp_rapids)
+-superbuild_depend(gxf)
+-superbuild_depend(eigen3_urm)
+-superbuild_depend(ucxx_rapids)
+-superbuild_depend(matx)
 +option(HOLOSCAN_BUILD_DEPENDENCIES "Build Holoscan dependencies" ON)
 +if(HOLOSCAN_BUILD_DEPENDENCIES)
 +    # Define packages to override the default ones.
@@ -128,10 +157,17 @@ index 1b78a4ab7..7f7582ccc 100644
 +    superbuild_depend(dlpack_rapids)
 +    superbuild_depend(expected_rapids)
 +    superbuild_depend(glfw_rapids)
++    superbuild_depend(grpc)
 +    superbuild_depend(hwloc)
 +    superbuild_depend(magic_enum)
 +    superbuild_depend(nvtx3)
++
++    # populate spdlog, rapids_logger, RMM in transitive dependency order
++    # to control fetch, patch, and export behavior
++    superbuild_depend(spdlog_rapids)
++    superbuild_depend(rapids_logger)
 +    superbuild_depend(rmm)
++
 +    superbuild_depend(tensorrt)
 +    superbuild_depend(threads)
 +    superbuild_depend(ucx)
@@ -161,7 +197,7 @@ index 1b78a4ab7..7f7582ccc 100644
 +    find_package(PkgConfig)
 +    pkg_check_modules(hwloc REQUIRED IMPORTED_TARGET GLOBAL hwloc>=2.9.0)
 +    rapids_find_package(magic_enum 0.9.7 REQUIRED)
-+    rapids_find_package(matx 0.9.3 REQUIRED)
++    rapids_find_package(matx 0.9.4 REQUIRED)
 +    find_package(nvtx3 3.3.0 REQUIRED)
 +    rapids_find_package(rapids_logger 0.2.0 REQUIRED)
 +    rapids_find_package(rmm 25.10.0 REQUIRED)
@@ -174,41 +210,32 @@ index 1b78a4ab7..7f7582ccc 100644
 +    pkg_check_modules(libonnxruntime REQUIRED IMPORTED_TARGET GLOBAL libonnxruntime>=1.21.0)
 +endif()
  
--# Other dependencies
--superbuild_depend(cli11_rapids)
--superbuild_depend(cudatoolkit_rapids)
--superbuild_depend(concurrent_queue)
--superbuild_depend(dlpack_rapids)
--superbuild_depend(expected_rapids)
--superbuild_depend(glfw_rapids)
--superbuild_depend(grpc)
--superbuild_depend(hwloc)
--superbuild_depend(magic_enum)
--superbuild_depend(nvtx3)
--superbuild_depend(rmm)
--superbuild_depend(tensorrt)
--superbuild_depend(threads)
--superbuild_depend(ucx)
--superbuild_depend(v4l2)
--superbuild_depend(yaml-cpp_rapids)
--superbuild_depend(gxf)
--superbuild_depend(eigen3_urm)
--superbuild_depend(ucxx_rapids)
--superbuild_depend(matx)
- 
  # Testing dependencies
  if(HOLOSCAN_BUILD_TESTS)
-@@ -79,8 +107,12 @@ endif()
+-    superbuild_depend(gtest_rapids)
++    if(HOLOSCAN_BUILD_DEPENDENCIES)
++        superbuild_depend(gtest_rapids)
++    endif()
+ endif()
  
  # Python binding dependencies
  if(HOLOSCAN_BUILD_PYTHON)
--    find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-+  find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-+  if(HOLOSCAN_BUILD_DEPENDENCIES)
-     superbuild_depend(pybind11)
-+  else()
-+    rapids_find_package(pybind11 2.11.1 REQUIRED)
-+  endif()  
+     find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+-    superbuild_depend(pybind11)
++    if(HOLOSCAN_BUILD_DEPENDENCIES)
++        superbuild_depend(pybind11)
++    else()
++        rapids_find_package(pybind11 2.11.1 REQUIRED)
++    endif()
  endif()
  
- # Restore clang-tidy for project code
+ # Add after pybind11 to avoid conflicting pybind11 fetch procedures
+@@ -104,5 +138,3 @@ set(CMAKE_CXX_CLANG_TIDY "${_SAVED_CMAKE_CXX_CLANG_TIDY}")
+ unset(_SAVED_CMAKE_CXX_CLANG_TIDY)
+ 
+ set(CMAKE_IGNORE_PREFIX_PATH "${_SAVED_CMAKE_IGNORE_PREFIX_PATH}")
+-
+-unset(CMAKE_POLICY_DEFAULT_CMP0169)
+-- 
+2.50.1 (Apple Git-155)
+

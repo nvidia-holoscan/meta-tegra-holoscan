@@ -1,17 +1,18 @@
-From a5d7abcd9c9ea7f7cb2a04d7278a7f80459a0479 Mon Sep 17 00:00:00 2001
-From: Julien Jomier <jjomier@nvidia.com>
-Date: Mon, 2 Feb 2026 01:31:56 +0000
+From f98086cbe07b0c10a9f30f93af1adb29085da9df Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Tue, 10 Mar 2026 12:47:55 -0400
 Subject: [PATCH] Fix Main CMakeLists.txt
 
+Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
- CMakeLists.txt | 97 +++-----------------------------------------------
- 1 file changed, 4 insertions(+), 93 deletions(-)
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 063be54..bb89c22 100644
+index c6f6f2f05..cb91aa1e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -65,7 +65,9 @@ project(${HOLOSCAN_PACKAGE_NAME}
+@@ -67,7 +67,9 @@ project(${HOLOSCAN_PACKAGE_NAME}
      DESCRIPTION "Holoscan SDK"
      LANGUAGES C CXX
  )
@@ -22,138 +23,15 @@ index 063be54..bb89c22 100644
  
  # If enabling google sanitizer
  if(HOLOSCAN_ENABLE_GOOGLE_SANITIZER)
-@@ -308,7 +310,6 @@ endif()
- # List targets to export/install
- list(APPEND HOLOSCAN_INSTALL_TARGETS
-     core
--    eigen3_interface
-     gpu_resident_cuda
-     holoviz
-     holoviz_imgui
-@@ -316,10 +317,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
+@@ -323,8 +325,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
      holoinfer_utils
      infer_utils
      logger
 -    matx
 -    holoscan_matx
--    nvtx3-c
--    nvtx3-cpp
      data_loggers_async_console_logger
      data_loggers_basic_console_logger
      op_async_ping_rx
-@@ -342,7 +339,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
-     pose_tree
-     profiler
-     spdlog_logger
--    yaml-cpp
- )
- if(HOLOSCAN_BUILD_LIBTORCH)
-   list(APPEND HOLOSCAN_INSTALL_TARGETS holoinfer_torch)
-@@ -353,8 +349,7 @@ endif()
- list(APPEND HOLOSCAN_INSTALL_TARGETS pybind11_abi_config)
- 
- # Copy library files
--# Note: ucxx is handled separately since it's only available in build targets, not install targets
--install(TARGETS ${HOLOSCAN_INSTALL_TARGETS} ucxx
-+install(TARGETS ${HOLOSCAN_INSTALL_TARGETS}
-     DESTINATION ${HOLOSCAN_INSTALL_LIB_DIR}
-     EXPORT ${HOLOSCAN_PACKAGE_NAME}-exports
-     COMPONENT holoscan-core
-@@ -366,36 +361,6 @@ install(DIRECTORY include/holoscan/
-     COMPONENT holoscan-core
- )
- 
--# Copy bundled tl-expected headers
--install(DIRECTORY ${tl-expected_SOURCE_DIR}/include/tl/
--    DESTINATION include/3rdparty/tl
--    COMPONENT holoscan-dependencies
--)
--
--# Copy bundled dlpack headers
--install(DIRECTORY ${dlpack_SOURCE_DIR}/include/dlpack/
--    DESTINATION include/3rdparty/dlpack
--    COMPONENT holoscan-core
--)
--
--# Copy bundled concurrent_queue.h header
--install(FILES ${concurrent_queue_SOURCE_DIR}/concurrentqueue.h
--    DESTINATION include/3rdparty/
--    COMPONENT holoscan-core
--)
--
--# Copy bundled cli11 headers
--install(DIRECTORY ${cli11_SOURCE_DIR}/include/CLI/
--    DESTINATION include/3rdparty/CLI
--    COMPONENT holoscan-core
--)
--
--# Copy bundled spdlog headers
--install(DIRECTORY ${spdlog_SOURCE_DIR}/include/spdlog/
--    DESTINATION include/3rdparty/spdlog
--    COMPONENT holoscan-core
--)
--
- # Copy version file
- install(FILES ${${HOLOSCAN_PACKAGE_NAME}_BINARY_DIR}/include/holoscan/version_config.hpp
-     DESTINATION include/holoscan
-@@ -530,60 +495,6 @@ endforeach()
- 
- @HOLOSCAN_GXF_INSTALL_HOOK@
- 
--if(TARGET GXF::ucx)
--    # GXF UCX classes publicly depend on UCX headers.
--    # Workaround to include those headers without explicitly providing UCX targets.
--    # http://cdash.nvidia.com/viewBuildError.php?buildid=4461
--    set_property(
--        TARGET GXF::ucx
--        APPEND PROPERTY
--            INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include/3rdparty/ucx"
--    )
--endif()
--
--if(NOT TARGET rmm::rmm)
--  add_library(rmm::rmm SHARED IMPORTED)
--  set_target_properties(rmm::rmm PROPERTIES
--    INTERFACE_COMPILE_DEFINITIONS "LIBCUDACXX_ENABLE_EXPERIMENTAL_MEMORY_RESOURCE"
--    IMPORTED_LOCATION "${PACKAGE_PREFIX_DIR}/lib/librmm.so"
--  )
--endif()
--
--# Find holoscan::ucp that is prerequisite of holoscan::ucxx
--if(NOT TARGET holoscan::ucp)
--  find_package(ucx QUIET)
--  # Create an alias for ucx::ucp to support downstream holoscan::ucxx export set
--  unset(UCP_IMPORTED_LOCATION)
--  if(TARGET ucx::ucp)
--      get_target_property(UCP_IMPORTED_LOCATION ucx::ucp IMPORTED_LOCATION)
--      if(NOT UCP_IMPORTED_LOCATION)
--          get_target_property(UCP_IMPORTED_LOCATION ucx::ucp IMPORTED_LOCATION_${CMAKE_BUILD_TYPE})
--      endif()
--      get_target_property(UCP_INCLUDE_DIRS ucx::ucp INTERFACE_INCLUDE_DIRECTORIES)
--  else()
--    set(UCP_IMPORTED_LOCATION "${PACKAGE_PREFIX_DIR}/lib/libucp.so")
--    set(UCP_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/3rdparty/ucx")
--  endif()
--  add_library(holoscan::ucp SHARED IMPORTED)
--  set_target_properties(holoscan::ucp PROPERTIES
--      INTERFACE_INCLUDE_DIRECTORIES "${UCP_INCLUDE_DIRS}"
--      IMPORTED_LOCATION "${UCP_IMPORTED_LOCATION}"
--      IMPORTED_SONAME "libucp.so"
--  )
--endif()
--
--if(NOT TARGET holoscan::ucxx)
--  # Create imported target holoscan::ucxx
--  add_library(holoscan::ucxx SHARED IMPORTED)
--
--  set_target_properties(holoscan::ucxx PROPERTIES
--    INTERFACE_COMPILE_DEFINITIONS "UCXX_ENABLE_RMM;RMM_LOG_ACTIVE_LEVEL=RAPIDS_LOGGER_LEVEL_INFO"
--    INTERFACE_INCLUDE_DIRECTORIES "${PACKAGE_PREFIX_DIR}/include/3rdparty/ucxx"
--    INTERFACE_LINK_LIBRARIES "GXF::rmm;holoscan::ucp"
--    INTERFACE_POSITION_INDEPENDENT_CODE "ON"
--  )
--endif()
--
- set(GXF_LIB_DIR "${PACKAGE_PREFIX_DIR}/lib")
- set(GXF_EXTENSIONS_DIR "${PACKAGE_PREFIX_DIR}/lib/gxf_extensions")
- 
+-- 
+2.50.1 (Apple Git-155)
+

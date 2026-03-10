@@ -24,15 +24,13 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "c5d33270eb23a9de12b24001ca70dc7f2309f6b2"
+SRCREV = "874dc9deb8cb92fd1f12691695abdef9d85888d4"
 
 SRC_URI += " \
     file://desktop-icons \
     file://0001-Fix-main-cmake.patch \
     file://0002-Use-external-dependencies-deps.patch \
     file://0003-Fix-cmakelists.patch \
-    file://0004-Build-python-libs-with-install-RPATH.patch \
-    file://0005-Fix-TensorRT-include-interface.patch \
     file://0006-Disable-various-warnings-as-errors.patch \
     file://0007-Fix-CMake-examples.patch \
 "
