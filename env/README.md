@@ -124,10 +124,8 @@ hours being expected on machines with slower hardware or internet connections.
 > build again. Builds are extremely resource-intensive, and having a number of
 > particularly large tasks running in parallel can exceed even 32GB of system
 > memory usage. Repeating the build can often reschedule the tasks so that
-> they can succeed. If errors are still encountered, try lowering the value
-> of [BB_NUMBER_THREADS](https://docs.yoctoproject.org/ref-manual/variables.html#term-BB_NUMBER_THREADS)
-> in `build/conf/local.conf` to reduce the maximum number of tasks that BitBake
-> should run in parallel at any one time.
+> they can succeed. If errors are still encountered, see the [Troubleshooting](#troubleshooting)
+> section below.
 
 Using the default configuration, the above script will build the BSP image and
 write the final output to:
@@ -250,6 +248,43 @@ To run the Python version of an application, run the application in the
 $ cd /opt/nvidia/holohub
 $ python3 ./applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.py
 ```
+
+### Troubleshooting
+
+#### Memory exhausted / BB_NUMBER_THREADS has no effect
+
+If memory and swap are still exhausted after setting `BB_NUMBER_THREADS` in `build/conf/local.conf`, limit **both** parallelism knobs:
+
+1. **BB_NUMBER_THREADS** — number of recipes (tasks) building at once.
+2. **PARALLEL_MAKE** — parallelism *per* recipe (e.g. `make -j N`). If you only lower `BB_NUMBER_THREADS`, each task can still run `make -j <all cores>`, so total processes = tasks × cores and RAM can still be exhausted.
+
+**In `build/conf/local.conf`** (edit the file in `build/conf/`, not the template under `env/templates/`), add or set, using `=` so they are not overridden:
+
+```
+BB_NUMBER_THREADS = "4"
+PARALLEL_MAKE = "-j 4"
+```
+
+Adjust the numbers to fit your machine (e.g. 2 or 4 for low-RAM hosts). Optionally limit parsing to reduce memory during the parse phase:
+
+```
+BB_NUMBER_PARSE_THREADS = "4"
+```
+
+Then remove any stale BitBake server so the new values are used: `rm -f build/bitbake.lock build/bitbake.sock`, and start the build again with `./bitbake.sh core-image-holoscan`. Changes to `local.conf` only apply when BitBake starts; reconnecting to an existing server keeps the old values.
+
+#### BitBake server timeout or "Reconnecting to bitbake server" / BlockingIOError
+
+If BitBake reports "No reply from server" or "Timeout while waiting for a reply from the bitbake server", and later runs fail with "Reconnecting to bitbake server" and `BlockingIOError: [Errno 11] Resource temporarily unavailable`, the previous run was interrupted and left a stale server. Deleting `build/bitbake.lock` and `build/bitbake.sock` is required when BitBake was killed (e.g. lost SSH connection, process killed, or interrupted). Clean up and restart:
+
+1. **From the workspace root** (on the host or inside the Docker container at `/workspace`), remove the stale server files:
+
+   ```sh
+   rm -f build/bitbake.lock build/bitbake.sock
+   ```
+
+2. Start the build again with `./bitbake.sh core-image-holoscan` (from the host) or `container_bitbake.sh core-image-holoscan` from `/workspace` (inside the container).
+
 ___
 
 ## License
