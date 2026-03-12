@@ -8,6 +8,9 @@
 - Fixed magic-enum recipe so `#include <magic_enum.hpp>` resolves correctly.
 - Fixed holohub-apps build with separate GXF by adding `find_package(GXF)` before holoscan in apps and operators.
 
+### Cleanup
+- holoscan-sdk: removing passing of obsolete `HOLOSCAN_BUILD_DOCS` CMake option (removed in Holoscan SDK 0.6.0).
+
 
 ## [3.11.0] - 2026-01-30
 ### Changed
