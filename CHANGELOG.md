@@ -4,6 +4,10 @@
 - Updated GXF to 5.4.0-20260213-9fe4995d9.
 - Updated MatX to 0.9.4.
 
+### Fixed
+- Fixed magic-enum recipe so `#include <magic_enum.hpp>` resolves correctly.
+- Fixed holohub-apps build with separate GXF by adding `find_package(GXF)` before holoscan in apps and operators.
+
 
 ## [3.11.0] - 2026-01-30
 ### Changed
