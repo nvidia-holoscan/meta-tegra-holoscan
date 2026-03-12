@@ -1,0 +1,199 @@
+From 8931be366362363ff71ecb38406453634854751f Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Thu, 12 Mar 2026 06:14:47 -0400
+Subject: [PATCH] Add find_package(GXF) before holoscan in apps and operators
+
+GXF is provided separately in OE (gxf-core). Add find_package(GXF 5.4.0
+REQUIRED CONFIG) to all C++ applications and operators that use holoscan
+so the GXF config is found from the sysroot before holoscan brings in
+GXF targets.
+
+Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
+---
+ applications/endoscopy_out_of_body_detection/CMakeLists.txt      | 1 +
+ applications/endoscopy_tool_tracking/cpp/CMakeLists.txt          | 1 +
+ applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt  | 1 +
+ .../multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt      | 1 +
+ .../multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt      | 1 +
+ applications/multiai_ultrasound/cpp/CMakeLists.txt               | 1 +
+ .../operators/visualizer_icardio/CMakeLists.txt                  | 1 +
+ applications/ultrasound_segmentation/cpp/CMakeLists.txt          | 1 +
+ applications/volume_rendering/cpp/CMakeLists.txt                 | 1 +
+ gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt           | 1 +
+ operators/lstm_tensor_rt_inference/CMakeLists.txt                | 1 +
+ operators/tool_tracking_postprocessor/CMakeLists.txt             | 1 +
+ operators/volume_loader/CMakeLists.txt                           | 1 +
+ operators/volume_renderer/CMakeLists.txt                         | 1 +
+ 14 files changed, 14 insertions(+)
+
+diff --git a/applications/endoscopy_out_of_body_detection/CMakeLists.txt b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
+index 3cdf964c..cdfd06b6 100644
+--- a/applications/endoscopy_out_of_body_detection/CMakeLists.txt
++++ b/applications/endoscopy_out_of_body_detection/CMakeLists.txt
+@@ -21,6 +21,7 @@ find_package(nvtx3 3.3.0 REQUIRED)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
+index eb1e7318..84c223a8 100644
+--- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
++++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
+@@ -19,6 +19,7 @@ project(endoscopy_tool_tracking CXX)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+index 25b9f540..3d8759af 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-cpu/CMakeLists.txt
+@@ -20,6 +20,7 @@ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
+ # Holoscan
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
+index f01901c5..35bfa4c8 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-matx-cpu/CMakeLists.txt
+@@ -17,6 +17,7 @@ cmake_minimum_required(VERSION 3.20)
+ project(multi_ai CXX)
+ 
+ # Holoscan
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
+index 3dc21d15..9b2b5a6b 100644
+--- a/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
++++ b/applications/multiai_endoscopy/cpp/post-proc-matx-gpu/CMakeLists.txt
+@@ -17,6 +17,7 @@ cmake_minimum_required(VERSION 3.20)
+ project(multi_ai CXX)
+ 
+ # Holoscan
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/multiai_ultrasound/cpp/CMakeLists.txt b/applications/multiai_ultrasound/cpp/CMakeLists.txt
+index 499f5fcf..40dd0779 100644
+--- a/applications/multiai_ultrasound/cpp/CMakeLists.txt
++++ b/applications/multiai_ultrasound/cpp/CMakeLists.txt
+@@ -19,6 +19,7 @@ project(multiai_ultrasound CXX)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
+index e482e415..acef023f 100644
+--- a/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
++++ b/applications/multiai_ultrasound/operators/visualizer_icardio/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(visualizer_icardio LANGUAGES CXX CUDA)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.5 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/ultrasound_segmentation/cpp/CMakeLists.txt b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
+index 48167458..442915e4 100644
+--- a/applications/ultrasound_segmentation/cpp/CMakeLists.txt
++++ b/applications/ultrasound_segmentation/cpp/CMakeLists.txt
+@@ -19,6 +19,7 @@ project(ultrasound_segmentation CXX)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/applications/volume_rendering/cpp/CMakeLists.txt b/applications/volume_rendering/cpp/CMakeLists.txt
+index 88cf7fb8..cebc0a09 100644
+--- a/applications/volume_rendering/cpp/CMakeLists.txt
++++ b/applications/volume_rendering/cpp/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(volume_rendering)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 1.0 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt b/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
+index ddee7862..e1280478 100644
+--- a/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
++++ b/gxf_extensions/lstm_tensor_rt_inference/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(gxf_lstm_tensor_rt_inference)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/operators/lstm_tensor_rt_inference/CMakeLists.txt b/operators/lstm_tensor_rt_inference/CMakeLists.txt
+index 51059f34..ba428003 100644
+--- a/operators/lstm_tensor_rt_inference/CMakeLists.txt
++++ b/operators/lstm_tensor_rt_inference/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(lstm_tensor_rt_inference)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/operators/tool_tracking_postprocessor/CMakeLists.txt b/operators/tool_tracking_postprocessor/CMakeLists.txt
+index f0144f68..c7933fd6 100644
+--- a/operators/tool_tracking_postprocessor/CMakeLists.txt
++++ b/operators/tool_tracking_postprocessor/CMakeLists.txt
+@@ -19,6 +19,7 @@ project(tool_tracking_postprocessor LANGUAGES CXX CUDA)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/operators/volume_loader/CMakeLists.txt b/operators/volume_loader/CMakeLists.txt
+index 2c57060f..d50e1d69 100644
+--- a/operators/volume_loader/CMakeLists.txt
++++ b/operators/volume_loader/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(volume_loader)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+diff --git a/operators/volume_renderer/CMakeLists.txt b/operators/volume_renderer/CMakeLists.txt
+index 0856af61..1ef61efc 100644
+--- a/operators/volume_renderer/CMakeLists.txt
++++ b/operators/volume_renderer/CMakeLists.txt
+@@ -18,6 +18,7 @@ project(volume_renderer)
+ find_package(rapids_logger 0.2.0 REQUIRED)
+ find_package(rmm 25.10.0 REQUIRED)
+ find_package(Eigen3 REQUIRED)
++find_package(GXF 5.4.0 REQUIRED CONFIG)
+ find_package(holoscan 0.6 REQUIRED CONFIG
+              PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
+ 
+-- 
+2.50.1 (Apple Git-155)
+

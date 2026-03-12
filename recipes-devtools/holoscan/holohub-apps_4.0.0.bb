@@ -37,6 +37,7 @@ SRC_URI += " \
     file://0007-Skip-model-download-for-object_detection_torch.patch \
     file://0008-Remove-native-CUDA_ARCHITECTURE.patch \
     file://0009-Updates-for-OE-cross-builds.patch \
+    file://0010-Add-find_package-GXF-before-holoscan-in-apps-and-ope.patch \
 "
 
 S = "${WORKDIR}/git"
@@ -49,6 +50,7 @@ EXTRA_OECMAKE:append = " \
     -DBUILD_SAMPLE_APPS=ON \
     -DHOLOHUB_DOWNLOAD_DATASETS=ON \
     -DCMAKE_INSTALL_PREFIX=${HOLOHUB_INSTALL_PATH} \
+    -DGXF_DIR=${RECIPE_SYSROOT}/opt/nvidia/gxf/lib/cmake/GXF \
     -Dholoscan_DIR=${RECIPE_SYSROOT}/opt/nvidia/holoscan/lib/cmake/holoscan \
     -Dajantv2_DIR=${RECIPE_SYSROOT}${libdir}/cmake/ajantv2 \
     -DAPP_colonoscopy_segmentation=ON \
