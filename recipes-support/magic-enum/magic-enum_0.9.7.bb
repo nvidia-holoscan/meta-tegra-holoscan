@@ -27,6 +27,11 @@ SRC_URI = "git://github.com/Neargye/magic_enum.git;protocol=https;branch=master"
 # tag: v0.9.7
 SRCREV = "e046b69a3736d314fad813e159b1c192eaef92cd"
 
+SRC_URI += " \
+    file://0001-Using-CMAKE_INSTALL_INCLUDEDIR-for-installing-includ.patch \
+    file://0002-Install-headers-under-INCLUDEDIR-PROJECT_NAME-for-ta.patch \
+"
+
 S = "${WORKDIR}/git"
 
 inherit cmake

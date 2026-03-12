@@ -1,0 +1,29 @@
+From 8ce61fc64ccdb65093964acc07530651d2f59bd2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jon=20Skjelsb=C3=A6k?= <skjelsbek@hotmail.com>
+Date: Wed, 11 Mar 2026 21:31:25 -0400
+Subject: [PATCH 1/2] Using CMAKE_INSTALL_INCLUDEDIR for installing includes.
+ (#391)
+
+(cherry-picked from Neargye/magic_enum@1a1824df7)
+
+Patch-name: 0001-Using-CMAKE_INSTALL_INCLUDEDIR-for-installing-includ.patch
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d02af07..cf41320 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -81,7 +81,7 @@ if(MAGIC_ENUM_OPT_INSTALL)
+ 
+   install(
+     DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
+-    DESTINATION include
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+     FILES_MATCHING
+     PATTERN "${PROJECT_INCLUDE_HEADER_PATTERN}"
+   )
+-- 
+2.50.1 (Apple Git-155)
+

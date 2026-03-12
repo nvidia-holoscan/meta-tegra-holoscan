@@ -1,0 +1,49 @@
+From aa21cccc63fb6ff825ede44fc72fc328bfe1f944 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Wed, 11 Mar 2026 23:20:00 -0400
+Subject: [PATCH 2/2] Install headers under INCLUDEDIR/PROJECT_NAME for target
+ consistency
+
+Align the installed layout with the exported target so that
+`#include <magic_enum_*.hpp>` resolves correctly for consumers.
+
+- Set `INSTALL_INTERFACE` to `${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}` so
+  the target exports the include directory where headers are installed.
+
+- Use `DIRECTORY .../include/${PROJECT_NAME}/` and
+  `DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}` so headers
+  are installed into that same path (e.g. `include/magic_enum/`).
+
+Patch-name: 0002-Install-headers-under-INCLUDEDIR-PROJECT_NAME-for-ta.patch
+Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
+---
+ CMakeLists.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf41320..c719314 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -46,7 +46,7 @@ add_library(${PROJECT_NAME} INTERFACE)
+ add_library(${EXPORT_NAMESPACE}${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+ target_include_directories(
+   ${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
++  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}>
+ )
+ 
+ if(MAGIC_ENUM_OPT_BUILD_EXAMPLES)
+@@ -80,8 +80,8 @@ if(MAGIC_ENUM_OPT_INSTALL)
+   endif()
+ 
+   install(
+-    DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}
+-    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    DIRECTORY ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/
++    DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+     FILES_MATCHING
+     PATTERN "${PROJECT_INCLUDE_HEADER_PATTERN}"
+   )
+-- 
+2.50.1 (Apple Git-155)
+
