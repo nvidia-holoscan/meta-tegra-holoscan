@@ -10,6 +10,7 @@
 
 ### Cleanup
 - holoscan-sdk: removing passing of obsolete `HOLOSCAN_BUILD_DOCS` CMake option (removed in Holoscan SDK 0.6.0).
+- holoscan-sdk: explicitly set `HOLOSCAN_USE_SCCACHE=OFF` (HSDK defaults to OFF; keeps OE build deterministic).
 
 
 ## [3.11.0] - 2026-01-30
