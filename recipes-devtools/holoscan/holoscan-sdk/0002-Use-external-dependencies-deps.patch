@@ -1,4 +1,4 @@
-From 106ba4843c4ab7972bb02f857f338b8861de275f Mon Sep 17 00:00:00 2001
+From 94ae779c82c5943ffc7a2e44ee3e2c88028b681e Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:00 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
@@ -6,10 +6,9 @@ Subject: [PATCH] Use external dependencies - Modules and examples
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  cmake/deps/grpc.cmake                |  10 ++-
- cmake/modules/SetupCache.cmake       |   3 -
  cmake/modules/SetupRapidsCMake.cmake |  24 ++++--
  cmake/setup_dependencies.cmake       | 116 +++++++++++++++++----------
- 4 files changed, 100 insertions(+), 53 deletions(-)
+ 3 files changed, 100 insertions(+), 50 deletions(-)
 
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
 index 360f64c52..8b877f043 100644
@@ -39,20 +38,6 @@ index 360f64c52..8b877f043 100644
  # Find gRPC installation
  # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
  find_package(gRPC CONFIG REQUIRED)
-diff --git a/cmake/modules/SetupCache.cmake b/cmake/modules/SetupCache.cmake
-index cc54d5864..e5dae043a 100644
---- a/cmake/modules/SetupCache.cmake
-+++ b/cmake/modules/SetupCache.cmake
-@@ -207,9 +207,6 @@ if(${HOLOSCAN_CACHE_DIR} STREQUAL " ")
-     set(HOLOSCAN_CACHE_DIR "${CMAKE_SOURCE_DIR}/.cache" CACHE)
- endif()
- 
--check_cache_dir(HOLOSCAN_CACHE_DIR)
--configure_cpm(HOLOSCAN_CACHE_DIR)
--
- if(HOLOSCAN_USE_CCACHE)
-     configure_ccache(HOLOSCAN_CACHE_DIR)
- endif()
 diff --git a/cmake/modules/SetupRapidsCMake.cmake b/cmake/modules/SetupRapidsCMake.cmake
 index 72b2a02da..2df6f7dee 100644
 --- a/cmake/modules/SetupRapidsCMake.cmake
@@ -91,7 +76,7 @@ index 72b2a02da..2df6f7dee 100644
  include(rapids-cmake)
  include(rapids-cpm)
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index 17d69e5e5..4da0db074 100644
+index d66141557..a5449b0f5 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
 @@ -20,12 +20,6 @@ list(APPEND CMAKE_MESSAGE_CONTEXT "deps")
@@ -130,7 +115,7 @@ index 17d69e5e5..4da0db074 100644
 -
 -# populate spdlog, rapids_logger, RMM in transitive dependency order
 -# to control fetch, patch, and export behavior
--superbuild_depend(spdlog_rapids)
+-superbuild_depend(spdlog)
 -superbuild_depend(rapids_logger)
 -superbuild_depend(rmm)
 -
@@ -164,7 +149,7 @@ index 17d69e5e5..4da0db074 100644
 +
 +    # populate spdlog, rapids_logger, RMM in transitive dependency order
 +    # to control fetch, patch, and export behavior
-+    superbuild_depend(spdlog_rapids)
++    superbuild_depend(spdlog)
 +    superbuild_depend(rapids_logger)
 +    superbuild_depend(rmm)
 +

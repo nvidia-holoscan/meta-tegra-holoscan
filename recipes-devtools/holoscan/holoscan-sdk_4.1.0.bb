@@ -24,7 +24,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "874dc9deb8cb92fd1f12691695abdef9d85888d4"
+SRCREV = "77d63877077f2f5f190319059a2d6f69f8c2f32b"
 
 SRC_URI += " \
     file://desktop-icons \
@@ -65,8 +65,7 @@ EXTRA_OECMAKE:append = " \
 EXTRA_OECMAKE:append = " \
     -DHOLOSCAN_INSTALL_EXAMPLE_SOURCE=OFF \
     -DHOLOSCAN_BUILD_TESTS=OFF \
-    -DHOLOSCAN_USE_CCACHE=OFF \
-    -DHOLOSCAN_USE_SCCACHE=OFF \
+    -DHOLOSCAN_USE_CACHE_DIR=OFF \
 "
 
 DEPENDS += " \

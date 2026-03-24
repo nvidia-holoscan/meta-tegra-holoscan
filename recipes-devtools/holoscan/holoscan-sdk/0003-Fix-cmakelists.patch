@@ -1,4 +1,4 @@
-From 74afad7abd117f228d718e2f356fdf66ed499945 Mon Sep 17 00:00:00 2001
+From e577c7451b75e004fa3814ae92227b3b9c3a870d Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:03 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
@@ -22,12 +22,12 @@ Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
  9 files changed, 33 insertions(+), 75 deletions(-)
 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 2faa709bd..a83ac0917 100644
+index 6fd716c70..0bd810316 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -57,7 +57,6 @@ include(CTest)
- if(HOLOSCAN_CPP_EXAMPLES)
+@@ -60,7 +60,6 @@ if(HOLOSCAN_CPP_EXAMPLES)
    add_subdirectory(gpu_resident_example)
+   add_subdirectory(gpu_resident_multi_io)
    add_subdirectory(gpu_resident_input)
 -  add_subdirectory(matx)
    add_subdirectory(ping_any)
@@ -276,7 +276,7 @@ index 3facf71b9..8d880dc9e 100644
    )
 \ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2b4d21364..38e66ec75 100644
+index 1087ba8e5..0682b959f 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -75,6 +75,7 @@ endfunction()
