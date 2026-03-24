@@ -1,4 +1,4 @@
-From f48916d03c298638150b6e55eed5ea603a42f955 Mon Sep 17 00:00:00 2001
+From 7f884e3b85ad95037db7e46fa3b6dfec0164b9a7 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:53 -0400
 Subject: [PATCH] Add install rules
@@ -326,12 +326,12 @@ index 8af6d5ec..acab477c 100644
  if(BUILD_TESTING)
    # To get the environment path
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 962230e7..9df6d7f2 100644
+index 176f6a7f..fb25bf90 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
-@@ -134,6 +134,15 @@ add_custom_target(object_detection_torch_yaml
+@@ -149,6 +149,15 @@ add_custom_target(object_detection_torch_copy_configs
  )
- add_dependencies(object_detection_torch object_detection_torch_yaml)
+ add_dependencies(object_detection_torch object_detection_torch_copy_configs)
  
 +# Install the application
 +file(RELATIVE_PATH install_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
