@@ -23,8 +23,9 @@ SUMMARY = "NVIDIA HoloHub Applications"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 
+# Source comes from the public Holohub GitHub release at the holoscan-sdk-4.2.0 tag.
 SRC_URI = "git://github.com/nvidia-holoscan/holohub.git;branch=main;protocol=https"
-SRCREV = "babff41b03c1b8dbadf1fc8de35e583ff8250d6a"
+SRCREV = "43cbe6f2c913f7ea926ec8c25a0bda3c8cdb00b9"
 
 SRC_URI += " \
     file://desktop-icons \

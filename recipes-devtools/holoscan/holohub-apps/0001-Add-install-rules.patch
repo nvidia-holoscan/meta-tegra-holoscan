@@ -500,5 +500,5 @@ index 1c9a5097..bc3d11d3 100644
 +
 +install(TARGETS video_encoder)
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

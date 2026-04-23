@@ -23,5 +23,5 @@ index 1fc8bbbf..1aaa53aa 100644
  
  target_link_libraries(tool_tracking_postprocessor
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

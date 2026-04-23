@@ -93,5 +93,5 @@ index e1e9a018..39570a8a 100644
  add_library(volume_renderer SHARED
    dataset.cpp
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

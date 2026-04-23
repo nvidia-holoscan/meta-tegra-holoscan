@@ -303,5 +303,5 @@ index cd5525ce..3a781a17 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  find_package(Vulkan REQUIRED)
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

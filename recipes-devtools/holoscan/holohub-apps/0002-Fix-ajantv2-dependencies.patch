@@ -157,5 +157,5 @@ index 83af79ff..3da6b68d 100644
  add_library(aja_source SHARED
    aja_source.hpp
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 
