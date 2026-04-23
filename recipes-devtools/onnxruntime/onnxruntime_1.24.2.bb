@@ -28,10 +28,11 @@ SRC_URI = " \
     git://gitlab.com/libeigen/eigen.git;protocol=https;nobranch=1;name=libeigen;destsuffix=git/_deps/eigen-src \
     git://github.com/NVIDIA/cudnn-frontend.git;protocol=https;nobranch=1;name=cudnn_frontend;destsuffix=git/_deps/cudnn_frontend-src \
 "
-# tag: v1.21.0
-SRCREV = "e0b66cad282043d4377cea5269083f17771b6dfc"
+# tag: v1.24.2
+SRCREV = "058787ceead760166e3c50a0a4cba8a833a6f53f"
 SRCREV_libeigen = "1d8b82b0740839c0de7f1242a3585e3390ff5f33"
-SRCREV_cudnn_frontend = "de355c7094af70467f2b264f531ab5c5f4401c42"
+# tag: v1.12.0
+SRCREV_cudnn_frontend = "666996fe3960f27170d1527e5579ba24c8d3380a"
 
 SRCREV_FORMAT = "onnxruntime_libeigen_cudnn_frontend"
 
@@ -53,6 +54,7 @@ DEPENDS += " \
     date \
     flatbuffers \
     flatbuffers-native \
+    libeigen \
     nlohmann-json \
     nsync \
     onnx \
