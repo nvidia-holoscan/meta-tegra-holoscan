@@ -1,0 +1,120 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Thu, 24 Apr 2026 00:00:00 -0400
+Subject: [PATCH] Replace IfRRef::AddPtr alias-template access with
+ std::conditional_t for GCC 10.x
+
+GCC 10.3 (shipped with the NVIDIA CUDA 12.6 cross-toolchain used by
+meta-tegra / meta-tegra-holoscan) has a parser bug where it cannot
+resolve member-alias-templates accessed through a nested-name-
+specifier of the form:
+
+    IfRRef<int KQual>::AddPtr<K>
+    IfRRef<int MQual>::AddPtr<M>
+    IfRRef<int VQual>::AddPtr<V>
+
+inside the ABSL_INTERNAL_X macros in btree_container.h (4 sites) and
+raw_hash_map.h (2 sites). It reports:
+
+    error: using template type parameter
+           'absl::lts_20250814::container_internal::IfRRef<const int&>
+            ::AddPtr<K>' after 'typename'
+    error: template argument N is invalid
+
+even with both 'typename' and 'template' keywords correctly placed
+for full disambiguation (the fully-disambiguated spelling
+'typename IfRRef<int KQual>::template AddPtr<K>' does not work
+either - GCC 10.3 still treats 'AddPtr<K>' as a template PARAMETER
+rather than a template SPECIALIZATION in this context). This is a
+GCC 10 frontend bug around alias templates in nested-name-specifiers;
+newer GCC versions accept both spellings.
+
+IfRRef's purpose is simple: 'IfRRef<T>::AddPtr<Other>' evaluates to
+'Other*' when T is an rvalue-reference type, and to 'Other' otherwise.
+That is exactly what 'std::conditional_t<std::is_rvalue_reference<T>
+::value, Other*, Other>' does - without going through an alias
+template access. Rewriting the 6 affected sites in terms of
+std::conditional_t sidesteps the GCC 10.3 bug entirely.
+
+Semantically identical to the original (verified: the primary IfRRef
+template returns Other; the IfRRef<T&&> specialization returns Other*;
+std::is_rvalue_reference<int const &>::value is false and
+std::is_rvalue_reference<int &&>::value is true, so
+std::conditional_t picks the same branch each time).
+
+Upstream master still has the original alias-template spelling as of
+abseil-cpp@HEAD at the time of this cycle, so this patch is not yet
+in any released abseil tag.
+
+Upstream-Status: Pending
+Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
+---
+ absl/container/internal/btree_container.h | 18 ++++++++++++++----
+ absl/container/internal/raw_hash_map.h    | 10 +++++++---
+ 2 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/absl/container/internal/btree_container.h b/absl/container/internal/btree_container.h
+index 21f00ae..85ecc8f 100644
+--- a/absl/container/internal/btree_container.h
++++ b/absl/container/internal/btree_container.h
+@@ -496,9 +496,13 @@ class btree_map_container : public btree_set_container<Tree> {
+   template <                                                                 \
+       typename K = key_type, class M,                                        \
+       ABSL_INTERNAL_IF_##KValue##_NOR_##MValue(                              \
+-          int = (EnableIf<LifetimeBoundKV<K, KValue, M, MValue,              \
+-                                          IfRRef<int KQual>::AddPtr<K>,      \
+-                                          IfRRef<int MQual>::AddPtr<M>>>()), \
++          int = (EnableIf<LifetimeBoundKV<                                   \
++                     K, KValue, M, MValue,                                   \
++                     std::conditional_t<                                     \
++                         std::is_rvalue_reference<int KQual>::value, K*, K>, \
++                     std::conditional_t<                                     \
++                         std::is_rvalue_reference<int MQual>::value, M*,     \
++                         M>>>()),                                            \
+           ABSL_INTERNAL_SINGLE_ARG(                                          \
+               int &...,                                                      \
+               decltype(EnableIf<LifetimeBoundKV<K, KValue, M, MValue>>()) =  \
+@@ -597,11 +601,17 @@ class btree_map_container : public btree_set_container<Tree> {
+       class K = key_type,                                                      \
+       ABSL_INTERNAL_IF_##KValue(                                               \
+           class... Args,                                                       \
+-          int = (EnableIf<                                                     \
+-                 LifetimeBoundK<K, KValue, IfRRef<int KQual>::AddPtr<K>>>())), \
++          int = (EnableIf<LifetimeBoundK<                                      \
++                     K, KValue,                                                \
++                     std::conditional_t<                                       \
++                         std::is_rvalue_reference<int KQual>::value, K*,       \
++                         K>>>())),                                             \
+       ABSL_INTERNAL_IF_##KValue(                                               \
+           decltype(EnableIf<LifetimeBoundK<                                    \
+-                       K, KValue, IfRRef<int KQual>::AddPtr<K>>>()) = 0,       \
++                       K, KValue,                                              \
++                       std::conditional_t<                                     \
++                           std::is_rvalue_reference<int KQual>::value, K*,     \
++                           K>>>()) = 0,                                        \
+           class... Args),                                                      \
+       std::enable_if_t<!std::is_convertible<K, const_iterator>::value, int> =  \
+           0>                                                                   \
+diff --git a/absl/container/internal/raw_hash_map.h b/absl/container/internal/raw_hash_map.h
+index b42a4f2..fef62d2 100644
+--- a/absl/container/internal/raw_hash_map.h
++++ b/absl/container/internal/raw_hash_map.h
+@@ -105,9 +105,13 @@ class raw_hash_map : public raw_hash_set<Policy, Hash, Eq, Alloc> {
+   template <                                                                   \
+       typename K = key_type, class V = mapped_type,                            \
+       ABSL_INTERNAL_IF_##KValue##_NOR_##VValue(                                \
+-          int = (EnableIf<LifetimeBoundKV<K, KValue, V, VValue,                \
+-                                          IfRRef<int KQual>::AddPtr<K>,        \
+-                                          IfRRef<int VQual>::AddPtr<V>>>()),   \
++          int = (EnableIf<LifetimeBoundKV<                                     \
++                     K, KValue, V, VValue,                                     \
++                     std::conditional_t<                                       \
++                         std::is_rvalue_reference<int KQual>::value, K*, K>,   \
++                     std::conditional_t<                                       \
++                         std::is_rvalue_reference<int VQual>::value, V*,       \
++                         V>>>()),                                              \
+           ABSL_INTERNAL_SINGLE_ARG(                                            \
+               int &...,                                                        \
+               decltype(EnableIf<LifetimeBoundKV<K, KValue, V, VValue>>()) =    \
+-- 
+2.50.1
