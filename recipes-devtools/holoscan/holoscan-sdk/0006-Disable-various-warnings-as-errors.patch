@@ -1,4 +1,4 @@
-From 61fcdcdc56bdd8d5d818044f7d03065da3830ec4 Mon Sep 17 00:00:00 2001
+From df4aea69bcc42bb47848e809ed03e50d9a233f97 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:15 -0400
 Subject: [PATCH] Disable various warnings as errors
@@ -10,10 +10,10 @@ Signed-off-by: Ian Stewart <istewart@nvidia.com>
  1 file changed, 12 insertions(+)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cb91aa1e9..4e1330176 100644
+index ba3b1b998..e6046738e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -129,6 +129,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
+@@ -136,6 +136,18 @@ set(CMAKE_CXX_EXTENSIONS NO)
  # Don't append suffix to shared libraries for debug build
  set(CMAKE_DEBUG_POSTFIX "")
  
@@ -33,5 +33,5 @@ index cb91aa1e9..4e1330176 100644
  # # RAPIDS CMAKE configurations
  # # (https://docs.rapids.ai/api/rapids-cmake/stable/api.html)
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

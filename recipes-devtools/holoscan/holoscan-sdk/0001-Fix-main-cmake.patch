@@ -1,18 +1,18 @@
-From f98086cbe07b0c10a9f30f93af1adb29085da9df Mon Sep 17 00:00:00 2001
+From f1fa6555d8d91736e74ed9a910700c72f9e9a465 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:47:55 -0400
 Subject: [PATCH] Fix Main CMakeLists.txt
 
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
- CMakeLists.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ CMakeLists.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c6f6f2f05..cb91aa1e9 100644
+index 4641d6a66..ba3b1b998 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -67,7 +67,9 @@ project(${HOLOSCAN_PACKAGE_NAME}
+@@ -74,7 +74,9 @@ project(${HOLOSCAN_PACKAGE_NAME}
      DESCRIPTION "Holoscan SDK"
      LANGUAGES C CXX
  )
@@ -23,15 +23,14 @@ index c6f6f2f05..cb91aa1e9 100644
  
  # If enabling google sanitizer
  if(HOLOSCAN_ENABLE_GOOGLE_SANITIZER)
-@@ -323,8 +325,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
+@@ -329,7 +331,6 @@ list(APPEND HOLOSCAN_INSTALL_TARGETS
      holoinfer_utils
      infer_utils
      logger
 -    matx
--    holoscan_matx
      data_loggers_async_console_logger
      data_loggers_basic_console_logger
      op_async_ping_rx
 -- 
-2.50.1 (Apple Git-155)
+2.50.1
 

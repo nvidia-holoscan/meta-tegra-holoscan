@@ -1,4 +1,4 @@
-From e577c7451b75e004fa3814ae92227b3b9c3a870d Mon Sep 17 00:00:00 2001
+From b57b48c4d55839cdd6c04cf76755e818858bce81 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:03 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
@@ -22,10 +22,10 @@ Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
  9 files changed, 33 insertions(+), 75 deletions(-)
 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 6fd716c70..0bd810316 100644
+index 0a999a1ef..ff24d523c 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -60,7 +60,6 @@ if(HOLOSCAN_CPP_EXAMPLES)
+@@ -62,7 +62,6 @@ if(HOLOSCAN_CPP_EXAMPLES)
    add_subdirectory(gpu_resident_example)
    add_subdirectory(gpu_resident_multi_io)
    add_subdirectory(gpu_resident_input)
@@ -156,7 +156,7 @@ index af2b7a301..0f87a07e9 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/tests/functional/CMakeLists.txt b/modules/holoviz/tests/functional/CMakeLists.txt
-index e5310ba80..8449ca569 100644
+index 9608c9acf..0dfe5116c 100644
 --- a/modules/holoviz/tests/functional/CMakeLists.txt
 +++ b/modules/holoviz/tests/functional/CMakeLists.txt
 @@ -15,18 +15,6 @@
@@ -178,7 +178,7 @@ index e5310ba80..8449ca569 100644
  find_package(CUDAToolkit REQUIRED)
  find_package(X11 REQUIRED)
  find_package(Vulkan REQUIRED)
-@@ -66,7 +54,7 @@ target_compile_definitions(${PROJECT_NAME}
+@@ -67,7 +55,7 @@ target_compile_definitions(${PROJECT_NAME}
  
  target_include_directories(${PROJECT_NAME}
      PRIVATE
@@ -188,7 +188,7 @@ index e5310ba80..8449ca569 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/thirdparty/imgui/CMakeLists.txt b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
-index 3facf71b9..8d880dc9e 100644
+index 34bcc8bc4..86e86dc68 100644
 --- a/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 +++ b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 @@ -18,29 +18,17 @@ include(GNUInstallDirs)
@@ -274,9 +274,8 @@ index 3facf71b9..8d880dc9e 100644
    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/holoviz/imgui/misc/cpp
    COMPONENT "holoscan-dependencies"
    )
-\ No newline at end of file
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1087ba8e5..0682b959f 100644
+index 7c833e51f..0c9ad7aab 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -75,6 +75,7 @@ endfunction()
@@ -287,7 +286,7 @@ index 1087ba8e5..0682b959f 100644
  add_holoscan_library(spdlog_logger common/logger/spdlog_logger.cpp)
  target_link_libraries(spdlog_logger
      PUBLIC
-@@ -339,7 +340,7 @@ target_link_libraries(core
+@@ -399,7 +400,7 @@ target_link_libraries(core
          tl::expected
          yaml-cpp::yaml-cpp
      PRIVATE
