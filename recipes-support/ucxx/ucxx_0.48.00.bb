@@ -31,7 +31,8 @@ SRC_URI = " \
     git://github.com/rapidsai/ucxx.git;protocol=https;nobranch=1 \
     file://0001-Updates-for-OE-cross-builds.patch \
 "
-SRCREV = "64355220c2a03ef14a1fc912e7c410b2f3f48f8b"
+# tag: v0.48.00
+SRCREV = "bb8b93e165c48da10756e746e1928dd240a6c249"
 
 DEPENDS += "ucx cccl cpm-cmake rapids-cmake"
 

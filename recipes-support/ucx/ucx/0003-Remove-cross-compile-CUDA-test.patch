@@ -1,34 +1,40 @@
-From 9cc3aa91573a046b47dd82a07c100dd2fc2571f7 Mon Sep 17 00:00:00 2001
+From 3865b7dbb64524cdfcf45ab2b9b18c4112412f39 Mon Sep 17 00:00:00 2001
 From: Julien Jomier <jjomier@nvidia.com>
-Date: Mon, 2 Feb 2026 16:54:30 -0500
+Date: Thu, 23 Apr 2026 17:39:48 -0400
 Subject: [PATCH] Remove cross-compile CUDA test
 
 ---
- test/apps/Makefile.am | 14 --------------
- 1 file changed, 14 deletions(-)
+ test/apps/Makefile.am | 17 -----------------
+ 1 file changed, 17 deletions(-)
 
 diff --git a/test/apps/Makefile.am b/test/apps/Makefile.am
-index 6ab8a6e20..f7d0f1c6e 100644
+index dbd98ba..668cde2 100644
 --- a/test/apps/Makefile.am
 +++ b/test/apps/Makefile.am
-@@ -97,20 +97,6 @@ test_cuda_hook_static_LDADD     = $(top_builddir)/src/ucp/libucp.la \
+@@ -98,23 +98,6 @@ test_cuda_hook_static_LDADD     = $(top_builddir)/src/ucp/libucp.la \
                                    $(CUDART_STATIC_LIBS) $(CUDA_LIBS)
  endif
  
 -if HAVE_NVCC
+-
+-include $(top_srcdir)/config/cuda.am
+-
+-# Could be simply added as .cu to _SOURCES if there was no specific CPPFLAGS
+-$(eval $(call nvcc-source, custom-test_cuda_get_symbol_address.o, \
+-	test_cuda_get_symbol_address.cu,CUDA_CPPFLAGS))
+-
 -noinst_PROGRAMS                      += test_cuda_get_symbol_address
--test_cuda_get_symbol_address_SOURCES  = test_cuda_get_symbol_address.cu
--test_cuda_get_symbol_address_CPPFLAGS = $(BASE_CPPFLAGS) $(CUDA_CPPFLAGS)
+-test_cuda_get_symbol_address_SOURCES  =
 -test_cuda_get_symbol_address_LDFLAGS  = $(CUDA_LDFLAGS)
--test_cuda_get_symbol_address_LDADD    = $(top_builddir)/src/ucp/libucp.la \
--                                        $(top_builddir)/src/ucm/libucm.la \
--                                        $(CUDART_LIBS)
--test_cuda_get_symbol_address_DEPBASE  = $(DEPDIR)/test_cuda_get_symbol_address
--test_cuda_get_symbol_address_COMPILE  = \
--    $(NVCC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
--    $(test_cuda_get_symbol_address_CPPFLAGS)
+-test_cuda_get_symbol_address_LDADD    = $(CUDART_LIBS) custom-test_cuda_get_symbol_address.o \
+-                                        $(top_builddir)/src/ucp/libucp.la \
+-                                        $(top_builddir)/src/ucm/libucm.la
+-
 -endif
 -
  endif
  
  if HAVE_TCMALLOC
+-- 
+2.50.1
+

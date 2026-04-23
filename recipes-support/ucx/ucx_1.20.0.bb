@@ -24,13 +24,13 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=cbe4fe88c540f18985ee4d32d590f683"
 
 SRC_URI = " \
-    git://github.com/openucx/ucx.git;protocol=https;branch=v1.19.x \
+    git://github.com/openucx/ucx.git;protocol=https;branch=v1.20.x \
     file://0001-Fix-CMAKE-library-import-paths.patch \
     file://0002-Add-option-to-enable-NVML.patch \
     file://0003-Remove-cross-compile-CUDA-test.patch \
 "
-# tag: v1.19.0
-SRCREV = "7009d7a19b1c2464224a3fe117a4155fb29298f5"
+# tag: v1.20.0
+SRCREV = "bbe51a5d687f3b2852e0027c6113d4de915aef75"
 
 S = "${WORKDIR}/git"
 

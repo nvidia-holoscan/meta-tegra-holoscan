@@ -1,21 +1,23 @@
-From 161bd8a61e79b3c686cd1dfbbc08538c44b82205 Mon Sep 17 00:00:00 2001
+From def73302f91c79248371fb01c78af81b371911da Mon Sep 17 00:00:00 2001
 From: Ilies CHERGUI <ichergui@nvidia.com>
-Date: Fri, 25 Apr 2025 20:39:04 +0100
+Date: Thu, 23 Apr 2026 17:38:46 -0400
 Subject: [PATCH] Add option to enable NVML
 
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
+Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---
- config/m4/cuda.m4                      | 34 ++++++++++++++++----------
- src/uct/cuda/base/cuda_iface.h         |  4 +++
- src/uct/cuda/cuda_ipc/cuda_ipc_iface.c |  9 +++++++
- 3 files changed, 34 insertions(+), 13 deletions(-)
+ config/m4/cuda.m4                      | 44 +++++++++++++++-----------
+ src/uct/cuda/base/cuda_nvml.c          |  4 +++
+ src/uct/cuda/base/cuda_nvml.h          |  3 ++
+ src/uct/cuda/cuda_ipc/cuda_ipc_iface.c |  9 ++++++
+ 4 files changed, 42 insertions(+), 18 deletions(-)
 
 diff --git a/config/m4/cuda.m4 b/config/m4/cuda.m4
-index 31813dfb0..8999d6032 100644
+index 0194c8a..9228688 100644
 --- a/config/m4/cuda.m4
 +++ b/config/m4/cuda.m4
-@@ -11,6 +11,11 @@ AS_IF([test "x$cuda_checked" != "xyes"],
+@@ -124,6 +124,11 @@ AS_IF([test "x$cuda_checked" != "xyes"],
                  [AS_HELP_STRING([--with-cuda=(DIR)], [Enable the use of CUDA (default is guess).])],
                  [], [with_cuda=guess])
  
@@ -27,7 +29,7 @@ index 31813dfb0..8999d6032 100644
      AS_IF([test "x$with_cuda" = "xno"],
          [
           cuda_happy=no
-@@ -60,21 +65,24 @@ AS_IF([test "x$cuda_checked" != "xyes"],
+@@ -173,27 +178,30 @@ AS_IF([test "x$cuda_checked" != "xyes"],
                  AC_CHECK_DECLS([CU_MEM_LOCATION_TYPE_HOST],
                                 [], [], [[#include <cuda.h>]])])
  
@@ -52,7 +54,7 @@ index 31813dfb0..8999d6032 100644
 -                                        [AC_MSG_ERROR([nvml header not found. Install appropriate cuda-nvml-devel package])])
 +                                        [AC_MSG_ERROR([libnvidia-ml not found. Install appropriate nvidia-driver package])])
                                    cuda_happy="no"])])
--
+ 
 -         # Check nvml library
 -         AS_IF([test "x$cuda_happy" = "xyes"],
 -               [AC_CHECK_LIB([nvidia-ml], [nvmlInit],
@@ -60,62 +62,83 @@ index 31813dfb0..8999d6032 100644
 -                             [AS_IF([test "x$with_cuda" != "xguess"],
 -                                    [AC_MSG_ERROR([libnvidia-ml not found. Install appropriate nvidia-driver package])])
 -                              cuda_happy="no"])])
+-
+-         # Check for nvmlDeviceGetGpuFabricInfoV
+-         AC_CHECK_DECLS([nvmlDeviceGetGpuFabricInfoV],
+-                        [AC_DEFINE([HAVE_NVML_FABRIC_INFO], 1, [Enable NVML GPU fabric info support])],
+-                        [AC_MSG_NOTICE([nvmlDeviceGetGpuFabricInfoV function not found in libnvidia-ml. MNNVL support will be disabled.])],
+-                        [[#include <nvml.h>]])
++             # Check for nvmlDeviceGetGpuFabricInfoV
++             AC_CHECK_DECLS([nvmlDeviceGetGpuFabricInfoV],
++                            [AC_DEFINE([HAVE_NVML_FABRIC_INFO], 1, [Enable NVML GPU fabric info support])],
++                            [AC_MSG_NOTICE([nvmlDeviceGetGpuFabricInfoV function not found in libnvidia-ml. MNNVL support will be disabled.])],
++                            [[#include <nvml.h>]])
 +             AC_DEFINE([ENABLE_NVML], , [Enable NVML])
 +         fi
  
-          # Check for nvmlDeviceGetGpuFabricInfo
-          AC_CHECK_DECLS([nvmlDeviceGetGpuFabricInfo],
-diff --git a/src/uct/cuda/base/cuda_iface.h b/src/uct/cuda/base/cuda_iface.h
-index 772e2f2d3..e72aa2728 100644
---- a/src/uct/cuda/base/cuda_iface.h
-+++ b/src/uct/cuda/base/cuda_iface.h
-@@ -13,12 +13,15 @@
- #include <ucs/datastruct/khash.h>
  
- #include <cuda.h>
+          # Check for cuda static library
+diff --git a/src/uct/cuda/base/cuda_nvml.c b/src/uct/cuda/base/cuda_nvml.c
+index 9ed56e6..d17de02 100644
+--- a/src/uct/cuda/base/cuda_nvml.c
++++ b/src/uct/cuda/base/cuda_nvml.c
+@@ -10,6 +10,8 @@
+ 
+ #include "cuda_nvml.h"
+ 
++#ifdef ENABLE_NVML
++
+ #include <ucs/debug/assert.h>
+ #include <ucs/debug/log_def.h>
+ #include <ucs/sys/preprocessor.h>
+@@ -205,3 +207,5 @@ UCS_STATIC_CLEANUP
+         dlclose(lib_handle);
+     }
+ }
++
++#endif /* ENABLE_NVML */
+diff --git a/src/uct/cuda/base/cuda_nvml.h b/src/uct/cuda/base/cuda_nvml.h
+index 5649f9e..8572a47 100644
+--- a/src/uct/cuda/base/cuda_nvml.h
++++ b/src/uct/cuda/base/cuda_nvml.h
+@@ -10,6 +10,7 @@
+ #include <ucs/sys/preprocessor.h>
+ #include <ucs/type/status.h>
+ 
 +#ifdef ENABLE_NVML
  #include <nvml.h>
-+#endif
  
  
- const char *uct_cuda_base_cu_get_error_string(CUresult result);
+@@ -48,4 +49,6 @@ UCT_CUDA_NVML_WRAP_DECL(nvmlDeviceGetGpuFabricInfoV, nvmlDevice_t,
+                         nvmlGpuFabricInfoV_t*);
+ #endif
  
- 
-+#ifdef ENABLE_NVML
- #define UCT_NVML_FUNC(_func, _log_level) \
-     ({ \
-         ucs_status_t _status = UCS_OK; \
-@@ -39,6 +42,7 @@ const char *uct_cuda_base_cu_get_error_string(CUresult result);
- 
- #define UCT_NVML_FUNC_LOG_ERR(_func) \
-     UCT_NVML_FUNC(_func, UCS_LOG_LEVEL_ERROR)
-+#endif // ENABLE_NVML
- 
- 
- #define UCT_CUDADRV_LOG(_func, _log_level, _result) \
++#endif /* ENABLE_NVML */
++
+ #endif
 diff --git a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
-index 5638e2bf5..032ca2ffb 100644
+index 116f379..49240ed 100644
 --- a/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
 +++ b/src/uct/cuda/cuda_ipc/cuda_ipc_iface.c
-@@ -18,7 +18,9 @@
- #include <ucs/debug/assert.h>
- #include <ucs/async/eventfd.h>
- #include <pthread.h>
+@@ -14,7 +14,9 @@
+ 
+ #include <uct/cuda/base/cuda_iface.h>
+ #include <uct/cuda/base/cuda_md.h>
 +#ifdef ENABLE_NVML
- #include <nvml.h>
+ #include <uct/cuda/base/cuda_nvml.h>
 +#endif
- 
- 
- typedef enum {
-@@ -191,6 +193,7 @@ static double uct_cuda_ipc_iface_get_bw()
+ #include <uct/cuda/cuda_ipc/cuda_ipc_device.h>
+ #include <ucs/type/class.h>
+ #include <ucs/sys/string.h>
+@@ -199,6 +201,7 @@ static double uct_cuda_ipc_iface_get_bw()
      }
  }
  
 +#ifdef ENABLE_NVML
- /* calls nvmlInit_v2 and nvmlShutdown which are expensive but
-  * get_device_nvlinks should be outside critical path */
  static int uct_cuda_ipc_get_device_nvlinks(int ordinal)
-@@ -244,6 +247,12 @@ err_sd:
+ {
+     static int num_nvlinks = -1;
+@@ -241,6 +244,12 @@ static int uct_cuda_ipc_get_device_nvlinks(int ordinal)
  err:
      return 0;
  }
@@ -124,7 +147,10 @@ index 5638e2bf5..032ca2ffb 100644
 +{
 +    return 0;
 +}
-+#endif // ENABLE_NVML
++#endif /* ENABLE_NVML */
  
  static size_t uct_cuda_ipc_iface_get_max_get_zcopy(uct_cuda_ipc_iface_t *iface)
  {
+-- 
+2.50.1
+
