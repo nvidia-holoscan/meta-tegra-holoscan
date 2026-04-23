@@ -1,3 +1,27 @@
+## [4.2.0] - 2026-04-23
+### Changed
+- Updated Holoscan SDK and Holohub apps to 4.2.0.
+- Updated GXF to 5.6.0-20260429-73f41cf00.
+- Updated ONNX to 1.20.1 (required by ONNX Runtime 1.24.2 for the new `OpSchema::SetNodeDeterminism`, `InferenceContext::hasOutput`, and `TensorProto_DataType_{FLOAT4E2M1,INT2,UINT2}` symbols).
+- Updated ONNX Runtime to 1.24.2 (cuDNN frontend to v1.12.0).
+- Updated UCX to 1.20.0 and UCXX to 0.48.00.
+- Updated abseil-cpp to 20250814.0 (required by ONNX Runtime 1.24.2 for the new `absl::hashtable_control_bytes` symbol).
+- Added `libeigen` 3.4.1 recipe (meta-openembedded scarthgap only ships 3.4.0; ONNX Runtime 1.24.2 needs the templated `min<Eigen::PropagateNaN>` / `max<Eigen::PropagateNaN>` overloads added between 3.4.0 and 3.4.1) and pinned `PREFERRED_VERSION_libeigen = "3.4.1"` in `conf/holoscan-common.conf`.
+- holoscan-sdk: raised CLI11 floor from 2.3.2 to 2.5.0 in `0002-Use-external-dependencies-deps.patch` to match SDK 4.2.0's `CLI11_VERSION 2.5.0`.
+- holoscan-sdk: in `0002-Use-external-dependencies-deps.patch`, also drop the `CCCL 3.2` version pin from the `find_dependency(CCCL ...)` call inside the `holoscan_install_hook_code_string` heredoc at top-level `CMakeLists.txt`. That heredoc is what `rapids_export(... FINAL_CODE_BLOCK ...)` bakes verbatim into the installed `holoscan-config.cmake`, so without this drop, every downstream consumer (e.g. `holohub-apps`) failed `do_configure` with `Could not find a configuration file for package "CCCL" that is compatible with requested version "3.2"` even though the SDK itself built fine against external CCCL 3.0.3.
+
+### Fixed
+- onnxruntime: added `libeigen` to `DEPENDS` so the new `Eigen3::Eigen` link from the CUDA / TensorRT EP modules in ORT 1.24.2 resolves against the meta-tegra Eigen3 sysroot.
+- abseil-cpp: dropped obsolete `0002-Remove-maes-option-from-cross-compilation.patch` and `0003-Remove-neon-option-from-cross-compilation.patch` (the `ABSL_RANDOM_HWAES_*_FLAGS` lists they targeted were removed from `absl/copts/GENERATED_AbseilCopts.cmake` upstream in 20250814.0). `conf/holoscan-common.conf` `PREFERRED_VERSION_abseil-cpp` bumped to match.
+
+### Deferred
+The following bumps from the Holoscan SDK 4.2.0 release notes were intentionally not taken this cycle:
+- PyTorch 2.5.0 -> 2.11.0 (and the paired torchvision 0.20.1 -> 0.26.0): PyTorch is pinned to the IGX 1.1 / DLFW 24.08 software stack baseline. The PyTorch stack will be revisited in a later cycle.
+- NCCL 2.27.5-1 -> 2.29: release notes tie this bump to PyTorch 2.11 compatibility. In meta-tegra-holoscan, `pytorch_2.5.0.bb` is built with `-DUSE_NCCL=OFF`, and the only remaining in-layer `nccl` consumer is `python3-cupy_13.6.0.bb`, which builds fine against 2.27.
+- CCCL 3.0.3 -> 3.2.0 and RMM 25.10.00 -> 26.02.00: both are pinned to the DLFW 26.03 baseline that PyTorch 2.5.0 builds against. The existing `0002-Use-external-dependencies-deps.patch` already replaces the SDK's `rapids_cpm_find(CCCL 3.2.0)` with an unversioned `find_package(CCCL REQUIRED)` and pins `rapids_find_package(rmm 25.10.0 REQUIRED)`, neutralizing SDK 4.2.0's newer version requests. Note: release notes flag RMM API breakage at the SDK source level; local bitbake validation is required to confirm SDK 4.2.0 source does not rely on any RMM 26.02-only APIs.
+- NSight Systems 2023.3.3.42-1 -> 2025.3.1: the standalone `nsight-systems-cli` debian package line stopped at `2024.2.3` on the NVIDIA CUDA repo; 2025.x only ships as the full `nsight-systems-<ver>` deb (different packaging). Will be revisited in a follow-up that switches the recipe accordingly.
+
+
 ## [4.1.0] - 2026-04-09
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 4.1.0.
