@@ -27,8 +27,8 @@ SRC_URI = " \
     git://github.com/onnx/onnx.git;protocol=https;branch=rel-${PV} \
     file://0001-Updates-for-OE-cross-builds.patch \
 "
-# tag: v1.17.0,
-SRCREV = "b8baa8446686496da4cc8fda09f2b6fe65c2a02c"
+# tag: v1.20.1
+SRCREV = "d3f6b795aedb48eaecc881bf5e8f5dd6efbe25b3"
 
 inherit cmake
 
