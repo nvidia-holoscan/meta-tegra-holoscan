@@ -1,0 +1,28 @@
+From b46690c5a9da4705279ea669d9371371b56d8b5b Mon Sep 17 00:00:00 2001
+From: JC Fillion-Robin <jcfr@nvidia.com>
+Date: Thu, 23 Apr 2026 19:37:23 -0400
+Subject: [PATCH 1/2] Default eigen_packet_wrapper constructor.
+
+This makes it trivial, allowing use of `memcpy`.
+
+Fixes #2326
+
+Upstream-Status: Backport [https://gitlab.com/libeigen/eigen/-/merge_requests/645/diffs?commit_id=cb507309937958c632147de87e8f1231d6698847]
+Signed-off-by: Antonio Sanchez <cantonios@google.com>
+---
+ Eigen/src/Core/GenericPacketMath.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Eigen/src/Core/GenericPacketMath.h b/Eigen/src/Core/GenericPacketMath.h
+index af45f39..58c81ab 100644
+--- a/Eigen/src/Core/GenericPacketMath.h
++++ b/Eigen/src/Core/GenericPacketMath.h
+@@ -160,7 +160,7 @@ struct eigen_packet_wrapper
+ {
+   EIGEN_ALWAYS_INLINE operator T&() { return m_val; }
+   EIGEN_ALWAYS_INLINE operator const T&() const { return m_val; }
+-  EIGEN_ALWAYS_INLINE eigen_packet_wrapper() {};
++  EIGEN_ALWAYS_INLINE eigen_packet_wrapper() = default;
+   EIGEN_ALWAYS_INLINE eigen_packet_wrapper(const T &v) : m_val(v) {}
+   EIGEN_ALWAYS_INLINE eigen_packet_wrapper& operator=(const T &v) {
+     m_val = v;
