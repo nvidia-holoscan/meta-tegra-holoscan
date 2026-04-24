@@ -21,14 +21,19 @@
 DESCRIPTION = "CUDA Templates for Linear Algebra Subroutines"
 HOMEPAGE = "https://github.com/NVIDIA/cutlass"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1132d6687f729bb3e7bf5d41649513d7"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=ce85e3722fa981b4aef41101c60ed4a4"
 
+# Cutlass keeps tagged releases on per-minor release branches
+# (release/4.2, release/4.3, ...), NOT on main. When bumping, update
+# both SRCREV and 'branch=release/X.Y'.
 SRC_URI = " \
-    git://github.com/NVIDIA/cutlass.git;protocol=https;branch=main \
+    git://github.com/NVIDIA/cutlass.git;protocol=https;branch=release/4.2 \
     file://0001-Fixups-for-cross-building-in-OE.patch \
 "
-# tag: v3.5.1
-SRCREV = "f7b19de32c5d1f3cedfc735c2849f12b537522ee"
+# tag: v4.2.1 (commit SHA verified via 'git ls-remote'). The SHA1 in
+# ORT cmake/deps.txt's cutlass entry is the .zip artifact hash, NOT a
+# git commit -- do not copy it as SRCREV.
+SRCREV = "f3fde58372d33e9a5650ba7b80fc48b3b49d40c8"
 PV .= "+git${SRCPV}"
 
 S = "${WORKDIR}/git"
