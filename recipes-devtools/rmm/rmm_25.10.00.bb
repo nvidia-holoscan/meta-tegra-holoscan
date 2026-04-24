@@ -46,5 +46,33 @@ EXTRA_OECMAKE:append = " \
     -DBUILD_TESTS=OFF \
 "
 
+# Compat forwarders for GXF 5.6.0 (shipped via the gxf-core binary recipe):
+# the installed GXF header gxf/rmm/rmm_allocator.hpp still includes the pre-2020
+# RMM paths 'rmm/mr/cuda_memory_resource.hpp' and 'rmm/mr/pool_memory_resource.hpp'.
+# RMM moved both into rmm/mr/device/ in commit 38528982 (Jan 2020) and no
+# released RMM since has shipped them at the short path. Forward the old
+# paths to the new ones so GXF's compile surface resolves against our
+# sysroot. 'pinned_host_memory_resource.hpp' is still at rmm/mr/ upstream, so
+# no forwarder is needed for it.
+do_install:append() {
+    install -d ${D}${includedir}/rmm/mr
+    cat > ${D}${includedir}/rmm/mr/cuda_memory_resource.hpp <<'EOF'
+// Compat forwarder: RMM moved this header to rmm/mr/device/ in Jan 2020
+// (commit 38528982). meta-tegra-holoscan carries this shim so that
+// GXF 5.6.0's gxf/rmm/rmm_allocator.hpp (which still uses the pre-2020
+// include path) resolves against RMM 25.10.00 in the OE sysroot.
+#pragma once
+#include "rmm/mr/device/cuda_memory_resource.hpp"
+EOF
+    cat > ${D}${includedir}/rmm/mr/pool_memory_resource.hpp <<'EOF'
+// Compat forwarder: RMM moved this header to rmm/mr/device/ in Jan 2020
+// (commit 38528982). meta-tegra-holoscan carries this shim so that
+// GXF 5.6.0's gxf/rmm/rmm_allocator.hpp (which still uses the pre-2020
+// include path) resolves against RMM 25.10.00 in the OE sysroot.
+#pragma once
+#include "rmm/mr/device/pool_memory_resource.hpp"
+EOF
+}
+
 SOLIBS = "*.so*"
 FILES_SOLIBSDEV = ""
