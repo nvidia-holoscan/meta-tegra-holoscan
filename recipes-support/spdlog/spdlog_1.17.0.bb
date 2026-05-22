@@ -21,13 +21,10 @@
 DESCRIPTION = "Very fast, header only, C++ logging library."
 HOMEPAGE = "https://github.com/gabime/spdlog/wiki"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=9573510928429ad0cbe5ba4de77546e9"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=13886a8d1692948ea9b78edc50e9447c"
 
-SRC_URI = " \
-    git://github.com/gabime/spdlog.git;protocol=https;branch=v1.x \
-    file://CVE-2025-6140.patch \
-"
-SRCREV = "27cb4c76708608465c413f6d0e6b8d99a4d84302"
+SRC_URI = "git://github.com/gabime/spdlog.git;protocol=https;branch=v1.x"
+SRCREV = "79524ddd08a4ec981b7fea76afd08ee05f83755d"
 
 DEPENDS = "fmt"
 
