@@ -23,9 +23,8 @@ HOMEPAGE = "https://developer.nvidia.com/holoscan-sdk"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-# Source comes from the public Holoscan SDK GitHub release at the v4.2.0 tag.
-SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;branch=main;protocol=https"
-SRCREV = "1f6ef481348e03656bcf99e033cfef9899c378a6"
+SRC_URI = "git://github.com/nvidia-holoscan/holoscan-sdk.git;nobranch=1;protocol=https"
+SRCREV = "e3a702d29ce0f51fe53108cc3f010f96b6f7384e"
 
 SRC_URI += " \
     file://desktop-icons \

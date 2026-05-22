@@ -1,29 +1,15 @@
-From 1fbcd6ff1291b8b1f51e48bb2f823c726bf5633b Mon Sep 17 00:00:00 2001
+From 002466b35f21707435347e09b7ae0fbe0a14f88d Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:00 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
 
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
- CMakeLists.txt                       |   2 +-
  cmake/deps/grpc.cmake                |  10 ++-
- cmake/modules/SetupRapidsCMake.cmake |  37 +++++----
+ cmake/modules/SetupRapidsCMake.cmake |  35 ++++----
  cmake/setup_dependencies.cmake       | 117 +++++++++++++++++----------
- 4 files changed, 102 insertions(+), 64 deletions(-)
+ 3 files changed, 100 insertions(+), 62 deletions(-)
 
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ba3b1b998..2f399fa12 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -470,7 +470,7 @@ set(holoscan_install_hook_code_string
- [=[
- include(CMakeFindDependencyMacro)
- find_dependency(CUDAToolkit)
--find_dependency(CCCL 3.2 PATHS ${CMAKE_CURRENT_LIST_DIR}/../cccl /usr/local/cuda/lib64/cmake/cccl)
-+find_dependency(CCCL PATHS ${CMAKE_CURRENT_LIST_DIR}/../cccl /usr/local/cuda/lib64/cmake/cccl)
- 
- find_dependency(yaml-cpp HINTS ${CMAKE_CURRENT_LIST_DIR}/../yaml-cpp)
- # Legacy non-namespaced yaml-cpp linkage required for GXF internal targets
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
 index 360f64c52..8b877f043 100644
 --- a/cmake/deps/grpc.cmake
@@ -53,15 +39,12 @@ index 360f64c52..8b877f043 100644
  # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
  find_package(gRPC CONFIG REQUIRED)
 diff --git a/cmake/modules/SetupRapidsCMake.cmake b/cmake/modules/SetupRapidsCMake.cmake
-index 0fabd0edb..09484e5d1 100644
+index 0fabd0edb..4cd4fa571 100644
 --- a/cmake/modules/SetupRapidsCMake.cmake
 +++ b/cmake/modules/SetupRapidsCMake.cmake
-@@ -13,28 +13,27 @@
- # See the License for the specific language governing permissions and
- # limitations under the License.
+@@ -15,26 +15,25 @@
  
--set(rapids-cmake-version 26.02)
-+set(rapids-cmake-version 25.10)
+ set(rapids-cmake-version 26.02)
  
 -# https://github.com/rapidsai/rapids-cmake#installation
 -if(NOT EXISTS ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
@@ -91,10 +74,10 @@ index 0fabd0edb..09484e5d1 100644
 -include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
 +set(rapids-cmake_POPULATED "TRUE")
 +if(NOT rapids-cmake-version)
-+  set(rapids-cmake-version "25.10")
++  set(rapids-cmake-version "26.02")
 +endif()
 +if(NOT rapids-cmake-branch)
-+  set(rapids-cmake-branch "branch-25.10")
++  set(rapids-cmake-branch "branch-26.02")
 +endif()
 +set(rapids-cmake-dir "${RAPIDS_CMAKE_DIR}/rapids-cmake")
 +message(STATUS "Rapids cmake DIR: ${rapids-cmake-dir}")
@@ -104,7 +87,7 @@ index 0fabd0edb..09484e5d1 100644
  include(rapids-cmake)
  include(rapids-cpm)
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index d561b88cb..03a240820 100644
+index d561b88cb..c2df44c14 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
 @@ -26,12 +26,6 @@ list(APPEND CMAKE_IGNORE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
@@ -214,7 +197,7 @@ index d561b88cb..03a240820 100644
 +    rapids_find_package(matx 0.9.4 REQUIRED)
 +    find_package(nvtx3 3.3.0 REQUIRED)
 +    rapids_find_package(rapids_logger 0.2.0 REQUIRED)
-+    rapids_find_package(rmm 25.10.0 REQUIRED)
++    rapids_find_package(rmm 26.02.0 REQUIRED)
 +    rapids_find_package(spdlog 1.14.1 REQUIRED)
 +    find_package(ucx 1.20.0 REQUIRED)
 +    # GXF needs to be included after finding ucx to avoid duplicate targets
