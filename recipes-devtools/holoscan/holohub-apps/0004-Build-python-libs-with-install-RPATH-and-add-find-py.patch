@@ -1,4 +1,4 @@
-From d56cc358ea96394ed55b388b4dbf0a26dd83f778 Mon Sep 17 00:00:00 2001
+From e74a80a00d77dd852dffb85a977cb069e89a7f68 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
 Subject: [PATCH] Build python libs with install RPATH and add find
@@ -11,7 +11,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  1 file changed, 3 insertions(+), 12 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index 27a94a65..785df33f 100644
+index b59c92bf..4c6751ab 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -16,15 +16,7 @@
@@ -31,8 +31,8 @@ index 27a94a65..785df33f 100644
  
  # Helper function to generate pybind11 operator modules
  function(pybind11_add_holohub_module)
-@@ -68,9 +60,8 @@ function(pybind11_add_holohub_module)
-         "\$ORIGIN/../lib" # in our python wheel"
+@@ -73,9 +65,8 @@ function(pybind11_add_holohub_module)
+         "\$ORIGIN/../lib"    # legacy fallback for one-level-deep layouts
      )
      list(JOIN _rpath ":" _rpath)
 -    set_property(TARGET ${target_name}
@@ -44,5 +44,5 @@ index 27a94a65..785df33f 100644
  
      # make submodule folder
 -- 
-2.50.1
+2.50.1 (Apple Git-155)
 
