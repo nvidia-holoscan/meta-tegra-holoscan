@@ -26,12 +26,8 @@ PACKAGES = "${PN} ${PN}-dev"
 
 GXF_VERSION = "${@d.getVar('PV').replace('-', '_')}"
 GXF_PACKAGE = "gxf_${GXF_VERSION}_holoscan-sdk-cu12_${TARGET_ARCH}"
-# Artifact is hosted on edge.urm.nvidia.com (the public Artifactory mirror used
-# by HSDK GA consumers; the original RC artifact lived on the internal
-# urm.nvidia.com and was not mirrored to edge -- this recipe was bumped to the
-# next available 5.6.0 build (20260429-73f41cf00) which IS on edge.urm).
 SRC_URI = "https://edge.urm.nvidia.com/artifactory/sw-holoscan-thirdparty-generic-local/gxf/${GXF_PACKAGE}.tar.gz;name=gxf;subdir=${GXF_PACKAGE}"
-SRC_URI[gxf.sha256sum] = "5589e44a7be3ae4bfd3ea08ee6c2b9e52cb83ece89cd3066c69ae0205c8cc778"
+SRC_URI[gxf.sha256sum] = "1745b4403614e9d216fa408cff454e4a5dfb3e0c0ce7c0d00c3477763226a07b"
 
 S = "${WORKDIR}/${GXF_PACKAGE}"
 
