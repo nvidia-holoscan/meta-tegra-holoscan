@@ -24,12 +24,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 SRC_URI = "https://github.com/NVIDIA/cccl/releases/download/v${PV}/cccl-v${PV}.tar.gz"
-SRC_URI[sha256sum] = "12d39fcc98d71037191632eed996c22b845d823da1df521002b6e3cc1edf0e2d"
+SRC_URI[sha256sum] = "36df0c283815691975a7870fdc8ed9a47e896e49407519727fa6092f041c4285"
 UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+(\.\d+)+)"
 UPSTREAM_CHECK_URI = "https://github.com/NVIDIA/cccl/releases/"
-
-
-SRC_URI:append = " file://0001-Updates-for-OE-cross-builds.patch"
 
 inherit cuda
 
