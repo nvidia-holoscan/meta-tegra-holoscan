@@ -27,8 +27,8 @@ SRC_URI = " \
     git://github.com/rapidsai/rapids-cmake.git;protocol=https;nobranch=1 \
     file://0001-Update-cmake-required-version.patch \
 "
-# tag: v25.10.00
-SRCREV = "b435ca821fbc08162937071a4b5ac41d4cdb5af3"
+# tag: v26.02.00
+SRCREV = "a6064536d9732286eafe18fc8ec3ddb96ed04c45"
 
 S = "${WORKDIR}/git"
 
