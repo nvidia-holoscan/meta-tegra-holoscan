@@ -23,20 +23,31 @@ HOMEPAGE = "https://github.com/pytorch/vision"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=bd7749a3307486a4d4bfefbc81c8b796"
 
-SRC_URI = "git://github.com/pytorch/vision.git;branch=release/0.20;protocol=https"
-SRCREV = "3ac97aa9120137381ed1060f37237e44485ac2aa"
+SRC_URI = "git://github.com/pytorch/vision.git;protocol=https;branch=release/0.26"
+SRCREV = "336d36e8db990a905498c73933e35231876e28bc"
 
 S = "${WORKDIR}/git"
+
+COMPATIBLE_MACHINE = "(cuda)"
 
 inherit cmake cuda
 
 EXTRA_OECMAKE = " \
     -DWITH_CUDA=1 \
     -DCMAKE_SKIP_RPATH=TRUE \
+    -DTORCH_CUDA_ARCH_LIST=${@' '.join(['%s.%s' % (a[:-1], a[-1]) for a in d.getVar('CUDA_ARCHITECTURES').split()])} \
+    -DCMAKE_CUDA_IMPLICIT_INCLUDE_DIRECTORIES=${RECIPE_SYSROOT}/usr/include \
 "
+
+# Caffe2's public/cuda.cmake (included via find_package(Torch)) defaults
+# CUDA_ARCH_NAME to "Auto", which calls select_compute_arch.cmake which in
+# turn invokes try_run() on a probe binary -- not supported in Yocto's
+# cross-compile sysroot. Setting TORCH_CUDA_ARCH_LIST above takes the
+# Manual branch and skips the try_run() call entirely.
 
 DEPENDS += " \
     jpeg \
+    libcublas \
     libpng \
     pytorch \
 "
