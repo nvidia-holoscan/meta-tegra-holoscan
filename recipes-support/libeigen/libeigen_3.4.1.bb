@@ -39,7 +39,7 @@ LIC_FILES_CHKSUM = "file://COPYING.MPL2;md5=815ca599c9df247a0c7f619bab123dad \
                     file://COPYING.MINPACK;md5=71d91b0f75ce79a75d3108a72bef8116 \
 "
 
-SRC_URI = "git://gitlab.com/libeigen/eigen.git;protocol=http;branch=3.4 \
+SRC_URI = "git://gitlab.com/libeigen/eigen.git;protocol=https;branch=3.4 \
     file://0001-Default-eigen_packet_wrapper-constructor.patch \
     file://0002-Remove-LGPL-Code-and-references.patch \
 "
