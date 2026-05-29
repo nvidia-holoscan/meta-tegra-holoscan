@@ -44,6 +44,24 @@ COMPATIBLE_MACHINE = "(cuda)"
 
 inherit cmake cuda
 
+# Cap parallelism for the CUDA compile step. ONNX Runtime's flash-attention
+# kernels (onnxruntime/contrib_ops/cuda/bert/flash_attention/*.cu) instantiate
+# large SM-8.0 templates and each nvcc subprocess can consume 4-8 GB of RAM
+# at peak. Without this cap, the layer-wide PARALLEL_MAKE = "-j 10" in
+# build/conf/local.conf would launch 10 such nvcc compiles concurrently
+# and the kernel OOM-kills them on a 32 GiB-class build host. SQA reported
+# such a do_compile OOM on 2026-05-28.
+#
+# This recipe-level setting OVERRIDES the layer-wide PARALLEL_MAKE for
+# onnxruntime only -- other recipes still benefit from the project default.
+# At j=4, peak memory is ~4 x 6 GB ~= 24 GB which fits inside the 32 GB
+# floor with headroom for the other processes that share the builder.
+#
+# Mirrors the recipe-level cap convention used in pytorch_2.11.0.bb.
+# Downstream users can override via local.conf using the :pn- mechanism:
+#   PARALLEL_MAKE:pn-onnxruntime = "-j 8"   # e.g. on a 64 GB host
+PARALLEL_MAKE = "-j 4"
+
 S = "${WORKDIR}/git"
 B = "${S}"
 

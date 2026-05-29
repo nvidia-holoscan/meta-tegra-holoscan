@@ -273,6 +273,26 @@ BB_NUMBER_PARSE_THREADS = "4"
 
 Then remove any stale BitBake server so the new values are used: `rm -f build/bitbake.lock build/bitbake.sock`, and start the build again with `./bitbake.sh core-image-holoscan`. Changes to `local.conf` only apply when BitBake starts; reconnecting to an existing server keeps the old values.
 
+##### Per-recipe `PARALLEL_MAKE` caps (`PARALLEL_MAKE:pn-<recipe>`)
+
+`PARALLEL_MAKE` in `build/conf/local.conf` is layer-wide, but specific recipes can be capped independently. `meta-tegra-holoscan` ships **recipe-level caps** in two `.bb` files for compiles whose `do_compile` is regularly OOM-killed on 32 GB-class builders — `onnxruntime_1.24.2.bb` (flash-attention `nvcc` TUs at `-j 4`) and `pytorch_2.11.0.bb` (ATen CUDA TUs at `-j 8`, sized for a 31 GB + 8 GB swap host). Each recipe documents its own peak-memory rationale inline.
+
+A recipe-level `PARALLEL_MAKE = "-j N"` overrides the layer-wide `PARALLEL_MAKE` in `local.conf` for that recipe only; other recipes continue to build at the project default.
+
+To override the recipe-level cap (e.g. on a host with more RAM than the recipe's default targets), use BitBake's `:pn-<recipe>` override in `build/conf/local.conf` — this takes precedence over both the layer-wide value AND the recipe-level cap:
+
+```
+# 16 GB host (more conservative than the recipe defaults)
+PARALLEL_MAKE:pn-onnxruntime = "-j 2"
+PARALLEL_MAKE:pn-pytorch     = "-j 2"
+
+# 64 GB host (more aggressive than the recipe defaults)
+PARALLEL_MAKE:pn-onnxruntime = "-j 8"
+PARALLEL_MAKE:pn-pytorch     = "-j 10"
+```
+
+Loose sizing heuristic: one `-jN` slot per ~8 GB of host RAM for the heaviest CUDA TUs (16 GB → -j 2, 32 GB → -j 4, 64 GB → -j 8). The same `PARALLEL_MAKE:pn-<recipe>` override pattern works for any other recipe whose `do_compile` is OOM-killed — cap that recipe specifically rather than lowering the layer-wide `PARALLEL_MAKE`, so unaffected recipes keep building at full parallelism.
+
 #### BitBake server timeout or "Reconnecting to bitbake server" / BlockingIOError
 
 If BitBake reports "No reply from server" or "Timeout while waiting for a reply from the bitbake server", and later runs fail with "Reconnecting to bitbake server" and `BlockingIOError: [Errno 11] Resource temporarily unavailable`, the previous run was interrupted and left a stale server. Deleting `build/bitbake.lock` and `build/bitbake.sock` is required when BitBake was killed (e.g. lost SSH connection, process killed, or interrupted). Clean up and restart:
