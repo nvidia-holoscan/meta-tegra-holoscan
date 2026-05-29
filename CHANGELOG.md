@@ -1,3 +1,26 @@
+## [4.3.0] - 2026-05-25
+### Changed
+- Updated Holoscan SDK and Holohub apps to 4.3.0.
+- Updated GXF to 5.7.0-20260515-6a50c8f1a (HSDK 4.3.0 raises `find_package(GXF 5.7 CONFIG REQUIRED)`).
+- Updated `fmt` to 12.1.0 (required by HSDK 4.3.0; `PREFERRED_VERSION_fmt` in `conf/holoscan-common.conf` updated to match).
+- Updated `spdlog` to 1.17.0 (required by HSDK 4.3.0; `PREFERRED_VERSION_spdlog` updated to match). Dropped `CVE-2025-6140.patch` — the upstream commit `10320184df1eb4` (size-underflow guard on truncate in `pattern_formatter-inl.h`) is integrated in 1.17.0.
+- Updated `cccl` to 3.2.0 (HSDK 4.3.0 requests `CCCL_REQUESTED_VERSION 3.2.0`; also satisfies RMM 26.02.00's CCCL 3.1+ floor — RMM PR 2180). Retires the 4.2.0 cycle's CCCL-version-strip hunk inside `holoscan-sdk/0002-Use-external-dependencies-deps.patch`.
+- Updated `rapids-cmake` to 26.02.00 (required by HSDK 4.3.0 PyTorch chain; kept in lock-step with RMM 26.02.00).
+- Updated `rmm` to 26.02.00 (HSDK 4.3.0 requests `RMM_TAG "26.02.00"`). Removed the `do_install:append` GXF 5.6.0 compat-forwarder shim (`rmm/mr/cuda_memory_resource.hpp`, `rmm/mr/pool_memory_resource.hpp`) introduced in 4.2.0 — RMM 26.02.00 restores both headers at the short `rmm/mr/` path (RMM PR 2151), and GXF 5.7.0 in 4.3.0 picks them up natively.
+- Updated `pytorch` to 2.11.0. HSDK 4.3.0 pins `PYTORCH_IGPU_VERSION=2.11.0` / `PYTORCH_DGPU_VERSION=2.11.0` in the Dockerfile, and the 2.5.0 → 2.11.0 jump is also required to compile against the new CCCL 3.2.0 / RMM 26.02.00 (PyTorch 2.5.0's anonymous-namespace `at::native::offset_t` in `aten/src/ATen/native/cuda/SortStable.cu` fails the random-access-iterator concept that `cub::DispatchSegmentedRadixSort::SortPairs` now requires). Replaced the 2.5.0 patch set with the 2.11.0-compatible set, and added `-DUSE_SYSTEM_ONNX=ON`, `-DUSE_SYSTEM_PYBIND11=ON`, `-DFMT_INSTALL=OFF` to `EXTRA_OECMAKE`. The 2.5.0 recipe and 4 retired 2.5-only patches (`0001-Remove-Modules_CUDA_fix.patch`, `0003-Fix-RPATH.patch`, `0005-Disable-various-warnings.patch`, `0006-Fixups-for-cross-building-in-OE-with-CCCL-3.0.patch`) were removed. Credit to Ilies CHERGUI for the corresponding `pytorch` recipe and patch set in meta-tegra-community that this work is derived from.
+- Updated `torchvision` to 0.26.0 (paired with PyTorch 2.11.x). Set `COMPATIBLE_MACHINE = "(cuda)"`, added `-DCMAKE_CUDA_IMPLICIT_INCLUDE_DIRECTORIES=${RECIPE_SYSROOT}/usr/include` and `libcublas` to `DEPENDS`. Pass `TORCH_CUDA_ARCH_LIST` via `EXTRA_OECMAKE` (derived from `CUDA_ARCHITECTURES`) to bypass the `select_compute_arch.cmake` `try_run()` probe that is unsupported in OE cross-compile sysroots. Credit to Ilies CHERGUI for the corresponding `torchvision_0.26.0.bb` recipe in meta-tegra-community that this work mirrors.
+- holohub-apps: bumped `find_package(rmm 25.10.0 REQUIRED)` pin to `rmm 26.02.0` across 16 `CMakeLists.txt` files (`applications/`, `operators/`, `gxf_extensions/lstm_tensor_rt_inference/`) in `0009-Updates-for-OE-cross-builds.patch`.
+
+### Fixed
+- Added `MIRRORS:append` rule to `conf/holoscan-common.conf` redirecting `https://crates.io/api/v1/crates/<name>/<version>/download` to `https://static.crates.io/crates/<name>/<name>-<version>.crate`. The crates.io API endpoint started returning HTTP 403 to default-UA clients (bitbake's `wget`, `curl`, etc.) in mid-2026 due to tightened User-Agent enforcement, breaking `do_fetch` on every clean build of any cargo-based recipe (notably `librsvg` / `librsvg-native` pulled in by meta-openembedded). The Fastly CDN at `static.crates.io` serves byte-identical `.crate` tarballs without UA enforcement. The rule must live in `MIRRORS` rather than `PREMIRRORS`: `meta/classes-global/uninative.bbclass` enumerates every `http*` PREMIRRORS rule at BuildStarted and synthesizes a new entry by embedding the rule's `replace` field as a literal URL suffix. Because our replace contains regex backreferences (`\1`, `\2`), the synthesized rule trips `re.error: invalid group reference 1` at config-parse time, bricking the build before `do_fetch` even runs.
+- Added recipe-level `PARALLEL_MAKE = "-j 4"` cap to `onnxruntime_1.24.2.bb` to keep `do_compile` from being OOM-killed on 32 GB-class builders — `onnxruntime` 1.24.2's flash-attention CUDA kernels compile with nvcc spawning multiple cicc/ptxas processes per TU, peaking well above 4 GiB resident per TU. SQA reported such a `do_compile` OOM on 2026-05-28. Mirrors the existing recipe-level convention used by `pytorch_2.11.0.bb` (capped at `-j 8` for skyloft's 31 GB + 8 GB swap profile). The recipe-level setting overrides the layer-wide `PARALLEL_MAKE` in `build/conf/local.conf` for the capped recipe only; downstream users can further override via BitBake's `PARALLEL_MAKE:pn-<recipe>` mechanism in `local.conf`. Per-host tuning guidance is documented in `env/README.md` under "Troubleshooting / Memory exhausted / BB_NUMBER_THREADS has no effect" as a new sub-section on per-recipe `PARALLEL_MAKE` caps.
+
+### Deferred
+The following bumps from the Holoscan SDK 4.3.0 release notes were intentionally not taken this cycle:
+- NCCL 2.27.5-1 -> 2.29: release notes tie this bump to PyTorch 2.11 compatibility. In meta-tegra-holoscan, `pytorch_2.11.0.bb` is built with `-DUSE_NCCL=OFF`, and the only remaining in-layer `nccl` consumer is `python3-cupy_13.6.0.bb`, which builds fine against 2.27.
+- NSight Systems 2023.3.3.42-1 -> 2025.3.1: the standalone `nsight-systems-cli` debian package line stopped at `2024.2.3` on the NVIDIA CUDA repo; 2025.x only ships as the full `nsight-systems-<ver>` deb (different packaging). Will be revisited in a follow-up that switches the recipe accordingly.
+
+
 ## [4.2.0] - 2026-04-23
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 4.2.0.
@@ -573,6 +596,8 @@ Repo](https://github.com/NVIDIA/cuda-samples).
 | AJA NTV2       | 16.2.0   |
 | Holoscan SDK   | 0.2.0    |
 
+[4.3.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v4.2.0...v4.3.0
+[4.2.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v4.1.0...v4.2.0
 [4.1.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.11.0...v4.0.0
 [3.11.0]: https://github.com/nvidia-holoscan/meta-tegra-holoscan/compare/v3.10.0...v3.11.0
