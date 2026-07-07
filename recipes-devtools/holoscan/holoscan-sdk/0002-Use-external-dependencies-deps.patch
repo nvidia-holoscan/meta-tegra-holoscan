@@ -1,4 +1,4 @@
-From 002466b35f21707435347e09b7ae0fbe0a14f88d Mon Sep 17 00:00:00 2001
+From 76105d264bf2061888af428e996a359ca2cab189 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:00 -0400
 Subject: [PATCH] Use external dependencies - Modules and examples
@@ -6,9 +6,9 @@ Subject: [PATCH] Use external dependencies - Modules and examples
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  cmake/deps/grpc.cmake                |  10 ++-
- cmake/modules/SetupRapidsCMake.cmake |  35 ++++----
+ cmake/modules/SetupRapidsCMake.cmake |  25 ++++--
  cmake/setup_dependencies.cmake       | 117 +++++++++++++++++----------
- 3 files changed, 100 insertions(+), 62 deletions(-)
+ 3 files changed, 101 insertions(+), 51 deletions(-)
 
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
 index 360f64c52..8b877f043 100644
@@ -39,50 +39,38 @@ index 360f64c52..8b877f043 100644
  # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
  find_package(gRPC CONFIG REQUIRED)
 diff --git a/cmake/modules/SetupRapidsCMake.cmake b/cmake/modules/SetupRapidsCMake.cmake
-index 0fabd0edb..4cd4fa571 100644
+index 062cf058b..589bd5fe2 100644
 --- a/cmake/modules/SetupRapidsCMake.cmake
 +++ b/cmake/modules/SetupRapidsCMake.cmake
-@@ -15,26 +15,25 @@
+@@ -15,13 +15,24 @@
  
- set(rapids-cmake-version 26.02)
+ set(rapids-cmake-version v26.02.00)
  
 -# https://github.com/rapidsai/rapids-cmake#installation
--if(NOT EXISTS ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
--  file(DOWNLOAD https://raw.githubusercontent.com/rapidsai/rapids-cmake/refs/heads/release/${rapids-cmake-version}/RAPIDS.cmake
--       ${CMAKE_BINARY_DIR}/RAPIDS.cmake
--       TIMEOUT 120
--       TLS_VERIFY ON
--       EXPECTED_HASH SHA256=7690a95285e02b4f04dd23b327da0ad46e1b7c19d85207e9ca7ac17faa1947ec
--       STATUS _rapids_dl_status
--       LOG _rapids_dl_log)
--  list(GET _rapids_dl_status 0 _rapids_dl_code)
--  list(GET _rapids_dl_status 1 _rapids_dl_message)
--  if(NOT _rapids_dl_code EQUAL 0)
--    file(REMOVE ${CMAKE_BINARY_DIR}/RAPIDS.cmake)
--    message(FATAL_ERROR
--            "rapids-cmake RAPIDS.cmake download failed (code ${_rapids_dl_code}): ${_rapids_dl_message}\n"
--            "${_rapids_dl_log}")
--  endif()
+-include(FetchContent)
+-FetchContent_Declare(rapids-cmake
+-  GIT_REPOSITORY https://github.com/rapidsai/rapids-cmake
+-  GIT_TAG ${rapids-cmake-version}
+-)
+-FetchContent_MakeAvailable(rapids-cmake)
++# rapids_cpm_download() honors CPM_DOWNLOAD_LOCATION, so use the CPM file
++# staged in the Yocto recipe sysroot instead of downloading it.
 +set(CPM_DOWNLOAD_VERSION 0.40.2)
 +set(CPM_DOWNLOAD_LOCATION "${CPM_SOURCE_CACHE}/cpm/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
++if(NOT EXISTS "${CPM_DOWNLOAD_LOCATION}")
++  message(FATAL_ERROR "Required CPM.cmake does not exist: ${CPM_DOWNLOAD_LOCATION}")
++endif()
 +message(STATUS "CPM download location: ${CPM_DOWNLOAD_LOCATION}")
 +
-+if(NOT EXISTS "${RAPIDS_CMAKE_DIR}/RAPIDS.cmake")
-+  message(FATAL_ERROR "Required RAPIDS.cmake does not exist!")
- endif()
- 
--include(${CMAKE_BINARY_DIR}/RAPIDS.cmake)
-+set(rapids-cmake_POPULATED "TRUE")
-+if(NOT rapids-cmake-version)
-+  set(rapids-cmake-version "26.02")
-+endif()
-+if(NOT rapids-cmake-branch)
-+  set(rapids-cmake-branch "branch-26.02")
-+endif()
++# Use the Yocto-staged RAPIDS modules directly. RAPIDS.cmake is the
++# FetchContent bootstrap and is intentionally not included here.
 +set(rapids-cmake-dir "${RAPIDS_CMAKE_DIR}/rapids-cmake")
++if(NOT EXISTS "${rapids-cmake-dir}/rapids-cmake.cmake")
++  message(FATAL_ERROR "Required rapids-cmake modules do not exist")
++endif()
++
 +message(STATUS "Rapids cmake DIR: ${rapids-cmake-dir}")
 +list(APPEND CMAKE_MODULE_PATH "${rapids-cmake-dir}")
-+include("${RAPIDS_CMAKE_DIR}/RAPIDS.cmake")
  
  include(rapids-cmake)
  include(rapids-cpm)
