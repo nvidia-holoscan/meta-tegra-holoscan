@@ -1,4 +1,4 @@
-From e74a80a00d77dd852dffb85a977cb069e89a7f68 Mon Sep 17 00:00:00 2001
+From 19c7699f911f7423a039d6cfacc22002ef43e08d Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
 Subject: [PATCH] Build python libs with install RPATH and add find
@@ -11,12 +11,12 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  1 file changed, 3 insertions(+), 12 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index b59c92bf..4c6751ab 100644
+index 73ec6bd17..c1b73ef7b 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -16,15 +16,7 @@
  # Find pybind11
- find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+ find_package(Python3 REQUIRED COMPONENTS Interpreter Development.Module)
  
 -# We fetch pybind11 since we need the same version as the Holoscan SDK
 -# and it's not necessarily available on all the platforms
@@ -31,7 +31,7 @@ index b59c92bf..4c6751ab 100644
  
  # Helper function to generate pybind11 operator modules
  function(pybind11_add_holohub_module)
-@@ -73,9 +65,8 @@ function(pybind11_add_holohub_module)
+@@ -123,9 +115,8 @@ function(pybind11_add_holohub_module)
          "\$ORIGIN/../lib"    # legacy fallback for one-level-deep layouts
      )
      list(JOIN _rpath ":" _rpath)
