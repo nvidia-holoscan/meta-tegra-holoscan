@@ -4,15 +4,13 @@
 - Refreshed the Holoscan SDK external-dependency patch for the RAPIDS CMake bootstrap update in 4.4.0 while continuing to use the layer-provided RAPIDS CMake package.
 - Refreshed the Holohub apps patches for the Python module namespace and install-layout updates in the 4.4.0 source.
 
+### Fixed
+- Updated Pseudo from 1.9.0 to 1.9.8 after SQA reproduced the `unknown directory, fd 4` packaging failure tracked as Yocto #16316. The update incorporates upstream `openat` and `EFAULT` path-handling fixes.
+
 ### Unchanged
 - Retained GXF 5.7.0-20260515-6a50c8f1a. Holoscan SDK 4.4.0 uses the same GXF artifact as 4.3.0.
 - Retained the 4.3.0 recipe versions for PyTorch, torchvision, CCCL, RMM, ONNX Runtime, UCX, UCXX, MatX, fmt, and spdlog because Holoscan SDK 4.4.0 does not change those dependency versions.
 - Holoscan Sensor Bridge 2.6.0 is not built by this layer because `HOLOSCAN_BUILD_HOLOLINK` remains disabled in the Holoscan SDK recipe.
-
-### Deferred
-- NCCL remains at 2.27.5 because `pytorch_2.11.0.bb` is built with `USE_NCCL=OFF`; the layer's remaining NCCL consumer continues to build against 2.27.
-- NSight Systems remains at 2023.3.3.42-1. The standalone `nsight-systems-cli` Debian package line does not provide the 2025.x release used by the SDK container.
-
 
 ## [4.3.0] - 2026-05-25
 ### Changed
