@@ -1,13 +1,14 @@
-From 3fb09fd39f10d55b7ddbd1efa33287bfc2c3c41a Mon Sep 17 00:00:00 2001
+From 6513e82e33b2878f715a75ddcbda5a49b573de10 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH] Skip model download for object_detection_torch
+Subject: [PATCH 07/10] Skip model download for object_detection_torch
 
 This step requires a native installation of PyTorch, which
 is not available in the OE build. If this model is needed
 then it needs to be manually downloaded and converted
 outside of the OE build process.
 
+Patch-name: 0007-Skip-model-download-for-object_detection_torch.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
@@ -35,6 +36,3 @@ index ca0c8e36..1d8af7bc 100644
  endif()
  
  # Copy application config file and PyTorch model config files
--- 
-2.50.1
-

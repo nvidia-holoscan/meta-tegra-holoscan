@@ -1,8 +1,9 @@
-From 7f884e3b85ad95037db7e46fa3b6dfec0164b9a7 Mon Sep 17 00:00:00 2001
+From 067888935b65c617b434b6086b0564e56286fb98 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:53 -0400
-Subject: [PATCH] Add install rules
+Subject: [PATCH 01/10] Add install rules
 
+Patch-name: 0001-Add-install-rules.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
@@ -75,10 +76,10 @@ index 7f32762f..bb3dbe7f 100644
  if(BUILD_TESTING)
    # Configure the yaml file to only play 10 frames
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 442217f4..270b6c33 100644
+index f0925a3b..2e4770ab 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-@@ -56,6 +56,15 @@ add_custom_target(endoscopy_tool_tracking_deps
+@@ -57,6 +57,15 @@ add_custom_target(endoscopy_tool_tracking_deps
  )
  add_dependencies(endoscopy_tool_tracking endoscopy_tool_tracking_deps)
  
@@ -95,10 +96,10 @@ index 442217f4..270b6c33 100644
  if(BUILD_TESTING)
  
 diff --git a/applications/endoscopy_tool_tracking/python/CMakeLists.txt b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-index 23d863d5..7a8c3e88 100644
+index d798178e..a9c66a00 100644
 --- a/applications/endoscopy_tool_tracking/python/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/python/CMakeLists.txt
-@@ -31,6 +31,14 @@ add_custom_target(python_endoscopy_tool_tracking_deps
+@@ -32,6 +32,14 @@ add_custom_target(python_endoscopy_tool_tracking_deps
  
  add_dependencies(python_endoscopy_tool_tracking python_endoscopy_tool_tracking_deps)
  
@@ -414,10 +415,10 @@ index c1f82dc2..40a45d8b 100644
 +  DESTINATION ${install_path}
 +)
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index a3ee8f0d..27a94a65 100644
+index 83bb8003..73ec6bd1 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
-@@ -89,4 +89,9 @@ function(pybind11_add_holohub_module)
+@@ -144,4 +144,9 @@ function(pybind11_add_holohub_module)
          OUTPUT_NAME _${MODULE_NAME}
      )
  
@@ -499,6 +500,3 @@ index 1c9a5097..bc3d11d3 100644
  target_include_directories(video_encoder INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 +
 +install(TARGETS video_encoder)
--- 
-2.50.1
-

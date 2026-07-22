@@ -1,8 +1,9 @@
-From 71dc48056b200dcccdbcff6b77e7ceae1143d7d1 Mon Sep 17 00:00:00 2001
+From 5cd5893297b40a241c569326bd76c49ca49d8ef9 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH] Fix volume_renderer application
+Subject: [PATCH 06/10] Fix volume_renderer application
 
+Patch-name: 0006-Fix-volume_renderer-application.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
@@ -92,6 +93,3 @@ index e1e9a018..39570a8a 100644
  
  add_library(volume_renderer SHARED
    dataset.cpp
--- 
-2.50.1
-

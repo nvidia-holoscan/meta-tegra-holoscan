@@ -1,8 +1,9 @@
-From 7da66482132a3f09f6664f0b70f518706a463f14 Mon Sep 17 00:00:00 2001
+From 17a222d34b001c9fc6df2846cf973e9bf119be8c Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:53 -0400
-Subject: [PATCH] Fix ajantv2 dependencies
+Subject: [PATCH 02/10] Fix ajantv2 dependencies
 
+Patch-name: 0002-Fix-ajantv2-dependencies.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
@@ -32,7 +33,7 @@ index 941ad61b..ccd6b337 100644
  if(HOLOHUB_DOWNLOAD_DATASETS)
    include(holoscan_download_data)
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index 270b6c33..4bd7f91e 100644
+index 2e4770ab..494a43c5 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,8 @@ project(endoscopy_tool_tracking CXX)
@@ -97,7 +98,7 @@ index 09877bc8..36848539 100644
      main.cpp
  )
 diff --git a/applications/object_detection_torch/CMakeLists.txt b/applications/object_detection_torch/CMakeLists.txt
-index 9df6d7f2..52385a5c 100644
+index fb25bf90..ca0c8e36 100644
 --- a/applications/object_detection_torch/CMakeLists.txt
 +++ b/applications/object_detection_torch/CMakeLists.txt
 @@ -59,6 +59,8 @@ if(holoscan_VERSION VERSION_GREATER 3.5)
@@ -156,6 +157,3 @@ index 83af79ff..3da6b68d 100644
  
  add_library(aja_source SHARED
    aja_source.hpp
--- 
-2.50.1
-

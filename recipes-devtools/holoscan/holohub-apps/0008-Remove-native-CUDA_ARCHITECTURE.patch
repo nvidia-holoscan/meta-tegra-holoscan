@@ -1,8 +1,9 @@
-From eb2f558b8f98eb5c5d169f9a83e05001494f174a Mon Sep 17 00:00:00 2001
+From 911c1a21e2536c1b34e3233a3dface17684a0387 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH] Remove native CUDA_ARCHITECTURE
+Subject: [PATCH 08/10] Remove native CUDA_ARCHITECTURE
 
+Patch-name: 0008-Remove-native-CUDA_ARCHITECTURE.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
@@ -22,6 +23,3 @@ index 1fc8bbbf..1aaa53aa 100644
    )
  
  target_link_libraries(tool_tracking_postprocessor
--- 
-2.50.1
-

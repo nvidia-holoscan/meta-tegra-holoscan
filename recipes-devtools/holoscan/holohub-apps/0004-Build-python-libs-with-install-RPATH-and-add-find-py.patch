@@ -1,8 +1,9 @@
-From 19c7699f911f7423a039d6cfacc22002ef43e08d Mon Sep 17 00:00:00 2001
+From dd0f8efbb4b96054a849fee0cb57faeaa421a537 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH] Build python libs with install RPATH and add find
+Subject: [PATCH 04/10] Build python libs with install RPATH and add find
 
+Patch-name: 0004-Build-python-libs-with-install-RPATH-and-add-find-py.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
@@ -11,7 +12,7 @@ Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
  1 file changed, 3 insertions(+), 12 deletions(-)
 
 diff --git a/cmake/pybind11_add_holohub_module.cmake b/cmake/pybind11_add_holohub_module.cmake
-index 73ec6bd17..c1b73ef7b 100644
+index 73ec6bd1..c1b73ef7 100644
 --- a/cmake/pybind11_add_holohub_module.cmake
 +++ b/cmake/pybind11_add_holohub_module.cmake
 @@ -16,15 +16,7 @@
@@ -43,6 +44,3 @@ index 73ec6bd17..c1b73ef7b 100644
      unset(_rpath)
  
      # make submodule folder
--- 
-2.50.1 (Apple Git-155)
-

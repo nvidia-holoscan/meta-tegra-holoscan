@@ -1,13 +1,15 @@
-From 9b639d670fd12057b4010ed68b6b0510c91bc1bf Mon Sep 17 00:00:00 2001
+From 3df865fc1c70929fdff6e0dafadbf1460f2c9dd1 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Thu, 12 Mar 2026 06:14:47 -0400
-Subject: [PATCH] Add find_package(GXF) before holoscan in apps and operators
+Subject: [PATCH 10/10] Add find_package(GXF) before holoscan in apps and
+ operators
 
 GXF is provided separately in OE (gxf-core). Add find_package(GXF 5.4.0
 REQUIRED CONFIG) to all C++ applications and operators that use holoscan
 so the GXF config is found from the sysroot before holoscan brings in
 GXF targets.
 
+Patch-name: 0010-Add-find_package-GXF-before-holoscan-in-apps-and-ope.patch
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  applications/endoscopy_out_of_body_detection/CMakeLists.txt      | 1 +
@@ -39,7 +41,7 @@ index 7156cc89..37bbaa3b 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
-index b36ff528..008fa7c5 100644
+index ecd9ffed..913fe04a 100644
 --- a/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 +++ b/applications/endoscopy_tool_tracking/cpp/CMakeLists.txt
 @@ -19,6 +19,7 @@ project(endoscopy_tool_tracking CXX)
@@ -171,7 +173,7 @@ index 7f0c838b..2989beef 100644
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
 diff --git a/operators/volume_loader/CMakeLists.txt b/operators/volume_loader/CMakeLists.txt
-index e25b79a9..128b371a 100644
+index d3a6babf..edd56059 100644
 --- a/operators/volume_loader/CMakeLists.txt
 +++ b/operators/volume_loader/CMakeLists.txt
 @@ -18,6 +18,7 @@ project(volume_loader)
@@ -194,6 +196,3 @@ index 0fd89da1..df35c38e 100644
  find_package(holoscan 0.6 REQUIRED CONFIG
               PATHS "/opt/nvidia/holoscan" "/workspace/holoscan-sdk/install")
  
--- 
-2.50.1 (Apple Git-155)
-

@@ -1,8 +1,9 @@
-From d76ba89077a32212aa2fc5a813eb27a3e30e195d Mon Sep 17 00:00:00 2001
+From 12d2458e419faa19a4c1155ca8a120cef7ceef29 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH] Remove relative gxf_extension paths
+Subject: [PATCH 03/10] Remove relative gxf_extension paths
 
+Patch-name: 0003-Remove-relative-gxf_extension-paths.patch
 ---
  .../cpp/endoscopy_tool_tracking.yaml                        | 4 ++--
  .../python/endoscopy_tool_tracking.yaml                     | 6 +++---
@@ -12,7 +13,7 @@ Subject: [PATCH] Remove relative gxf_extension paths
  5 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
-index 1ea94c4a..d5926cca 100644
+index a4102fdd..24a28cd1 100644
 --- a/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/cpp/endoscopy_tool_tracking.yaml
 @@ -29,9 +29,9 @@ resources:
@@ -28,7 +29,7 @@ index 1ea94c4a..d5926cca 100644
  source: "replayer"    # "replayer" or "aja" or "deltacast" or "yuan"
  postprocessor: "tool_tracking_postprocessor" # "slang_shader" or "tool_tracking_postprocessor"
 diff --git a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
-index b8fbd969..cec09f01 100644
+index fb0d9035..d7806bb9 100644
 --- a/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 +++ b/applications/endoscopy_tool_tracking/python/endoscopy_tool_tracking.yaml
 @@ -29,9 +29,9 @@ resources:
@@ -83,6 +84,3 @@ index 165170c2..7f9d82f0 100644
  
  emergent:
    width: 4200
--- 
-2.50.1
-
