@@ -1,3 +1,13 @@
+## [4.5.0] - 2026-07-22
+### Changed
+- Updated Holoscan SDK and Holohub apps to the 4.5.0 source candidates.
+- Updated GXF to 5.7.1-20260713-86d402891 to satisfy the Holoscan SDK 4.5.0 `find_package(GXF 5.7.1 CONFIG REQUIRED)` constraint.
+- Refreshed the Holoscan SDK and Holohub apps OE support patches on their exact 4.5.0 candidate sources without changing the reviewed application selection.
+
+### Unchanged
+- Retained the 4.4.0 recipe versions for PyTorch, torchvision, CCCL, RMM, ONNX Runtime, UCX, UCXX, MatX, fmt, spdlog, CPM CMake, and RAPIDS CMake because Holoscan SDK 4.5.0 does not change those dependency versions.
+- Holoscan Sensor Bridge is not built by this layer because `HOLOSCAN_BUILD_HOLOLINK` remains disabled in the Holoscan SDK recipe.
+
 ## [4.4.0] - 2026-07-07
 ### Changed
 - Updated Holoscan SDK and Holohub apps to 4.4.0.
