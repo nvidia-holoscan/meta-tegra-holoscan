@@ -275,7 +275,11 @@ Then remove any stale BitBake server so the new values are used: `rm -f build/bi
 
 ##### Per-recipe `PARALLEL_MAKE` caps (`PARALLEL_MAKE:pn-<recipe>`)
 
-`PARALLEL_MAKE` in `build/conf/local.conf` is layer-wide, but specific recipes can be capped independently. `meta-tegra-holoscan` ships **recipe-level caps** in two `.bb` files for compiles whose `do_compile` is regularly OOM-killed on 32 GB-class builders — `onnxruntime_1.24.2.bb` (flash-attention `nvcc` TUs at `-j 4`) and `pytorch_2.11.0.bb` (ATen CUDA TUs at `-j 8`, sized for a 31 GB + 8 GB swap host). Each recipe documents its own peak-memory rationale inline.
+`PARALLEL_MAKE` in `build/conf/local.conf` is layer-wide, but specific recipes
+can be capped independently. `meta-tegra-holoscan` ships **recipe-level caps**
+in two `.bb` files for compiles whose `do_compile` is regularly OOM-killed on
+32 GB-class builders: `onnxruntime_1.24.2.bb` and `pytorch_2.11.0.bb` both use
+`-j 4`. Each recipe documents its own peak-memory rationale inline.
 
 A recipe-level `PARALLEL_MAKE = "-j N"` overrides the layer-wide `PARALLEL_MAKE` in `local.conf` for that recipe only; other recipes continue to build at the project default.
 

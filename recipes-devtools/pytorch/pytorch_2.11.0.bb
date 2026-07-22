@@ -43,13 +43,10 @@ inherit cmake cuda python3native python3-dir
 # nvcc compiles concurrently and the kernel OOM-kills them on a 31 GiB
 # build host (10 x ~6 GB peak ~= 60 GB > 31 GB + 8 GB swap).
 #
-# This recipe-level setting OVERRIDES the local.conf value for pytorch
-# only -- other recipes still benefit from the project default. At j=8,
-# peak memory is ~8 x 6 GB ~= 48 GB which fits inside RAM+swap (~39 GB)
-# only because not all 8 in-flight compiles are flash-attention kernels
-# simultaneously; the bulk of pytorch's 1900 nvcc compiles stay under
-# 1.5 GB each.
-PARALLEL_MAKE = "-j 8"
+# This recipe-level setting overrides the local.conf value for pytorch
+# only. Limit it to four concurrent jobs so peak flash-attention memory
+# remains bounded on a 32 GiB-class builder while other BitBake tasks run.
+PARALLEL_MAKE = "-j 4"
 
 PACKAGECONFIG ??= "numpy openmp python"
 PACKAGECONFIG[numpy] = "-DUSE_NUMPY=1, -DUSE_NUMPY=0, python3-numpy python3-numpy-native, python3-numpy"
