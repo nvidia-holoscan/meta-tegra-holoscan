@@ -1,8 +1,9 @@
-From bb84b6c94c8b05e6e0f97b43ba5724f4034f81b6 Mon Sep 17 00:00:00 2001
+From 16b0d7f302a9dbb9a51ee5abc6f9f4f7c5bd0fca Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:19 -0400
-Subject: [PATCH] Fix CMake examples
+Subject: [PATCH 5/5] Fix CMake examples
 
+Patch-name: 0007-Fix-CMake-examples.patch
 Co-authored-by: Julien Jomier <jjomier@nvidia.com>
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
@@ -13,10 +14,10 @@ Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
  4 files changed, 14 insertions(+), 17 deletions(-)
 
 diff --git a/examples/matx/matx_allocator/cpp/CMakeLists.min.txt b/examples/matx/matx_allocator/cpp/CMakeLists.min.txt
-index ebb04a7f2..13b2450c8 100644
+index d9ab653..7894cf1 100644
 --- a/examples/matx/matx_allocator/cpp/CMakeLists.min.txt
 +++ b/examples/matx/matx_allocator/cpp/CMakeLists.min.txt
-@@ -27,6 +27,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES MATCHES "^[0-9]+$" AND CMAKE_CUDA_ARCHITECTURES
+@@ -15,6 +15,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES MATCHES "^[0-9]+$" AND CMAKE_CUDA_ARCHITECTURES
  endif()
  
  find_package(CUDAToolkit QUIET)
@@ -29,10 +30,10 @@ index ebb04a7f2..13b2450c8 100644
  # Find the Holoscan SDK development package and its embedded MatX distribution
  find_package(holoscan REQUIRED CONFIG
 diff --git a/examples/matx/matx_basic/cpp/CMakeLists.min.txt b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
-index b880940e4..ea4919679 100644
+index b347121..97eab12 100644
 --- a/examples/matx/matx_basic/cpp/CMakeLists.min.txt
 +++ b/examples/matx/matx_basic/cpp/CMakeLists.min.txt
-@@ -27,6 +27,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES MATCHES "^[0-9]+$" AND CMAKE_CUDA_ARCHITECTURES
+@@ -15,6 +15,11 @@ elseif(CMAKE_CUDA_ARCHITECTURES MATCHES "^[0-9]+$" AND CMAKE_CUDA_ARCHITECTURES
  endif()
  
  find_package(CUDAToolkit QUIET)
@@ -45,10 +46,10 @@ index b880940e4..ea4919679 100644
  # Find the Holoscan SDK development package and its embedded MatX distribution
  find_package(holoscan REQUIRED CONFIG
 diff --git a/include/holoscan/core/resources/data_logger_queue.hpp b/include/holoscan/core/resources/data_logger_queue.hpp
-index bc70538e5..940778001 100644
+index cc23bd7..94dc401 100644
 --- a/include/holoscan/core/resources/data_logger_queue.hpp
 +++ b/include/holoscan/core/resources/data_logger_queue.hpp
-@@ -28,7 +28,7 @@
+@@ -16,7 +16,7 @@
  #include <string>
  #include <utility>
  
@@ -58,10 +59,10 @@ index bc70538e5..940778001 100644
  
  namespace holoscan {
 diff --git a/modules/holoinfer/src/infer/torch/CMakeLists.txt b/modules/holoinfer/src/infer/torch/CMakeLists.txt
-index 950c4554d..e2ed7e084 100644
+index ed280bf..18aafb4 100644
 --- a/modules/holoinfer/src/infer/torch/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/torch/CMakeLists.txt
-@@ -49,22 +49,9 @@ else()
+@@ -36,22 +36,9 @@ else()
  endif()
  message(STATUS "TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}")
  
@@ -87,6 +88,3 @@ index 950c4554d..e2ed7e084 100644
  
  # Create the holoinfer torch backend library
  add_library(holoinfer_torch SHARED core.cpp)
--- 
-2.50.1
-

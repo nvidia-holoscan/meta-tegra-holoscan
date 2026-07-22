@@ -1,8 +1,9 @@
-From 76105d264bf2061888af428e996a359ca2cab189 Mon Sep 17 00:00:00 2001
+From 7aa3c7ef874b638e364abccec9d4288d2c806846 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:00 -0400
-Subject: [PATCH] Use external dependencies - Modules and examples
+Subject: [PATCH 2/5] Use external dependencies - Modules and examples
 
+Patch-name: 0002-Use-external-dependencies-deps.patch
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  cmake/deps/grpc.cmake                |  10 ++-
@@ -11,10 +12,10 @@ Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
  3 files changed, 101 insertions(+), 51 deletions(-)
 
 diff --git a/cmake/deps/grpc.cmake b/cmake/deps/grpc.cmake
-index 360f64c52..8b877f043 100644
+index 515000a..ea09df5 100644
 --- a/cmake/deps/grpc.cmake
 +++ b/cmake/deps/grpc.cmake
-@@ -75,7 +75,7 @@ endfunction()
+@@ -62,7 +62,7 @@ endfunction()
  # GRPC_CPP_EXECUTABLE - the path to the grpc_cpp_plugin executable
  
  set(protobuf_MODULE_COMPATIBLE TRUE)
@@ -23,7 +24,7 @@ index 360f64c52..8b877f043 100644
  message(STATUS "Using protobuf ${Protobuf_VERSION}")
  
  if(CMAKE_CROSSCOMPILING)
-@@ -84,6 +84,14 @@ else()
+@@ -71,6 +71,14 @@ else()
      get_target_property(PROTOC_EXECUTABLE protobuf::protoc LOCATION)
  endif()
  
@@ -39,10 +40,10 @@ index 360f64c52..8b877f043 100644
  # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
  find_package(gRPC CONFIG REQUIRED)
 diff --git a/cmake/modules/SetupRapidsCMake.cmake b/cmake/modules/SetupRapidsCMake.cmake
-index 062cf058b..589bd5fe2 100644
+index 8f8922c..171d517 100644
 --- a/cmake/modules/SetupRapidsCMake.cmake
 +++ b/cmake/modules/SetupRapidsCMake.cmake
-@@ -15,13 +15,24 @@
+@@ -3,13 +3,24 @@
  
  set(rapids-cmake-version v26.02.00)
  
@@ -75,10 +76,10 @@ index 062cf058b..589bd5fe2 100644
  include(rapids-cmake)
  include(rapids-cpm)
 diff --git a/cmake/setup_dependencies.cmake b/cmake/setup_dependencies.cmake
-index d561b88cb..c2df44c14 100644
+index bee87b5..0530b63 100644
 --- a/cmake/setup_dependencies.cmake
 +++ b/cmake/setup_dependencies.cmake
-@@ -26,12 +26,6 @@ list(APPEND CMAKE_IGNORE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
+@@ -14,12 +14,6 @@ list(APPEND CMAKE_IGNORE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
  # Note that "set" only applies to this subdirectory scope.
  set(CMAKE_INSTALL_DEFAULT_COMPONENT_NAME "holoscan-dependencies")
  
@@ -91,7 +92,7 @@ index d561b88cb..c2df44c14 100644
  function(superbuild_depend module_name)
      cmake_parse_arguments(PARSE_ARGV 1 _SUPER_BUILD "" "COMPONENT" "")
      # Set CMAKE_INSTALL_DEFAULT_COMPONENT_NAME before including .cmake file
-@@ -52,49 +46,88 @@ rapids_cpm_init()
+@@ -40,49 +34,88 @@ rapids_cpm_init()
  set(_SAVED_CMAKE_CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}")
  set(CMAKE_CXX_CLANG_TIDY "")
  
@@ -215,12 +216,9 @@ index d561b88cb..c2df44c14 100644
  endif()
  
  # Add after pybind11 to avoid conflicting pybind11 fetch procedures
-@@ -107,5 +140,3 @@ set(CMAKE_CXX_CLANG_TIDY "${_SAVED_CMAKE_CXX_CLANG_TIDY}")
+@@ -95,5 +128,3 @@ set(CMAKE_CXX_CLANG_TIDY "${_SAVED_CMAKE_CXX_CLANG_TIDY}")
  unset(_SAVED_CMAKE_CXX_CLANG_TIDY)
  
  set(CMAKE_IGNORE_PREFIX_PATH "${_SAVED_CMAKE_IGNORE_PREFIX_PATH}")
 -
 -unset(CMAKE_POLICY_DEFAULT_CMP0169)
--- 
-2.50.1 (Apple Git-155)
-

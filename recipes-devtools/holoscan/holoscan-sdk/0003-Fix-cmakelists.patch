@@ -1,11 +1,12 @@
-From b57b48c4d55839cdd6c04cf76755e818858bce81 Mon Sep 17 00:00:00 2001
+From 3f2382921d3e27d0e7bc764b8fff5aa264937439 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:03 -0400
-Subject: [PATCH] Use external dependencies - Modules and examples
+Subject: [PATCH 3/5] Use external dependencies - Modules and examples
 
 Update cmake modules, examples, and source CMakeLists files to use
 external library dependencies.
 
+Patch-name: 0003-Fix-cmakelists.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
@@ -22,10 +23,10 @@ Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
  9 files changed, 33 insertions(+), 75 deletions(-)
 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
-index 0a999a1ef..ff24d523c 100644
+index 309724d..0ab3bcb 100644
 --- a/examples/CMakeLists.txt
 +++ b/examples/CMakeLists.txt
-@@ -62,7 +62,6 @@ if(HOLOSCAN_CPP_EXAMPLES)
+@@ -50,7 +50,6 @@ if(HOLOSCAN_CPP_EXAMPLES)
    add_subdirectory(gpu_resident_example)
    add_subdirectory(gpu_resident_multi_io)
    add_subdirectory(gpu_resident_input)
@@ -34,10 +35,10 @@ index 0a999a1ef..ff24d523c 100644
    add_subdirectory(ping_conditional)
    add_subdirectory(ping_cycle)
 diff --git a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
-index dafe6a6a4..3002982a3 100644
+index 60d98e6..a552303 100644
 --- a/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/distributed_pose_tree/cpp/CMakeLists.txt
-@@ -19,8 +19,10 @@ add_executable(distributed_pose_tree
+@@ -7,8 +7,10 @@ add_executable(distributed_pose_tree
  )
  target_link_libraries(distributed_pose_tree
    PUBLIC
@@ -51,10 +52,10 @@ index dafe6a6a4..3002982a3 100644
  
  # Copy config file
 diff --git a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
-index ef797f1fc..8df1b5113 100644
+index f344275..85f2040 100644
 --- a/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
 +++ b/examples/pose_tree/pose_tree_basic/cpp/CMakeLists.txt
-@@ -19,8 +19,10 @@ add_executable(pose_tree_basic
+@@ -7,8 +7,10 @@ add_executable(pose_tree_basic
  )
  target_link_libraries(pose_tree_basic
    PUBLIC
@@ -68,12 +69,12 @@ index ef797f1fc..8df1b5113 100644
  
  # Copy config file
 diff --git a/modules/holoinfer/src/infer/onnx/CMakeLists.txt b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
-index 76d668968..7cb58b815 100644
+index e739ee8..ad75309 100644
 --- a/modules/holoinfer/src/infer/onnx/CMakeLists.txt
 +++ b/modules/holoinfer/src/infer/onnx/CMakeLists.txt
-@@ -15,7 +15,9 @@
- # limitations under the License.
- #
+@@ -2,7 +2,9 @@
+ # SPDX-FileCopyrightText: Copyright (c) 2024-2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ # SPDX-License-Identifier: Apache-2.0
  
 -find_package(ONNXRuntime REQUIRED)
 +find_package(PkgConfig)
@@ -82,7 +83,7 @@ index 76d668968..7cb58b815 100644
  add_library(holoinfer_ort SHARED core.cpp)
  add_library(holoscan::infer::onnx_runtime ALIAS holoinfer_ort)
  set_target_properties(holoinfer_ort PROPERTIES
-@@ -27,7 +29,7 @@ set_target_properties(holoinfer_ort PROPERTIES
+@@ -14,7 +16,7 @@ set_target_properties(holoinfer_ort PROPERTIES
  )
  target_link_libraries(holoinfer_ort
      PRIVATE
@@ -92,10 +93,10 @@ index 76d668968..7cb58b815 100644
          dlpack::dlpack
          holoscan::logger
 diff --git a/modules/holoviz/examples/demo/CMakeLists.txt b/modules/holoviz/examples/demo/CMakeLists.txt
-index 8b96a52ae..3f26faefe 100644
+index 32d3a41..8f48bba 100644
 --- a/modules/holoviz/examples/demo/CMakeLists.txt
 +++ b/modules/holoviz/examples/demo/CMakeLists.txt
-@@ -15,18 +15,6 @@
+@@ -3,18 +3,6 @@
  
  set(PROJECT_NAME holoviz_demo)
  
@@ -114,7 +115,7 @@ index 8b96a52ae..3f26faefe 100644
  add_executable(${PROJECT_NAME})
  
  target_sources(${PROJECT_NAME}
-@@ -36,7 +24,7 @@ target_sources(${PROJECT_NAME}
+@@ -24,7 +12,7 @@ target_sources(${PROJECT_NAME}
  
  target_include_directories(${PROJECT_NAME}
      PRIVATE
@@ -124,10 +125,10 @@ index 8b96a52ae..3f26faefe 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/examples/depth_map/CMakeLists.txt b/modules/holoviz/examples/depth_map/CMakeLists.txt
-index af2b7a301..0f87a07e9 100644
+index e08c197..36f0314 100644
 --- a/modules/holoviz/examples/depth_map/CMakeLists.txt
 +++ b/modules/holoviz/examples/depth_map/CMakeLists.txt
-@@ -15,18 +15,6 @@
+@@ -3,18 +3,6 @@
  
  set(PROJECT_NAME holoviz_depth_map)
  
@@ -146,7 +147,7 @@ index af2b7a301..0f87a07e9 100644
  add_executable(${PROJECT_NAME})
  
  target_sources(${PROJECT_NAME}
-@@ -36,7 +24,7 @@ target_sources(${PROJECT_NAME}
+@@ -24,7 +12,7 @@ target_sources(${PROJECT_NAME}
  
  target_include_directories(${PROJECT_NAME}
      PRIVATE
@@ -156,10 +157,10 @@ index af2b7a301..0f87a07e9 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/tests/functional/CMakeLists.txt b/modules/holoviz/tests/functional/CMakeLists.txt
-index 9608c9acf..0dfe5116c 100644
+index 9b2fd41..1076f10 100644
 --- a/modules/holoviz/tests/functional/CMakeLists.txt
 +++ b/modules/holoviz/tests/functional/CMakeLists.txt
-@@ -15,18 +15,6 @@
+@@ -3,18 +3,6 @@
  
  set(PROJECT_NAME holoviz_functionaltests)
  
@@ -178,7 +179,7 @@ index 9608c9acf..0dfe5116c 100644
  find_package(CUDAToolkit REQUIRED)
  find_package(X11 REQUIRED)
  find_package(Vulkan REQUIRED)
-@@ -67,7 +55,7 @@ target_compile_definitions(${PROJECT_NAME}
+@@ -57,7 +45,7 @@ target_compile_definitions(${PROJECT_NAME}
  
  target_include_directories(${PROJECT_NAME}
      PRIVATE
@@ -188,10 +189,10 @@ index 9608c9acf..0dfe5116c 100644
  
  target_link_libraries(${PROJECT_NAME}
 diff --git a/modules/holoviz/thirdparty/imgui/CMakeLists.txt b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
-index 34bcc8bc4..86e86dc68 100644
+index 30b1bfc..b808399 100644
 --- a/modules/holoviz/thirdparty/imgui/CMakeLists.txt
 +++ b/modules/holoviz/thirdparty/imgui/CMakeLists.txt
-@@ -18,29 +18,17 @@ include(GNUInstallDirs)
+@@ -6,29 +6,17 @@ include(GNUInstallDirs)
  
  find_package(Vulkan REQUIRED)
  
@@ -224,7 +225,7 @@ index 34bcc8bc4..86e86dc68 100644
    )
  
  target_compile_definitions(imgui_backend
-@@ -62,16 +50,16 @@ add_library(holoscan::viz::imgui ALIAS holoviz_imgui)
+@@ -50,16 +38,16 @@ add_library(holoscan::viz::imgui ALIAS holoviz_imgui)
  
  target_sources(holoviz_imgui
    PRIVATE
@@ -247,7 +248,7 @@ index 34bcc8bc4..86e86dc68 100644
      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>/holoviz/imgui
    )
  
-@@ -82,19 +70,19 @@ set_target_properties(holoviz_imgui
+@@ -70,19 +58,19 @@ set_target_properties(holoviz_imgui
  
  install(
    FILES
@@ -275,10 +276,10 @@ index 34bcc8bc4..86e86dc68 100644
    COMPONENT "holoscan-dependencies"
    )
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 7c833e51f..0c9ad7aab 100644
+index a2316cc..5c959e7 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -75,6 +75,7 @@ endfunction()
+@@ -63,6 +63,7 @@ endfunction()
  # ##############################################################################
  # # Add library holoscan::spdlog_logger
  # ##############################################################################
@@ -286,7 +287,7 @@ index 7c833e51f..0c9ad7aab 100644
  add_holoscan_library(spdlog_logger common/logger/spdlog_logger.cpp)
  target_link_libraries(spdlog_logger
      PUBLIC
-@@ -399,7 +400,7 @@ target_link_libraries(core
+@@ -387,7 +388,7 @@ target_link_libraries(core
          tl::expected
          yaml-cpp::yaml-cpp
      PRIVATE
@@ -295,6 +296,3 @@ index 7c833e51f..0c9ad7aab 100644
          gRPC::grpc++
          gRPC::grpc++_reflection
          protobuf::libprotobuf
--- 
-2.50.1 (Apple Git-155)
-
