@@ -1,7 +1,7 @@
 From 3df865fc1c70929fdff6e0dafadbf1460f2c9dd1 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Thu, 12 Mar 2026 06:14:47 -0400
-Subject: [PATCH 10/10] Add find_package(GXF) before holoscan in apps and
+Subject: [PATCH] Add find_package(GXF) before holoscan in apps and
  operators
 
 GXF is provided separately in OE (gxf-core). Add find_package(GXF 5.4.0
@@ -9,7 +9,6 @@ REQUIRED CONFIG) to all C++ applications and operators that use holoscan
 so the GXF config is found from the sysroot before holoscan brings in
 GXF targets.
 
-Patch-name: 0010-Add-find_package-GXF-before-holoscan-in-apps-and-ope.patch
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  applications/endoscopy_out_of_body_detection/CMakeLists.txt      | 1 +

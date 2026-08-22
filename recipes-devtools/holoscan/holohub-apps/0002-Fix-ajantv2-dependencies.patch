@@ -1,9 +1,8 @@
 From 17a222d34b001c9fc6df2846cf973e9bf119be8c Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:53 -0400
-Subject: [PATCH 02/10] Fix ajantv2 dependencies
+Subject: [PATCH] Fix ajantv2 dependencies
 
-Patch-name: 0002-Fix-ajantv2-dependencies.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>

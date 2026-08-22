@@ -1,9 +1,8 @@
 From 07b9bff3d0dbe3a007130a957a03e665779fb7a4 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH 05/10] Fix default data paths in python apps
+Subject: [PATCH] Fix default data paths in python apps
 
-Patch-name: 0005-Fix-default-data-paths-in-python-apps.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---

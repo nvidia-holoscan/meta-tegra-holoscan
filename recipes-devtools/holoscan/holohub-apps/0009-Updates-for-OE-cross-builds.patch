@@ -1,9 +1,8 @@
 From 22d193137a66666b46500cd590359fd47a0ebc16 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:55 -0400
-Subject: [PATCH 09/10] Updates for OE cross builds
+Subject: [PATCH] Updates for OE cross builds
 
-Patch-name: 0009-Updates-for-OE-cross-builds.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ilies CHERGUI <ichergui@nvidia.com>
 ---

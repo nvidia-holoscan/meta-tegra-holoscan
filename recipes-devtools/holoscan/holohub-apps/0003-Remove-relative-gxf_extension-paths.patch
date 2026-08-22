@@ -1,9 +1,8 @@
 From 12d2458e419faa19a4c1155ca8a120cef7ceef29 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 15:43:54 -0400
-Subject: [PATCH 03/10] Remove relative gxf_extension paths
+Subject: [PATCH] Remove relative gxf_extension paths
 
-Patch-name: 0003-Remove-relative-gxf_extension-paths.patch
 ---
  .../cpp/endoscopy_tool_tracking.yaml                        | 4 ++--
  .../python/endoscopy_tool_tracking.yaml                     | 6 +++---
