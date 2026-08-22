@@ -1,3 +1,14 @@
+## [4.6.0] - 2026-08-22
+### Changed
+- Updated Holoscan SDK and HoloHub apps to the exact public 4.6.0 release sources.
+- Refreshed the Holoscan SDK and HoloHub apps OE support patches on their exact public 4.6.0 sources without changing the reviewed application selection.
+- Refreshed the HoloHub external-dependency patches to continue using the Yocto-staged pybind11 and ClaraViz packages after upstream CMake bootstrap changes.
+
+### Unchanged
+- Retained GXF 5.7.1-20260713-86d402891 because Holoscan SDK 4.6.0 uses the same GXF artifacts as 4.5.0.
+- Retained the 4.5.0 recipe versions for PyTorch, torchvision, CCCL, RMM, ONNX Runtime, UCX, UCXX, MatX, fmt, spdlog, CPM CMake, and RAPIDS CMake because Holoscan SDK 4.6.0 does not change those dependency versions.
+- Holoscan Sensor Bridge is not built by this layer because `HOLOSCAN_BUILD_HOLOLINK` remains disabled in the Holoscan SDK recipe; the SDK source dependency update to HoloLink 2.7.0 therefore does not require a Deployment Stack recipe bump.
+
 ## [4.5.0] - 2026-07-22
 ### Changed
 - Updated Holoscan SDK and Holohub apps to the 4.5.0 source candidates.
