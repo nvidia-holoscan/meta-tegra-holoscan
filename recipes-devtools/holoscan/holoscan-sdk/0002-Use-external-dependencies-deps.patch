@@ -1,9 +1,8 @@
 From 7aa3c7ef874b638e364abccec9d4288d2c806846 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:00 -0400
-Subject: [PATCH 2/5] Use external dependencies - Modules and examples
+Subject: [PATCH] Use external dependencies - Modules and examples
 
-Patch-name: 0002-Use-external-dependencies-deps.patch
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  cmake/deps/grpc.cmake                |  10 ++-

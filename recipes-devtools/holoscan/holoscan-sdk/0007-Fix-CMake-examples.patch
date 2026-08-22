@@ -1,9 +1,8 @@
 From 16b0d7f302a9dbb9a51ee5abc6f9f4f7c5bd0fca Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:19 -0400
-Subject: [PATCH 5/5] Fix CMake examples
+Subject: [PATCH] Fix CMake examples
 
-Patch-name: 0007-Fix-CMake-examples.patch
 Co-authored-by: Julien Jomier <jjomier@nvidia.com>
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---

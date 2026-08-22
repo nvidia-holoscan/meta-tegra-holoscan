@@ -1,9 +1,8 @@
 From 85c5865b19bb89d0297527244dd2d3505362dcdb Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:47:55 -0400
-Subject: [PATCH 1/5] Fix Main CMakeLists.txt
+Subject: [PATCH] Fix Main CMakeLists.txt
 
-Patch-name: 0001-Fix-main-cmake.patch
 Signed-off-by: JC Fillion-Robin <jcfr@nvidia.com>
 ---
  CMakeLists.txt | 5 +++--

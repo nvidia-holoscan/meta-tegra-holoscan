@@ -1,9 +1,8 @@
 From 190f683cfcfa81707a57eb7b2e478cc0964c5377 Mon Sep 17 00:00:00 2001
 From: JC Fillion-Robin <jcfr@nvidia.com>
 Date: Tue, 10 Mar 2026 12:48:15 -0400
-Subject: [PATCH 4/5] Disable various warnings as errors
+Subject: [PATCH] Disable various warnings as errors
 
-Patch-name: 0006-Disable-various-warnings-as-errors.patch
 Upstream-Status: Inappropriate [OE-specific]
 Signed-off-by: Ian Stewart <istewart@nvidia.com>
 ---
