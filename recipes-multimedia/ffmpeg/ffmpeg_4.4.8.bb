@@ -1,7 +1,8 @@
 #
-# NOTE: This is copied as-is from a previous version of the recipe from the
-#       openembedded-core layer. It is required to satisfy the emergent-camera
-#       dependency on libavformat.so.58, which is not included in later versions.
+# NOTE: This is based on a previous version of the recipe from the
+#       openembedded-core layer and remains on the FFmpeg 4.4 maintenance line
+#       to satisfy the emergent-camera dependency on libavformat.so.58, which
+#       is not included in later major versions.
 #
 
 SUMMARY = "A complete, cross-platform solution to record, convert and stream audio and video."
@@ -26,13 +27,13 @@ LICENSE_FLAGS = "commercial"
 
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.GPLv3;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
+                    file://COPYING.LGPLv2.1;md5=eed22b3456132611e3d4aa7a7ec64dac \
                     file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://0001-libavutil-include-assembly-with-full-path-from-sourc.patch \
            "
-SRC_URI[sha256sum] = "eadbad9e9ab30b25f5520fbfde99fae4a92a1ae3c0257a8d68569a4651e30e02"
+SRC_URI[sha256sum] = "c73848c4ae283d9eaee7be3b276affbc3543380483555500d0dd2c9b7e1c39c3"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
