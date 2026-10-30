@@ -1,8 +1,15 @@
 # meta-tegra-holoscan — historical Holoscan Deployment Stack
 
 > [!IMPORTANT]
-> **[NVIDIA/meta-tegra-community](https://github.com/NVIDIA/meta-tegra-community/tree/master/recipes-devtools/holoscan)**
-> is the public home for **Holoscan SDK 5.x recipes**.
+> **This page was written in October 2026.** This repository is archived and
+> the page will not be maintained. The instructions, links, and references
+> below reflect that point in time and may become outdated.
+>
+> For current Holoscan guidance, see the
+> [Holoscan SDK User Guide](https://docs.nvidia.com/holoscan/sdk-user-guide),
+> including [Yocto on Jetson](https://docs.nvidia.com/holoscan/sdk-user-guide/yocto).
+> Upstream **Holoscan SDK 5.x recipes** are available in
+> [OE4T/meta-tegra-community](https://github.com/OE4T/meta-tegra-community).
 
 This repository preserves the OpenEmbedded/Yocto layer and build instructions
 for the Holoscan Deployment Stack through **Holoscan SDK 4.6.0**.
@@ -30,29 +37,21 @@ added to a BitBake build as a layer.
 
 ## Holoscan SDK 5.x transition
 
-The Holoscan SDK 5.x Deployment Stack separates recipes from the configuration
-that selects and pins them:
+Follow the maintained
+[Yocto on Jetson guide](https://docs.nvidia.com/holoscan/sdk-user-guide/yocto)
+for build-host setup, the demo image, and integration into your own distro.
+The guide explains release-validation snapshots, upstream development, and
+maintained OE4T release/LTS branches, including compatibility requirements.
 
-| Repository | Role |
-| --- | --- |
-| [NVIDIA/meta-tegra-community](https://github.com/NVIDIA/meta-tegra-community) | Shared OpenEmbedded recipes, dependency versions, and patches. |
-| [NVIDIA/tegra-demo-distro](https://github.com/NVIDIA/tegra-demo-distro) | Build configuration that pins the recipe layers and selects the machine, distribution, and image. |
+OE4T maintains the [demo distro](https://github.com/OE4T/tegra-demo-distro)
+and [Holoscan recipes](https://github.com/OE4T/meta-tegra-community).
+Matching `holoscan-sdk-X.Y.Z` tags in the NVIDIA
+[distro](https://github.com/NVIDIA/tegra-demo-distro/tags) and
+[recipe](https://github.com/NVIDIA/meta-tegra-community/tags) forks record the
+revisions validated for a Holoscan release.
 
-Start with the build configuration for the intended release, then use its
-pinned layer revisions. Both repositories use `main` as an administrative
-control branch; it is not a Holoscan build configuration. Consult their branch
-documentation and the instructions for the chosen Holoscan release before
-building.
-
-### OpenEmbedded build environment
-
-For newer deployments, start with the build-host requirements and setup
-instructions in [NVIDIA/tegra-demo-distro](https://github.com/NVIDIA/tegra-demo-distro)
-for the selected release. That configuration selects the recipe layers and
-their revisions. Build-environment tooling is maintained separately; follow
-the selected release's instructions for any required container or host tools.
-The historical builder under this repository's
-[`env/` directory](https://github.com/nvidia-holoscan/meta-tegra-holoscan/tree/v4.6.0/env)
+The historical builder in
+[`env/`](https://github.com/nvidia-holoscan/meta-tegra-holoscan/tree/v4.6.0/env)
 belongs to the 4.6.0 workflow.
 
 ## License
